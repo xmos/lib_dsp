@@ -1,5 +1,7 @@
+#include <platform.h>
+#include "xmos_dsp_qformat.h"
+#include "xmos_dsp_math.h"
 #include "xmos_dsp_statistics.h"
-
 
 // Vector sum: result = X[0] + ... X[N-1]
 //
@@ -19,12 +21,12 @@ int xmos_dsp_vector_abs_sum
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
-        {ah,al} = macs( x0, 1 << q_format, ah, al );
-        {ah,al} = macs( x1, 1 << q_format, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(1<<q_format),"0"(ah),"1"(al));
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
-        {ah,al} = macs( x0, 1 << q_format, ah, al );
-        {ah,al} = macs( x1, 1 << q_format, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(1<<q_format),"0"(ah),"1"(al));
         vector_length -= 4; input_vector_X += 4;
     }
     switch( vector_length )
@@ -32,22 +34,22 @@ int xmos_dsp_vector_abs_sum
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
-        {ah,al} = macs( x0, 1 << q_format, ah, al );
-        {ah,al} = macs( x1, 1 << q_format, ah, al );
-        x0 = input_vector_X[2]; //if( x0 < 0 ) x0 = -x0;
-        {ah,al} = macs( x0, 1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(1<<q_format),"0"(ah),"1"(al));
+        x0 = input_vector_X[2]; if( x0 < 0 ) x0 = -x0;
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
         break;
     
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
-        {ah,al} = macs( x0, 1 << q_format, ah, al );
-        {ah,al} = macs( x1, 1 << q_format, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(1<<q_format),"0"(ah),"1"(al));
         break;
     
         case 1:
         x0 = input_vector_X[0]; if( x0 < 0 ) x0 = -x0;
-        {ah,al} = macs( x0, 1 << q_format, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(1<<q_format),"0"(ah),"1"(al));
         break;
     }
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
@@ -91,32 +93,32 @@ int xmos_dsp_vector_power
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        {ah,al} = macs( x0, x0, ah, al );
-        {ah,al} = macs( x1, x1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(x1),"0"(ah),"1"(al));
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        {ah,al} = macs( x0, x0, ah, al );
-        {ah,al} = macs( x1, x1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(x1),"0"(ah),"1"(al));
         vector_length -= 4; input_vector_X += 4;
     }
     switch( vector_length )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        {ah,al} = macs( x0, x0, ah, al );
-        {ah,al} = macs( x1, x1, ah, al );
-        x0 = input_vector_X[2]; //if( x0 < 0 ) x0 = -x0;
-        {ah,al} = macs( x0, x0, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(x1),"0"(ah),"1"(al));
+        x0 = input_vector_X[2];
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
         break;
     
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        {ah,al} = macs( x0, x0, ah, al );
-        {ah,al} = macs( x1, x0, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(x1),"0"(ah),"1"(al));
         break;
     
         case 1:
         x0 = input_vector_X[0];
-        {ah,al} = macs( x0, x0, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(x0),"0"(ah),"1"(al));
         break;
     }
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
@@ -164,12 +166,12 @@ int xmos_dsp_vector_dotprod
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
-        {ah,al} = macs( x0, y0, ah, al );
-        {ah,al} = macs( x1, y1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(y1),"0"(ah),"1"(al));        
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[1]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
-        {ah,al} = macs( x0, y0, ah, al );
-        {ah,al} = macs( x1, y1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(y1),"0"(ah),"1"(al));
         vector_length -= 4; input_vector_X += 4; input_vector_Y += 4;
     }
     switch( vector_length )
@@ -177,24 +179,31 @@ int xmos_dsp_vector_dotprod
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
-        {ah,al} = macs( x0, y0, ah, al );
-        {ah,al} = macs( x1, y1, ah, al );
-        {ah,al} = macs( input_vector_X[2], input_vector_Y[2], ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(y1),"0"(ah),"1"(al));
+        x0 = input_vector_X[2]; y0 = input_vector_Y[2];
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
-        {ah,al} = macs( x0, y0, ah, al );
-        {ah,al} = macs( x1, y1, ah, al );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(y1),"0"(ah),"1"(al));
         break;
         case 1:
-        {ah,al} = macs( input_vector_X[0], input_vector_Y[0], ah, al );
+        x0 = input_vector_X[0]; y0 = input_vector_Y[0];
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
         break;
 
     }
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
 	return ah;
 }
+
+//MEAN    0.400000
+//POWER   0.640000
+//RMS     0.400000
+//DOTPROD 0.320000
 
 //int __TODO__xmos_dsp_vector_correlation;
 //int __TODO__xmos_dsp_vector_coherence;
