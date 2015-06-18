@@ -19,17 +19,17 @@ int xmos_dsp_math_reciprocal( int input_value, int q_format )
     int one = 1 << (2 * q_format - 32); 
     // Start with the minimum positive 32-bit fixed-point value
     int result = 0x080000000 >> (63 - 2 * q_format);
-    if( sign ) input_value = -input_value + 1;	
+    if( sign ) input_value = -input_value + 1;    
     if( q_format == 31 ) result = Q31(0.9999999999); // FIXME
     else {
-		// Approximation algorithm: x[0] = min, loop: x[k+1] = x[k] + x[k] * (1 − d * x[k])
-		for( int i = 0; i < 30; ++i ) {
-			asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(-input_value),"0"(one),"1"(1<<(q_format-1)) );
-			asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
-			asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(temp),"0"(0),"1"(1<<(q_format-1)) );
-			asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
-			result += temp;
-		}
+        // Approximation algorithm: x[0] = min, loop: x[k+1] = x[k] + x[k] * (1 − d * x[k])
+        for( int i = 0; i < 30; ++i ) {
+            asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(-input_value),"0"(one),"1"(1<<(q_format-1)) );
+            asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
+            asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(temp),"0"(0),"1"(1<<(q_format-1)) );
+            asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
+            result += temp;
+        }
     }
     if( sign ) result = -result;
     return result;

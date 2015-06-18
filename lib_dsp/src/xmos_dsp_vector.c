@@ -23,23 +23,23 @@ int xmos_dsp_vector_minimum
         if( x0 < result ) result = x0; if( x1 < result ) result = x1;
         vector_length -= 4; input_vector += 4;
     }
-	switch( vector_length )
-	{
-		case 3:
+    switch( vector_length )
+    {
+        case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 < result ) result = x0; if( x1 < result ) result = x1;
         x0 = input_vector[2];
         if( x0 < result ) result = x0;
-		break;
-		case 2:
+        break;
+        case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 < result ) result = x0; if( x1 < result ) result = x1;
-		break;
-		case 1:
+        break;
+        case 1:
         x0 = input_vector[0];
         if( x0 < result ) result = x0;
-		break;
-	}
+        break;
+    }
     return result;
 }
 
@@ -57,23 +57,23 @@ int xmos_dsp_vector_maximum
         if( x0 > result ) result = x0; if( x1 > result ) result = x1;
         vector_length -= 4; input_vector += 4;
     }
-	switch( vector_length )
-	{
-		case 3:
+    switch( vector_length )
+    {
+        case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 > result ) result = x0; if( x1 > result ) result = x1;
         x0 = input_vector[2];
         if( x0 > result ) result = x0;
-		break;
-		case 2:
+        break;
+        case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 > result ) result = x0; if( x1 > result ) result = x1;
-		break;
-		case 1:
+        break;
+        case 1:
         x0 = input_vector[0];
         if( x0 > result ) result = x0;
-		break;
-	}
+        break;
+    }
     return result;
 }
 
@@ -144,23 +144,23 @@ void xmos_dsp_vector_adds
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-	switch( vector_length )
-	{
-		case 3:
+    switch( vector_length )
+    {
+        case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x1 += input_scalar_A; x0 += input_scalar_A;
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         result_vector_R[2] = input_vector_X[2] + input_scalar_A;
-		break;
-		case 2:
+        break;
+        case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x1 += input_scalar_A; x0 += input_scalar_A;
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-		break;
-		case 1:
+        break;
+        case 1:
         result_vector_R[0] = input_vector_X[0] + input_scalar_A;
-		break;
-	}
+        break;
+    }
 }
 
 // Vector / scalar multiplication (R = X * a)
@@ -199,10 +199,10 @@ void xmos_dsp_vector_muls
         
         vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-	switch( vector_length )
-	{
-		case 3:
-		
+    switch( vector_length )
+    {
+        case 3:
+        
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
         asm("lextract %0,%1,%2,%3,32": "=r"(x0):"r"(ah),"r"(al),"r"(q_format));
@@ -212,25 +212,25 @@ void xmos_dsp_vector_muls
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input_vector_X[2]),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
         asm("lextract %0,%1,%2,%3,32": "=r"(x0):"r"(ah),"r"(al),"r"(q_format));
         result_vector_R[2] = x0;
-		break;
-		
-		case 2:
-		
+        break;
+        
+        case 2:
+        
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
         asm("lextract %0,%1,%2,%3,32": "=r"(x0):"r"(ah),"r"(al),"r"(q_format));
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
         asm("lextract %0,%1,%2,%3,32": "=r"(x1):"r"(ah),"r"(al),"r"(q_format));
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-		break;
-		
-		case 1:
-		
+        break;
+        
+        case 1:
+        
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input_vector_X[0]),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
         asm("lextract %0,%1,%2,%3,32":"=r"(x0):"r"(ah),"r"(al),"r"(q_format));
         result_vector_R[0] = x0;
-		break;
-	}
+        break;
+    }
 }
 
 // Vector / vector addition (R = X + Y)

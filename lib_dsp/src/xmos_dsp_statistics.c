@@ -197,7 +197,7 @@ int xmos_dsp_vector_dotprod
 
     }
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
-	return ah;
+    return ah;
 }
 
 //MEAN    0.400000

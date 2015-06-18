@@ -28,7 +28,7 @@ int xmos_dsp_fir
     register int ah = 0, b0, b1, s0 = input_sample, s1, s2, s3;
     register unsigned int al = 1 << (q_format-1);
     
-	while( tap_count >= 20 )
+    while( tap_count >= 20 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
         asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(state_data));

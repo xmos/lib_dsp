@@ -11,9 +11,9 @@
 
 int xmos_dsp_math_multiply
 (
-	int input1_value,
-	int input2_value,
-	int q_format
+    int input1_value,
+    int input2_value,
+    int q_format
 );
 
 // Compute reciprocal
