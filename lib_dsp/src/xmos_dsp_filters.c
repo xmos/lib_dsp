@@ -16,7 +16,7 @@
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_fir
+int xmos_dsp_filters_fir
 (
     int        input_sample,
     const int* filter_coeffs,
@@ -730,7 +730,7 @@ int xmos_dsp_fir
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_iir_biquad
+int xmos_dsp_filters_biquad
 (
     int        input_sample,
     const int* filter_coeffs,
@@ -767,7 +767,7 @@ int xmos_dsp_iir_biquad
 //
 // return value:    Resulting filter output sample
 
-int xmos_dsp_cascaded_iir_biquad( int input_sample, const int* filter_coeffs, int* state_data, int nn, int q_format )
+int xmos_dsp_filters_biquads( int input_sample, const int* filter_coeffs, int* state_data, int nn, int q_format )
 {
     register unsigned al; register int ah, b0,b1, s1,s2;
     for( ;; )

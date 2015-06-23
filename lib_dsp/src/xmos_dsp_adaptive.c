@@ -4,7 +4,7 @@
 #include "xmos_dsp_filters.h"
 #include "xmos_dsp_vector.h"
 #include "xmos_dsp_statistics.h"
-#include "xmos_dsp_filters2.h"
+#include "xmos_dsp_adaptive.h"
 
 // LMS filter
 //
@@ -20,7 +20,7 @@
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_lms
+int xmos_dsp_adaptive_lms
 (
     int  input_sample,
     int  reference_sample,
@@ -37,7 +37,7 @@ int xmos_dsp_lms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = xmos_dsp_filters_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -67,7 +67,7 @@ int xmos_dsp_lms
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_nlms
+int xmos_dsp_adaptive_nlms
 (
     int  input_sample,
     int  reference_sample,
@@ -84,7 +84,7 @@ int xmos_dsp_nlms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = xmos_dsp_filters_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]

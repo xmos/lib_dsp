@@ -12,13 +12,13 @@
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_fir
+int xmos_dsp_filters_fir
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        tap_count,
-    int        q_format
+    int       input_sample,
+    const int filter_coeffs[],
+    int       state_data[],
+    int       tap_count,
+    int       q_format
 );
 
 // Biquadratic IIR filter (direct form I)
@@ -31,12 +31,12 @@ int xmos_dsp_fir
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_iir_biquad
+int xmos_dsp_filters_biquad
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        q_format
+    int       input_sample,
+    const int filter_coeffs[],
+    int       state_data[],
+    int       q_format
 );
 
 // Cascaded biquadratic IIR filter (direct form I)
@@ -51,13 +51,13 @@ int xmos_dsp_iir_biquad
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_cascaded_iir_biquad
+int xmos_dsp_filters_biquads
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        num_sections,
-    int        q_format
+    int       input_sample,
+    const int filter_coeffs[],
+    int       state_data[],
+    int       num_sections,
+    int       q_format
 );
 
 #endif

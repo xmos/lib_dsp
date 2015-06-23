@@ -119,6 +119,49 @@ void xmos_dsp_vector_negate
     }
 }
 
+// Vector absolute value (R = |X|)
+//
+// 'result_vector_R': Pointer to the resulting data array
+// 'input_vector_X':  Pointer/reference to source data
+// 'vector_length':   Length of the input and output vectors
+
+void xmos_dsp_vector_abs
+(
+    int*       result_vector_R,
+    const int* input_vector_X,
+    int        vector_length
+) {
+    register int x1, x0;
+    while( vector_length >= 4 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
+    }
+    switch( vector_length )
+    {
+        case 3:
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        if( x0 < 0 ) x0 = -x0;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        result_vector_R[2] = -input_vector_X[2];
+        break;
+        case 2:
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        if( x0 < 0 ) x0 = -x0;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        break;
+        case 1:
+        result_vector_R[0] = -input_vector_X[0];
+        break;
+    }
+}
+
+
 // Vector / scalar addition (R = X + a)
 //
 // 'result_vector_R': Pointer to the resulting data array

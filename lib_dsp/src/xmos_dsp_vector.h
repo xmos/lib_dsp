@@ -10,14 +10,14 @@
 
 int xmos_dsp_vector_minimum
 (
-    const int* input_vector,
-    int        vector_length
+    const int input_vector[],
+    int       vector_length
 );
 
 int xmos_dsp_vector_maximum
 (
-    const int* input_vector,
-    int        vector_length
+    const int input_vector[],
+    int       vector_length
 );
 
 // Vector negation (R = -X)
@@ -28,9 +28,22 @@ int xmos_dsp_vector_maximum
 
 void xmos_dsp_vector_negate
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    int        vector_length
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       vector_length
+);
+
+// Vector absolute value (R = |X|)
+//
+// 'result_vector_R': Pointer to the resulting data array
+// 'input_vector_X':  Pointer/reference to source data
+// 'vector_length':   Length of the input and output vectors
+
+void xmos_dsp_vector_abs
+(
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       vector_length
 );
 
 // Vector / scalar addition (R = X + a)
@@ -42,10 +55,10 @@ void xmos_dsp_vector_negate
 
 void xmos_dsp_vector_adds
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    int        scalar_value_A,
-    int        vector_length
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       scalar_value_A,
+    int       vector_length
 );
 
 // Vector / scalar multiplication (R = X * a)
@@ -58,11 +71,11 @@ void xmos_dsp_vector_adds
 
 void xmos_dsp_vector_muls
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    int        scalar_value_A,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       scalar_value_A,
+    int       vector_length,
+    int       q_format
 );
 
 // Vector / vector addition (R = X + Y)
@@ -74,10 +87,10 @@ void xmos_dsp_vector_muls
 
 void xmos_dsp_vector_addv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        vector_length
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    int       vector_length
 );
 
 // Vector / vector subtraction (R = X - Y)
@@ -89,10 +102,10 @@ void xmos_dsp_vector_addv
 
 void xmos_dsp_vector_subv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        vector_length
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    int       vector_length
 );
 
 // Vector / vector multiplication (R = X * Y)
@@ -105,11 +118,11 @@ void xmos_dsp_vector_subv
 
 void xmos_dsp_vector_mulv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector multiplication and scalar addition (R = X * Y + a)
@@ -123,12 +136,12 @@ void xmos_dsp_vector_mulv
 
 void xmos_dsp_vector_mulv_adds
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        input_scalar_A,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    int       input_scalar_A,
+    int       vector_length,
+    int       q_format
 );
 
 // Scalar multiplication and vector addition (R = a * X + Y)
@@ -142,12 +155,12 @@ void xmos_dsp_vector_mulv_adds
 
 void xmos_dsp_vector_muls_addv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    int        input_scalar_A,
-    const int* input_vector_Y,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       input_scalar_A,
+    const int input_vector_Y[],
+    int       vector_length,
+    int       q_format
 );
 
 // Scalar multiplication and vector subtraction (R = a * X - Y)
@@ -161,12 +174,12 @@ void xmos_dsp_vector_muls_addv
 
 void xmos_dsp_vector_muls_subv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    int        input_scalar_A,
-    const int* input_vector_Y,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    int       input_scalar_A,
+    const int input_vector_Y[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector multiplication and vector addition (R = X * Y + Z)
@@ -180,12 +193,12 @@ void xmos_dsp_vector_muls_subv
 
 void xmos_dsp_vector_mulv_addv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    const int* input_vector_Z,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    const int input_vector_Z[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector multiplication and vector addition (R = X * Y - Z)
@@ -199,12 +212,12 @@ void xmos_dsp_vector_mulv_addv
 
 void xmos_dsp_vector_mulv_subv
 (
-    int*       result_vector_R,
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    const int* input_vector_Z,
-    int        vector_length,
-    int        q_format
+    int       result_vector_R[],
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    const int input_vector_Z[],
+    int       vector_length,
+    int       q_format
 );
 
 #endif

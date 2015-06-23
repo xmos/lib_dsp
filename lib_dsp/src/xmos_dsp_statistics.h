@@ -9,9 +9,9 @@
 
 int xmos_dsp_vector_mean
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int input_vector_X[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector power: result = X[0]^2 + ... X[N-1]^2
@@ -22,9 +22,9 @@ int xmos_dsp_vector_mean
 
 int xmos_dsp_vector_power
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int input_vector_X[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector root mean square: result = ((X[0]^2 + ... + X[N-1]^2) / N) ^ 0.5)
@@ -35,9 +35,9 @@ int xmos_dsp_vector_power
 
 int xmos_dsp_vector_rms
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int input_vector_X[],
+    int       vector_length,
+    int       q_format
 );
 
 // Vector dot product: result = X[0] * Y[0] + ... X[N-1] * Y[N-1]
@@ -49,10 +49,10 @@ int xmos_dsp_vector_rms
 
 int xmos_dsp_vector_dotprod
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        vector_length,
-    int        q_format
+    const int input_vector_X[],
+    const int input_vector_Y[],
+    int       vector_length,
+    int       q_format
 );
 
 #endif

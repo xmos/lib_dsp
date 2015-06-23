@@ -1,5 +1,5 @@
-#ifndef XMOS_DSP_FILTERS2
-#define XMOS_DSP_FILTERS2
+#ifndef XMOS_DSP_ADAPTIVE
+#define XMOS_DSP_ADAPTIVE
 
 // LMS filter
 //
@@ -15,16 +15,16 @@
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_lms
+int xmos_dsp_adaptive_lms
 (
-    int  input_sample,
-    int  reference_sample,
-    int* error_sample,
-    int* filter_coeffs,
-    int* state_data,
-    int  tap_count,
-    int  step_size,
-    int  q_format
+    int input_sample,
+    int reference_sample,
+    int error_sample[],
+    int filter_coeffs[],
+    int state_data[],
+    int tap_count,
+    int step_size,
+    int q_format
 );
 
 // Normalized LMS filter
@@ -41,16 +41,16 @@ int xmos_dsp_lms
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_nlms
+int xmos_dsp_adaptive_nlms
 (
-    int  input_sample,
-    int  reference_sample,
-    int* error_sample,
-    int* filter_coeffs,
-    int* state_data,
-    int  tap_count,
-    int  step_size,
-    int  q_format
+    int input_sample,
+    int reference_sample,
+    int error_sample[],
+    int filter_coeffs[],
+    int state_data[],
+    int tap_count,
+    int step_size,
+    int q_format
 );
 
 #endif

@@ -10,10 +10,10 @@
 
 void xmos_dsp_matrix_negate
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    int        row_count,
-    int        column_count
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    int       row_count,
+    int       column_count
 );
 
 // Matrix / scalar addition (R = X + a)
@@ -26,11 +26,11 @@ void xmos_dsp_matrix_negate
 
 void xmos_dsp_matrix_adds
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    int        scalar_value_A,
-    int        row_count,
-    int        column_count
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    int       scalar_value_A,
+    int       row_count,
+    int       column_count
 );
 
 // Matrix / scalar multiplication (R = X * a)
@@ -44,12 +44,12 @@ void xmos_dsp_matrix_adds
 
 void xmos_dsp_matrix_muls
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    int        scalar_value_A,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    int       scalar_value_A,
+    int       row_count,
+    int       column_count,
+    int       q_format
 );
 
 // Matrix / matrix addition (R = X + Y)
@@ -62,11 +62,11 @@ void xmos_dsp_matrix_muls
 
 void xmos_dsp_matrix_addm
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int        row_count,
-    int        column_count
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    const int input_matrix_Y[],
+    int       row_count,
+    int       column_count
 );
 
 // Matrix / matrix subtraction (R = X - Y)
@@ -79,11 +79,11 @@ void xmos_dsp_matrix_addm
 
 void xmos_dsp_matrix_subm
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int        row_count,
-    int        column_count
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    const int input_matrix_Y[],
+    int       row_count,
+    int       column_count
 );
 
 // Matrix / matrix multiplication (R = X * Y)
@@ -97,12 +97,12 @@ void xmos_dsp_matrix_subm
 
 void xmos_dsp_matrix_mulm
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    const int input_matrix_Y[],
+    int       row_count,
+    int       column_count,
+    int       q_format
 );
 
 // Matrix inversion
@@ -115,11 +115,11 @@ void xmos_dsp_matrix_mulm
 
 void __TODO__xmos_dsp_matrix_invert
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    int       row_count,
+    int       column_count,
+    int       q_format
 );
 
 // Matrix transposition
@@ -132,11 +132,11 @@ void __TODO__xmos_dsp_matrix_invert
 
 void xmos_dsp_matrix_transpose
 (
-    int*       result_matrix_R,
-    const int* input_matrix_X,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    int       result_matrix_R[],
+    const int input_matrix_X[],
+    int       row_count,
+    int       column_count,
+    int       q_format
 );
 
 #endif
