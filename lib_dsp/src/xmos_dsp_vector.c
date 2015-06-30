@@ -2,19 +2,19 @@
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_vector.h"
 
-// Vector minimum/maximum
+// Locate the vector's first occurring minimum value
 //
-// 'input_vector':  Pointer to source data array
-// 'vector_length': Length of the output and input arrays
+// 'input_vector':  Pointer to source data array.
+// 'vector_length': Length of the output and input arrays.
 //
-// return value:     Array index where first minimum or maximum value occurs
+// return value:     Array index where first minimum value occurs.
 
 int xmos_dsp_vector_minimum
 (
     const int* input_vector,
     int        vector_length
 ) {
-    register int x1, x0, result = 0;
+    int x1, x0, result = 0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
@@ -42,13 +42,20 @@ int xmos_dsp_vector_minimum
     }
     return result;
 }
+
+// Locate the vector's first occurring maximum value
+//
+// 'input_vector':  Pointer to source data array.
+// 'vector_length': Length of the output and input arrays.
+//
+// return value:     Array index where first maximum value occurs.
 
 int xmos_dsp_vector_maximum
 (
     const int* input_vector,
     int        vector_length
 ) {
-    register int x1, x0, result = 0;
+    int x1, x0, result = 0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
@@ -77,11 +84,11 @@ int xmos_dsp_vector_maximum
     return result;
 }
 
-// Vector negation (R = -X)
+// Vector negation: R = -X
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_negate
 (
@@ -89,7 +96,7 @@ void xmos_dsp_vector_negate
     const int* input_vector_X,
     int        vector_length
 ) {
-    register int x1, x0;
+    int x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -119,11 +126,11 @@ void xmos_dsp_vector_negate
     }
 }
 
-// Vector absolute value (R = |X|)
+// Vector absolute value: R = |X|
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_abs
 (
@@ -131,7 +138,7 @@ void xmos_dsp_vector_abs
     const int* input_vector_X,
     int        vector_length
 ) {
-    register int x1, x0;
+    int x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -162,12 +169,12 @@ void xmos_dsp_vector_abs
 }
 
 
-// Vector / scalar addition (R = X + a)
+// Vector / scalar addition: R = X + a
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
-// 'input_scalar_A':  Scalar value to add to each 'input' element
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data.
+// 'input_scalar_A':  Scalar value to add to each 'input' element.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_adds
 (
@@ -176,7 +183,7 @@ void xmos_dsp_vector_adds
     int        input_scalar_A,
     int        vector_length
 ) {
-    register int x1, x0;
+    int x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -206,13 +213,13 @@ void xmos_dsp_vector_adds
     }
 }
 
-// Vector / scalar multiplication (R = X * a)
+// Vector / scalar multiplication: R = X * a
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data X
-// 'input_scalar_A':  Scalar value to multiply each 'input' element by
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data X.
+// 'input_scalar_A':  Scalar value to multiply each 'input' element by.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_muls
 (
@@ -222,7 +229,7 @@ void xmos_dsp_vector_muls
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0; register unsigned al;
+    int ah, x1, x0; unsigned al;
     
     while( vector_length >= 4 )
     {
@@ -276,12 +283,12 @@ void xmos_dsp_vector_muls
     }
 }
 
-// Vector / vector addition (R = X + Y)
+// Vector / vector addition: R = X + Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_addv
 (
@@ -290,7 +297,7 @@ void xmos_dsp_vector_addv
     const int* input_vector_Y,
     int        vector_length
 ) {
-    register int x1, x0, y1, y0;
+    int x1, x0, y1, y0;
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -316,7 +323,7 @@ void xmos_dsp_vector_addv
         *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
 }
 
-// Vector / vector subtraction (R = X - Y)
+// Vector / vector subtraction: R = X - Y
 //
 // 'result_vector_R': Pointer to the resulting data array
 // 'input_vector_X':  Pointer to source data array X
@@ -330,7 +337,7 @@ void xmos_dsp_vector_subv
     const int* input_vector_Y,
     int        vector_length
 ) {
-    register int x1, x0, y1, y0;
+    int x1, x0, y1, y0;
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -356,13 +363,13 @@ void xmos_dsp_vector_subv
         *result_vector_R++ = *input_vector_X++ - *input_vector_Y++;
 }
 
-// Vector / vector multiplication (R = X * Y)
+// Vector / vector multiplication: R = X * Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv
 (
@@ -372,7 +379,7 @@ void xmos_dsp_vector_mulv
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0; register unsigned al;
+    int ah, x1, x0, y1, y0; unsigned al;
     
     // Q24 * Q24 = Q48 -> Q24  (24 = 24+24-24)
     // iiiiiiii,iiiiiiii,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff
@@ -436,14 +443,14 @@ void xmos_dsp_vector_mulv
     }
 }
 
-// Vector multiplication and scalar addition (R = X * Y + a)
+// Vector multiplication and scalar addition: R = X * Y + a
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'input_scalar_A':  Scalar value to add to each X*Y result
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'input_scalar_A':  Scalar value to add to each X*Y result.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_adds
 (
@@ -454,7 +461,7 @@ void xmos_dsp_vector_mulv_adds
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0; register unsigned al;    
+    int ah, x1, x0, y1, y0; unsigned al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -505,14 +512,14 @@ void xmos_dsp_vector_mulv_adds
     }
 }
 
-// Scalar multiplication and vector addition (R = a * X + Y)
+// Scalar multiplication and vector addition: R = a * X + Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_scalar_A':  Scalar value to multiply each 'input' element by
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_scalar_A':  Scalar value to multiply each 'input' element by.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_muls_addv
 (
@@ -523,7 +530,7 @@ void xmos_dsp_vector_muls_addv
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0; register unsigned al;    
+    int ah, x1, x0, y1, y0; unsigned al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -574,14 +581,14 @@ void xmos_dsp_vector_muls_addv
     }
 }
 
-// Scalar multiplication and vector subtraction (R = a * X - Y)
+// Scalar multiplication and vector subtraction: R = a * X - Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_scalar_A':  Scalar value to multiply each 'input' element by
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_scalar_A':  Scalar value to multiply each 'input' element by.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_muls_subv
 (
@@ -592,7 +599,7 @@ void xmos_dsp_vector_muls_subv
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0; register unsigned al;    
+    int ah, x1, x0, y1, y0; unsigned al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -643,14 +650,14 @@ void xmos_dsp_vector_muls_subv
     }
 }
 
-// Vector multiplication and vector addition (R = X * Y + Z)
+// Vector multiplication and vector addition: R = X * Y + Z
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'input_vector_Z':  Pointer to source data array Z
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'input_vector_Z':  Pointer to source data array Z.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_addv
 (
@@ -661,7 +668,7 @@ void xmos_dsp_vector_mulv_addv
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0, z1, z0; register unsigned al;    
+    int ah, x1, x0, y1, y0, z1, z0; unsigned al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -716,13 +723,13 @@ void xmos_dsp_vector_mulv_addv
     }
 }
 
-// Vector multiplication and vector addition (R = X * Y - Z)
+// Vector multiplication and vector addition: R = X * Y - Z
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'input_vector_Z':  Pointer to source data array Z
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'input_vector_Z':  Pointer to source data array Z.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_subv
 (
@@ -733,7 +740,7 @@ void xmos_dsp_vector_mulv_subv
     int        vector_length,
     int        q_format
 ) {
-    register int ah, x1, x0, y1, y0, z1, z0; register unsigned al;    
+    int ah, x1, x0, y1, y0, z1, z0; unsigned al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));

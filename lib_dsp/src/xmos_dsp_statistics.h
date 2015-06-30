@@ -3,9 +3,9 @@
 
 // Vector mean: result = (X[0] + ... X[N-1]) / N
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_mean
 (
@@ -14,11 +14,11 @@ int xmos_dsp_vector_mean
     int       q_format
 );
 
-// Vector power: result = X[0]^2 + ... X[N-1]^2
+// Vector power (sum of squares): result = X[0]^2 + ... X[N-1]^2
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_power
 (
@@ -29,9 +29,9 @@ int xmos_dsp_vector_power
 
 // Vector root mean square: result = ((X[0]^2 + ... + X[N-1]^2) / N) ^ 0.5)
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length (N) of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length (N) of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_rms
 (
@@ -42,10 +42,10 @@ int xmos_dsp_vector_rms
 
 // Vector dot product: result = X[0] * Y[0] + ... X[N-1] * Y[N-1]
 //
-// 'input_vector_X': Pointer to source data array X
-// 'input_vector_Y': Pointer to source data array Y
-// 'vector_length':  Length of the input vectors
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'input_vector_Y': Pointer to source data array Y.
+// 'vector_length':  Length of the input vectors.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_dotprod
 (

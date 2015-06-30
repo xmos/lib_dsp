@@ -4,7 +4,7 @@
 // LMS filter
 //
 // 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample
+// 'reference_sample': Reference sample.
 // 'error_sample':     Pointer to resulting error sample (error = reference - output)
 // 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
 // 'state_data':       Pointer to FIR filter state data array of length N.
@@ -17,7 +17,7 @@
 
 int xmos_dsp_adaptive_lms
 (
-    int input_sample,
+    int source_sample,
     int reference_sample,
     int error_sample[],
     int filter_coeffs[],
@@ -30,7 +30,7 @@ int xmos_dsp_adaptive_lms
 // Normalized LMS filter
 //
 // 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample
+// 'reference_sample': Reference sample.
 // 'error_sample':     Pointer to resulting error sample (error = reference - output)
 // 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
 // 'state_data':       Pointer to FIR filter state data array of length N.
@@ -43,7 +43,7 @@ int xmos_dsp_adaptive_lms
 
 int xmos_dsp_adaptive_nlms
 (
-    int input_sample,
+    int source_sample,
     int reference_sample,
     int error_sample[],
     int filter_coeffs[],

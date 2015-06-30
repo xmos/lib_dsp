@@ -5,9 +5,9 @@
 
 // Vector sum: result = X[0] + ... X[N-1]
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_abs_sum
 (
@@ -15,7 +15,7 @@ int xmos_dsp_vector_abs_sum
     int        vector_length,
     int        q_format
 ) {
-    register int ah=0, x1, x0; register unsigned al=0;
+    int ah=0, x1, x0; unsigned al=0;
     
     while( vector_length >= 4 )
     {
@@ -58,27 +58,26 @@ int xmos_dsp_vector_abs_sum
 
 // Vector mean: result = (X[0] + ... X[N-1]) / N
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_mean
 (
     const int* input_vector_X,
     int        vector_length,
     int        q_format
-)
-{
+) {
     int divide_by_N = xmos_dsp_math_reciprocal( vector_length << q_format, q_format );
     int vectort_sum = xmos_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
     return xmos_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
 }
 
-// Vector power: result = X[0]^2 + ... X[N-1]^2
+// Vector power (sum of squares): result = X[0]^2 + ... X[N-1]^2
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_power
 (
@@ -86,7 +85,7 @@ int xmos_dsp_vector_power
     int        vector_length,
     int        q_format
 ) {
-    register int ah=0, x1, x0; register unsigned al=0;
+    int ah=0, x1, x0; unsigned al=0;
     unsigned int ii = -4, len = vector_length;
     
     while( len > 0 ) {++ii; len /= 2;}
@@ -127,17 +126,16 @@ int xmos_dsp_vector_power
 
 // Vector root mean square: result = ((X[0]^2 + ... X[N-1]^2) / N) ^ 0.5)
 //
-// 'input_vector_X': Pointer to source data array X
-// 'vector_length':  Length (N) of the input vector
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'vector_length':  Length (N) of the input vector.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_rms
 (
     const int* input_vector_X,
     int        vector_length,
     int        q_format
-)
-{
+) {
     int divide_by_N = xmos_dsp_math_reciprocal( vector_length << q_format,     q_format );
     int vectort_pwr = xmos_dsp_vector_power   ( input_vector_X, vector_length, q_format );
     int mean_square = xmos_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
@@ -147,10 +145,10 @@ int xmos_dsp_vector_rms
 
 // Vector dot product: return = X[0] * Y[0] + ... X[N-1] * Y[N-1]
 //
-// 'input_vector_X': Pointer to source data array X
-// 'input_vector_Y': Pointer to source data array Y
-// 'vector_length':  Length of the input vectors
-// 'q_format':       Fixed point format, the number of bits making up fractional part
+// 'input_vector_X': Pointer to source data array X.
+// 'input_vector_Y': Pointer to source data array Y.
+// 'vector_length':  Length of the input vectors.
+// 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 int xmos_dsp_vector_dotprod
 (
@@ -159,8 +157,8 @@ int xmos_dsp_vector_dotprod
     int        vector_length,
     int        q_format
 ) {    
-    register int ah = 0, x1, x0, y1, y0;
-    register unsigned al = 1 << (q_format-1);
+    int ah = 0, x1, x0, y1, y0;
+    unsigned al = 1 << (q_format-1);
     
     while( vector_length >= 4 )
     {

@@ -9,7 +9,7 @@
 // LMS filter
 //
 // 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample
+// 'reference_sample': Reference sample.
 // 'error_sample':     Pointer to resulting error sample (error = reference - output)
 // 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
 // 'state_data':       Pointer to FIR filter state data array of length N.
@@ -22,7 +22,7 @@
 
 int xmos_dsp_adaptive_lms
 (
-    int  input_sample,
+    int  source_sample,
     int  reference_sample,
     int* error_sample,
     int* filter_coeffs,
@@ -30,14 +30,13 @@ int xmos_dsp_adaptive_lms
     int  tap_count,
     int  step_size,
     int  q_format
-)
-{
+) {
     int output_sample, mu_err;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_filters_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = xmos_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -56,7 +55,7 @@ int xmos_dsp_adaptive_lms
 // Normalized LMS filter
 //
 // 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample
+// 'reference_sample': Reference sample.
 // 'error_sample':     Pointer to resulting error sample (error = reference - output)
 // 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
 // 'state_data':       Pointer to FIR filter state data array of length N.
@@ -69,7 +68,7 @@ int xmos_dsp_adaptive_lms
 
 int xmos_dsp_adaptive_nlms
 (
-    int  input_sample,
+    int  source_sample,
     int  reference_sample,
     int* error_sample,
     int* filter_coeffs,
@@ -77,14 +76,13 @@ int xmos_dsp_adaptive_nlms
     int  tap_count,
     int  step_size,
     int  q_format
-)
-{
+) {
     int output_sample, mu_err_egy, energy;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_filters_fir( input_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = xmos_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -93,8 +91,10 @@ int xmos_dsp_adaptive_nlms
     
     // Compute the instantaneous enegry: E = x[n]^2 + x[n-1]^2 + ... + x[n-N+1]^2
     energy = xmos_dsp_vector_power( state_data, tap_count, q_format );
+    //printf( "E = %08x %f\n", energy, F31(energy) );
     
     // mu_err_egy = error * mu / energy
+    // <FIXME>: Reciprocal causes overflow, example 1 / Q31(0.032)
     energy     = xmos_dsp_math_reciprocal( energy, q_format );
     mu_err_egy = xmos_dsp_math_multiply  ( *error_sample, step_size, q_format );
     mu_err_egy = xmos_dsp_math_multiply  ( energy, mu_err_egy, q_format );

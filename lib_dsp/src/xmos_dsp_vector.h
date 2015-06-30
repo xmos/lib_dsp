@@ -1,12 +1,12 @@
 #ifndef XMOS_DSP_VECTOR
 #define XMOS_DSP_VECTOR
 
-// Vector minimum/maximum
+// Locate the vector's first occurring minimum value
 //
-// 'input_vector':  Pointer to source data array
-// 'vector_length': Length of the output and input arrays
+// 'input_vector':  Pointer to source data array.
+// 'vector_length': Length of the output and input arrays.
 //
-// return value:     Array index where first minimum or maximum value occurs
+// return value:     Array index where first minimum value occurs.
 
 int xmos_dsp_vector_minimum
 (
@@ -14,17 +14,24 @@ int xmos_dsp_vector_minimum
     int       vector_length
 );
 
+// Locate the vector's first occurring maximum value
+//
+// 'input_vector':  Pointer to source data array.
+// 'vector_length': Length of the output and input arrays.
+//
+// return value:     Array index where first maximum value occurs.
+
 int xmos_dsp_vector_maximum
 (
     const int input_vector[],
     int       vector_length
 );
 
-// Vector negation (R = -X)
+// Vector negation: R = -X
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_negate
 (
@@ -33,11 +40,11 @@ void xmos_dsp_vector_negate
     int       vector_length
 );
 
-// Vector absolute value (R = |X|)
+// Vector absolute value: R = |X|
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_abs
 (
@@ -46,10 +53,10 @@ void xmos_dsp_vector_abs
     int       vector_length
 );
 
-// Vector / scalar addition (R = X + a)
+// Vector / scalar addition: R = X + a
 //
 // 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data
+// 'input_vector_X':  Pointer/reference to source data array X
 // 'scalar_value_A':  Scalar value to add to each 'input' element
 // 'vector_length':   Length of the input and output vectors
 
@@ -61,13 +68,13 @@ void xmos_dsp_vector_adds
     int       vector_length
 );
 
-// Vector / scalar multiplication (R = X * a)
+// Vector / scalar multiplication: R = X * a
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer/reference to source data X
-// 'scalar_value_A':  Scalar value to multiply each 'input' element by
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer/reference to source data array X.
+// 'scalar_value_A':  Scalar value to multiply each 'input' element by.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_muls
 (
@@ -78,12 +85,12 @@ void xmos_dsp_vector_muls
     int       q_format
 );
 
-// Vector / vector addition (R = X + Y)
+// Vector / vector addition: R = X + Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_addv
 (
@@ -93,12 +100,12 @@ void xmos_dsp_vector_addv
     int       vector_length
 );
 
-// Vector / vector subtraction (R = X - Y)
+// Vector / vector subtraction: R = X - Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
 
 void xmos_dsp_vector_subv
 (
@@ -108,13 +115,13 @@ void xmos_dsp_vector_subv
     int       vector_length
 );
 
-// Vector / vector multiplication (R = X * Y)
+// Vector / vector multiplication: R = X * Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv
 (
@@ -127,12 +134,12 @@ void xmos_dsp_vector_mulv
 
 // Vector multiplication and scalar addition (R = X * Y + a)
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'scalar_value_A':  Scalar value to add to each X*Y result
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'scalar_value_A':  Scalar value to add to each X*Y result.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_adds
 (
@@ -144,11 +151,11 @@ void xmos_dsp_vector_mulv_adds
     int       q_format
 );
 
-// Scalar multiplication and vector addition (R = a * X + Y)
+// Scalar multiplication and vector addition: R = a * X + Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_scalar_A':  Scalar value to multiply each 'input' element by
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_scalar_A':  Scalar value to multiply each 'input' element by.
 // 'input_vector_Y':  Pointer to source data array Y
 // 'vector_length':   Length of the input and output vectors
 // 'q_format':        Fixed point format, the number of bits making up fractional part
@@ -163,14 +170,14 @@ void xmos_dsp_vector_muls_addv
     int       q_format
 );
 
-// Scalar multiplication and vector subtraction (R = a * X - Y)
+// Scalar multiplication and vector subtraction: R = a * X - Y
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_scalar_A':  Scalar value to multiply each 'input' element by
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_scalar_A':  Scalar value to multiply each 'input' element by.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_muls_subv
 (
@@ -182,14 +189,14 @@ void xmos_dsp_vector_muls_subv
     int       q_format
 );
 
-// Vector multiplication and vector addition (R = X * Y + Z)
+// Vector multiplication and vector addition: R = X * Y + Z
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'input_vector_Z':  Pointer to source data array Z
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'input_vector_Z':  Pointer to source data array Z.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_addv
 (
@@ -201,14 +208,14 @@ void xmos_dsp_vector_mulv_addv
     int       q_format
 );
 
-// Vector multiplication and vector addition (R = X * Y - Z)
+// Vector multiplication and vector addition: R = X * Y - Z
 //
-// 'result_vector_R': Pointer to the resulting data array
-// 'input_vector_X':  Pointer to source data array X
-// 'input_vector_Y':  Pointer to source data array Y
-// 'input_vector_Z':  Pointer to source data array Z
-// 'vector_length':   Length of the input and output vectors
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_vector_R': Pointer to the resulting data array.
+// 'input_vector_X':  Pointer to source data array X.
+// 'input_vector_Y':  Pointer to source data array Y.
+// 'input_vector_Z':  Pointer to source data array Z.
+// 'vector_length':   Length of the input and output vectors.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_vector_mulv_subv
 (

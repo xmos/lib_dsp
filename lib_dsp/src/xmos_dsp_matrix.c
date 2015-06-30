@@ -3,12 +3,12 @@
 #include "xmos_dsp_vector.h"
 #include "xmos_dsp_matrix.h"
 
-// Matrix negation (R = -X)
+// Matrix negation: R = -X
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer/reference to source data
-// 'row_count':       Number of rows in input matrix
-// 'column_count':    Number of columns in input matrix
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array.
+// 'row_count':       Number of rows in input matrix.
+// 'column_count':    Number of columns in input matrix.
 
 void xmos_dsp_matrix_negate
 (
@@ -16,18 +16,17 @@ void xmos_dsp_matrix_negate
     const int* input_matrix_X,
     int        row_count,
     int        column_count
-)
-{
+) {
     xmos_dsp_vector_negate( result_matrix_R, input_matrix_X, row_count * column_count );
 }
 
-// Matrix / scalar addition (R = X + a)
+// Matrix / scalar addition: R = X + a
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer/reference to source data
-// 'scalar_value_A':  Scalar value to add to each 'input' element
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array.
+// 'scalar_value_A':  Scalar value to add to each 'input' element.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
 
 void xmos_dsp_matrix_adds
 (
@@ -36,8 +35,7 @@ void xmos_dsp_matrix_adds
     int        scalar_value_A,
     int        row_count,
     int        column_count
-)
-{
+) {
     xmos_dsp_vector_adds
     (
         result_matrix_R,
@@ -47,14 +45,14 @@ void xmos_dsp_matrix_adds
     );
 }
 
-// Matrix / scalar multiplication (R = X * a)
+// Matrix / scalar multiplication: R = X * a
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer/reference to source data X
-// 'scalar_value_A':  Scalar value to multiply each 'input' element by
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array X.
+// 'scalar_value_A':  Scalar value to multiply each 'input' element by.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_matrix_muls
 (
@@ -64,8 +62,7 @@ void xmos_dsp_matrix_muls
     int        row_count,
     int        column_count,
     int        q_format
-)
-{
+) {
     xmos_dsp_vector_muls
     (
         result_matrix_R,
@@ -76,13 +73,13 @@ void xmos_dsp_matrix_muls
     );
 }
 
-// Matrix / matrix addition (R = X + Y)
+// Matrix / matrix addition: R = X + Y
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer to source data array X
-// 'input_matrix_Y':  Pointer to source data array Y
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array X.
+// 'input_matrix_Y':  Pointer to source data array Y.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
 
 void xmos_dsp_matrix_addm
 (
@@ -91,8 +88,7 @@ void xmos_dsp_matrix_addm
     const int* input_matrix_Y,
     int        row_count,
     int        column_count
-)
-{
+) {
     xmos_dsp_vector_addv
     (
         result_matrix_R,
@@ -102,13 +98,13 @@ void xmos_dsp_matrix_addm
     );
 }
 
-// Matrix / matrix subtraction (R = X - Y)
+// Matrix / matrix subtraction: R = X - Y
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer to source data array X
-// 'input_matrix_Y':  Pointer to source data array Y
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array X.
+// 'input_matrix_Y':  Pointer to source data array Y.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
 
 void xmos_dsp_matrix_subm
 (
@@ -117,8 +113,7 @@ void xmos_dsp_matrix_subm
     const int* input_matrix_Y,
     int        row_count,
     int         column_count
-)
-{
+) {
     xmos_dsp_vector_subv
     (
         result_matrix_R,
@@ -128,14 +123,14 @@ void xmos_dsp_matrix_subm
     );
 }
 
-// Matrix / matrix multiplication (R = X * Y)
+// Matrix / matrix multiplication: R = X * Y
 //
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-// 'input_matrix_X':  Pointer to source data array X
-// 'input_matrix_Y':  Pointer to source data array Y
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
+// 'input_matrix_X':  Pointer to source data array X.
+// 'input_matrix_Y':  Pointer to source data array Y.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 // <FIXME> - assumes 'row_count' == 'column_count'
 // <TODO> - optimize using double-word load/store
@@ -149,10 +144,10 @@ void xmos_dsp_matrix_mulm
     int        row_count,
     int        column_count,
     int        q_format
-)
-{
+) {
     int ah; unsigned al;
     int x, y;
+    // <TODO>: Optimize
     for( int r = 0; r < row_count; ++r )
     {
         ah = 0; al = 1 << (q_format-1);
@@ -162,7 +157,7 @@ void xmos_dsp_matrix_mulm
             {
                 x = input_matrix_X[r * column_count + i];
                 y = input_matrix_Y[j * column_count + c];
-                //XS2_MACCS( ah, al, x, y, ah, al );
+                asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x),"r"(y),"0"(ah),"1"(al));
             }
             asm("lextract %0,%1,%2,%3,32": "=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             result_matrix_R[r * column_count + c] = ah;
@@ -172,11 +167,11 @@ void xmos_dsp_matrix_mulm
 
 // Matrix inversion
 //
-// 'result_matrix_R': Pointer/reference to the resulting data
-// 'input_matrix_X':  Pointer/reference to source data
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_matrix_R': Pointer/reference to the resulting data.
+// 'input_matrix_X':  Pointer/reference to source data.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void __TODO__xmos_dsp_matrix_invert
 (
@@ -185,17 +180,17 @@ void __TODO__xmos_dsp_matrix_invert
     int        row_count,
     int        column_count,
     int        q_format
-)
-{
+) {
+    // <TODO>: Implement
 }
 
 // Matrix transposition
 //
-// 'result_matrix_R': Pointer/reference to the resulting data
-// 'input_matrix_X':  Pointer/reference to source data
-// 'row_count':       Number of rows in input and output matrices
-// 'column_count':    Number of columns in input and output matrices
-// 'q_format':        Fixed point format, the number of bits making up fractional part
+// 'result_matrix_R': Pointer/reference to the resulting data.
+// 'input_matrix_X':  Pointer/reference to source data.
+// 'row_count':       Number of rows in input and output matrices.
+// 'column_count':    Number of columns in input and output matrices.
+// 'q_format':        Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_matrix_transpose
 (
@@ -204,11 +199,10 @@ void xmos_dsp_matrix_transpose
     int        row_count,
     int        column_count,
     int        q_format
-)
-{
+) {
+    // <TODO>: Optimize 
     for( int r = 0; r < row_count; ++r )
     {
-        //ah = 0; al = 1 << (q_format-1);
         for( int c = 0; c < column_count; ++c )
         {
             result_matrix_R[c * column_count + r] = input_matrix_X[r * column_count + c];
