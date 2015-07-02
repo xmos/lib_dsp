@@ -715,6 +715,7 @@ int xmos_dsp_filters_fir
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(filter_coeffs[0]),"r"(s0),"0"(ah),"1"(al));
         break;
     }
+    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
@@ -824,6 +825,7 @@ int _xmos_dsp_filters_interpolate__fir_even
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
         break;
     }
+    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(format));
     return ah;
 }
@@ -936,6 +938,7 @@ int _xmos_dsp_filters_interpolate__fir_odd
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
         break;
     }
+    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(format));
     return ah;
 }
@@ -1129,6 +1132,7 @@ int xmos_dsp_filters_biquad
     asm("ldd %0,%1,%2[1]":"=r"(s2),"=r"(s1):"r"(state_data));
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(c2),"0"(ah),"1"(al));
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(filter_coeffs[4]),"0"(ah),"1"(al));
+    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));    
     asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
     return ah;
@@ -1171,6 +1175,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1184,6 +1189,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[3]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[3]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1198,6 +1204,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[7]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[5]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1211,6 +1218,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[7]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[7]"::"r"(s1),"r"(ah),"r"(state_data));
             return ah;
@@ -1227,6 +1235,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1240,6 +1249,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[3]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[3]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1253,6 +1263,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[5]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(filter_coeffs[14]),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[5]"::"r"(s1),"r"(ah),"r"(state_data));
             return ah;
@@ -1269,6 +1280,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1282,6 +1294,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[3]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[3]"::"r"(s1),"r"(ah),"r"(state_data));
             return ah;
@@ -1297,6 +1310,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[1]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(filter_coeffs[4]),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));    
             asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
             return ah;
@@ -1313,6 +1327,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1326,6 +1341,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[3]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[3]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1340,6 +1356,7 @@ int xmos_dsp_filters_biquads
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b1),"0"(ah),"1"(al));
             asm("ldd %0,%1,%2[7]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b0),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[5]"::"r"(s1),"r"(ah),"r"(state_data));
             input_sample = ah;
@@ -1353,6 +1370,7 @@ int xmos_dsp_filters_biquads
             asm("ldd %0,%1,%2[7]":"=r"(s2),"=r"(s1):"r"(state_data));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s1),"r"(b0),"0"(ah),"1"(al));
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(s2),"r"(b1),"0"(ah),"1"(al));
+            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
             asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
             asm("std %0,%1,%2[7]"::"r"(s1),"r"(ah),"r"(state_data));
             num_sections -= 4; filter_coeffs += 20; state_data += 16;
