@@ -719,207 +719,352 @@ int xmos_dsp_filters_fir
     return ah;
 }
 
+// FIR filter (even coeff array boundary, no state data shifting - for internal use only)
+
+int _xmos_dsp_filters_interpolate__fir_even
+(
+    const int* coeff,
+    const int* state,
+    int        taps,
+    int        format
+) {
+    int ah = 0, b0, b1, s0, s1;
+    unsigned int al = 1 << (format-1);
+    
+    while( taps >= 8 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[2]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[3]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[3]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        taps -= 8; coeff += 8; state += 8;
+    }
+    switch( taps )
+    {        
+        case 7:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[2]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[6]),"r"(state[6]),"0"(ah),"1"(al));
+        break;
+
+        case 6:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+
+        case 5:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[4]),"r"(state[4]),"0"(ah),"1"(al));
+        break;
+
+        case 4:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+        
+        case 3:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[2]),"r"(state[2]),"0"(ah),"1"(al));
+        break;
+
+        case 2:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+
+        case 1:        
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
+        break;
+    }
+    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(format));
+    return ah;
+}
+
+// FIR filter (even coeff array boundary, no state data shifting - for internal use only)
+
+int _xmos_dsp_filters_interpolate__fir_odd
+(
+    const int* coeff,
+    const int* state,
+    int        taps,
+    int        format
+) {
+    int ah = 0, b0, b1, s0, s1;
+    unsigned int al = 1 << (format-1);
+    
+    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
+    --taps;
+
+    while( taps >= 8 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[2]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[3]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[3]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        taps -= 8; coeff += 8; state += 8;
+    }
+    switch( taps )
+    {        
+        case 7:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[2]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[6]),"r"(state[6]),"0"(ah),"1"(al));
+        break;
+
+        case 6:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+
+        case 5:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[4]),"r"(state[4]),"0"(ah),"1"(al));
+        break;
+
+        case 4:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[1]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+        
+        case 3:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("ldd %0,%1,%2[0]":"=r"(s1),"=r"(s0):"r"(state));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[2]),"r"(state[2]),"0"(ah),"1"(al));
+        break;
+
+        case 2:
+        asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(coeff));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s0),"0"(ah),"1"(al));
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s1),"0"(ah),"1"(al));
+        break;
+
+        case 1:        
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
+        break;
+    }
+    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(format));
+    return ah;
+}
+
 // Interpolating FIR filter
 //
 // 'output_samples': The resulting interpolated samples.
 // 'input_sample':   The new sample to be processed.
-// 'filter_coeffs':  Pointer to FIR coefficients array arranged as [b0,b1,b2, ...,bN-1].
+// 'filter_coeffs':  Pointer to FIR coefficients array arranged as ...
+//                   b0,b(1L),b(2L)      [b0,b1,b2, ...,bN-1].
 // 'state_data':     Pointer to filter state data array of length N.
 //                   Must be initialized at startup to all zero's.
 // 'tap_count':      Filter tap count (N = tap_count = filter order + 1).
 //                   The tap count must be a multiple of the interpolation factor.
 // 'interp_factor':  The interpolation factor/index (i.e. the up-sampling ratio).
+//                   The interpolation factor/index can range from 2 to 16.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
 void xmos_dsp_filters_interpolate
 (
-    int       output_samples[],
-    int       input_sample,
-    const int filter_coeffs[],
-    int       state_data[],
-    int       tap_count,
-    int       interp_factor,
-    int       q_format
+    int       output[],
+    int       input,
+    const int coeff[],
+    int       state[],
+    int       taps,
+    int       L,
+    int       format
 ) {
-    int ah[16], b0, b1, s0, odd = 0; unsigned al[16];
-    int phase_length = tap_count / interp_factor;
-    
-    for( int i = 0; i < interp_factor; ++i ) {ah[i] = 0; al[i] = 1<<(q_format-1);}
-        
-    /*
-                                    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 bA bB
-    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 * x0  0  0  0  0 x1  0  0  0  0 x2  0 -> y0
-    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  0 x0  0  0  0  0 x1  0  0  0  0 x2 -> y1
-    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  0  0 x0  0  0  0  0 x1  0  0  0  0 -> y2
-    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  0  0  0 x0  0  0  0  0 x1  0  0  0 -> y3
-    b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  0  0  0  0 x0  0  0  0  0 x1  0  0 -> y4
-    */
+    int s0 = input, s1, s2, s3, b0, b1;
+    int odd = 0, length = taps / L, len;
+    int* ss = state;
 
-    while( phase_length-- > 0 )
+
+
+    /*
+           b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 bA bB bC bD bE
+    y0 <-- x0  0  0  0  0 x1  0  0  0  0 x2  0  0  0  0
+    y1 <--  0 x0  0  0  0  0 x1  0  0  0  0 x2  0  0  0
+    y2 <--  0  0 x0  0  0  0  0 x1  0  0  0  0 x2  0  0
+    y3 <--  0  0  0 x0  0  0  0  0 x1  0  0  0  0 x2  0
+    y4 <--  0  0  0  0 x0  0  0  0  0 x1  0  0  0  0 x2
+
+           b0 b5 bA b1 b6 bB b2 b7 bC b3 b8 bD b4 b9 bE
+    y0 <-- x0 x1 x2  0  0  0  0  0  0  0  0  0  0  0  0
+    y1 <--  0  0  0 x0 x1 x2  0  0  0  0  0  0  0  0  0
+    y2 <--  0  0  0  0  0  0 x0 x1 x2  0  0  0  0  0  0
+    y3 <--  0  0  0  0  0  0  0  0  0 x0 x1 x2  0  0  0
+    y4 <--  0  0  0  0  0  0  0  0  0  0  0  0 x0 x1 x2
+    */
+    
+    //printf( "%08x ", input );
+    //for( int i = 0; i < 8; ++i ) printf( "%08x ", state[i] ); printf( "\n" );
+    
+    //for( int i = length-1; i > 0; --i ) state[i] = state[i-1];
+    //state[0] = input;
+    
+    len = length;
+    while( len >= 8 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[1]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[1]"::"r"(s3), "r"(s2),"r"(ss));
+        asm("ldd %0,%1,%2[2]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[2]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[3]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[3]"::"r"(s3), "r"(s2),"r"(ss));
+        len -= 8; ss += 8;
+    }
+    switch( len )
+    {
+        case 7:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[1]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[1]"::"r"(s3), "r"(s2),"r"(ss));
+        asm("ldd %0,%1,%2[2]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[2]"::"r"(s1), "r"(s0),"r"(ss));
+        ss[6] = s2;
+        break;
+
+        case 6:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[1]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[1]"::"r"(s3), "r"(s2),"r"(ss));
+        asm("ldd %0,%1,%2[2]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[2]"::"r"(s1), "r"(s0),"r"(ss));
+        break;
+    
+        case 5:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[1]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[1]"::"r"(s3), "r"(s2),"r"(ss));
+        ss[4] = s0;
+        break;
+    
+        case 4:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        asm("ldd %0,%1,%2[1]":"=r"(s0),"=r"(s3):"r"(ss));
+        asm("std %0,%1,%2[1]"::"r"(s3), "r"(s2),"r"(ss));
+        break;
+    
+        case 3:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        ss[2] = s2;
+        break;
+    
+        case 2:
+        asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(ss));
+        asm("std %0,%1,%2[0]"::"r"(s1), "r"(s0),"r"(ss));
+        break;
+    
+        case 1: ss[0] = s0; break;
+    }
+    
+    for( int i = 0; i < L; ++i )
     {
         if( odd )
-        {
-            switch( interp_factor )
-            {
-                case 9:
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(*filter_coeffs++),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b0),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b1),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b0),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b1),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b0),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[6]),"=r"(al[6]):"r"(b1),"r"(input_sample),"0"(ah[6]),"1"(al[6]));
-                asm("ldd %0,%1,%2[3]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[7]),"=r"(al[7]):"r"(b0),"r"(input_sample),"0"(ah[7]),"1"(al[7]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[8]),"=r"(al[8]):"r"(b1),"r"(input_sample),"0"(ah[8]),"1"(al[8]));
-                break;
-            
-                case 7:
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(*filter_coeffs++),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b0),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b1),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b0),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b1),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b0),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[6]),"=r"(al[6]):"r"(b1),"r"(input_sample),"0"(ah[6]),"1"(al[6]));
-                break;
-            
-                case 5:
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(*filter_coeffs++),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b0),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b1),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b0),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b1),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                break;
-            
-                case 3:
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(*filter_coeffs++),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b0),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b1),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                break;
-            
-                case 1:        
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(filter_coeffs[0]),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                break;
-            }
-            filter_coeffs += interp_factor - 1;  
-            odd = 0;
-        }
+            output[i] = _xmos_dsp_filters_interpolate__fir_odd( coeff, state, length, format );
         else
-        {
-            switch( interp_factor )
-            {
-                case 9:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b0),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b1),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                asm("ldd %0,%1,%2[3]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[6]),"=r"(al[6]):"r"(b0),"r"(input_sample),"0"(ah[6]),"1"(al[6]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[7]),"=r"(al[7]):"r"(b1),"r"(input_sample),"0"(ah[7]),"1"(al[7]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[8]),"=r"(al[8]):"r"(filter_coeffs[8]),"r"(input_sample),"0"(ah[8]),"1"(al[8]));
-                break;
-
-                case 8:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b0),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b1),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                asm("ldd %0,%1,%2[3]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[6]),"=r"(al[6]):"r"(b0),"r"(input_sample),"0"(ah[6]),"1"(al[6]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[7]),"=r"(al[7]):"r"(b1),"r"(input_sample),"0"(ah[7]),"1"(al[7]));
-                break;
-
-                case 7:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b0),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b1),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[6]),"=r"(al[6]):"r"(filter_coeffs[6]),"r"(input_sample),"0"(ah[6]),"1"(al[6]));
-                break;
-
-                case 6:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("ldd %0,%1,%2[2]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(b0),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[5]),"=r"(al[5]):"r"(b1),"r"(input_sample),"0"(ah[5]),"1"(al[5]));
-                break;
-
-                case 5:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[4]),"=r"(al[4]):"r"(filter_coeffs[4]),"r"(input_sample),"0"(ah[4]),"1"(al[4]));
-                break;
-
-                case 4:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("ldd %0,%1,%2[1]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(b0),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[3]),"=r"(al[3]):"r"(b1),"r"(input_sample),"0"(ah[3]),"1"(al[3]));
-                break;
-
-                case 3:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[2]),"=r"(al[2]):"r"(filter_coeffs[2]),"r"(input_sample),"0"(ah[2]),"1"(al[2]));
-                break;
-
-                case 2:
-                asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(b0),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                asm("maccs %0,%1,%2,%3":"=r"(ah[1]),"=r"(al[1]):"r"(b1),"r"(input_sample),"0"(ah[1]),"1"(al[1]));
-                break;
-
-                case 1:        
-                asm("maccs %0,%1,%2,%3":"=r"(ah[0]),"=r"(al[0]):"r"(filter_coeffs[0]),"r"(input_sample),"0"(ah[0]),"1"(al[0]));
-                break;
-            }
-            filter_coeffs += interp_factor;  
-            odd = interp_factor & 1;
-        }
-        s0 = input_sample; input_sample = state_data[0]; state_data[0] = s0; ++state_data;
+            output[i] = _xmos_dsp_filters_interpolate__fir_even( coeff, state, length, format );
+        coeff += length;
+        odd ^= length & 1;
     }
-    for( int i = 0; i < interp_factor; ++i )
-    {
-        asm("lextract %0,%1,%2,%3,32":"=r"(output_samples[i]):"r"(ah[i]),"r"(al[i]),"r"(q_format));
-    }
-}
+}    
 
 // Decimating FIR filter
 //
