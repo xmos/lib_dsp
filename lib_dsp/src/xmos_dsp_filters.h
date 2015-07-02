@@ -26,10 +26,10 @@ int xmos_dsp_filters_fir
 // 'output_samples': The resulting interpolated samples.
 // 'input_sample':   The new sample to be processed.
 // 'filter_coeffs':  Pointer to FIR coefficients array arranged as:
-//                      h0,h(1L+0),h(2L+0),...h((N-1)L+0),
-//                      h1,h(1L+1),h(2L+1),...h((N-1)L+1),
-//                      ...
 //                      hM,h(1L+M),h(2L+M),...h((N-1)L+M),
+//                      ...
+//                      h1,h(1L+1),h(2L+1),...h((N-1)L+1),
+//                      h0,h(1L+0),h(2L+0),...h((N-1)L+0),
 //                   where M = N-1
 // 'state_data':     Pointer to filter state data array of length N.
 //                   Must be initialized at startup to all zero's.
