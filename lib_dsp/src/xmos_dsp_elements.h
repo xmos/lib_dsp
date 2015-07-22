@@ -1,7 +1,7 @@
 #ifndef XMOS_DSP_ELEMENTS
 #define XMOS_DSP_ELEMENTS
 
-#include "xmos_dsp_qformats.h"
+#include "xmos_dsp_qformat.h"
 #include "xmos_dsp_math.h"
 #include "xmos_dsp_filters.h"
 #include "xmos_dsp_vector.h"
