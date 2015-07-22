@@ -8,7 +8,5 @@
 #include "xmos_dsp_statistics.h"
 #include "xmos_dsp_adaptive.h"
 #include "xmos_dsp_matrix.h"
-//#include "xmos_dsp_transforms.h"
-//#include "xmos_dsp_control.h"
 
 #endif
