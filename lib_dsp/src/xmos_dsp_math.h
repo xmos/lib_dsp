@@ -1,7 +1,7 @@
 #ifndef XMOS_DSP_MATH
 #define XMOS_DSP_MATH
 
-// Scalar fixed-point multiply
+// Scalar multiply
 //
 // 'input1_value': Multiply operand #1.
 // 'input2_value': Multiply operand #2.

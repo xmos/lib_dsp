@@ -47,7 +47,7 @@ int xmos_dsp_adaptive_lms
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
     mu_err = xmos_dsp_math_multiply( *error_sample, step_size, q_format );
-    xmos_dsp_vector_muls_addv( filter_coeffs, state_data, mu_err, filter_coeffs, tap_count, q_format );
+    xmos_dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, tap_count, q_format );
         
     return output_sample;
 }
@@ -102,7 +102,7 @@ int xmos_dsp_adaptive_nlms
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    xmos_dsp_vector_muls_addv( filter_coeffs, state_data, mu_err_egy, filter_coeffs, tap_count, q_format );
+    xmos_dsp_vector_muls_addv( state_data, mu_err_egy, filter_coeffs, filter_coeffs, tap_count, q_format );
         
     return output_sample;
 }

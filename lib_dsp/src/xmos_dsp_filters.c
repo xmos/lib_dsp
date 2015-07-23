@@ -970,7 +970,7 @@ void xmos_dsp_filters_interpolate
     int       L,
     int       format
 ) {
-    int s0 = input, s1, s2, s3, b0, b1;
+    int s0 = input, s1, s2, s3;
     int odd = 0, length = taps / L, len;
     int* ss = state;
 

@@ -201,12 +201,3 @@ int xmos_dsp_vector_dotprod
     return ah;
 }
 
-//MEAN    0.400000
-//POWER   0.640000
-//RMS     0.400000
-//DOTPROD 0.320000
-
-//int __TODO__xmos_dsp_vector_correlation;
-//int __TODO__xmos_dsp_vector_coherence;
-//int __TODO__xmos_dsp_vector_autocorrelate;
-//int __TODO__xmos_dsp_vector_autocoherence;
