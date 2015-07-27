@@ -1,6 +1,10 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_vector.h"
+
+// ================================================================================================
 
 // Locate the vector's first occurring minimum value
 //
@@ -90,6 +94,8 @@ int xmos_dsp_vector_minimum
     return result_location;
 }
 
+// ================================================================================================
+
 // Locate the vector's first occurring maximum value
 //
 // 'input_vector':  Pointer to source data array.
@@ -178,6 +184,8 @@ int xmos_dsp_vector_maximum
     return result_location;
 }
 
+// ================================================================================================
+
 // Vector negation: R = -X
 //
 // 'input_vector_X':  Pointer/reference to source data.
@@ -219,6 +227,8 @@ void xmos_dsp_vector_negate
         break;
     }
 }
+
+// ================================================================================================
 
 // Vector absolute value: R = |X|
 //
@@ -262,6 +272,7 @@ void xmos_dsp_vector_abs
     }
 }
 
+// ================================================================================================
 
 // Vector / scalar addition: R = X + a
 //
@@ -306,6 +317,8 @@ void xmos_dsp_vector_adds
         break;
     }
 }
+
+// ================================================================================================
 
 // Vector / scalar multiplication: R = X * a
 //
@@ -387,6 +400,8 @@ void xmos_dsp_vector_muls
     }
 }
 
+// ================================================================================================
+
 // Vector / vector addition: R = X + Y
 //
 // 'input_vector_X':  Pointer to source data array X.
@@ -427,6 +442,8 @@ void xmos_dsp_vector_addv
         *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
 }
 
+// ================================================================================================
+
 // Vector / vector subtraction: R = X - Y
 //
 // 'input_vector_X':  Pointer to source data array X
@@ -466,6 +483,8 @@ void xmos_dsp_vector_subv
     while( vector_length-- )
         *result_vector_R++ = *input_vector_X++ - *input_vector_Y++;
 }
+
+// ================================================================================================
 
 // Vector / vector multiplication: R = X * Y
 //
@@ -556,6 +575,8 @@ void xmos_dsp_vector_mulv
     }
 }
 
+// ================================================================================================
+
 // Vector multiplication and scalar addition: R = X * Y + a
 //
 // 'input_vector_X':  Pointer to source data array X.
@@ -633,6 +654,8 @@ void xmos_dsp_vector_mulv_adds
         *result_vector_R++ = x0 + input_scalar_A;
     }
 }
+
+// ================================================================================================
 
 // Scalar multiplication and vector addition: R = a * X + Y
 //
@@ -712,6 +735,8 @@ void xmos_dsp_vector_muls_addv
     }
 }
 
+// ================================================================================================
+
 // Scalar multiplication and vector subtraction: R = a * X - Y
 //
 // 'input_vector_X':  Pointer to source data array X.
@@ -789,6 +814,8 @@ void xmos_dsp_vector_muls_subv
         *result_vector_R++ = x0 - y0;
     }
 }
+
+// ================================================================================================
 
 // Vector multiplication and vector addition: R = X * Y + Z
 //
@@ -872,6 +899,8 @@ void xmos_dsp_vector_mulv_addv
     }
 }
 
+// ================================================================================================
+
 // Vector multiplication and vector addition: R = X * Y - Z
 //
 // 'input_vector_X':  Pointer to source data array X.
@@ -952,4 +981,6 @@ void xmos_dsp_vector_mulv_subv
         *result_vector_R++ = x0 - z0;
     }
 }
+
+// ================================================================================================
 

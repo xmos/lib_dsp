@@ -1,9 +1,13 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_vector.h"
 #include "xmos_dsp_matrix.h"
 
-// Matrix negation: R = -X
+// ================================================================================================
+
+// Matrix negation: R[i] = -X[i]
 //
 // 'input_matrix_X':  Pointer to source data array.
 // 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
@@ -20,7 +24,9 @@ void xmos_dsp_matrix_negate
     xmos_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
 
-// Matrix / scalar addition: R = X + a
+// ================================================================================================
+
+// Matrix / scalar addition: R[i] = X[i] + A
 //
 // 'input_matrix_X':  Pointer to source data array.
 // 'scalar_value_A':  Scalar value to add to each 'input' element.
@@ -45,7 +51,9 @@ void xmos_dsp_matrix_adds
     );
 }
 
-// Matrix / scalar multiplication: R = X * a
+// ================================================================================================
+
+// Matrix / scalar multiplication: R[i] = X[i] * A
 //
 // 'input_matrix_X':  Pointer to source data array X.
 // 'scalar_value_A':  Scalar value to multiply each 'input' element by.
@@ -73,7 +81,9 @@ void xmos_dsp_matrix_muls
     );
 }
 
-// Matrix / matrix addition: R = X + Y
+// ================================================================================================
+
+// Matrix / matrix addition: R[i] = X[i] + Y[i]
 //
 // 'input_matrix_X':  Pointer to source data array X.
 // 'input_matrix_Y':  Pointer to source data array Y.
@@ -98,7 +108,9 @@ void xmos_dsp_matrix_addm
     );
 }
 
-// Matrix / matrix subtraction: R = X - Y
+// ================================================================================================
+
+// Matrix / matrix subtraction: R[i] = X[i] - Y[i]
 //
 // 'input_matrix_X':  Pointer to source data array X.
 // 'input_matrix_Y':  Pointer to source data array Y.
@@ -123,7 +135,9 @@ void xmos_dsp_matrix_subm
     );
 }
 
-// Matrix / matrix multiplication: R = X * Y
+// ================================================================================================
+
+// Matrix / matrix multiplication: R[i] = X[i] * Y[i]
 //
 // 'input_matrix_X':  Pointer to source data array X.
 // 'input_matrix_Y':  Pointer to source data array Y.
@@ -165,6 +179,8 @@ void xmos_dsp_matrix_mulm
     }
 }
 
+// ================================================================================================
+
 // Matrix transposition
 //
 // 'input_matrix_X':  Pointer/reference to source data.
@@ -190,3 +206,5 @@ void xmos_dsp_matrix_transpose
         }
     }
 }
+
+// ================================================================================================

@@ -1,7 +1,11 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_math.h"
 #include "xmos_dsp_statistics.h"
+
+// ================================================================================================
 
 // Vector sum: result = X[0] + ... X[N-1]
 //
@@ -57,6 +61,8 @@ int xmos_dsp_vector_abs_sum
     return ah;
 }
 
+// ================================================================================================
+
 // Vector mean: result = (X[0] + ... X[N-1]) / N
 //
 // 'input_vector_X': Pointer to source data array X.
@@ -73,6 +79,8 @@ int xmos_dsp_vector_mean
     int vectort_sum = xmos_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
     return xmos_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
 }
+
+// ================================================================================================
 
 // Vector power (sum of squares): result = X[0]^2 + ... X[N-1]^2
 //
@@ -126,6 +134,8 @@ int xmos_dsp_vector_power
     return ah;
 }
 
+// ================================================================================================
+
 // Vector root mean square: result = ((X[0]^2 + ... X[N-1]^2) / N) ^ 0.5)
 //
 // 'input_vector_X': Pointer to source data array X.
@@ -144,6 +154,8 @@ int xmos_dsp_vector_rms
     int rt_mean_sqr = xmos_dsp_math_squareroot( mean_square,                   q_format );
     return rt_mean_sqr;
 }
+
+// ================================================================================================
 
 // Vector dot product: return = X[0] * Y[0] + ... X[N-1] * Y[N-1]
 //
@@ -201,3 +213,4 @@ int xmos_dsp_vector_dotprod
     return ah;
 }
 
+// ================================================================================================

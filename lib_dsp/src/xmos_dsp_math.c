@@ -1,6 +1,10 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_math.h"
+
+// ================================================================================================
 
 // Scalar fixed-point multiply
 //
@@ -18,6 +22,8 @@ int xmos_dsp_math_multiply( int input1_value, int input2_value, int q_format )
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
+
+// ================================================================================================
 
 // Scalar reciprocal
 //
@@ -53,6 +59,8 @@ int xmos_dsp_math_reciprocal( int input_value, int q_format )
     return result;
 }
 
+// ================================================================================================
+
 // Scalar inverse square root
 //
 // 'input_value': Input value for computation.
@@ -82,6 +90,8 @@ int xmos_dsp_math_invsqrroot( int input_value, int q_format )
     return ah;
 }
 
+// ================================================================================================
+
 // Scalar square root
 //
 // 'input_value': Input value for computation.
@@ -100,3 +110,5 @@ int xmos_dsp_math_squareroot( int input_value, int q_format )
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
+
+// ================================================================================================
