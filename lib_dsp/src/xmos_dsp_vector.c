@@ -14,33 +14,80 @@ int xmos_dsp_vector_minimum
     const int* input_vector,
     int        vector_length
 ) {
-    int x1, x0, result = 0;
+    int x1, x0, result_location;
+    int search_location = 0;
+    int min_val = 2147483647;                    // Maximum 32 bit signed integer
+
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 < result ) result = x0; if( x1 < result ) result = x1;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location;
+        }
+        if( x1 < min_val )
+        {
+          min_val = x1;
+          result_location = search_location + 1;
+        }
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 < result ) result = x0; if( x1 < result ) result = x1;
-        vector_length -= 4; input_vector += 4;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location + 2;
+        }
+        if( x1 < min_val )
+        {
+          min_val = x1;
+          result_location = search_location + 3;
+        }
+        vector_length -= 4; input_vector += 4; search_location += 4;
     }
     switch( vector_length )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 < result ) result = x0; if( x1 < result ) result = x1;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location;
+        }
+        if( x1 < min_val )
+        {
+          min_val = x1;
+          result_location = search_location + 1;
+        }
         x0 = input_vector[2];
-        if( x0 < result ) result = x0;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location + 2;
+        }
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 < result ) result = x0; if( x1 < result ) result = x1;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location;
+        }
+        if( x1 < min_val )
+        {
+          min_val = x1;
+          result_location = search_location + 1;
+        }
         break;
         case 1:
         x0 = input_vector[0];
-        if( x0 < result ) result = x0;
+        if( x0 < min_val )
+        {
+          min_val = x0;
+          result_location = search_location;
+        }
         break;
     }
-    return result;
+    return result_location;
 }
 
 // Locate the vector's first occurring maximum value
@@ -55,33 +102,80 @@ int xmos_dsp_vector_maximum
     const int* input_vector,
     int        vector_length
 ) {
-    int x1, x0, result = 0;
+    int x1, x0, result_location;
+    int search_location = 0;
+    int max_val = -2147483648;                    // Minimum 32 bit signed integer
+
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 > result ) result = x0; if( x1 > result ) result = x1;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location;
+        }
+        if( x1 > max_val )
+        {
+          max_val = x1;
+          result_location = search_location + 1;
+        }
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 > result ) result = x0; if( x1 > result ) result = x1;
-        vector_length -= 4; input_vector += 4;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location + 2;
+        }
+        if( x1 > max_val )
+        {
+          max_val = x1;
+          result_location = search_location + 3;
+        }
+        vector_length -= 4; input_vector += 4; search_location += 4;
     }
     switch( vector_length )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 > result ) result = x0; if( x1 > result ) result = x1;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location;
+        }
+        if( x1 > max_val )
+        {
+          max_val = x1;
+          result_location = search_location + 1;
+        }
         x0 = input_vector[2];
-        if( x0 > result ) result = x0;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location + 2;
+        }
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
-        if( x0 > result ) result = x0; if( x1 > result ) result = x1;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location;
+        }
+        if( x1 > max_val )
+        {
+          max_val = x1;
+          result_location = search_location + 1;
+        }
         break;
         case 1:
         x0 = input_vector[0];
-        if( x0 > result ) result = x0;
+        if( x0 > max_val )
+        {
+          max_val = x0;
+          result_location = search_location;
+        }
         break;
     }
-    return result;
+    return result_location;
 }
 
 // Vector negation: R = -X
