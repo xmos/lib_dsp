@@ -1,3 +1,5 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_math.h"
@@ -5,6 +7,8 @@
 #include "xmos_dsp_vector.h"
 #include "xmos_dsp_statistics.h"
 #include "xmos_dsp_adaptive.h"
+
+// ================================================================================================
 
 // LMS filter
 //
@@ -18,7 +22,7 @@
 // 'step_size':        Coefficient adjustment step size, controls rate of convergence.
 // 'q_format':         Fixed point format, the number of bits making up fractional part.
 //
-// return value:    Resulting filter output sample.
+// Return value:       Resulting filter output sample.
 
 int xmos_dsp_adaptive_lms
 (
@@ -52,6 +56,8 @@ int xmos_dsp_adaptive_lms
     return output_sample;
 }
 
+// ================================================================================================
+
 // Normalized LMS filter
 //
 // 'input_sample':     The new sample to be processed.
@@ -64,7 +70,7 @@ int xmos_dsp_adaptive_lms
 // 'step_size':        Coefficient adjustment step size, controls rate of convergence.
 // 'q_format':         Fixed point format, the number of bits making up fractional part.
 //
-// return value:    Resulting filter output sample.
+// Return value:       Resulting filter output sample.
 
 int xmos_dsp_adaptive_nlms
 (
@@ -106,4 +112,6 @@ int xmos_dsp_adaptive_nlms
         
     return output_sample;
 }
+
+// ================================================================================================
 
