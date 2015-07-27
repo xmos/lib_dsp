@@ -1,0 +1,31 @@
+16:32:12 **** Build of configuration Default for project app_math ****
+xmake CONFIG=Default all 
+Checking build modules
+Using build modules: lib_dsp
+Analyzing xmos_dsp_adaptive.c
+Analyzing xmos_dsp_filters.c
+Analyzing xmos_dsp_math.c
+Analyzing xmos_dsp_matrix.c
+Analyzing xmos_dsp_statistics.c
+Analyzing xmos_dsp_vector.c
+Analyzing app_math.xc
+Propagating analysis
+Creating dependencies for app_math.xc
+Creating dependencies for xmos_dsp_vector.c
+Creating dependencies for xmos_dsp_statistics.c
+Creating dependencies for xmos_dsp_matrix.c
+Creating dependencies for xmos_dsp_math.c
+Creating dependencies for xmos_dsp_filters.c
+Creating dependencies for xmos_dsp_adaptive.c
+Compiling xmos_dsp_adaptive.c
+Compiling xmos_dsp_filters.c
+Compiling xmos_dsp_math.c
+Compiling xmos_dsp_matrix.c
+Compiling xmos_dsp_statistics.c
+Compiling xmos_dsp_vector.c
+Compiling app_math.xc
+Creating app_math.xe
+Build Complete
+
+16:32:37 Build Finished (took 24s.390ms)
+

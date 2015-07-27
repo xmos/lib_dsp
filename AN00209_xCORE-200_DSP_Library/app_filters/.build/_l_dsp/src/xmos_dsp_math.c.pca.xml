@@ -1,0 +1,22 @@
+<preCompilationAnalysis file="C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_math.c">
+  <fCall global="true" name="xmos_dsp_math_multiply"/>
+  <fCall global="true" name="xmos_dsp_math_multiply.nstackwords"/>
+  <fCall global="true" name="xmos_dsp_math_multiply.maxcores"/>
+  <fCall global="true" name="xmos_dsp_math_multiply.maxtimers"/>
+  <fCall global="true" name="xmos_dsp_math_multiply.maxchanends"/>
+  <fCall global="true" name="xmos_dsp_math_reciprocal"/>
+  <fCall global="true" name="xmos_dsp_math_reciprocal.nstackwords"/>
+  <fCall global="true" name="xmos_dsp_math_reciprocal.maxcores"/>
+  <fCall global="true" name="xmos_dsp_math_reciprocal.maxtimers"/>
+  <fCall global="true" name="xmos_dsp_math_reciprocal.maxchanends"/>
+  <fCall global="true" name="xmos_dsp_math_invsqrroot"/>
+  <fCall global="true" name="xmos_dsp_math_invsqrroot.nstackwords"/>
+  <fCall global="true" name="xmos_dsp_math_invsqrroot.maxcores"/>
+  <fCall global="true" name="xmos_dsp_math_invsqrroot.maxtimers"/>
+  <fCall global="true" name="xmos_dsp_math_invsqrroot.maxchanends"/>
+  <fCall global="true" name="xmos_dsp_math_squareroot"/>
+  <fCall global="true" name="xmos_dsp_math_squareroot.nstackwords"/>
+  <fCall global="true" name="xmos_dsp_math_squareroot.maxcores"/>
+  <fCall global="true" name="xmos_dsp_math_squareroot.maxtimers"/>
+  <fCall global="true" name="xmos_dsp_math_squareroot.maxchanends"/>
+</preCompilationAnalysis>

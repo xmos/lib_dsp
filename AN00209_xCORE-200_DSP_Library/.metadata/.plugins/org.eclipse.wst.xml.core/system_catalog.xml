@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <uri name="http://www.xmos.com/schema/xn" uri="jar:file:/C:/Xmos/Tools/xTIMEcomposer/Community_14.1.0/xtimecomposer_bin/plugins/com.xmos.cdt.ui_1.0.0.jar!/schema/xn.xsd"/>
+  <system systemId="http://www.w3.org/2001/xml.xsd" uri="jar:file:/C:/Xmos/Tools/xTIMEcomposer/Community_14.1.0/xtimecomposer_bin/plugins/org.eclipse.xsd_2.9.1.v20140203-1126.jar!/cache/www.w3.org/2001/xml.xsd"/>
+  <uri name="http://www.w3.org/2001/XMLSchema" uri="jar:file:/C:/Xmos/Tools/xTIMEcomposer/Community_14.1.0/xtimecomposer_bin/plugins/org.eclipse.xsd_2.9.1.v20140203-1126.jar!/cache/www.w3.org/2001/XMLSchema.xsd"/>
+</catalog>
