@@ -1,0 +1,13 @@
+11:09:41 **** Incremental Build of configuration Default for project app_vector ****
+xmake CONFIG=Default all 
+Checking build modules
+Using build modules: lib_dsp
+Analyzing app_vector.xc
+Propagating analysis
+Creating dependencies for app_vector.xc
+Compiling app_vector.xc
+Creating app_vector.xe
+Build Complete
+
+11:09:51 Build Finished (took 10s.531ms)
+
