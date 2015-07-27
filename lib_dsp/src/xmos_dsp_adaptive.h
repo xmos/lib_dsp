@@ -106,8 +106,9 @@ int xmos_dsp_adaptive_lms
 // 1) Apply the transfer function: output = FIR( input )
 // 2) Compute the instantaneous error value: error = reference - output
 // 3) Normalise the error using the instantaneous power computed by: E = x[n]^2 + ... + x[n-N+1]^2
-// 4) Compute current coefficient adjustment delta: delta = mu * error
-// 5) Adjust transfer function coefficients: FIR_COEFFS[n] = FIR_COEFFS[n] + FIR_STATE[n] * delta
+// 4) Update error value:  error = (reference - output) / E
+// 5) Compute current coefficient adjustment delta: delta = mu * error
+// 6) Adjust transfer function coefficients: FIR_COEFFS[n] = FIR_COEFFS[n] + FIR_STATE[n] * delta
 //
 // Behavior:
 //
@@ -119,7 +120,7 @@ int xmos_dsp_adaptive_lms
 // considered for both FIR operations as well as for coefficient step size calculation and FIR
 // coefficient adjustment.
 //
-// Computing the coeficient adjustment involves taking the reciprocal of the instantaneous power
+// Computing the coefficient adjustment involves taking the reciprocal of the instantaneous power
 // computed by E = x[n]^2 + x[n-1]^2 + ... + x[n-N+1]^2.  The reciprocal is subject to overflow
 // since the instantaneous power may be less than one.
 //
