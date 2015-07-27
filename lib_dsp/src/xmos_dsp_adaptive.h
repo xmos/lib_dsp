@@ -126,12 +126,12 @@ int xmos_dsp_adaptive_lms
 //
 // Example:
 //
-// 100-tap LMS filter with samples and coefficients represented in Q28 fixed-point format
+// 100-tap NLMS filter with samples and coefficients represented in Q28 fixed-point format
 //
 //   int filter_coeff[100] = { ... not shown for brevity };
 //   int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
 //
-//   int output_sample = xmos_dsp_adaptive_lms
+//   int output_sample = xmos_dsp_adaptive_nlms
 //   (
 //     input_sample, reference_sample, &error_sample,
 //     filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
