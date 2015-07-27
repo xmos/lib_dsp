@@ -1,9 +1,13 @@
+// ================================================================================================
+
 #include <platform.h>
 #include "xmos_dsp_qformat.h"
 #include "xmos_dsp_math.h"
 #include "xmos_dsp_vector.h"
 #include "xmos_dsp_statistics.h"
 #include "xmos_dsp_filters.h"
+
+// ================================================================================================
 
 // FIR filter
 //
@@ -720,6 +724,8 @@ int xmos_dsp_filters_fir
     return ah;
 }
 
+// ================================================================================================
+
 // FIR filter (even coeff array boundary, no state data shifting - for internal use only)
 
 int _xmos_dsp_filters_interpolate__fir_even
@@ -1066,6 +1072,8 @@ void xmos_dsp_filters_interpolate
     }
 }    
 
+// ================================================================================================
+
 // Decimating FIR filter
 //
 // 'input_samples': The new samples to be decimated.
@@ -1104,6 +1112,8 @@ int xmos_dsp_filters_decimate
     return output;    
 }
 
+// ================================================================================================
+
 // Biquadratic IIR filter (direct form I)
 //
 // 'input_sample':  The new sample to be processed.
@@ -1137,6 +1147,8 @@ int xmos_dsp_filters_biquad
     asm("std %0,%1,%2[1]"::"r"(s1),"r"(ah),"r"(state_data));
     return ah;
 }
+
+// ================================================================================================
 
 // Cascaded biquadratic IIR filters (direct form I)
 //
@@ -1380,3 +1392,5 @@ int xmos_dsp_filters_biquads
     }
     return 0;
 }
+
+// ================================================================================================
