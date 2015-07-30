@@ -49,11 +49,6 @@
   <fCall global="true" name="xmos_dsp_matrix_mulm.maxcores"/>
   <fCall global="true" name="xmos_dsp_matrix_mulm.maxtimers"/>
   <fCall global="true" name="xmos_dsp_matrix_mulm.maxchanends"/>
-  <fCall global="true" name="__TODO__xmos_dsp_matrix_invert"/>
-  <fCall global="true" name="__TODO__xmos_dsp_matrix_invert.nstackwords"/>
-  <fCall global="true" name="__TODO__xmos_dsp_matrix_invert.maxcores"/>
-  <fCall global="true" name="__TODO__xmos_dsp_matrix_invert.maxtimers"/>
-  <fCall global="true" name="__TODO__xmos_dsp_matrix_invert.maxchanends"/>
   <fCall global="true" name="xmos_dsp_matrix_transpose"/>
   <fCall global="true" name="xmos_dsp_matrix_transpose.nstackwords"/>
   <fCall global="true" name="xmos_dsp_matrix_transpose.maxcores"/>

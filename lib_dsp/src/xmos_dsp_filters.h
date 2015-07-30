@@ -70,7 +70,6 @@ int xmos_dsp_filters_fir
 //
 // Parameters:
 //
-// 'output_samples': The resulting interpolated samples.
 // 'input_sample':   The new sample to be processed.
 // 'filter_coeffs':  Pointer to FIR coefficients array arranged as:
 //                      hM,h(1L+M),h(2L+M),...h((N-1)L+M),
@@ -83,6 +82,7 @@ int xmos_dsp_filters_fir
 // 'phase_length':   Phase length (N), FIR filter tap count = N * interp_factor.
 // 'interp_factor':  The interpolation factor/index (i.e. the up-sampling ratio).
 //                   The interpolation factor/index can range from 2 to 16.
+// 'output_samples': The resulting interpolated samples.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 //
 // Return value:     Resulting filter output sample.
@@ -108,12 +108,12 @@ int xmos_dsp_filters_fir
 
 void xmos_dsp_filters_interpolate
 (
-    int       output_samples[],
     int       input_sample,
     const int filter_coeffs[],
     int       state_data[],
     int       tap_count,
     int       interp_factor,
+    int       output_samples[],
     int       q_format
 );
 

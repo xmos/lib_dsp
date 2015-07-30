@@ -1,4 +1,4 @@
-16:32:52 **** Build of configuration Default for project app_matrix ****
+13:39:11 **** Incremental Build of configuration Default for project app_matrix ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
@@ -8,6 +8,7 @@ Analyzing xmos_dsp_math.c
 Analyzing xmos_dsp_matrix.c
 Analyzing xmos_dsp_statistics.c
 Analyzing xmos_dsp_vector.c
+Propagating analysis
 Analyzing app_matrix.xc
 Propagating analysis
 Creating dependencies for app_matrix.xc
@@ -27,5 +28,5 @@ Compiling app_matrix.xc
 Creating app_matrix.xe
 Build Complete
 
-16:33:17 Build Finished (took 24s.707ms)
+13:39:39 Build Finished (took 27s.846ms)
 

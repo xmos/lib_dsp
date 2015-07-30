@@ -1,4 +1,4 @@
-16:33:30 **** Build of configuration Default for project app_statistics ****
+13:09:07 **** Incremental Build of configuration Default for project app_statistics ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
@@ -8,6 +8,7 @@ Analyzing xmos_dsp_math.c
 Analyzing xmos_dsp_matrix.c
 Analyzing xmos_dsp_statistics.c
 Analyzing xmos_dsp_vector.c
+Propagating analysis
 Analyzing app_statistics.xc
 Propagating analysis
 Creating dependencies for app_statistics.xc
@@ -27,5 +28,5 @@ Compiling app_statistics.xc
 Creating app_statistics.xe
 Build Complete
 
-16:33:54 Build Finished (took 24s.15ms)
+13:09:36 Build Finished (took 29s.639ms)
 

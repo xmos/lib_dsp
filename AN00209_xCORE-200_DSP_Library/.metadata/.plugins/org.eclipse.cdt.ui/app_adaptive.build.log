@@ -1,0 +1,13 @@
+17:16:48 **** Incremental Build of configuration Default for project app_adaptive ****
+xmake CONFIG=Default all 
+Checking build modules
+Using build modules: lib_dsp
+Analyzing app_adaptive.xc
+Propagating analysis
+Creating dependencies for app_adaptive.xc
+Compiling app_adaptive.xc
+Creating app_adaptive.xe
+Build Complete
+
+17:16:57 Build Finished (took 9s.800ms)
+
