@@ -974,7 +974,7 @@ void xmos_dsp_filters_interpolate
     int       taps,
     int       L,
     int       output[],
-    int       q_format
+    int       format
 ) {
     int s0 = input, s1, s2, s3;
     int odd = 0, length = taps / L, len;
@@ -1064,9 +1064,9 @@ void xmos_dsp_filters_interpolate
     for( int i = 0; i < L; ++i )
     {
         if( odd )
-            output[i] = _xmos_dsp_filters_interpolate__fir_odd( coeff, state, length, q_format );
+            output[i] = _xmos_dsp_filters_interpolate__fir_odd( coeff, state, length, format );
         else
-            output[i] = _xmos_dsp_filters_interpolate__fir_even( coeff, state, length, q_format );
+            output[i] = _xmos_dsp_filters_interpolate__fir_even( coeff, state, length, format );
         coeff += length;
         odd ^= length & 1;
     }

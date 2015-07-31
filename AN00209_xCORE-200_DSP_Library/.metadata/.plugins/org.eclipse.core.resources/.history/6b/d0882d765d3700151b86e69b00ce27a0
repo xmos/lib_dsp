@@ -132,7 +132,7 @@ int main(void)
                                Q_N);                // Q Format N
   }
 
-  printf ("\nIIR Biquad Filter Results\n");
+  printf ("IIR Biquad Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
@@ -156,7 +156,7 @@ int main(void)
                                 Q_N);               // Q Format N
   }
 
-  printf ("\nCascaded IIR Biquad Filter Results\n");
+  printf ("Cascaded IIR Biquad Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
@@ -164,7 +164,7 @@ int main(void)
 
 
 
-  printf ("\nInterpolation\n");
+  printf ("Interpolation\n");
   for( r = 2; r <= 8; ++r )
   {
     c = 8;
@@ -180,15 +180,15 @@ int main(void)
 
     for( i = 0; i < c; ++i )
     {
-      xmos_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
+      xmos_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, xx, 31 );
       for( j = 0; j < r; ++j )
-        print31( Dst[j] );
+        print31( xx[j] );
       printf( "\n" );
     }
   }
 
 
-  printf ("\nDecimation\n");
+  printf ("Decimation\n");
   for( int r = 2; r <= 8; ++r )
   {
     for( i = 0; i < 16; ++i )

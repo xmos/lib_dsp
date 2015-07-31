@@ -27,7 +27,7 @@ int  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.
                Q24(.41), Q24(.42), Q24(.43), Q24(.44), Q24(.45), Q24(.46), Q24(.47), Q24(.48), Q24(.49), Q24(.50),
                Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 
-int           Dst[INTERP_FILTER_LENGTH];
+int           Dst[SAMPLE_LENGTH];
 
 int firCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
                     Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25), Q24(.26), Q24(.27), Q24(.28), Q24(.29), Q24(.30),
@@ -82,11 +82,12 @@ int iirCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15),
                     Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35)};
 
 //int filterState[FIR_FILTER_LENGTH];
-int filterState[INTERP_FILTER_LENGTH];
+int filterState[160];
 
-int inter_coeff[INTERP_FILTER_LENGTH];
-int decim_coeff[INTERP_FILTER_LENGTH];
+int inter_coeff[160];
+int decim_coeff[160];
 int decim_input[16];
+int xx[160];
 
 int main(void)
 {
@@ -132,7 +133,7 @@ int main(void)
                                Q_N);                // Q Format N
   }
 
-  printf ("\nIIR Biquad Filter Results\n");
+  printf ("IIR Biquad Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
@@ -156,7 +157,7 @@ int main(void)
                                 Q_N);               // Q Format N
   }
 
-  printf ("\nCascaded IIR Biquad Filter Results\n");
+  printf ("Cascaded IIR Biquad Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
@@ -164,7 +165,7 @@ int main(void)
 
 
 
-  printf ("\nInterpolation\n");
+  printf ("Interpolation\n");
   for( r = 2; r <= 8; ++r )
   {
     c = 8;
@@ -180,15 +181,15 @@ int main(void)
 
     for( i = 0; i < c; ++i )
     {
-      xmos_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
+      xmos_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, xx, 31 );
       for( j = 0; j < r; ++j )
-        print31( Dst[j] );
+        print31( xx[j] );
       printf( "\n" );
     }
   }
 
 
-  printf ("\nDecimation\n");
+  printf ("Decimation\n");
   for( int r = 2; r <= 8; ++r )
   {
     for( i = 0; i < 16; ++i )

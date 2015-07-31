@@ -110,7 +110,7 @@ int main(void)
                             Q_N);                   // Q Format N
   }
 
-  printf ("FIR Filter Results\n");
+  printf ("\nFIR Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
