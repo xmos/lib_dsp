@@ -296,8 +296,6 @@ The function operates on a single set of input samples whose count is equal to t
 +-------------------+---------+-----------------------------------------------------------------+
 | Name              |Direction| Description                                                     |
 +===================+=========+=================================================================+
-| output_samples    | out     | The resulting interpolated samples.                             |
-+-------------------+---------+-----------------------------------------------------------------+
 | input_sample      | in      | The new sample to be processed.                                 |
 +-------------------+---------+-----------------------------------------------------------------+
 | filter_coeffs[]   | in      | Pointer to FIR coefficients arranged as:                        |
@@ -316,6 +314,8 @@ The function operates on a single set of input samples whose count is equal to t
 | decim_factor      | in      | The decimation factor/index (i.e. the down-sampling ratio).     |
 +-------------------+---------+-----------------------------------------------------------------+
 |                   |         | The decimation factor/index can range from 2 to 16.             |
++-------------------+---------+-----------------------------------------------------------------+
+| output_samples    | out     | The resulting interpolated samples.                             |
 +-------------------+---------+-----------------------------------------------------------------+
 | q_format          | in      | Fixed point format (number of bits making up fractional part).  |
 +-------------------+---------+-----------------------------------------------------------------+
