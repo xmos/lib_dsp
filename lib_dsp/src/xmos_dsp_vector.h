@@ -7,7 +7,7 @@
 
 // Vector Minimum
 //
-// Locate the vector's first occurring minimum value, returning the index of the first occuring
+// Locate the vector's first occurring minimum value, returning the index of the first occurring
 // minimum value.
 //
 // Parameters:
@@ -41,7 +41,7 @@ int xmos_dsp_vector_minimum
 
 // Vector Minimum
 //
-// Locate the vector's first occurring maximum value, returning the index of the first occuring
+// Locate the vector's first occurring maximum value, returning the index of the first occurring
 // maximum value.
 //
 // Parameters:
@@ -76,7 +76,7 @@ int xmos_dsp_vector_maximum
 // Vector negation: R[i] = -X[i]
 //
 // This function computes the negative value for each input element and sets the corresponding
-// result element to it's negative value.
+// result element to its negative value.
 //
 // Parameters:
 //
@@ -131,7 +131,7 @@ void xmos_dsp_vector_negate
 //
 // If an element is less than zero it is negated to compute it's absolute value.  Negation is
 // computed via twos-compliment negation therefore the minimum negative fixed-point value can not be
-// negated to generate it's corresponding maximum positive fixed-point value.
+// negated to generate its corresponding maximum positive fixed-point value.
 //
 // For example: -Q28(-8.0) will not result in a fixed-point value representing +8.0.
 //
