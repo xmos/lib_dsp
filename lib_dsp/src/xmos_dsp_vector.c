@@ -186,7 +186,7 @@ int xmos_dsp_vector_maximum
 
 // ================================================================================================
 
-// Vector negation: R = -X
+// Vector negation: R[i] = -X[i]
 //
 // 'input_vector_X':  Pointer/reference to source data.
 // 'result_vector_R': Pointer to the resulting data array.
@@ -230,7 +230,7 @@ void xmos_dsp_vector_negate
 
 // ================================================================================================
 
-// Vector absolute value: R = |X|
+// Vector absolute value: R[i] = |X[i]|
 //
 // 'input_vector_X':  Pointer/reference to source data.
 // 'result_vector_R': Pointer to the resulting data array.
@@ -274,7 +274,7 @@ void xmos_dsp_vector_abs
 
 // ================================================================================================
 
-// Vector / scalar addition: R = X + a
+// Vector / scalar addition: R[i] = X[i] + A
 //
 // 'input_vector_X':  Pointer/reference to source data.
 // 'input_scalar_A':  Scalar value to add to each 'input' element.
@@ -320,7 +320,7 @@ void xmos_dsp_vector_adds
 
 // ================================================================================================
 
-// Vector / scalar multiplication: R = X * a
+// Vector / scalar multiplication: R[i] = X[i] * A
 //
 // 'input_vector_X':  Pointer/reference to source data X.
 // 'input_scalar_A':  Scalar value to multiply each 'input' element by.
@@ -402,7 +402,7 @@ void xmos_dsp_vector_muls
 
 // ================================================================================================
 
-// Vector / vector addition: R = X + Y
+// Vector / vector addition: R[i] = X[i] + Y[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_vector_Y':  Pointer to source data array Y.
@@ -444,7 +444,7 @@ void xmos_dsp_vector_addv
 
 // ================================================================================================
 
-// Vector / vector subtraction: R = X - Y
+// Vector / vector subtraction: R[i] = X[i] - Y[i]
 //
 // 'input_vector_X':  Pointer to source data array X
 // 'input_vector_Y':  Pointer to source data array Y
@@ -486,7 +486,7 @@ void xmos_dsp_vector_subv
 
 // ================================================================================================
 
-// Vector / vector multiplication: R = X * Y
+// Vector / vector multiplication: R[i] = X[i] * Y[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_vector_Y':  Pointer to source data array Y.
@@ -577,7 +577,7 @@ void xmos_dsp_vector_mulv
 
 // ================================================================================================
 
-// Vector multiplication and scalar addition: R = X * Y + a
+// Vector multiplication and scalar addition: R[i] = X[i] * Y[i] + A
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_vector_Y':  Pointer to source data array Y.
@@ -657,7 +657,7 @@ void xmos_dsp_vector_mulv_adds
 
 // ================================================================================================
 
-// Scalar multiplication and vector addition: R = a * X + Y
+// Scalar multiplication and vector addition: R[i] = X[i] * A + Y[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_scalar_A':  Scalar value to multiply each 'input' element by.
@@ -737,7 +737,7 @@ void xmos_dsp_vector_muls_addv
 
 // ================================================================================================
 
-// Scalar multiplication and vector subtraction: R = a * X - Y
+// Scalar multiplication and vector subtraction: R[i] = X[i] * A - Y[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_scalar_A':  Scalar value to multiply each 'input' element by.
@@ -817,7 +817,7 @@ void xmos_dsp_vector_muls_subv
 
 // ================================================================================================
 
-// Vector multiplication and vector addition: R = X * Y + Z
+// Vector multiplication and vector addition: R[i] = X[i] * Y[i] + Z[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_vector_Y':  Pointer to source data array Y.
@@ -901,7 +901,7 @@ void xmos_dsp_vector_mulv_addv
 
 // ================================================================================================
 
-// Vector multiplication and vector addition: R = X * Y - Z
+// Vector multiplication and vector addition: R[i] = X[i] * Y[i] - Z[i]
 //
 // 'input_vector_X':  Pointer to source data array X.
 // 'input_vector_Y':  Pointer to source data array Y.

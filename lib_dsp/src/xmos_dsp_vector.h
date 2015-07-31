@@ -242,8 +242,8 @@ void xmos_dsp_vector_muls
 //
 // Behavior:
 //
-// 32-bit addition is used to compute the scaler plus vector element result. Therefore fixed-point
-// value overflow conditions should be observed.  The resulting values are not saturated.
+// 32-bit addition is used to compute the result for each element. Therefore fixed-point value
+// overflow conditions should be observed.  The resulting values are not saturated.
 //
 // Example:
 //
@@ -278,8 +278,8 @@ void xmos_dsp_vector_addv
 //
 // Behavior:
 //
-// 32-bit addition is used to compute the scaler plus vector element result. Therefore fixed-point
-// value overflow conditions should be observed.  The resulting values are not saturated.
+// 32-bit subtraction is used to compute the result for each element. Therefore fixed-point value
+// overflow conditions should be observed.  The resulting values are not saturated.
 //
 // Example:
 //

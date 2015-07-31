@@ -181,7 +181,7 @@ void xmos_dsp_matrix_addm
 // Algorithm:
 //
 //  for i = 0 to (vector_length - 1):
-//    result_matrix_R[i] = input_matrix_X[i] + input_matrix_Y[i]
+//    result_matrix_R[i] = input_matrix_X[i] - input_matrix_Y[i]
 //
 // Behavior:
 //
