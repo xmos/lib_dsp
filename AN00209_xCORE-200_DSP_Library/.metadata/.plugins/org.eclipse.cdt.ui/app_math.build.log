@@ -1,4 +1,4 @@
-16:32:12 **** Build of configuration Default for project app_math ****
+13:40:29 **** Incremental Build of configuration Default for project app_math ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
@@ -8,6 +8,7 @@ Analyzing xmos_dsp_math.c
 Analyzing xmos_dsp_matrix.c
 Analyzing xmos_dsp_statistics.c
 Analyzing xmos_dsp_vector.c
+Propagating analysis
 Analyzing app_math.xc
 Propagating analysis
 Creating dependencies for app_math.xc
@@ -27,5 +28,5 @@ Compiling app_math.xc
 Creating app_math.xe
 Build Complete
 
-16:32:37 Build Finished (took 24s.390ms)
+13:40:56 Build Finished (took 26s.373ms)
 

@@ -1,536 +1,125 @@
-16:49:37 **** Incremental Build of configuration Default for project app_vector ****
+08:51:36 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing app_vector.xc
+Analyzing app_filters.xc
+../src/app_filters.xc:154:80: error: use of undeclared identifer `n'
+      printf( "INTERP L=%02u C=%03u:            %f\n", r, r*c, 10000.0/(float)(n-m));
+                                                                               ^
+../src/app_filters.xc:154:82: error: use of undeclared identifer `m'
+      printf( "INTERP L=%02u C=%03u:            %f\n", r, r*c, 10000.0/(float)(n-m));
+                                                                                 ^
+../src/app_filters.xc:46:10: warning: unused variable `j'
+  int i, j, c, r, x, y;
+         ^
+../src/app_filters.xc:46:13: warning: unused variable `c'
+  int i, j, c, r, x, y;
+            ^
+../src/app_filters.xc:46:16: warning: unused variable `r'
+  int i, j, c, r, x, y;
+               ^
+../src/app_filters.xc:46:22: warning: unused variable `y'
+  int i, j, c, r, x, y;
+                     ^
+xmake[1]: *** [.build/src//app_filters.xc.pca.xml] Error 1
+xmake: *** [analyze] Error 2
+08:56:51 **** Incremental Build of configuration Default for project app_filters ****
+xmake CONFIG=Default all 
+Checking build modules
+Using build modules: lib_dsp
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-16:49:49 **** Incremental Build of configuration Default for project app_vector ****
+08:58:12 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Build Complete
-09:13:02 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:24:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:29:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:36:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:41:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:52:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:57:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:71:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:76:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-8 warnings generated.
-Analyzing app_vector.xc
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:24:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:29:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:36:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:41:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:52:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:57:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:71:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:76:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-8 warnings generated.
-Compiling app_vector.xc
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:13:53 **** Incremental Build of configuration Default for project app_vector ****
+08:59:03 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing app_vector.xc
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:15:13 **** Incremental Build of configuration Default for project app_vector ****
+09:02:05 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:17:21 **** Incremental Build of configuration Default for project app_vector ****
+09:04:13 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:26:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:31:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:38:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:43:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:54:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:59:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:73:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:78:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-8 warnings generated.
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:26:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:31:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:38:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:43:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:54:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:59:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:73:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector;
-                          ^ ~~~~~~~~~~~~
-C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c:78:27: warning: incompatible pointer to integer conversion assigning to 'int' from 'const int *' [-Wint-conversion]
-          result_location = input_vector + 1;
-                          ^ ~~~~~~~~~~~~~~~~
-8 warnings generated.
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:22:16 **** Incremental Build of configuration Default for project app_vector ****
+09:07:33 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:23:07 **** Incremental Build of configuration Default for project app_vector ****
+09:14:45 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:27:37 **** Incremental Build of configuration Default for project app_vector ****
+09:23:53 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:29:49 **** Incremental Build of configuration Default for project app_vector ****
+09:29:55 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
+Analyzing app_filters.xc
 Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
+Creating dependencies for app_filters.xc
+Compiling app_filters.xc
+Creating app_filters.xe
 Build Complete
-09:35:55 **** Incremental Build of configuration Default for project app_vector ****
+09:40:30 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
-Build Complete
-09:36:37 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-09:37:23 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-09:38:14 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-09:39:58 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_adaptive.c
 Analyzing xmos_dsp_filters.c
-Analyzing xmos_dsp_math.c
-Analyzing xmos_dsp_matrix.c
-Analyzing xmos_dsp_statistics.c
-Analyzing xmos_dsp_vector.c
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
 Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Creating dependencies for xmos_dsp_statistics.c
-Creating dependencies for xmos_dsp_matrix.c
-Creating dependencies for xmos_dsp_math.c
 Creating dependencies for xmos_dsp_filters.c
-Creating dependencies for xmos_dsp_adaptive.c
-Compiling xmos_dsp_adaptive.c
 Compiling xmos_dsp_filters.c
-Compiling xmos_dsp_math.c
-Compiling xmos_dsp_matrix.c
-Compiling xmos_dsp_statistics.c
-Compiling xmos_dsp_vector.c
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-09:45:00 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-09:45:11 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-09:46:46 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
-Build Complete
-09:47:52 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-09:50:24 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-09:51:30 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-09:53:36 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-10:01:58 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-10:07:20 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-Creating app_vector.xe
-Build Complete
-10:10:33 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-10:27:20 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-10:54:51 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-10:56:57 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Build Complete
-10:59:46 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Creating app_vector.xe
-Build Complete
-11:01:57 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-11:03:06 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_adaptive.c
-Analyzing xmos_dsp_filters.c
-Analyzing xmos_dsp_math.c
-Analyzing xmos_dsp_matrix.c
-Analyzing xmos_dsp_statistics.c
-Analyzing xmos_dsp_vector.c
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Creating dependencies for xmos_dsp_vector.c
-Creating dependencies for xmos_dsp_statistics.c
-Creating dependencies for xmos_dsp_matrix.c
-Creating dependencies for xmos_dsp_math.c
-Creating dependencies for xmos_dsp_filters.c
-Creating dependencies for xmos_dsp_adaptive.c
-Compiling xmos_dsp_adaptive.c
-Compiling xmos_dsp_filters.c
-Compiling xmos_dsp_math.c
-Compiling xmos_dsp_matrix.c
-Compiling xmos_dsp_statistics.c
-Compiling xmos_dsp_vector.c
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-11:03:57 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-11:04:33 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-11:09:07 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-../src/app_vector.xc:30:7: warning: unused variable `i'
-  int i;
-      ^
-Creating app_vector.xe
-Build Complete
-11:09:41 **** Incremental Build of configuration Default for project app_vector ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_vector.xc
-Propagating analysis
-Creating dependencies for app_vector.xc
-Compiling app_vector.xc
-Creating app_vector.xe
-Build Complete
-11:11:46 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
-Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
 Creating app_filters.xe
 Build Complete

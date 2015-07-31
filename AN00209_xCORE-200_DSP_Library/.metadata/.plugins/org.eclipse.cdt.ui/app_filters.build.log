@@ -1,13 +1,13 @@
-11:11:46 **** Incremental Build of configuration Default for project app_filters ****
+09:40:30 **** Incremental Build of configuration Default for project app_filters ****
 xmake CONFIG=Default all 
 Checking build modules
 Using build modules: lib_dsp
-Analyzing xmos_dsp_vector.c
+Analyzing xmos_dsp_filters.c
 Propagating analysis
-Creating dependencies for xmos_dsp_vector.c
-Compiling xmos_dsp_vector.c
+Creating dependencies for xmos_dsp_filters.c
+Compiling xmos_dsp_filters.c
 Creating app_filters.xe
 Build Complete
 
-11:11:58 Build Finished (took 11s.516ms)
+09:40:42 Build Finished (took 12s.115ms)
 

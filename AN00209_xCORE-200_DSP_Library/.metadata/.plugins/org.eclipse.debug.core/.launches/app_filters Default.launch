@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.xmos.cdt.core.Launch">
-<stringAttribute key="com.xmos.cdt.device_id" value="7uwFuk35"/>
 <booleanAttribute key="com.xmos.cdt.display_command_in_console" value="false"/>
 <booleanAttribute key="com.xmos.cdt.displaystats" value="false"/>
 <booleanAttribute key="com.xmos.cdt.enablegprof" value="false"/>
@@ -17,8 +16,7 @@
 <stringAttribute key="com.xmos.cdt.maxcyclestext" value=""/>
 <booleanAttribute key="com.xmos.cdt.pins" value="false"/>
 <listAttribute key="com.xmos.cdt.pins.connections"/>
-<booleanAttribute key="com.xmos.cdt.simulator_launch" value="false"/>
-<stringAttribute key="com.xmos.cdt.target_name" value="XMOS XTAG-3 connected to O[0] [7uwFuk35]"/>
+<booleanAttribute key="com.xmos.cdt.simulator_launch" value="true"/>
 <booleanAttribute key="com.xmos.cdt.traceDisabled" value="true"/>
 <booleanAttribute key="com.xmos.cdt.traceToConsole" value="false"/>
 <booleanAttribute key="com.xmos.cdt.traceToFile" value="false"/>

@@ -1,0 +1,76 @@
+Minimum location = 0
+Minimum = 0.110000
+Maximum location = 49
+Maximum = 0.600000
+Vector Negate Result
+Dst[0] = -0.110000
+Dst[1] = -0.120000
+Dst[2] = -0.130000
+Dst[3] = -0.140000
+Dst[4] = -0.150000
+Vector Absolute Result
+Dst[0] = 0.110000
+Dst[1] = 0.120000
+Dst[2] = 0.130000
+Dst[3] = 0.140000
+Dst[4] = -0.150000
+Vector / scalar addition Result
+Dst[0] = 2.110000
+Dst[1] = 2.120000
+Dst[2] = 2.130000
+Dst[3] = 2.140000
+Dst[4] = 2.150000
+Vector / scalar multiplication Result
+Dst[0] = 0.220000
+Dst[1] = 0.240000
+Dst[2] = 0.260000
+Dst[3] = 0.280000
+Dst[4] = 0.300000
+Vector / vector addition Result
+Dst[0] = 0.620000
+Dst[1] = 0.640000
+Dst[2] = 0.660000
+Dst[3] = 0.680000
+Dst[4] = 0.700000
+Vector / vector subtraction Result
+Dst[0] = -0.400000
+Dst[1] = -0.400000
+Dst[2] = -0.400000
+Dst[3] = -0.400000
+Dst[4] = -0.400000
+Vector / vector multiplication Result
+Dst[0] = 0.056100
+Dst[1] = 0.062400
+Dst[2] = 0.068900
+Dst[3] = 0.075600
+Dst[4] = 0.082500
+Vector multiplication and scalar addition Result
+Dst[0] = 2.056100
+Dst[1] = 2.062400
+Dst[2] = 2.068900
+Dst[3] = 2.075600
+Dst[4] = 2.082500
+Vector / Scalar multiplication and vector addition Result
+Dst[0] = 0.730000
+Dst[1] = 0.760000
+Dst[2] = 0.790000
+Dst[3] = 0.820000
+Dst[4] = 0.850000
+Vector / Scalar multiplication and vector subtraction Result
+Dst[0] = -0.453900
+Dst[1] = -0.457600
+Dst[2] = -0.461100
+Dst[3] = -0.464400
+Dst[4] = -0.467500
+Vector / Vector multiplication and vector addition Result
+Dst[0] = -127.389999
+Dst[1] = -127.379997
+Dst[2] = -127.370003
+Dst[3] = -127.360001
+Dst[4] = -127.349998
+Vector / Vector multiplication and vector subtraction Result
+Dst[0] = -0.553900
+Dst[1] = -0.557600
+Dst[2] = -0.561100
+Dst[3] = -0.564400
+Dst[4] = -0.567500

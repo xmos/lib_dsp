@@ -3,6 +3,7 @@
 <fDef name="delay_milliseconds" global="true" noreturn="false" doNotSpecialize="true" numParams="1"/>
 <fDef name="delay_seconds" global="true" noreturn="false" doNotSpecialize="true" numParams="1"/>
 <fDef name="main" global="true" noreturn="false" doNotSpecialize="false" numParams="0"/>
+<fDef name="print31" global="true" noreturn="false" doNotSpecialize="false" numParams="1"/>
 <fCall name="delay_ticks_longlong" global="true" numArgs="1">
   <arg num="0">
     <values>
@@ -19,6 +20,30 @@
 </fCall>
 <fCall name="delay_ticks_longlong" global="true" numArgs="1">
   <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="2">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="1">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="2">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="1">
     <values>
       <value type="unknown"/>
     </values>
@@ -167,6 +192,158 @@
     </values>
   </arg>
   <arg num="2">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="3">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="1">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="2">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="xmos_dsp_filters_interpolate" global="true" numArgs="7">
+  <arg num="0">
+    <values>
+      <value type="intval"><intval isSigned="true" val="214748365"/></value>
+    </values>
+  </arg>
+  <arg num="1">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="2">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="3">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="4">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="5">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="6">
+    <values>
+      <value type="intval"><intval isSigned="true" val="31"/></value>
+    </values>
+  </arg>
+</fCall>
+<fCall name="print31" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="3">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="1">
+    <values>
+      <value type="intval"><intval isSigned="true" val="32"/></value>
+    </values>
+  </arg>
+  <arg num="2">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="xmos_dsp_filters_decimate" global="true" numArgs="6">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="1">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="2">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="3">
+    <values>
+      <value type="intval"><intval isSigned="true" val="32"/></value>
+    </values>
+  </arg>
+  <arg num="4">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+  <arg num="5">
+    <values>
+      <value type="intval"><intval isSigned="true" val="31"/></value>
+    </values>
+  </arg>
+</fCall>
+<fCall name="print31" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="1">
+  <arg num="0">
+    <values>
+      <value type="unknown"/>
+    </values>
+  </arg>
+</fCall>
+<fCall name="printf" global="true" numArgs="1">
+  <arg num="0">
     <values>
       <value type="unknown"/>
     </values>
