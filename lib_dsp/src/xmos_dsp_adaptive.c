@@ -83,7 +83,7 @@ int xmos_dsp_adaptive_nlms
     int  step_size,
     int  q_format
 ) {
-    int output_sample, mu_err_egy, energy;
+    int output_sample, energy, adjustment;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
@@ -99,16 +99,19 @@ int xmos_dsp_adaptive_nlms
     energy = xmos_dsp_vector_power( state_data, tap_count, q_format );
     //printf( "E = %08x %f\n", energy, F31(energy) );
     
-    // mu_err_egy = error * mu / energy
-    // <FIXME>: Reciprocal causes overflow, example 1 / Q31(0.032)
-    energy     = xmos_dsp_math_reciprocal( energy, q_format );
-    mu_err_egy = xmos_dsp_math_multiply  ( *error_sample, step_size, q_format );
-    mu_err_egy = xmos_dsp_math_multiply  ( energy, mu_err_egy, q_format );
+    // adjustment = error * mu / energy
+    
+    // Saturate the reciprocal value to max value for the given q_format
+    if( energy < (1 << (31-(31-q_format)*2)) ) energy = (1 << (31-(31-q_format)*2)) + 0;
+    energy = xmos_dsp_math_reciprocal( energy, q_format );
+    
+    adjustment = xmos_dsp_math_multiply  ( *error_sample, step_size, q_format );
+    adjustment = xmos_dsp_math_multiply  ( energy, adjustment, q_format );
     
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    xmos_dsp_vector_muls_addv( state_data, mu_err_egy, filter_coeffs, filter_coeffs, tap_count, q_format );
+    xmos_dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, tap_count, q_format );
         
     return output_sample;
 }
