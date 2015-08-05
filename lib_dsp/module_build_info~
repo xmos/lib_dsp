@@ -1,0 +1,3 @@
+OPTIONAL_HEADERS += debug_conf.h xassert_conf.h
+
+VERSION = 1.0.0

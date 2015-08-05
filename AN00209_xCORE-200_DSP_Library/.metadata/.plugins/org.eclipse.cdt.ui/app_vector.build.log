@@ -1,14 +1,13 @@
-13:10:07 **** Incremental Build of configuration Default for project app_vector ****
+10:02:37 **** Build of configuration Default for project app_vector ****
 xmake CONFIG=Default all 
 Checking build modules
-Using build modules: lib_dsp
+Using build modules: lib_dsp(1.0.0)
 Analyzing xmos_dsp_adaptive.c
 Analyzing xmos_dsp_filters.c
 Analyzing xmos_dsp_math.c
 Analyzing xmos_dsp_matrix.c
 Analyzing xmos_dsp_statistics.c
 Analyzing xmos_dsp_vector.c
-Propagating analysis
 Analyzing app_vector.xc
 Propagating analysis
 Creating dependencies for app_vector.xc
@@ -28,5 +27,5 @@ Compiling app_vector.xc
 Creating app_vector.xe
 Build Complete
 
-13:10:34 Build Finished (took 27s.206ms)
+10:02:59 Build Finished (took 22s.436ms)
 

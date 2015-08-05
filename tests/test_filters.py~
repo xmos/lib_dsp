@@ -1,0 +1,12 @@
+import xmostest
+
+def runtest():
+    resources = xmostest.request_resource("xsim")
+     
+    tester = xmostest.ComparisonTester(open('filters_test.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_filters', {})
+     
+    xmostest.run_on_simulator(resources['xsim'],
+                              'app_filters/bin/app_filters.xe',
+                              tester=tester)

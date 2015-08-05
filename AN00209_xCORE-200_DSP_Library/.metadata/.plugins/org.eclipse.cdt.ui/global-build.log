@@ -1,16 +1,16 @@
-23:33:44 **** Build of configuration Default for project app_adaptive ****
+10:02:37 **** Build of configuration Default for project app_vector ****
 xmake CONFIG=Default all 
 Checking build modules
-Using build modules: lib_dsp
+Using build modules: lib_dsp(1.0.0)
 Analyzing xmos_dsp_adaptive.c
 Analyzing xmos_dsp_filters.c
 Analyzing xmos_dsp_math.c
 Analyzing xmos_dsp_matrix.c
 Analyzing xmos_dsp_statistics.c
 Analyzing xmos_dsp_vector.c
-Analyzing app_adaptive.xc
+Analyzing app_vector.xc
 Propagating analysis
-Creating dependencies for app_adaptive.xc
+Creating dependencies for app_vector.xc
 Creating dependencies for xmos_dsp_vector.c
 Creating dependencies for xmos_dsp_statistics.c
 Creating dependencies for xmos_dsp_matrix.c
@@ -23,11 +23,6 @@ Compiling xmos_dsp_math.c
 Compiling xmos_dsp_matrix.c
 Compiling xmos_dsp_statistics.c
 Compiling xmos_dsp_vector.c
-Compiling app_adaptive.xc
-Creating app_adaptive.xe
-Build Complete
-23:34:34 **** Incremental Build of configuration Default for project app_adaptive ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
+Compiling app_vector.xc
+Creating app_vector.xe
 Build Complete
