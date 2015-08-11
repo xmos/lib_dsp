@@ -5,7 +5,7 @@ def runtest():
      
     tester = xmostest.ComparisonTester(open('filters_test.expect'),
                                        'lib_dsp', 'simple_tests',
-                                       'filters_test', {})
+                                       'app_filters', {})
      
     xmostest.run_on_simulator(resources['xsim'],
                               '../AN00209_xCORE-200_DSP_Library/app_filters/bin/app_filters.xe',

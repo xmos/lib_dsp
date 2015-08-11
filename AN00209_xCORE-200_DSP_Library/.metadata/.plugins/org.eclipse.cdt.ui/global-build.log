@@ -1,125 +1,28 @@
-08:51:36 **** Incremental Build of configuration Default for project app_filters ****
+10:02:37 **** Build of configuration Default for project app_vector ****
 xmake CONFIG=Default all 
 Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-../src/app_filters.xc:154:80: error: use of undeclared identifer `n'
-      printf( "INTERP L=%02u C=%03u:            %f\n", r, r*c, 10000.0/(float)(n-m));
-                                                                               ^
-../src/app_filters.xc:154:82: error: use of undeclared identifer `m'
-      printf( "INTERP L=%02u C=%03u:            %f\n", r, r*c, 10000.0/(float)(n-m));
-                                                                                 ^
-../src/app_filters.xc:46:10: warning: unused variable `j'
-  int i, j, c, r, x, y;
-         ^
-../src/app_filters.xc:46:13: warning: unused variable `c'
-  int i, j, c, r, x, y;
-            ^
-../src/app_filters.xc:46:16: warning: unused variable `r'
-  int i, j, c, r, x, y;
-               ^
-../src/app_filters.xc:46:22: warning: unused variable `y'
-  int i, j, c, r, x, y;
-                     ^
-xmake[1]: *** [.build/src//app_filters.xc.pca.xml] Error 1
-xmake: *** [analyze] Error 2
-08:56:51 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-08:58:12 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-08:59:03 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:02:05 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:04:13 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:07:33 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:14:45 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:23:53 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:29:55 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
-Analyzing app_filters.xc
-Propagating analysis
-Creating dependencies for app_filters.xc
-Compiling app_filters.xc
-Creating app_filters.xe
-Build Complete
-09:40:30 **** Incremental Build of configuration Default for project app_filters ****
-xmake CONFIG=Default all 
-Checking build modules
-Using build modules: lib_dsp
+Using build modules: lib_dsp(1.0.0)
+Analyzing xmos_dsp_adaptive.c
 Analyzing xmos_dsp_filters.c
+Analyzing xmos_dsp_math.c
+Analyzing xmos_dsp_matrix.c
+Analyzing xmos_dsp_statistics.c
+Analyzing xmos_dsp_vector.c
+Analyzing app_vector.xc
 Propagating analysis
+Creating dependencies for app_vector.xc
+Creating dependencies for xmos_dsp_vector.c
+Creating dependencies for xmos_dsp_statistics.c
+Creating dependencies for xmos_dsp_matrix.c
+Creating dependencies for xmos_dsp_math.c
 Creating dependencies for xmos_dsp_filters.c
+Creating dependencies for xmos_dsp_adaptive.c
+Compiling xmos_dsp_adaptive.c
 Compiling xmos_dsp_filters.c
-Creating app_filters.xe
+Compiling xmos_dsp_math.c
+Compiling xmos_dsp_matrix.c
+Compiling xmos_dsp_statistics.c
+Compiling xmos_dsp_vector.c
+Compiling app_vector.xc
+Creating app_vector.xe
 Build Complete

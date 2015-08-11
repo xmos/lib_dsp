@@ -5,10 +5,10 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.xmos.cdt.toolchain.50902111" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
-					<extension id="com.xmos.cdt.core.XEBinaryParser" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="com.xmos.cdt.core.XdeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.xmos.cdt.core.XEBinaryParser" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -178,6 +178,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/legacy}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/xc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.xc.compiler.input.949645103" name="XC" superClass="com.xmos.cdt.xc.compiler.input"/>
 							</tool>
@@ -484,6 +488,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/legacy}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.c.compiler.input.c.53381600" name="C" superClass="com.xmos.cdt.c.compiler.input.c"/>
 							</tool>
@@ -795,6 +802,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/legacy}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/c++/v1&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.cxx.compiler.input.cpp.1005563196" name="C++" superClass="com.xmos.cdt.cxx.compiler.input.cpp"/>
 							</tool>

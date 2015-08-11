@@ -1,4 +1,4 @@
-<preCompilationAnalysis file="C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_statistics.c">
+<preCompilationAnalysis file="/home/notroot/Desktop/lib_dsp/lib_dsp/lib_dsp/src/xmos_dsp_statistics.c">
   <fCall global="true" name="xmos_dsp_vector_abs_sum"/>
   <fCall global="true" name="xmos_dsp_vector_abs_sum.nstackwords"/>
   <fCall global="true" name="xmos_dsp_vector_abs_sum.maxcores"/>
