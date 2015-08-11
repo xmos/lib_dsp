@@ -83,7 +83,7 @@ int xmos_dsp_adaptive_nlms
     int  step_size,
     int  q_format
 ) {
-    int output_sample, energy, adjustment;
+    int output_sample, energy, adjustment, ee, qq;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
@@ -101,12 +101,14 @@ int xmos_dsp_adaptive_nlms
     
     // adjustment = error * mu / energy
     
+    // Adjust energy q_format to account for range of reciprocal
+    for( qq = q_format, ee = energy; qq >= 0 && !(ee & 0x80000000); --qq ) ee <<= 1;
+    energy = energy >> (q_format - qq);
     // Saturate the reciprocal value to max value for the given q_format
-    if( energy < (1 << (31-(31-q_format)*2)) ) energy = (1 << (31-(31-q_format)*2)) + 0;
-    energy = xmos_dsp_math_reciprocal( energy, q_format );
-    
-    adjustment = xmos_dsp_math_multiply  ( *error_sample, step_size, q_format );
-    adjustment = xmos_dsp_math_multiply  ( energy, adjustment, q_format );
+    if( energy < (1 << (31-(31-qq)*2)) ) energy = (1 << (31-(31-qq)*2)) + 0;
+    energy = xmos_dsp_math_reciprocal( energy, qq );
+    adjustment = xmos_dsp_math_multiply( *error_sample, step_size, q_format );
+    adjustment = xmos_dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
     
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
