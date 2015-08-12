@@ -1643,3 +1643,12 @@ Binding(ALT+CTRL+I,
 
 !ENTRY org.eclipse.cdt.core 1 0 2015-08-03 23:33:27.529
 !MESSAGE Indexed 'lib_dsp' (6 sources, 9 headers) in 0.78 sec: 579 declarations; 861 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0.00%)
+!SESSION 2015-08-05 09:50:38.475 -----------------------------------------------
+eclipse.buildId=I20080702-1800
+java.version=1.8.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.cdt.core 1 0 2015-08-05 09:58:02.697
+!MESSAGE Indexed 'lib_dsp' (6 sources, 9 headers) in 1.38 sec: 579 declarations; 861 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0.00%)
