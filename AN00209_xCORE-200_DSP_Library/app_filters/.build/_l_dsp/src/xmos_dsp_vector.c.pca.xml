@@ -1,4 +1,4 @@
-<preCompilationAnalysis file="C:/Users/johne2/.myrepos/lib_dsp/lib_dsp/src/xmos_dsp_vector.c">
+<preCompilationAnalysis file="/home/notroot/Desktop/lib_dsp/lib_dsp/lib_dsp/src/xmos_dsp_vector.c">
   <fCall global="true" name="xmos_dsp_vector_minimum"/>
   <fCall global="true" name="xmos_dsp_vector_minimum.nstackwords"/>
   <fCall global="true" name="xmos_dsp_vector_minimum.maxcores"/>
