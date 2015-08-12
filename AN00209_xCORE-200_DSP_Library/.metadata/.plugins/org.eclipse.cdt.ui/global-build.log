@@ -41,3 +41,13 @@ Compiling app_vector.xc
 Creating app_vector.xe
 >>>>>>> 4cdfda4574e272900c222fcb31e7eeb5a4ee6712
 Build Complete
+23:10:01 **** Build of configuration Default for project app_adaptive ****
+xmake CONFIG=Default all 
+Checking build modules
+Using build modules: lib_dsp(1.0.0)
+Analyzing xmos_dsp_adaptive.c
+Propagating analysis
+Creating dependencies for xmos_dsp_adaptive.c
+Compiling xmos_dsp_adaptive.c
+Creating app_adaptive.xe
+Build Complete
