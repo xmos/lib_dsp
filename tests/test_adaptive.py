@@ -8,5 +8,5 @@ def runtest():
                                        'app_adaptive', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_adaptive/bin/app_adaptive.xe',
+                              '../examples/AN00209_xCORE-200_DSP_Library/app_adaptive/bin/app_adaptive.xe',
                               tester=tester)

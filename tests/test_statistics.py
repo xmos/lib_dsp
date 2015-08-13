@@ -8,5 +8,5 @@ def runtest():
                                        'app_statistics', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_statistics/bin/app_statistics.xe',
+                              '../examples/AN00209_xCORE-200_DSP_Library/app_statistics/bin/app_statistics.xe',
                               tester=tester)

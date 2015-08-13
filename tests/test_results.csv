@@ -1,7 +1,7 @@
 Product,Test Group,Test,Config,Environment,Result
-lib_dsp,simple_tests,app_adaptive,,,PASS
-lib_dsp,simple_tests,app_filters,,,PASS
-lib_dsp,simple_tests,app_math,,,PASS
-lib_dsp,simple_tests,app_matrix,,,PASS
-lib_dsp,simple_tests,app_statistics,,,PASS
-lib_dsp,simple_tests,app_vector,,,PASS
+lib_dsp,simple_tests,app_adaptive,,,FAIL
+lib_dsp,simple_tests,app_filters,,,FAIL
+lib_dsp,simple_tests,app_math,,,FAIL
+lib_dsp,simple_tests,app_matrix,,,FAIL
+lib_dsp,simple_tests,app_statistics,,,FAIL
+lib_dsp,simple_tests,app_vector,,,FAIL
