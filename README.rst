@@ -34,6 +34,11 @@ This document assumes familiarity with the XMOS xCORE architecture,
 the XMOS tool chain, the 'C' programming language,
 and digital signal processing concepts.
 
+Software version and dependencies
+.................................
+
+.. libdeps::
+
 Related application notes
 .........................
 
