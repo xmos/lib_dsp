@@ -8,5 +8,5 @@ def runtest():
                                        'app_filters', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../examples/AN00209_xCORE-200_DSP_Library/app_filters/bin/app_filters.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_filters/bin/app_filters.xe',
                               tester=tester)
