@@ -1,146 +1,39 @@
 .. include:: ../../README.rst
 
-|newpage|
-
-Overview
---------
-
 Introduction
-............
+------------
 
-Block diagram
-.............
+The XMOS xCORE-200 DSP Elements Library provides foundation Digital
+Signal Processing functions.
 
-xCORE-200 DSP Library Application Note
---------------------------------------
+The library is split into the following modules :
 
-|newpage|
+   * Basic Math - xmos_dsp_math.h
+   * Filtering - xmos_dsp_filters.h
+   * Vectors - xmos_dsp_vector.h
+   * Statistics - xmos_dsp_statistics.h
+   * Adaptive Filters - xmos_dsp_adaptive.h
+   * Matrix Math - xmos_dsp_matrix.h
 
-Makefile additions for this example
-...................................
+The library supports variable Q formats from Q16 to Q31, using the
+macros in the following header file : xmos_dsp_qformat.h.
 
-To start using the USB library, you need to add **lib_usb** to your makefile::
+In order to use any of these modules and the Q formats it is
+only necessary to include the following header file :
 
-  USED_MODULES = ... lib_usb ...
+#include "xmos_dsp_elements.h"
 
-You can then access the USB functions in your source code via the *usb.h* header file::
+Using The Test Applications
+---------------------------
 
-  #include <usb.h>
+The test functions support all of the functions in the library :
 
-Source code files
-.................
+   * Basic Math - math.c
+   * Filtering - filters.c
+   * Vectors - vector.c
+   * Statistics - statistics.c
+   * Adaptive Filters - adaptive.c
+   * Matrix Math - matrix.c
 
-The example application consists of the following files::
-  
-  main.xc
-  xud_cdc.xc
-  xud_cdc.h
+All of the test functions are written using Q24 format.
 
-*xud_cdc.xc* contains the CDC ACM implementation which includes the USB descriptors, endpoints handler functions and the xC interface (APIs) for application programs.
-The *xud_cdc.h* header is included in the *main.xc* to use the APIs exposed
-by *xud_cdc.xc*. The *main.xc* implements the application logic that interacts over the USB CDC link with a host terminal application. 
-
-Declaring resource and setting up the USB components
-....................................................
-
-The application main() function
-...............................
-
-Below is the source code for the main function of this application, which is taken from
-the source file ``main.xc``
-
-Looking at this in a more detail you can see the following:
-
-  - The par statement starts four separate tasks in parallel.
-
-  - There is a task to configure and execute the USB library: ``xud``. This library 
-    call runs in an infinite loop and handles all the underlying USB communications and provides abstraction at the endpoints level.
-
-  - There is a task to startup and run the Endpoint0 code: ``Endpoint0()``. It handles the 
-    control endpoint zero and must be run in a separate logical core inorder to promptly respond to the control requests from host.
-
-  - There is a task to handle all the other three endpoints required for the CDC class: 
-    ``CdcEnpointsHandler()``. This function handles one bulk OUT and one bulk IN 
-    endpoints for data transmissions and one interrupt IN endpoint for sending notifications 
-    to host.
-
-  - There is a task to run the application logic that interacts with user over the 
-    virtual serial port: ``app_virtual_com()``.
-
-  - The define USB_TILE describes the tile on which the individual tasks will run.
-
-  - The xCONNECT communication channels and the xC interface *cdc_data* used for inter task 
-    communication are setup at the beginning of ``main()`` and passed on to respective tasks.
-
-  - The USB defines discussed earlier are passed into the function ``xud()``.
-
-
-|appendix|
-|newpage|
-
-Demo Hardware Setup
--------------------
-
-To setup the demo hardware the following boards are required.
-
-|newpage|
-
-Launching the demo application
-------------------------------
-
-Once the demo example has been built either from the command line using
-xmake or via the build mechanism of xTIMEcomposer studio we can execute
-the application on the xCORE-USB sliceKIT. 
-
-Once built there will be a *bin* directory within the project which
-contains the binary for the xCORE device. The xCORE binary has a XMOS standard 
-.xe extension.
-
-Launching from the command line
-...............................
-
-From the command line we use the ``xrun`` tool to download code to both the
-xCORE devices. If we change into the bin directory of the project
-we can execute the code on the xCORE microcontroller as follows::
-
-> xrun app_usb_cdc_demo.xe          <-- Download and execute the xCORE code
-
-Once this command has executed the CDC device will have enumerated as virtual serial port on 
-your host machine.
-
-Launching from xTIMEcomposer Studio
-...................................
-
-From xTIMEcomposer Studio we use the run mechanism to download code to 
-xCORE device. From *Project Explorer* select the xCORE binary from the bin directory, right 
-click and then run as xCORE application will execute the code on the xCORE device.
-
-Once this command has executed, the CDC device will have enumerated as virtual serial port on 
-your host machine.
-
-|newpage|
-
-References
-----------
-  
-.. nopoints::
-
-  * XMOS Tools User Guide
-
-    http://www.xmos.com/published/xtimecomposer-user-guide
-
-  * XMOS xCORE Programming Guide
-
-    http://www.xmos.com/published/xmos-programming-guide
-  
-
-|newpage|
-
-Full source code listing
-------------------------
-
-Source code for main.xc
-.......................
-
-
-|newpage|
