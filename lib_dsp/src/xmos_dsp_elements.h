@@ -1,3 +1,4 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 #ifndef XMOS_DSP_ELEMENTS
 #define XMOS_DSP_ELEMENTS
 

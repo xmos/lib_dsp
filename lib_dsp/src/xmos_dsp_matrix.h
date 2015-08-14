@@ -1,3 +1,4 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 // ================================================================================================
 #ifndef XMOS_DSP_MATRIX
 #define XMOS_DSP_MATRIX

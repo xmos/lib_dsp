@@ -1,3 +1,4 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 fndef __dsp_h__
 #define __dsp_h__
 #include <../lib_dsp/xmos_dsp_adaptive.h>

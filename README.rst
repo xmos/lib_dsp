@@ -1,28 +1,38 @@
-DSP Library
-===========
+xCORE-200 DSP Library
+=====================
 
-Overview
---------
+.. version:: 1.0.0
 
-The XMOS DSP library allows you to implement DSP functions on the
-XMOS xCORE-200 devices.
+Summary
+-------
 
-Features
-........
+This API reference manual describes the XMOS fixed-point digital signal processing
+software library.  The library implements of a suite of common signal processing functions
+for use on XMOS xCORE-200 multicore microcontrollers.
 
- * Abstract interface to DSP functions
- * Allow concurrent / re-entrant access to all functions
- * Supports Q Format fixed point numbers from Q16 to Q31
+Required tools and libraries
+............................
 
-Operating modes
-...............
+* xTIMEcomposer Tools Version 14.0.1 or later
 
- * Can be called from C/xC or assembly code
+Required hardware
+.................
 
-Software version and dependencies
-.................................
+Only XMOS xCORE-200 based multicore microcontrollers are supported with this library.
+The previsous generation XS1 based multicore microntrollers are not supported.
 
-.. libdeps::
+The xCORE-200 has a single cycle 32x32->64 bit multiply/accumulate unit,
+single cycle double-word load and store, dual issue instruction execution,
+and other instruction set enhancements.
+These features make xCORE-200 an efficient platform for executing
+digital signal processing algorithms.
+
+Prerequisites
+.............
+
+This document assumes familiarity with the XMOS xCORE architecture,
+the XMOS tool chain, the 'C' programming language,
+and digital signal processing concepts.
 
 Related application notes
 .........................
