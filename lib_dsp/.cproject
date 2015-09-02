@@ -171,10 +171,17 @@
 									<listOptionValue builtIn="false" value="__XCC_HAVE_FLOAT__=1"/>
 									<listOptionValue builtIn="false" value="_XSCOPE_PROBES_INCLUDE_FILE=&quot;/tmp/ccjsPcFI.h&quot;"/>
 								</option>
+<<<<<<< HEAD
+								<option id="com.xmos.xc.compiler.option.include.paths.1034653062" name="com.xmos.xc.compiler.option.include.paths" superClass="com.xmos.xc.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include/xc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include/clang&quot;"/>
+=======
 								<option id="com.xmos.xc.compiler.option.include.paths.497342305" name="com.xmos.xc.compiler.option.include.paths" superClass="com.xmos.xc.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/xc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
+>>>>>>> 4cdfda4574e272900c222fcb31e7eeb5a4ee6712
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters/src}&quot;"/>
 								</option>
@@ -477,9 +484,15 @@
 									<listOptionValue builtIn="false" value="__XCC_HAVE_FLOAT__=1"/>
 									<listOptionValue builtIn="false" value="_XSCOPE_PROBES_INCLUDE_FILE=&quot;/tmp/cccZov9N.h&quot;"/>
 								</option>
+<<<<<<< HEAD
+								<option id="com.xmos.c.compiler.option.include.paths.629593210" name="com.xmos.c.compiler.option.include.paths" superClass="com.xmos.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include/clang&quot;"/>
+=======
 								<option id="com.xmos.c.compiler.option.include.paths.1270934057" name="com.xmos.c.compiler.option.include.paths" superClass="com.xmos.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
+>>>>>>> 4cdfda4574e272900c222fcb31e7eeb5a4ee6712
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters/src}&quot;"/>
 								</option>
@@ -786,10 +799,17 @@
 									<listOptionValue builtIn="false" value="__XCC_HAVE_FLOAT__=1"/>
 									<listOptionValue builtIn="false" value="_XSCOPE_PROBES_INCLUDE_FILE=&quot;/tmp/ccXahJXf.h&quot;"/>
 								</option>
+<<<<<<< HEAD
+								<option id="com.xmos.cxx.compiler.option.include.paths.668477310" name="com.xmos.cxx.compiler.option.include.paths" superClass="com.xmos.cxx.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include/clang&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}\target/include/c++/v1&quot;"/>
+=======
 								<option id="com.xmos.cxx.compiler.option.include.paths.1766676557" name="com.xmos.cxx.compiler.option.include.paths" superClass="com.xmos.cxx.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/clang&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${XMOS_TOOL_PATH}/target/include/c++/v1&quot;"/>
+>>>>>>> 4cdfda4574e272900c222fcb31e7eeb5a4ee6712
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app_filters/src}&quot;"/>
 								</option>

@@ -1,3 +1,4 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Statistics Functions Test Program
 // Uses Q24 format
 
