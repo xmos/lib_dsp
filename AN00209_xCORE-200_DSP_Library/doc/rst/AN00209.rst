@@ -18,13 +18,27 @@ The library is split into the following modules :
 The library supports variable Q formats from Q16 to Q31, using the
 macros in the following header file : xmos_dsp_qformat.h.
 
-In order to use any of these modules and the Q formats it is
-only necessary to include the following header file :
+Using The DSP Library
+---------------------
 
-#include "xmos_dsp_elements.h"
+Makefile Additions For These Examples
+.....................................
+
+To start using the DSP Library, you need to add lib_dsp to your Makefile::
+
+  USED_MODULES = ... lib_dsp ...
+
+Including The Library Into Your Source Code
+...........................................
+
+In order to use any of these modules and the Q formats it is
+only necessary to include the following header file::
+
+  #include "xmos_dsp_elements.h"
+
 
 Using The Test Applications
----------------------------
+...........................
 
 The test functions support all of the functions in the library :
 
@@ -37,3 +51,77 @@ The test functions support all of the functions in the library :
 
 All of the test functions are written using Q24 format.
 
+|appendix|
+
+References
+----------
+  
+.. nopoints::
+
+  * XMOS Tools User Guide
+
+    http://www.xmos.com/published/xtimecomposer-user-guide
+
+  * XMOS xCORE Programming Guide
+
+    http://www.xmos.com/published/xmos-programming-guide
+  
+  * XMOS DSP Library
+
+    http://www.xmos.com/support/libraries/lib_dsp
+
+  * xCORE-200: The XMOS XS2 Architecture (ISA)
+  
+    https://www.xmos.com/published/xs2-isa-specification
+
+
+Full Source Code Listings
+-------------------------
+
+Adaptive Filtering Functions
+............................
+
+.. literalinclude:: ../../app_adaptive/src/app_adaptive.xc
+  :largelisting:
+
+|newpage|
+
+Fixed Coefficient Filtering Functions
+.....................................
+
+.. literalinclude:: ../../app_filters/src/app_filters.xc
+  :largelisting:
+
+|newpage|
+
+Math Functions
+..............
+
+.. literalinclude:: ../../app_math/src/app_math.xc
+  :largelisting:
+
+|newpage|
+
+Matrix Functions
+................
+
+.. literalinclude:: ../../app_matrix/src/app_matrix.xc
+  :largelisting:
+
+|newpage|
+
+Statistics Functions
+....................
+
+.. literalinclude:: ../../app_statistics/src/app_statistics.xc
+  :largelisting:
+
+|newpage|
+
+Vector Functions
+................
+
+.. literalinclude:: ../../app_vector/src/app_vector.xc
+  :largelisting:
+
+|newpage|
