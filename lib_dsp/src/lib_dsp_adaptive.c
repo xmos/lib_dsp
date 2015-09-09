@@ -1,15 +1,15 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_math.h"
-#include "xmos_dsp_filters.h"
-#include "xmos_dsp_vector.h"
-#include "xmos_dsp_statistics.h"
-#include "xmos_dsp_adaptive.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_math.h"
+#include "lib_dsp_filters.h"
+#include "lib_dsp_vector.h"
+#include "lib_dsp_statistics.h"
+#include "lib_dsp_adaptive.h"
 
-// ================================================================================================
+// ============================================================================
 
 // LMS filter
 //
@@ -25,7 +25,7 @@
 //
 // Return value:       Resulting filter output sample.
 
-int xmos_dsp_adaptive_lms
+int lib_dsp_adaptive_lms
 (
     int  source_sample,
     int  reference_sample,
@@ -41,7 +41,7 @@ int xmos_dsp_adaptive_lms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = lib_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -51,13 +51,13 @@ int xmos_dsp_adaptive_lms
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    mu_err = xmos_dsp_math_multiply( *error_sample, step_size, q_format );
-    xmos_dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, tap_count, q_format );
+    mu_err = lib_dsp_math_multiply( *error_sample, step_size, q_format );
+    lib_dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, tap_count, q_format );
         
     return output_sample;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Normalized LMS filter
 //
@@ -73,7 +73,7 @@ int xmos_dsp_adaptive_lms
 //
 // Return value:       Resulting filter output sample.
 
-int xmos_dsp_adaptive_nlms
+int lib_dsp_adaptive_nlms
 (
     int  source_sample,
     int  reference_sample,
@@ -89,7 +89,7 @@ int xmos_dsp_adaptive_nlms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = xmos_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = lib_dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -97,7 +97,7 @@ int xmos_dsp_adaptive_nlms
     *error_sample = reference_sample - output_sample;
     
     // Compute the instantaneous enegry: E = x[n]^2 + x[n-1]^2 + ... + x[n-N+1]^2
-    energy = xmos_dsp_vector_power( state_data, tap_count, q_format );
+    energy = lib_dsp_vector_power( state_data, tap_count, q_format );
     //printf( "E = %08x %f\n", energy, F31(energy) );
     
     // adjustment = error * mu / energy
@@ -107,17 +107,17 @@ int xmos_dsp_adaptive_nlms
     energy = energy >> (q_format - qq);
     // Saturate the reciprocal value to max value for the given q_format
     if( energy < (1 << (31-(31-qq)*2)) ) energy = (1 << (31-(31-qq)*2)) + 0;
-    energy = xmos_dsp_math_reciprocal( energy, qq );
-    adjustment = xmos_dsp_math_multiply( *error_sample, step_size, q_format );
-    adjustment = xmos_dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
+    energy = lib_dsp_math_reciprocal( energy, qq );
+    adjustment = lib_dsp_math_multiply( *error_sample, step_size, q_format );
+    adjustment = lib_dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
     
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    xmos_dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, tap_count, q_format );
+    lib_dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, tap_count, q_format );
         
     return output_sample;
 }
 
-// ================================================================================================
+// ============================================================================
 

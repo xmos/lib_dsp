@@ -1,14 +1,14 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_math.h"
-#include "xmos_dsp_vector.h"
-#include "xmos_dsp_statistics.h"
-#include "xmos_dsp_filters.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_math.h"
+#include "lib_dsp_vector.h"
+#include "lib_dsp_statistics.h"
+#include "lib_dsp_filters.h"
 
-// ================================================================================================
+// ============================================================================
 
 // FIR filter
 //
@@ -21,7 +21,7 @@
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_filters_fir
+int lib_dsp_filters_fir
 (
     int        input_sample,
     const int* filter_coeffs,
@@ -725,11 +725,11 @@ int xmos_dsp_filters_fir
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // FIR filter (even coeff array boundary, no state data shifting - for internal use only)
 
-int _xmos_dsp_filters_interpolate__fir_even
+int _lib_dsp_filters_interpolate__fir_even
 (
     const int* coeff,
     const int* state,
@@ -839,7 +839,7 @@ int _xmos_dsp_filters_interpolate__fir_even
 
 // FIR filter (odd coeff array boundary, no state data shifting - for internal use only)
 
-int _xmos_dsp_filters_interpolate__fir_odd
+int _lib_dsp_filters_interpolate__fir_odd
 (
     const int* coeff,
     const int* state,
@@ -967,7 +967,7 @@ int _xmos_dsp_filters_interpolate__fir_odd
 // 'output_samples': The resulting interpolated samples.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_filters_interpolate
+void lib_dsp_filters_interpolate
 (
     int       input,
     const int coeff[],
@@ -1065,15 +1065,15 @@ void xmos_dsp_filters_interpolate
     for( int i = 0; i < L; ++i )
     {
         if( odd )
-            output[i] = _xmos_dsp_filters_interpolate__fir_odd( coeff, state, length, q_format );
+            output[i] = _lib_dsp_filters_interpolate__fir_odd( coeff, state, length, q_format );
         else
-            output[i] = _xmos_dsp_filters_interpolate__fir_even( coeff, state, length, q_format );
+            output[i] = _lib_dsp_filters_interpolate__fir_even( coeff, state, length, q_format );
         coeff += length;
         odd ^= length & 1;
     }
 }    
 
-// ================================================================================================
+// ============================================================================
 
 // Decimating FIR filter
 //
@@ -1087,7 +1087,7 @@ void xmos_dsp_filters_interpolate
 //
 // return value:    The resulting decimated sample.
 
-int xmos_dsp_filters_decimate
+int lib_dsp_filters_decimate
 (
     int       input_samples[],
     const int filter_coeffs[],
@@ -1107,13 +1107,13 @@ int xmos_dsp_filters_decimate
     b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  ?  ?  ?  ?  ?  ?  ?  ?  ?  ? x0 x1 -> y0
     */
 
-    output = xmos_dsp_filters_fir( input_samples[0], filter_coeffs, state_data, tap_count, q_format );
+    output = lib_dsp_filters_fir( input_samples[0], filter_coeffs, state_data, tap_count, q_format );
     for( int i = 0; i < tap_count - (decim_factor-1); ++i ) *dst-- = *src--;
     for( int i = 0; i < decim_factor-1; ++i ) state_data[i] = input_samples[i+1];
     return output;    
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Biquadratic IIR filter (direct form I)
 //
@@ -1125,7 +1125,7 @@ int xmos_dsp_filters_decimate
 //
 // return value:    Resulting filter output sample.
 
-int xmos_dsp_filters_biquad
+int lib_dsp_filters_biquad
 (
     int        input_sample,
     const int* filter_coeffs,
@@ -1149,7 +1149,7 @@ int xmos_dsp_filters_biquad
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Cascaded biquadratic IIR filters (direct form I)
 //
@@ -1163,7 +1163,7 @@ int xmos_dsp_filters_biquad
 //
 // return value:    Resulting filter output sample
 
-int xmos_dsp_filters_biquads
+int lib_dsp_filters_biquads
 (
     int        input_sample,
     const int* filter_coeffs,
@@ -1394,4 +1394,4 @@ int xmos_dsp_filters_biquads
     return 0;
 }
 
-// ================================================================================================
+// ============================================================================

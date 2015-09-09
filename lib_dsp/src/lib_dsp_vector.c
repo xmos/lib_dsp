@@ -1,11 +1,11 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_vector.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_vector.h"
 
-// ================================================================================================
+// ============================================================================
 
 // Locate the vector's first occurring minimum value
 //
@@ -14,7 +14,7 @@
 //
 // return value:     Array index where first minimum value occurs.
 
-int xmos_dsp_vector_minimum
+int lib_dsp_vector_minimum
 (
     const int* input_vector,
     int        vector_length
@@ -95,7 +95,7 @@ int xmos_dsp_vector_minimum
     return result_location;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Locate the vector's first occurring maximum value
 //
@@ -104,7 +104,7 @@ int xmos_dsp_vector_minimum
 //
 // return value:     Array index where first maximum value occurs.
 
-int xmos_dsp_vector_maximum
+int lib_dsp_vector_maximum
 (
     const int* input_vector,
     int        vector_length
@@ -185,7 +185,7 @@ int xmos_dsp_vector_maximum
     return result_location;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector negation: R[i] = -X[i]
 //
@@ -193,7 +193,7 @@ int xmos_dsp_vector_maximum
 // 'result_vector_R': Pointer to the resulting data array.
 // 'vector_length':   Length of the input and output vectors.
 
-void xmos_dsp_vector_negate
+void lib_dsp_vector_negate
 (
     const int* input_vector_X,
     int*       result_vector_R,
@@ -229,7 +229,7 @@ void xmos_dsp_vector_negate
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector absolute value: R[i] = |X[i]|
 //
@@ -237,7 +237,7 @@ void xmos_dsp_vector_negate
 // 'result_vector_R': Pointer to the resulting data array.
 // 'vector_length':   Length of the input and output vectors.
 
-void xmos_dsp_vector_abs
+void lib_dsp_vector_abs
 (
     const int* input_vector_X,
     int*       result_vector_R,
@@ -273,7 +273,7 @@ void xmos_dsp_vector_abs
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector / scalar addition: R[i] = X[i] + A
 //
@@ -282,7 +282,7 @@ void xmos_dsp_vector_abs
 // 'result_vector_R': Pointer to the resulting data array.
 // 'vector_length':   Length of the input and output vectors.
 
-void xmos_dsp_vector_adds
+void lib_dsp_vector_adds
 (
     const int* input_vector_X,
     int        input_scalar_A,
@@ -319,7 +319,7 @@ void xmos_dsp_vector_adds
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector / scalar multiplication: R[i] = X[i] * A
 //
@@ -329,7 +329,7 @@ void xmos_dsp_vector_adds
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_muls
+void lib_dsp_vector_muls
 (
     const int* input_vector_X,
     int        input_scalar_A,
@@ -401,7 +401,7 @@ void xmos_dsp_vector_muls
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector / vector addition: R[i] = X[i] + Y[i]
 //
@@ -410,7 +410,7 @@ void xmos_dsp_vector_muls
 // 'result_vector_R': Pointer to the resulting data array.
 // 'vector_length':   Length of the input and output vectors.
 
-void xmos_dsp_vector_addv
+void lib_dsp_vector_addv
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -443,7 +443,7 @@ void xmos_dsp_vector_addv
         *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector / vector subtraction: R[i] = X[i] - Y[i]
 //
@@ -452,7 +452,7 @@ void xmos_dsp_vector_addv
 // 'result_vector_R': Pointer to the resulting data array
 // 'vector_length':   Length of the input and output vectors
 
-void xmos_dsp_vector_subv
+void lib_dsp_vector_subv
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -485,7 +485,7 @@ void xmos_dsp_vector_subv
         *result_vector_R++ = *input_vector_X++ - *input_vector_Y++;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector / vector multiplication: R[i] = X[i] * Y[i]
 //
@@ -495,7 +495,7 @@ void xmos_dsp_vector_subv
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_mulv
+void lib_dsp_vector_mulv
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -576,7 +576,7 @@ void xmos_dsp_vector_mulv
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector multiplication and scalar addition: R[i] = X[i] * Y[i] + A
 //
@@ -587,7 +587,7 @@ void xmos_dsp_vector_mulv
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_mulv_adds
+void lib_dsp_vector_mulv_adds
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -656,7 +656,7 @@ void xmos_dsp_vector_mulv_adds
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar multiplication and vector addition: R[i] = X[i] * A + Y[i]
 //
@@ -667,7 +667,7 @@ void xmos_dsp_vector_mulv_adds
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_muls_addv
+void lib_dsp_vector_muls_addv
 (
     const int* input_vector_X,
     int        input_scalar_A,
@@ -736,7 +736,7 @@ void xmos_dsp_vector_muls_addv
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar multiplication and vector subtraction: R[i] = X[i] * A - Y[i]
 //
@@ -747,7 +747,7 @@ void xmos_dsp_vector_muls_addv
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_muls_subv
+void lib_dsp_vector_muls_subv
 (
     const int* input_vector_X,
     int        input_scalar_A,
@@ -816,7 +816,7 @@ void xmos_dsp_vector_muls_subv
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector multiplication and vector addition: R[i] = X[i] * Y[i] + Z[i]
 //
@@ -827,7 +827,7 @@ void xmos_dsp_vector_muls_subv
 // 'vector_length':   Length of the input and output vectors.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_mulv_addv
+void lib_dsp_vector_mulv_addv
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -900,7 +900,7 @@ void xmos_dsp_vector_mulv_addv
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector multiplication and vector addition: R[i] = X[i] * Y[i] - Z[i]
 //
@@ -910,7 +910,7 @@ void xmos_dsp_vector_mulv_addv
 // 'result_vector_R': Pointer to the resulting data array.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_vector_mulv_subv
+void lib_dsp_vector_mulv_subv
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -983,5 +983,5 @@ void xmos_dsp_vector_mulv_subv
     }
 }
 
-// ================================================================================================
+// ============================================================================
 

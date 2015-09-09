@@ -1,12 +1,12 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_vector.h"
-#include "xmos_dsp_matrix.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_vector.h"
+#include "lib_dsp_matrix.h"
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix negation: R[i] = -X[i]
 //
@@ -15,17 +15,17 @@
 // 'row_count':       Number of rows in input matrix.
 // 'column_count':    Number of columns in input matrix.
 
-void xmos_dsp_matrix_negate
+void lib_dsp_matrix_negate
 (
     const int* input_matrix_X,
     int*       result_matrix_R,
     int        row_count,
     int        column_count
 ) {
-    xmos_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
+    lib_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix / scalar addition: R[i] = X[i] + A
 //
@@ -35,7 +35,7 @@ void xmos_dsp_matrix_negate
 // 'row_count':       Number of rows in input and output matrices.
 // 'column_count':    Number of columns in input and output matrices.
 
-void xmos_dsp_matrix_adds
+void lib_dsp_matrix_adds
 (
     const int* input_matrix_X,
     int        scalar_value_A,
@@ -43,7 +43,7 @@ void xmos_dsp_matrix_adds
     int        row_count,
     int        column_count
 ) {
-    xmos_dsp_vector_adds
+    lib_dsp_vector_adds
     (
         input_matrix_X,
         scalar_value_A,
@@ -52,7 +52,7 @@ void xmos_dsp_matrix_adds
     );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix / scalar multiplication: R[i] = X[i] * A
 //
@@ -63,7 +63,7 @@ void xmos_dsp_matrix_adds
 // 'column_count':    Number of columns in input and output matrices.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_matrix_muls
+void lib_dsp_matrix_muls
 (
     const int* input_matrix_X,
     int        scalar_value_A,
@@ -72,7 +72,7 @@ void xmos_dsp_matrix_muls
     int        column_count,
     int        q_format
 ) {
-    xmos_dsp_vector_muls
+    lib_dsp_vector_muls
     (
         input_matrix_X,
         scalar_value_A,
@@ -82,7 +82,7 @@ void xmos_dsp_matrix_muls
     );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix / matrix addition: R[i] = X[i] + Y[i]
 //
@@ -92,7 +92,7 @@ void xmos_dsp_matrix_muls
 // 'row_count':       Number of rows in input and output matrices.
 // 'column_count':    Number of columns in input and output matrices.
 
-void xmos_dsp_matrix_addm
+void lib_dsp_matrix_addm
 (
     const int* input_matrix_X,
     const int* input_matrix_Y,
@@ -100,7 +100,7 @@ void xmos_dsp_matrix_addm
     int        row_count,
     int        column_count
 ) {
-    xmos_dsp_vector_addv
+    lib_dsp_vector_addv
     (
         input_matrix_X,
         input_matrix_Y,
@@ -109,7 +109,7 @@ void xmos_dsp_matrix_addm
     );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix / matrix subtraction: R[i] = X[i] - Y[i]
 //
@@ -119,7 +119,7 @@ void xmos_dsp_matrix_addm
 // 'row_count':       Number of rows in input and output matrices.
 // 'column_count':    Number of columns in input and output matrices.
 
-void xmos_dsp_matrix_subm
+void lib_dsp_matrix_subm
 (
     const int* input_matrix_X,
     const int* input_matrix_Y,
@@ -127,7 +127,7 @@ void xmos_dsp_matrix_subm
     int        row_count,
     int        column_count
 ) {
-    xmos_dsp_vector_subv
+    lib_dsp_vector_subv
     (
         input_matrix_X,
         input_matrix_Y,
@@ -136,7 +136,7 @@ void xmos_dsp_matrix_subm
     );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix / matrix multiplication: R[i] = X[i] * Y[i]
 //
@@ -151,7 +151,7 @@ void xmos_dsp_matrix_subm
 // <TODO> - optimize using double-word load/store
 // <TODO> - optimize for 2x2, 3x3 and 4x4 matrices
 
-void xmos_dsp_matrix_mulm
+void lib_dsp_matrix_mulm
 (
     const int* input_matrix_X,
     const int* input_matrix_Y,
@@ -180,7 +180,7 @@ void xmos_dsp_matrix_mulm
     }
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Matrix transposition
 //
@@ -190,7 +190,7 @@ void xmos_dsp_matrix_mulm
 // 'column_count':    Number of columns in input and output matrices.
 // 'q_format':        Fixed point format, the number of bits making up fractional part.
 
-void xmos_dsp_matrix_transpose
+void lib_dsp_matrix_transpose
 (
     const int* input_matrix_X,
     int*       result_matrix_R,
@@ -208,4 +208,4 @@ void xmos_dsp_matrix_transpose
     }
 }
 
-// ================================================================================================
+// ============================================================================

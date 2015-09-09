@@ -1,11 +1,11 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_math.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_math.h"
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar fixed-point multiply
 //
@@ -15,7 +15,7 @@
 //
 // return value:   input1_value * input2_value.
 
-int xmos_dsp_math_multiply( int input1_value, int input2_value, int q_format )
+int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
     asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
@@ -24,7 +24,7 @@ int xmos_dsp_math_multiply( int input1_value, int input2_value, int q_format )
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar reciprocal
 //
@@ -33,7 +33,7 @@ int xmos_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 //
 // return value:  Reciporcal of input value.
 
-int xmos_dsp_math_reciprocal( int input_value, int q_format )
+int lib_dsp_math_reciprocal( int input_value, int q_format )
 {
     int ah, temp; unsigned al;
     int sign = input_value < 0;
@@ -60,7 +60,7 @@ int xmos_dsp_math_reciprocal( int input_value, int q_format )
     return result;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar inverse square root
 //
@@ -69,7 +69,7 @@ int xmos_dsp_math_reciprocal( int input_value, int q_format )
 //
 // return value:  Inverse square root of input value.
 
-int xmos_dsp_math_invsqrroot( int input_value, int q_format )
+int lib_dsp_math_invsqrroot( int input_value, int q_format )
 {
     int ah = 1 << q_format, result; unsigned al;
     // Approximation algorithm: ah = 1.0, loop[ yy = ah + ah*(1-x*ah^2)/2, ah=yy ]
@@ -91,7 +91,7 @@ int xmos_dsp_math_invsqrroot( int input_value, int q_format )
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Scalar square root
 //
@@ -100,10 +100,10 @@ int xmos_dsp_math_invsqrroot( int input_value, int q_format )
 //
 // return value:  Square root of input value.
 
-int xmos_dsp_math_squareroot( int input_value, int q_format )
+int lib_dsp_math_squareroot( int input_value, int q_format )
 {
     int ah; unsigned al;
-    ah = xmos_dsp_math_invsqrroot( input_value, q_format );
+    ah = lib_dsp_math_invsqrroot( input_value, q_format );
     // <FIXME> Determine appropriate initial lower-word value
     //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(1<<(q_format-1)) );
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(0) );
@@ -112,4 +112,4 @@ int xmos_dsp_math_squareroot( int input_value, int q_format )
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================

@@ -1,12 +1,12 @@
+// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-// ================================================================================================
 
 #include <platform.h>
-#include "xmos_dsp_qformat.h"
-#include "xmos_dsp_math.h"
-#include "xmos_dsp_statistics.h"
+#include "lib_dsp_qformat.h"
+#include "lib_dsp_math.h"
+#include "lib_dsp_statistics.h"
 
-// ================================================================================================
+// ============================================================================
 
 // Vector sum: result = X[0] + ... X[N-1]
 //
@@ -14,7 +14,7 @@
 // 'vector_length':  Length of the input vector.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-int xmos_dsp_vector_abs_sum
+int lib_dsp_vector_abs_sum
 (
     const int* input_vector_X,
     int        vector_length,
@@ -62,7 +62,7 @@ int xmos_dsp_vector_abs_sum
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector mean: result = (X[0] + ... X[N-1]) / N
 //
@@ -70,18 +70,18 @@ int xmos_dsp_vector_abs_sum
 // 'vector_length':  Length of the input vector.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-int xmos_dsp_vector_mean
+int lib_dsp_vector_mean
 (
     const int* input_vector_X,
     int        vector_length,
     int        q_format
 ) {
-    int divide_by_N = xmos_dsp_math_reciprocal( vector_length << q_format, q_format );
-    int vectort_sum = xmos_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
-    return xmos_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
+    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format, q_format );
+    int vectort_sum = lib_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
+    return lib_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector power (sum of squares): result = X[0]^2 + ... X[N-1]^2
 //
@@ -89,7 +89,7 @@ int xmos_dsp_vector_mean
 // 'vector_length':  Length of the input vector.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-int xmos_dsp_vector_power
+int lib_dsp_vector_power
 (
     const int* input_vector_X,
     int        vector_length,
@@ -135,7 +135,7 @@ int xmos_dsp_vector_power
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector root mean square: result = ((X[0]^2 + ... X[N-1]^2) / N) ^ 0.5)
 //
@@ -143,20 +143,20 @@ int xmos_dsp_vector_power
 // 'vector_length':  Length (N) of the input vector.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-int xmos_dsp_vector_rms
+int lib_dsp_vector_rms
 (
     const int* input_vector_X,
     int        vector_length,
     int        q_format
 ) {
-    int divide_by_N = xmos_dsp_math_reciprocal( vector_length << q_format,     q_format );
-    int vectort_pwr = xmos_dsp_vector_power   ( input_vector_X, vector_length, q_format );
-    int mean_square = xmos_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
-    int rt_mean_sqr = xmos_dsp_math_squareroot( mean_square,                   q_format );
+    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format,     q_format );
+    int vectort_pwr = lib_dsp_vector_power   ( input_vector_X, vector_length, q_format );
+    int mean_square = lib_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
+    int rt_mean_sqr = lib_dsp_math_squareroot( mean_square,                   q_format );
     return rt_mean_sqr;
 }
 
-// ================================================================================================
+// ============================================================================
 
 // Vector dot product: return = X[0] * Y[0] + ... X[N-1] * Y[N-1]
 //
@@ -165,7 +165,7 @@ int xmos_dsp_vector_rms
 // 'vector_length':  Length of the input vectors.
 // 'q_format':       Fixed point format, the number of bits making up fractional part.
 
-int xmos_dsp_vector_dotprod
+int lib_dsp_vector_dotprod
 (
     const int* input_vector_X,
     const int* input_vector_Y,
@@ -214,4 +214,4 @@ int xmos_dsp_vector_dotprod
     return ah;
 }
 
-// ================================================================================================
+// ============================================================================
