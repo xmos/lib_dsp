@@ -239,19 +239,19 @@ Matrix Math Functions: Matrix Multiplication
 Statistics Functions: Vector Mean
 ---------------------------------
 
-.. doxygenfunction::lib_dsp_vector_mean
+.. doxygenfunction:: lib_dsp_vector_mean
 
 Statistics Functions: Vector Power (Sum-of-Squares)
 ---------------------------------------------------
 
-.. doxygenfunction::lib_dsp_vector_power
+.. doxygenfunction:: lib_dsp_vector_power
 
 Statistics Functions: Root Mean Square (RMS)
 --------------------------------------------
 
-.. doxygenfunction::lib_dsp_vector_rms
+.. doxygenfunction:: lib_dsp_vector_rms
 
 Statistics Functions: Dot Product
 ---------------------------------
 
-.. doxygenfunction::lib_dsp_vector_dotprod
+.. doxygenfunction:: lib_dsp_vector_dotprod

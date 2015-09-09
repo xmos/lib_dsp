@@ -3,17 +3,7 @@
 #ifndef LIB_DSP_MATRIX
 #define LIB_DSP_MATRIX
 
-/** Matrix negation
- * 
- *  Algorithm: R[i] = -X[i]
- *
- *  \code
- *  result = 0
- *  for i = 0 to (row_count - 1):
- *    for j = 0 to (column_count - 1):
- *      k = i * column_count + j
- *      input_vector_X[k] = -input_vector_X[k]
- *  \endcode
+/** Matrix negation: ``R[i][j] = -X[i][j]``
  * 
  *  Each negated element is computed by two's-compliment negation therefore
  *  the minimum negative fixed-point value can not be negated to generate it's
@@ -42,23 +32,7 @@ void lib_dsp_matrix_negate
     int       column_count
 );
 
-/** Matrix / scalar addition
- * 
- *  \param  input_matrix_X   Pointer/reference to source data.
- *  \param  input_scalar_A   Scalar value to add to each input element.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- * 
- *  Algorithm: R[i] = X[i] + A
- * 
- *  \code
- *  result = 0
- *  for i = 0 to (row_count - 1):
- *    for j = 0 to (column_count - 1):
- *      k = i * column_count + j
- *      result_matrix_R[k] = input_matrix_X[k] * scalar_value_A
- *  \endcode
+/** Matrix / scalar addition: ``R[i][j] = X[i][j] + A``
  * 
  *  32-bit addition is used to compute the scaler plus matrix element result.
  *  Therefore fixed-point value overflow conditions should be observed.  The
@@ -72,6 +46,12 @@ void lib_dsp_matrix_negate
  *  int result_vector_R[8][32];  
  *  lib_dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
  *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data.
+ *  \param  input_scalar_A   Scalar value to add to each input element.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
  */
 
 void lib_dsp_matrix_adds
@@ -83,24 +63,7 @@ void lib_dsp_matrix_adds
     int       column_count
 );
 
-/** Matrix / scalar multiplication
- * 
- *  \param  input_matrix_X   Pointer/reference to source data X.
- *  \param  input_scalar_A   Scalar value to multiply each element by.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- *  \param  q_format         Fixed point format (i.e. number of fractional bits).
- * 
- *  Algorithm: R[i] = X[i] * A
- * 
- *  \code
- *  result = 0
- *  for i = 0 to (row_count - 1):
- *    for j = 0 to (column_count - 1):
- *      k = i * column_count + j
- *      result_matrix_R[k] = input_matrix_X[k] * scalar_value_A
- *  \endcode
+/** Matrix / scalar multiplication: ``R[i][j] = X[i][j] * A``
  * 
  *  Each element of the input matrix is multiplied by a scalar value using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point
@@ -115,6 +78,13 @@ void lib_dsp_matrix_adds
  *  int result_vector_R[8][32];  
  *  lib_dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data X.
+ *  \param  input_scalar_A   Scalar value to multiply each element by.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 
 void lib_dsp_matrix_muls
@@ -127,20 +97,7 @@ void lib_dsp_matrix_muls
     int       q_format
 );
 
-/** Matrix / matrix addition
- * 
- *  \param  input_matrix_X   Pointer to source data array X.
- *  \param  input_matrix_Y   Pointer to source data array Y.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- * 
- *  Algorithm: R[i] = X[i] + Y[i]
- * 
- *  \code
- *  for i = 0 to (vector_length - 1):
- *    result_matrix_R[i] = input_matrix_X[i] + input_matrix_Y[i]
- *  \endcode
+/** Matrix / matrix addition: ``R[i][j] = X[i][j] + Y[i][j]``
  * 
  *  32-bit addition is used to compute the result for each element.
  *  Therefore fixed-point value overflow conditions should be observed.
@@ -154,6 +111,12 @@ void lib_dsp_matrix_muls
  *  int result_matrix_R[256];  
  *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer to source data array X.
+ *  \param  input_matrix_Y   Pointer to source data array Y.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
  */
 
 void lib_dsp_matrix_addm
@@ -165,14 +128,7 @@ void lib_dsp_matrix_addm
     int       column_count
 );
 
-/** Matrix / matrix subtraction
- * 
- *  Algorithm: R[i] = X[i] - Y[i]
- * 
- *  \code
- *  for i = 0 to (vector_length - 1):
- *    result_matrix_R[i] = input_matrix_X[i] - input_matrix_Y[i]
- *  \endcode
+/** Matrix / matrix subtraction: ``R[i][j] = X[i][j] - Y[i][j]``
  * 
  *  32-bit subtraction is used to compute the result for each element.
  *  Therefore fixed-point value overflow conditions should be observed.
@@ -203,17 +159,7 @@ void lib_dsp_matrix_subm
     int       column_count
 );
 
-/** Matrix / matrix multiplication
- * 
- *  Algorithm: R[i] = X[i] * Y[i]
- * 
- *  \code
- *  result = 0
- *  for i = 0 to (row_count - 1):
- *    for j = 0 to (column_count - 1):
- *      k = i * column_count + j
- *      result_matrix_R[k] = input_matrix_X[k] * input_matrix_Y[k]
- *  \endcode
+/** Matrix / matrix multiplication: ``R[i][j] = X[i][j] * Y[i][j]``
  * 
  *  Elements in each of the input matrices are multiplied together using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point

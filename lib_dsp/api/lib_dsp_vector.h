@@ -8,17 +8,6 @@
  *  Locate the vector's first occurring minimum value, returning the index of
  *  the first occurring minimum value.
  * 
- *  Algorithm:
- *
- *  \code 
- *  index = -1, value = maximum 32 bit signed integer
- *  for i = 0 to (vector_length - 1):
- *    if input_vector_X[i] < result:
- *      value = input_vector_X[i]
- *      index = i
- *  return index
- *  \endcode 
- * 
  *  Example:
  * 
  *  \code 
@@ -42,17 +31,6 @@ int lib_dsp_vector_minimum
  *  Locate the vector's first occurring maximum value, returning the index of
  *  the first occurring maximum value.
  * 
- *  Algorithm:
- *
- *  \code 
- *  index = -1, value = minimum 32 bit signed integer
- *  for i = 0 to (vector_length - 1):
- *    if input_vector_X[i] > result:
- *      value = input_vector_X[i]
- *      index = i
- *  return index
- *  \endcode 
- * 
  *  Example:
  * 
  *  \code 
@@ -71,18 +49,11 @@ int lib_dsp_vector_maximum
     int       vector_length
 );
 
-/** Vector negation
+/** Vector negation: ``R[i] = -X[i]``
  *
  *  This function computes the negative value for each input element and sets
  *  the corresponding result element to its negative value.
  *
- *  Algorithm: R[i] = -X[i]
- *
- *  \code 
- *  result = 0
- *  for i = 0 to (vector_length - 1): input_vector_X[i] = -input_vector_X[i]
- *  \endcode 
- * 
  *  Each negated element is computed by twos-compliment negation therefore the
  *  minimum negative fixed-point value can not be negated to generate it's
  *  corresponding maximum positive fixed-point value.  For example: -Q28(-8.0)
@@ -108,18 +79,11 @@ void lib_dsp_vector_negate
     int       vector_length
 );
 
-/** Vector absolute value
+/** Vector absolute value: ``R[i] = |X[i]|``
  * 
  *  Set each element of the result vector to the absolute value of the
  *  corresponding input vector element.
  *
- *  Algorithm: R[i] = |X[i]|
- * 
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = abs( input_vector_X[i] )
- *  \endcode 
- * 
  *  Example:
  * 
  *  \code 
@@ -146,17 +110,10 @@ void lib_dsp_vector_abs
     int       vector_length
 );
 
-/** Vector / scalar addition
+/** Vector / scalar addition: ``R[i] = X[i] + A``
  * 
  *  This function adds a scalar value to each vector element.
  *
- *  Algorithm: R[i] = X[i] + A
- * 
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] + scalar_value_A
- *  \endcode 
- * 
  *  32-bit addition is used to compute the scaler plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed.  The
  *  resulting values are not saturated.
@@ -184,14 +141,7 @@ void lib_dsp_vector_adds
     int       vector_length
 );
 
-/** Vector / scalar multiplication
- *
- *  Algorithm: R[i] = X[i] * A
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] * scalar_value_A
- *  \endcode 
+/** Vector / scalar multiplication: ``R[i] = X[i] * A``
  *
  *  32-bit addition is used to compute the scaler plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed. The
@@ -222,14 +172,7 @@ void lib_dsp_vector_muls
     int       q_format
 );
 
-/** Vector / vector addition
- * 
- *  Algorithm: R[i] = X[i] + Y[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] + input_vector_Y[i]
- *  \endcode 
+/** Vector / vector addition: ``R[i] = X[i] + Y[i]``
  * 
  *  32-bit addition is used to compute the scaler plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed. The
@@ -258,14 +201,7 @@ void lib_dsp_vector_addv
     int       vector_length
 );
 
-/** Vector / vector subtraction
- * 
- *  Algorithm: R[i] = X[i] - Y[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] - input_vector_Y[i]
- *  \endcode 
+/** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
  * 
  *  32-bit subtraction is used to compute the scaler plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed. The
@@ -294,14 +230,7 @@ void lib_dsp_vector_subv
     int       vector_length
 );
 
-/** Vector / vector multiplication
- * 
- *  Algorithm: R[i] = X[i] * Y[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] * input_vector_Y[i]
- *  \endcode 
+/** Vector / vector multiplication: ``R[i] = X[i] * Y[i]``
  * 
  *  Elements in each of the input vectors are multiplied together using a
  *  32-bit multiply 64-bit accumulate function therefore fixed-point
@@ -333,14 +262,7 @@ void lib_dsp_vector_mulv
     int       q_format
 );
 
-/** Vector multiplication and scalar addition:
- * 
- *  Algorithm: R[i] = X[i] * Y[i] + A
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] * input_vector_Y[i] + input_scalar_A
- *  \endcode 
+/** Vector multiplication and scalar addition: ``R[i] = X[i] * Y[i] + A``
  * 
  *  Elements in each of the input vectors are multiplied together using a
  *  32-bit multiply 64-bit accumulate function therefore fixed-point
@@ -378,14 +300,7 @@ void lib_dsp_vector_mulv_adds
     int       q_format
 );
 
-/** Scalar multiplication and vector addition
- * 
- *  Algorithm: R[i] = X[i] * A + Y[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_scalar_A * input_vector_X[i] + input_vector_Y[i]
- *  \endcode 
+/** Scalar multiplication and vector addition: ``R[i] = X[i] * A + Y[i]``
  * 
  *  Each element in the input vectors is multiplied by a scalar using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point
@@ -423,14 +338,7 @@ void lib_dsp_vector_muls_addv
     int       q_format
 );
 
-/** Scalar multiplication and vector subtraction
- * 
- *  Algorithm: R[i] = X[i] * A - Y[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_scalar_A * input_vector_X[i] - input_vector_Y[i]
- *  \endcode 
+/** Scalar multiplication and vector subtraction: ``R[i] = X[i] * A - Y[i]``
  * 
  *  Each element in the input vectors is multiplied by a scalar using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point
@@ -468,14 +376,7 @@ void lib_dsp_vector_muls_subv
     int       q_format
 );
 
-/** Vector multiplication and vector addition
- * 
- *  Algorithm: R[i] = X[i] * Y[i] + Z[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] * input_vector_Y[i] + input_vector_Z[i]
- *  \endcode 
+/** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] + Z[i]``
  * 
  *  The elements in the input vectors are multiplied before being summed
  *  therefore fixed-point multiplication behavior must be considered (see
@@ -514,14 +415,7 @@ void lib_dsp_vector_mulv_addv
     int       q_format
 );
 
-/** Vector multiplication and vector addition
- * 
- *  Algorithm: R[i] = X[i] * Y[i] - Z[i]
- *
- *  \code 
- *  for i = 0 to (vector_length - 1):
- *    result_vector_R[i] = input_vector_X[i] * input_vector_Y[i] - input_vector_Z[i]
- *  \endcode 
+/** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] - Z[i]``
  * 
  *  The elements in the input vectors are multiplied before being subtracted
  *  therefore fixed-point multiplication behavior must be considered (see

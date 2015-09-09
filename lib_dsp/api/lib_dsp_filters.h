@@ -11,11 +11,11 @@
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]...+x[n-N+1]*h[N-1]``
+ *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
  *
  *  The parameter ``filter_coeffs`` points to a coefficient array of size
  *  N = ``num_taps``. The filter coefficients are stored in forward order
- *  (e.g. ``h[0],h[1],...,h[N-1]``).
+ *  (e.g. ``h[0],h[1],h[N-1]``).
  *
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
@@ -35,7 +35,7 @@
  *
  *  \param  input_sample    The new sample to be processed.
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
- *                          as ``[b0,b1,b2, ...,bN-1]``.
+ *                          as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data      Pointer to filter state data array of length N.
  *                          Must be initialized at startup to all zero's.
  *  \param  tap_count       Filter tap count (N = ``tap_count`` = filter order + 1).
@@ -62,11 +62,11 @@ int lib_dsp_filters_fir
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]...+x[n-N+1]*h[N-1]``
+ *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``h[0],=h[1],...,h[N-1]``).
+ *  are stored in forward order (e.g. ``h[0],h[1],h[N-1]``).
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
@@ -78,10 +78,9 @@ int lib_dsp_filters_fir
  * 
  *  \param input_sample    The new sample to be processed.
  *  \param filter_coeffs   Pointer to FIR coefficients array arranged as:
- *                         ``hM,h(1L+M),h(2L+M),...h((N-1)L+M),``
- *                         ``...``
- *                         ``h1,h(1L+1),h(2L+1),...h((N-1)L+1),``
- *                         ``h0,h(1L+0),h(2L+0),...h((N-1)L+0),``
+ *                         ``hM,h(1L+M),h(2L+M),h((N-1)L+M),``
+ *                         ``h1,h(1L+1),h(2L+1),h((N-1)L+1),``
+ *                         ``h0,h(1L+0),h(2L+0),h((N-1)L+0),``
  *                         where M = N-1
  *  \param state_data      Pointer to filter state data array of length N.
  *                         Must be initialized at startup to all zero's.
@@ -116,7 +115,7 @@ void lib_dsp_filters_interpolate
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``h[0],h[1],...,h[N-1]``).
+ *  are stored in forward order (e.g. ``h[0],h[1],h[N-1]``).
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
@@ -128,7 +127,7 @@ void lib_dsp_filters_interpolate
  * 
  *  \param  input_samples  The new samples to be decimated.
  *  \param  filter_coeffs  Pointer to FIR coefficients array arranged
- *                         as ``[b0,b1,b2,...,bN-1]``.
+ *                         as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data     Pointer to filter state data array of length N.
  *                         Must be initialized at startup to all zero's.
  *  \param  tap_count      Filter tap count (N = tap_count = filter order + 1).
@@ -203,7 +202,7 @@ int lib_dsp_filters_biquad
  *  ``y[n]=x[n]*b[0]+x[n-1]*b[1]+x[n-2]*b2+x[n-1]*a[1]+x[n-2]*a[2]``
  * 
  *  The filter coefficients are stored in forward order
- *  (e.g. ``section1:b0,b1,b2,a1,a2,...,sectionN:b0,b1,b2,a1,a2``).
+ *  (e.g. ``section1:b0,b1,b2,a1,a2,sectionN:b0,b1,b2,a1,a2``).
  * 
  *  Example showing a 4x cascaded Biquad filter with samples and coefficients
  *  represented in Q28 fixed-point format:
