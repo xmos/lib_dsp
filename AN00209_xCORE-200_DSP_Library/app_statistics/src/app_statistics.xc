@@ -5,7 +5,7 @@
 // Include files
 #include <stdio.h>
 #include <xs1.h>
-#include <xmos_dsp_elements.h>
+#include <lib_dsp.h>
 
 // Define constants
 
