@@ -1,4 +1,3 @@
-// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
 
 #include <platform.h>
@@ -6,14 +5,26 @@
 #include "lib_dsp_vector.h"
 #include "lib_dsp_matrix.h"
 
-// ============================================================================
-
-// Matrix negation: R[i] = -X[i]
-//
-// 'input_matrix_X':  Pointer to source data array.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input matrix.
-// 'column_count':    Number of columns in input matrix.
+/** Matrix negation: ``R[i][j] = -X[i][j]``
+ * 
+ *  Each negated element is computed by two's-compliment negation therefore
+ *  the minimum negative fixed-point value can not be negated to generate it's
+ *  corresponding maximum positive fixed-point value. For example: -Q28(-8.0)
+ *  will not result in a fixed-point value representing +8.0.
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int samples[8][32];
+ *  int result[8][32];  
+ *  lib_dsp_matrix_negate( samples, result, 8, 32 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input matrix.
+ *  \param  column_count     Number of columns in input matrix.
+ */
 
 void lib_dsp_matrix_negate
 (
@@ -25,15 +36,27 @@ void lib_dsp_matrix_negate
     lib_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
 
-// ============================================================================
-
-// Matrix / scalar addition: R[i] = X[i] + A
-//
-// 'input_matrix_X':  Pointer to source data array.
-// 'scalar_value_A':  Scalar value to add to each 'input' element.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
+/** Matrix / scalar addition: ``R[i][j] = X[i][j] + A``
+ * 
+ *  32-bit addition is used to compute the scaler plus matrix element result.
+ *  Therefore fixed-point value overflow conditions should be observed.  The
+ *  resulting values are not saturated.
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int input_matrix_X[8][32];
+ *  int input_scalar_A = Q28( 0.333 );
+ *  int result_vector_R[8][32];  
+ *  lib_dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data.
+ *  \param  input_scalar_A   Scalar value to add to each input element.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ */
 
 void lib_dsp_matrix_adds
 (
@@ -52,16 +75,29 @@ void lib_dsp_matrix_adds
     );
 }
 
-// ============================================================================
-
-// Matrix / scalar multiplication: R[i] = X[i] * A
-//
-// 'input_matrix_X':  Pointer to source data array X.
-// 'scalar_value_A':  Scalar value to multiply each 'input' element by.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
-// 'q_format':        Fixed point format, the number of bits making up fractional part.
+/** Matrix / scalar multiplication: ``R[i][j] = X[i][j] * A``
+ * 
+ *  Each element of the input matrix is multiplied by a scalar value using a
+ *  32bit multiply 64-bit accumulate function therefore fixed-point
+ *  multiplication and q-format adjustment overflow behavior must be considered
+ *  (see behavior for the function ``lib_dsp_math_multiply``).
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int input_matrix_X[8][32];
+ *  int input_scalar_A = Q28( 0.333 );
+ *  int result_vector_R[8][32];  
+ *  lib_dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data X.
+ *  \param  input_scalar_A   Scalar value to multiply each element by.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ *  \param  q_format         Fixed point format (i.e. number of fractional bits).
+ */
 
 void lib_dsp_matrix_muls
 (
@@ -82,15 +118,27 @@ void lib_dsp_matrix_muls
     );
 }
 
-// ============================================================================
-
-// Matrix / matrix addition: R[i] = X[i] + Y[i]
-//
-// 'input_matrix_X':  Pointer to source data array X.
-// 'input_matrix_Y':  Pointer to source data array Y.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
+/** Matrix / matrix addition: ``R[i][j] = X[i][j] + Y[i][j]``
+ * 
+ *  32-bit addition is used to compute the result for each element.
+ *  Therefore fixed-point value overflow conditions should be observed.
+ *  The resulting values are not saturated.
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int input_matrix_X [256];
+ *  int input_matrix_Y [256];
+ *  int result_matrix_R[256];  
+ *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer to source data array X.
+ *  \param  input_matrix_Y   Pointer to source data array Y.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ */
 
 void lib_dsp_matrix_addm
 (
@@ -109,15 +157,27 @@ void lib_dsp_matrix_addm
     );
 }
 
-// ============================================================================
-
-// Matrix / matrix subtraction: R[i] = X[i] - Y[i]
-//
-// 'input_matrix_X':  Pointer to source data array X.
-// 'input_matrix_Y':  Pointer to source data array Y.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
+/** Matrix / matrix subtraction: ``R[i][j] = X[i][j] - Y[i][j]``
+ * 
+ *  32-bit subtraction is used to compute the result for each element.
+ *  Therefore fixed-point value overflow conditions should be observed.
+ *  The resulting values are not saturated.
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int input_matrix_X [256];
+ *  int input_matrix_Y [256];
+ *  int result_matrix_R[256];  
+ *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer to source data array X.
+ *  \param  input_matrix_Y   Pointer to source data array Y.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ */
 
 void lib_dsp_matrix_subm
 (
@@ -136,16 +196,29 @@ void lib_dsp_matrix_subm
     );
 }
 
-// ============================================================================
-
-// Matrix / matrix multiplication: R[i] = X[i] * Y[i]
-//
-// 'input_matrix_X':  Pointer to source data array X.
-// 'input_matrix_Y':  Pointer to source data array Y.
-// 'result_matrix_R': Pointer to the resulting 2-dimensional data array.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
-// 'q_format':        Fixed point format, the number of bits making up fractional part.
+/** Matrix / matrix multiplication: ``R[i][j] = X[i][j] * Y[i][j]``
+ * 
+ *  Elements in each of the input matrices are multiplied together using a
+ *  32bit multiply 64-bit accumulate function therefore fixed-point
+ *  multiplication and q-format adjustment overflow behavior must be considered
+ *  (see behavior for the function ``lib_dsp_math_multiply``).
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int input_matrix_X[8][32];
+ *  int input_matrix_Y[8][32];
+ *  int result_vector_R[8][32];  
+ *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
+ *  \endcode
+ * 
+ *  \param  input_matrix_X   Pointer to source data array X.
+ *  \param  input_matrix_Y   Pointer to source data array Y.
+ *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ *  \param  q_format         Fixed point format (i.e. number of fractional bits).
+ */
 
 // <FIXME> - assumes 'row_count' == 'column_count'
 // <TODO> - optimize using double-word load/store
@@ -180,15 +253,14 @@ void lib_dsp_matrix_mulm
     }
 }
 
-// ============================================================================
-
-// Matrix transposition
-//
-// 'input_matrix_X':  Pointer/reference to source data.
-// 'result_matrix_R': Pointer/reference to the resulting data.
-// 'row_count':       Number of rows in input and output matrices.
-// 'column_count':    Number of columns in input and output matrices.
-// 'q_format':        Fixed point format, the number of bits making up fractional part.
+/** Matrix transposition
+ * 
+ *  \param  input_matrix_X   Pointer/reference to source data.
+ *  \param  result_matrix_R  Pointer/reference to the resulting data.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
+ *  \param  q_format         Fixed point format (i.e. number of fractional bits).
+ */
 
 void lib_dsp_matrix_transpose
 (
@@ -207,5 +279,3 @@ void lib_dsp_matrix_transpose
         }
     }
 }
-
-// ============================================================================

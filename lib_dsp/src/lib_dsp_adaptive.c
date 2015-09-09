@@ -1,4 +1,3 @@
-// ============================================================================
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
 
 #include <platform.h>
@@ -9,21 +8,63 @@
 #include "lib_dsp_statistics.h"
 #include "lib_dsp_adaptive.h"
 
-// ============================================================================
-
-// LMS filter
-//
-// 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample.
-// 'error_sample':     Pointer to resulting error sample (error = reference - output)
-// 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
-// 'state_data':       Pointer to FIR filter state data array of length N.
-//                     Must be initialized at startup to all zero's.
-// 'tap_count':        Filter tap count where N = tap_count = filter order + 1.
-// 'step_size':        Coefficient adjustment step size, controls rate of convergence.
-// 'q_format':         Fixed point format, the number of bits making up fractional part.
-//
-// Return value:       Resulting filter output sample.
+/** This function implements a least-mean-squares adaptive FIR filter.
+ *
+ *  LMS filters are a class of adaptive filters that adjust filter coefficients
+ *  in order to create the a transfer function that minimizes the error between
+ *  the input and reference signals. FIR coefficients are adjusted on a  per
+ *  sample basis by an amount calculated from the given step size and the
+ *  instantaneous error.
+ * 
+ *  The function operates on a single sample of input and output data (i.e. and
+ *  each call to the function processes one sample and each call results in
+ *  changes to the FIR coefficients).
+ *  The general LMS algorithm, on a per sample basis, is to:
+ *
+ *  \code 
+ *  1) Apply the transfer function: output = FIR( input )
+ *  2) Compute the instantaneous error value: error = reference - output
+ *  3) Compute current coefficient adjustment delta: delta = mu * error
+ *  4) Adjust transfer function coefficients:
+ *     FIR_COEFFS[n] = FIR_COEFFS[n] + FIR_STATE[n] * delta
+ *  \endcode
+ *
+ *  Example of a 100-tap LMS filter with samples and coefficients represented
+ *  in Q28 fixed-point format:
+ * 
+ *  \code
+ *  int filter_coeff[100] = { ... not shown for brevity };
+ *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ *
+ *  int output_sample = lib_dsp_adaptive_lms
+ *  (
+ *    input_sample, reference_sample, &error_sample,
+ *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
+ *  );
+ *  \endcode
+ * 
+ *  The LMS filter algorithm involves multiplication between two 32-bit values
+ *  and 64-bit accumulation as a result of using an FIR as well as coefficient
+ *  step size calculations). 
+ * 
+ *  Multiplication results are accumulated in 64-bit accumulater with the final
+ *  result shifted to the required fixed-point format. Therefore overflow
+ *  behavior of the 32-bit multiply operation and truncation behavior from
+ *  final shifing of the accumulated multiplication results must be considered
+ *  for both FIR operations as well as for coefficient step size calculation
+ *  and FIR coefficient adjustment.
+ * 
+ *  \param  input_sample      The new sample to be processed.
+ *  \param  reference_sample  Reference sample.
+ *  \param  error_sample      Pointer to resulting error sample (error = reference - output)
+ *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
+ *  \param  state_data        Pointer to FIR filter state data array of length ``N``.
+ *                            Must be initialized at startup to all zero's.
+ *  \param  tap_count         Filter tap count where ``N`` = ``tap_count`` = filter order + 1.
+ *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
+ *  \param  q_format          Fixed point format (i.e. number of fractional bits).
+ *  \returns                  The resulting filter output sample.
+ */
 
 int lib_dsp_adaptive_lms
 (
@@ -57,21 +98,69 @@ int lib_dsp_adaptive_lms
     return output_sample;
 }
 
-// ============================================================================
-
-// Normalized LMS filter
-//
-// 'input_sample':     The new sample to be processed.
-// 'reference_sample': Reference sample.
-// 'error_sample':     Pointer to resulting error sample (error = reference - output)
-// 'filter_coeffs':    Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
-// 'state_data':       Pointer to FIR filter state data array of length N.
-//                     Must be initialized at startup to all zero's.
-// 'tap_count':        Filter tap count where N = tap_count = filter order + 1.
-// 'step_size':        Coefficient adjustment step size, controls rate of convergence.
-// 'q_format':         Fixed point format, the number of bits making up fractional part.
-//
-// Return value:       Resulting filter output sample.
+/** This function implements a normalized LMS FIR filter. LMS filters are a class of
+ *  adaptive filters that adjust filter coefficients in order to create the a transfer function that
+ *  minimizes the error between the input and reference signals. FIR coefficients are adjusted on a 
+ *  per sample basis by an amount calculated from the given step size and the instantaneous error.
+ * 
+ *  The function operates on a single sample of input and output data (i.e. and each call to the
+ *  function processes one sample and each call results in changes to the FIR coefficients).
+ * 
+ *  The general NLMS algorithm, on a per sample basis, is to:
+ *
+ *  \code 
+ *  1) Apply the transfer function: output = FIR( input )
+ *  2) Compute the instantaneous error value: error = reference - output
+ *  3) Normalise the error using the instantaneous power computed by:
+ *     E = x[n]^2 + ... + x[n-N+1]^2
+ *  4) Update error value:  error = (reference - output) / E
+ *  5) Compute current coefficient adjustment delta: delta = mu * error
+ *  6) Adjust transfer function coefficients:
+ *     FIR_COEFFS[n] = FIR_COEFFS[n] + FIR_STATE[n] * delta
+ *  \endcode
+ * 
+ *  Example of a 100-tap NLMS filter with samples and coefficients represented
+ *  in Q28 fixed-point format:
+ * 
+ *  \code
+ *  int filter_coeff[100] = { ... not shown for brevity };
+ *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ * 
+ *  int output_sample = lib_dsp_adaptive_nlms
+ *  (
+ *    input_sample, reference_sample, &error_sample,
+ *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
+ *  );
+ *  \endcode
+ * 
+ *  The LMS filter algorithm involves multiplication between two 32-bit values
+ *  and 64-bit accumulation as a result of using an FIR as well as coefficient
+ *  step size calculations). 
+ * 
+ *  Multiplication results are accumulated in 64-bit accumulater with the final
+ *  result shifted to the required fixed-point format. Therefore overflow
+ *  behavior of the 32-bit multiply operation and truncation behavior from
+ *  final shifing of the accumulated multiplication results must be considered
+ *  for both FIR operations as well as for coefficient step size calculation
+ *  and FIR coefficient adjustment.
+ * 
+ *  Computing the coefficient adjustment involves taking the reciprocal of the
+ *  instantaneous power computed by
+ *  ``E = x[n]^2 + x[n-1]^2 + ... + x[n-N+1]^2.``
+ *  The reciprocal is subject to overflow since the instantaneous power may be
+ *  less than one.
+ * 
+ *  \param  input_sample      The new sample to be processed.
+ *  \param  reference_sample  Reference sample.
+ *  \param  error_sample      Pointer to resulting error sample (error = reference - output)
+ *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
+ *  \param  state_data        Pointer to FIR filter state data array of length N.
+ *                            Must be initialized at startup to all zero's.
+ *  \param  tap_count         Filter tap count where N = tap_count = filter order + 1.
+ *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
+ *  \param  q_format          Fixed point format (i.e. number of fractional bits).
+ *  \returns                  The resulting filter output sample.
+ */
 
 int lib_dsp_adaptive_nlms
 (
@@ -118,6 +207,3 @@ int lib_dsp_adaptive_nlms
         
     return output_sample;
 }
-
-// ============================================================================
-

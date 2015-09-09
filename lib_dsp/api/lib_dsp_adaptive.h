@@ -15,7 +15,7 @@
  *  each call to the function processes one sample and each call results in
  *  changes to the FIR coefficients).
  *  The general LMS algorithm, on a per sample basis, is to:
- 
+ *
  *  \code 
  *  1) Apply the transfer function: output = FIR( input )
  *  2) Compute the instantaneous error value: error = reference - output
