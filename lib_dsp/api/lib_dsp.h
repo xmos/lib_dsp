@@ -7,7 +7,6 @@
 #include <../lib_dsp/lib_dsp_filters.h>
 #include <../lib_dsp/lib_dsp_matrix.h>
 #include <../lib_dsp/lib_dsp_statistics.h>
-#include <../lib_dsp/lib_dsp_elements.h>
 #include <../lib_dsp/lib_dsp_math.h>
 #include <../lib_dsp/lib_dsp_qformat.h>
 #include <../lib_dsp/lib_dsp_vector.h>
