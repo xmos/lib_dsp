@@ -8,15 +8,15 @@ Signal Processing functions.
 
 The library is split into the following modules :
 
-   * Basic Math - xmos_dsp_math.h
-   * Filtering - xmos_dsp_filters.h
-   * Vectors - xmos_dsp_vector.h
-   * Statistics - xmos_dsp_statistics.h
-   * Adaptive Filters - xmos_dsp_adaptive.h
-   * Matrix Math - xmos_dsp_matrix.h
+   * Basic Math - lib_dsp_math.h
+   * Filtering - lib_dsp_filters.h
+   * Vectors - lib_dsp_vector.h
+   * Statistics - lib_dsp_statistics.h
+   * Adaptive Filters - lib_dsp_adaptive.h
+   * Matrix Math - lib_dsp_matrix.h
 
 The library supports variable Q formats from Q16 to Q31, using the
-macros in the following header file : xmos_dsp_qformat.h.
+macros in the following header file : lib_dsp_qformat.h.
 
 Using The DSP Library
 ---------------------
@@ -34,7 +34,7 @@ Including The Library Into Your Source Code
 In order to use any of these modules and the Q formats it is
 only necessary to include the following header file::
 
-  #include "xmos_dsp_elements.h"
+  #include "lib_dsp.h"
 
 
 Using The Test Applications
