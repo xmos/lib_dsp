@@ -1,6 +1,7 @@
 // Copyright (c) 2015, XMOS Ltd, All rights reserved
-#ifndef XMOS_DSP_QFORMAT
-#define XMOS_DSP_QFORMAT
+
+#ifndef LIB_DSP_QFORMAT
+#define LIB_DSP_QFORMAT
 
 // Compute fixed-point value from floating-point value
 
