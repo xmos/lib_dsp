@@ -1,5 +1,0 @@
-15:42:28 **** Clean-only build of configuration Default for project app_vector ****
-xmake CONFIG=Default clean 
-"Cleaning C:/Users/johne2/.myrepos/lib_dsp/AN00209_xCORE-200_DSP_Library/app_vector"
-cmd /c if exist ".\bin\" RMDIR /S /Q ".\bin\"
-cmd /c if exist ".\.build" RMDIR /S /Q ".\.build"

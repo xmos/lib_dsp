@@ -1,8 +1,0 @@
-15:42:12 **** Clean-only build of configuration Default for project app_math ****
-xmake CONFIG=Default clean 
-"Cleaning C:/Users/johne2/.myrepos/lib_dsp/AN00209_xCORE-200_DSP_Library/app_math"
-cmd /c if exist ".\bin\" RMDIR /S /Q ".\bin\"
-cmd /c if exist ".\.build" RMDIR /S /Q ".\.build"
-
-15:42:13 Build Finished (took 1s.722ms)
-
