@@ -1,0 +1,8 @@
+15:42:23 **** Clean-only build of configuration Default for project app_statistics ****
+xmake CONFIG=Default clean 
+"Cleaning C:/Users/johne2/.myrepos/lib_dsp/AN00209_xCORE-200_DSP_Library/app_statistics"
+cmd /c if exist ".\bin\" RMDIR /S /Q ".\bin\"
+cmd /c if exist ".\.build" RMDIR /S /Q ".\.build"
+
+15:42:25 Build Finished (took 1s.788ms)
+
