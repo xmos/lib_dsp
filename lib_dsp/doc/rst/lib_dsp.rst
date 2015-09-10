@@ -79,8 +79,6 @@ For example::
   // q_format_parameter = 27 = 28 + 29 - 30
   result_q30 = lib_dsp_math_multiply( input1_q28, input2_q29, 27 );
   
-|newpage|
-
 Filter Functions: Finite Impulse Response (FIR) Filter
 ------------------------------------------------------
 
