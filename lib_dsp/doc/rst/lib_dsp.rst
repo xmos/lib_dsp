@@ -253,3 +253,12 @@ Statistics Functions: Dot Product
 ---------------------------------
 
 .. doxygenfunction:: lib_dsp_vector_dotprod
+
+|appendix|
+
+Known Issues
+------------
+
+There are no known issues.
+
+.. include:: ../../../CHANGELOG.rst
