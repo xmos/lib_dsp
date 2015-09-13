@@ -12,3 +12,4 @@
 **/pdf/*
 *.pyc
 test_results.csv
+**/.metadata/*

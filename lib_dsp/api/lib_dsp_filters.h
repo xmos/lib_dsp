@@ -111,7 +111,7 @@ void lib_dsp_filters_interpolate
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]...+x[n-N+1]*h[N-1]
+ *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients

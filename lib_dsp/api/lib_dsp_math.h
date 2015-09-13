@@ -51,7 +51,7 @@ int lib_dsp_math_multiply
  * 
  *  \code
  *  1) result = 1.0
- *  2) result = result + result * (1 − input_value * result)
+ *  2) result = result + result * (1 - input * result)
  *  3) Repeat step #2 until desired precision is achieved
  *  \endcode
  * 
