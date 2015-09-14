@@ -37,7 +37,7 @@
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
  *                          as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data      Pointer to filter state data array of length N.
- *                          Must be initialized at startup to all zero's.
+ *                          Must be initialized at startup to all zeros.
  *  \param  tap_count       Filter tap count (N = ``tap_count`` = filter order + 1).
  *  \param q_format         Fixed point format (i.e. number of fractional bits).
  *  \returns                The resulting filter output sample.
