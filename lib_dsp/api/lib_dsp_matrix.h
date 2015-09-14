@@ -5,8 +5,8 @@
 
 /** Matrix negation: ``R[i][j] = -X[i][j]``
  * 
- *  Each negated element is computed by two's-compliment negation therefore
- *  the minimum negative fixed-point value can not be negated to generate it's
+ *  Each negated element is computed by twos-compliment negation therefore
+ *  the minimum negative fixed-point value can not be negated to generate its
  *  corresponding maximum positive fixed-point value. For example: -Q28(-8.0)
  *  will not result in a fixed-point value representing +8.0.
  * 
