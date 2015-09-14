@@ -19,9 +19,7 @@ Required tools and libraries
 Required hardware
 .................
 
-The code in this application note is designed to run on an XMOS xCORE-200 eXplorerKIT :
-http://www.xmos.com/products/boards#explorerkit-200
-but the code will also run in the simulator.
+This application note is designed to run on any XMOS xCORE-200 multicore microcontroller or the XMOS simulator.
 
 Prerequisites
 .............
