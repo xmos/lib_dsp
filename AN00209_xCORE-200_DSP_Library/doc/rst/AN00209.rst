@@ -98,6 +98,8 @@ References
 Full Source Code Listings
 -------------------------
 
+This section includes the source code for all of the example programs.
+
 Adaptive Filtering Functions
 ............................
 
@@ -142,6 +144,59 @@ Vector Functions
 ................
 
 .. literalinclude:: ../../app_vector/src/app_vector.xc
+  :largelisting:
+
+|newpage|
+
+Correct Results Listings
+------------------------
+
+This section includes the source code for all of the example programs.
+
+Adaptive Filtering Functions
+............................
+
+.. literalinclude:: ../../../tests/adaptive_test.expect
+  :largelisting:
+
+|newpage|
+
+Fixed Coefficient Filtering Functions
+.....................................
+
+.. literalinclude:: ../../../tests/filters_test.expect
+  :largelisting:
+
+|newpage|
+
+Math Functions
+..............
+
+.. literalinclude:: ../../../tests/math_test.expect
+  :largelisting:
+
+|newpage|
+
+Matrix Functions
+................
+
+.. literalinclude:: ../../../tests/matrix_test.expect
+  :largelisting:
+
+|newpage|
+
+Statistics Functions
+....................
+
+.. literalinclude:: ../../../tests/statistics_test.expect
+  :largelisting:
+
+|newpage|
+
+Vector Functions
+................
+
+.. literalinclude:: ../../../tests/vector_test.expect
   :largelisting:
 
 |newpage|
