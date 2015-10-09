@@ -19,7 +19,7 @@ Required hardware
 .................
 
 Only XMOS xCORE-200 based multicore microcontrollers are supported with this library.
-The previsous generation XS1 based multicore microntrollers are not supported.
+The previous generation XS1 based multicore microntrollers are not supported.
 
 The xCORE-200 has a single cycle 32x32->64 bit multiply/accumulate unit,
 single cycle double-word load and store, dual issue instruction execution,

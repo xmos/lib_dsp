@@ -37,7 +37,7 @@
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
  *                          as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data      Pointer to filter state data array of length N.
- *                          Must be initialized at startup to all zero's.
+ *                          Must be initialized at startup to all zeros.
  *  \param  tap_count       Filter tap count (N = ``tap_count`` = filter order + 1).
  *  \param q_format         Fixed point format (i.e. number of fractional bits).
  *  \returns                The resulting filter output sample.
@@ -83,7 +83,7 @@ int lib_dsp_filters_fir
  *                         ``h0,h(1L+0),h(2L+0),h((N-1)L+0),``
  *                         where M = N-1
  *  \param state_data      Pointer to filter state data array of length N.
- *                         Must be initialized at startup to all zero's.
+ *                         Must be initialized at startup to all zeros.
  *  \param  tap_count      Filter tap count (N = ``tap_count`` = filter order + 1).
  *  \param interp_factor   The interpolation factor/index (i.e. the up-sampling ratio).
  *                         The interpolation factor/index can range from 2 to 16.
@@ -111,7 +111,7 @@ void lib_dsp_filters_interpolate
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]...+x[n-N+1]*h[N-1]
+ *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
@@ -129,7 +129,7 @@ void lib_dsp_filters_interpolate
  *  \param  filter_coeffs  Pointer to FIR coefficients array arranged
  *                         as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data     Pointer to filter state data array of length N.
- *                         Must be initialized at startup to all zero's.
+ *                         Must be initialized at startup to all zeros.
  *  \param  tap_count      Filter tap count (N = tap_count = filter order + 1).
  *  \param  decim_factor   The decimation factor/index (i.e. the down-sampling ratio).
  *  \param  q_format       Fixed point format (i.e. number of fractional bits).
@@ -177,7 +177,7 @@ int lib_dsp_filters_decimate
  *
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array arranged as ``[b0,b1,b2,a1,a2]``.
- *  \param  state_data     Pointer to filter state data array (initialized at startup to zero's).
+ *  \param  state_data     Pointer to filter state data array (initialized at startup to zeros).
  *                         The length of the state data array is 4.
  *  \param  q_format       Fixed point format (i.e. number of fractional bits).
  *  \returns               The resulting filter output sample.
@@ -227,7 +227,7 @@ int lib_dsp_filters_biquad
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array for all BiQuad sections.
  *                         Arranged as ``[section1:b0,b1,b2,a1,a2,...sectionN:b0,b1,b2,a1,a2]``.
- *  \param  state_data     Pointer to filter state data array (initialized at startup to zero's).
+ *  \param  state_data     Pointer to filter state data array (initialized at startup to zeros).
  *                         The length of the state data array is ``num_sections`` * 4.
  *  \param  num_sections   Number of BiQuad sections.
  *  \param  q_format       Fixed point format (i.e. number of fractional bits).

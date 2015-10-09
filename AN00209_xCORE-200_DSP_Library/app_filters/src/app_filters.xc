@@ -104,11 +104,11 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     Dst[i] =
-      xmos_dsp_filters_fir (Src[i],                 // Input data sample to be filtered
-                            firCoeffs,              // Pointer to filter coefficients
-                            filterState,            // Pointer to filter state array
-                            FIR_FILTER_LENGTH,      // Filter length
-                            Q_N);                   // Q Format N
+      lib_dsp_filters_fir (Src[i],                 // Input data sample to be filtered
+                           firCoeffs,              // Pointer to filter coefficients
+                           filterState,            // Pointer to filter state array
+                           FIR_FILTER_LENGTH,      // Filter length
+                           Q_N);                   // Q Format N
   }
 
   printf ("FIR Filter Results\n");
@@ -127,10 +127,10 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     Dst[i] =
-      xmos_dsp_filters_biquad (Src[i],              // Input data sample to be filtered
-                               iirCoeffs,           // Pointer to filter coefficients
-                               filterState,         // Pointer to filter state array
-                               Q_N);                // Q Format N
+      lib_dsp_filters_biquad (Src[i],              // Input data sample to be filtered
+                              iirCoeffs,           // Pointer to filter coefficients
+                              filterState,         // Pointer to filter state array
+                              Q_N);                // Q Format N
   }
 
   printf ("\nIIR Biquad Filter Results\n");
@@ -150,11 +150,11 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     Dst[i] =
-      xmos_dsp_filters_biquads (Src[i],             // Input data sample to be filtered
-                                iirCoeffs,          // Pointer to filter coefficients
-                                filterState,        // Pointer to filter state array
-                                IIR_CASCADE_DEPTH,  // Number of cascaded sections
-                                Q_N);               // Q Format N
+      lib_dsp_filters_biquads (Src[i],             // Input data sample to be filtered
+                               iirCoeffs,          // Pointer to filter coefficients
+                               filterState,        // Pointer to filter state array
+                               IIR_CASCADE_DEPTH,  // Number of cascaded sections
+                               Q_N);               // Q Format N
   }
 
   printf ("\nCascaded IIR Biquad Filter Results\n");
@@ -181,7 +181,7 @@ int main(void)
 
     for( i = 0; i < c; ++i )
     {
-      xmos_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
+      lib_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
       for( j = 0; j < r; ++j )
         print31( Dst[j] );
       printf( "\n" );
@@ -199,7 +199,7 @@ int main(void)
       filterState[i] = 0;
     for( i = 0; i < 32/r; ++i )
     {
-      x = xmos_dsp_filters_decimate( decim_input, firCoeffsInt, filterState, 32, r, 31 );
+      x = lib_dsp_filters_decimate( decim_input, firCoeffsInt, filterState, 32, r, 31 );
       print31( x );
       if( (i&7) == 7 )
         printf( "\n" );

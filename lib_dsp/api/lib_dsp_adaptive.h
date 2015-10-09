@@ -6,7 +6,7 @@
 /** This function implements a least-mean-squares adaptive FIR filter.
  *
  *  LMS filters are a class of adaptive filters that adjust filter coefficients
- *  in order to create the a transfer function that minimizes the error between
+ *  in order to create a transfer function that minimizes the error between
  *  the input and reference signals. FIR coefficients are adjusted on a  per
  *  sample basis by an amount calculated from the given step size and the
  *  instantaneous error.
@@ -54,7 +54,7 @@
  *  \param  error_sample      Pointer to resulting error sample (error = reference - output)
  *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
  *  \param  state_data        Pointer to FIR filter state data array of length ``N``.
- *                            Must be initialized at startup to all zero's.
+ *                            Must be initialized at startup to all zeros.
  *  \param  tap_count         Filter tap count where ``N`` = ``tap_count`` = filter order + 1.
  *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).
@@ -86,7 +86,7 @@ int lib_dsp_adaptive_lms
  *  \code 
  *  1) Apply the transfer function: output = FIR( input )
  *  2) Compute the instantaneous error value: error = reference - output
- *  3) Normalise the error using the instantaneous power computed by:
+ *  3) Normalize the error using the instantaneous power computed by:
  *     E = x[n]^2 + ... + x[n-N+1]^2
  *  4) Update error value:  error = (reference - output) / E
  *  5) Compute current coefficient adjustment delta: delta = mu * error
@@ -130,7 +130,7 @@ int lib_dsp_adaptive_lms
  *  \param  error_sample      Pointer to resulting error sample (error = reference - output)
  *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
  *  \param  state_data        Pointer to FIR filter state data array of length N.
- *                            Must be initialized at startup to all zero's.
+ *                            Must be initialized at startup to all zeros.
  *  \param  tap_count         Filter tap count where N = tap_count = filter order + 1.
  *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).

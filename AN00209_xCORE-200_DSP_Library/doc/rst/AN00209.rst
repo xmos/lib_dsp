@@ -8,18 +8,53 @@ Signal Processing functions.
 
 The library is split into the following modules :
 
-   * Basic Math - lib_dsp_math.h
-   * Filtering - lib_dsp_filters.h
-   * Vectors - lib_dsp_vector.h
-   * Statistics - lib_dsp_statistics.h
    * Adaptive Filters - lib_dsp_adaptive.h
+   * Filtering - lib_dsp_filters.h
+   * Basic Math - lib_dsp_math.h
    * Matrix Math - lib_dsp_matrix.h
+   * Statistics - lib_dsp_statistics.h
+   * Vectors - lib_dsp_vector.h
 
 The library supports variable Q formats from Q16 to Q31, using the
 macros in the following header file : lib_dsp_qformat.h.
 
-Using The DSP Library
----------------------
+Getting Started
+---------------
+
+Ensure you are in the xTIMEcomposer edit perspective by clicking on the Edit perspective button on the left hand side toolbar.
+
+In the Project Explorer view you will see the following applications :
+
+   * Adaptive Filters - app_adaptive
+   * Filtering - app_filters
+   * Basic Math - app_math
+   * Matrix Math - app_matrix
+   * Statistics - app_statistics
+   * Vectors - app_vector
+
+To build any of the applications, open src/main.xc by double clicking.
+The applications contain code to generate the simulation data and call all of the functions in each module and print the results in the xTIMEcomposer console.
+All of the test functions are written using Q24 format.
+
+Build the applications
+......................
+
+To build the application, select ‘Project -> Build Project’ in the menu, or click the ‘Build’ button on the toolbar. The output from the compilation process will be visible on the console.
+
+Create and launch a run configuration
+.....................................
+
+To view xSCOPE data in real-time you first need to create a run configuration. The xTIMEcomposer allows multiple configurations to exist, thus allowing you to store configurations for running on different targets/with different runtime options and arguments.
+Right-click on the generated binary in the *Project Explorer* view, and select *Run As -> Run Configurations*.
+In the resulting dialog, double click on *xCORE Application*, then perform the following operations:
+
+   * On the *Main* tab select the desired target, or check the *simulator* option.
+   * Select the Run button to launch the application.
+
+The results will be displayed in the xTIMEcomposer *console* tab.
+
+Using The DSP Library In Other Applications
+-------------------------------------------
 
 Makefile Additions For These Examples
 .....................................
@@ -35,21 +70,6 @@ In order to use any of these modules and the Q formats it is
 only necessary to include the following header file::
 
   #include "lib_dsp.h"
-
-
-Using The Test Applications
-...........................
-
-The test functions support all of the functions in the library :
-
-   * Basic Math - math.c
-   * Filtering - filters.c
-   * Vectors - vector.c
-   * Statistics - statistics.c
-   * Adaptive Filters - adaptive.c
-   * Matrix Math - matrix.c
-
-All of the test functions are written using Q24 format.
 
 |appendix|
 
@@ -77,6 +97,8 @@ References
 
 Full Source Code Listings
 -------------------------
+
+This section includes the source code for all of the example programs.
 
 Adaptive Filtering Functions
 ............................
@@ -122,6 +144,59 @@ Vector Functions
 ................
 
 .. literalinclude:: ../../app_vector/src/app_vector.xc
+  :largelisting:
+
+|newpage|
+
+Correct Results Listings
+------------------------
+
+This section includes the source code for all of the example programs.
+
+Adaptive Filtering Functions
+............................
+
+.. literalinclude:: ../../../tests/adaptive_test.expect
+  :largelisting:
+
+|newpage|
+
+Fixed Coefficient Filtering Functions
+.....................................
+
+.. literalinclude:: ../../../tests/filters_test.expect
+  :largelisting:
+
+|newpage|
+
+Math Functions
+..............
+
+.. literalinclude:: ../../../tests/math_test.expect
+  :largelisting:
+
+|newpage|
+
+Matrix Functions
+................
+
+.. literalinclude:: ../../../tests/matrix_test.expect
+  :largelisting:
+
+|newpage|
+
+Statistics Functions
+....................
+
+.. literalinclude:: ../../../tests/statistics_test.expect
+  :largelisting:
+
+|newpage|
+
+Vector Functions
+................
+
+.. literalinclude:: ../../../tests/vector_test.expect
   :largelisting:
 
 |newpage|

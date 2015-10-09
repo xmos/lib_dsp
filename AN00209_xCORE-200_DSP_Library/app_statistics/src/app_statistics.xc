@@ -29,31 +29,31 @@ int main(void)
   int result;
 
   result =
-    xmos_dsp_vector_mean (Src,                      // Input vector
-                          SAMPLE_LENGTH,            // Vector length
-                          Q_N);                     // Q Format N
+    lib_dsp_vector_mean (Src,                       // Input vector
+                         SAMPLE_LENGTH,             // Vector length
+                         Q_N);                      // Q Format N
 
   printf ("Vector Mean = %lf\n", F24 (result));
 
   result =
-    xmos_dsp_vector_power (Src,                     // Input vector
-                           SAMPLE_LENGTH,           // Vector length
-                           Q_N);                    // Q Format N
+    lib_dsp_vector_power (Src,                      // Input vector
+                          SAMPLE_LENGTH,            // Vector length
+                          Q_N);                     // Q Format N
 
   printf ("Vector Power (sum of squares) = %lf\n", F24 (result));
 
   result =
-    xmos_dsp_vector_rms (Src,                       // Input vector
-                         SAMPLE_LENGTH,             // Vector length
-                         Q_N);                      // Q Format N
+    lib_dsp_vector_rms (Src,                        // Input vector
+                        SAMPLE_LENGTH,              // Vector length
+                        Q_N);                       // Q Format N
 
   printf ("Vector Root Mean Square = %lf\n", F24 (result));
 
   result =
-    xmos_dsp_vector_dotprod (Src,                   // Input vector 1
-                             Src2,                  // Input vector 2
-                             SHORT_SAMPLE_LENGTH,   // Vector length
-                             Q_N);                  // Q Format N
+    lib_dsp_vector_dotprod (Src,                    // Input vector 1
+                            Src2,                   // Input vector 2
+                            SHORT_SAMPLE_LENGTH,    // Vector length
+                            Q_N);                   // Q Format N
 
   printf ("Vector Dot Product = %lf\n", F24 (result));
 

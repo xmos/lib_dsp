@@ -320,3 +320,12 @@ Filter Design Functions: Treble Shelving Filter
 -----------------------------------------------
 
 .. doxygenfunction:: lib_dsp_design_biquad_highshelf
+
+|appendix|
+
+Known Issues
+------------
+
+There are no known issues.
+
+.. include:: ../../../CHANGELOG.rst

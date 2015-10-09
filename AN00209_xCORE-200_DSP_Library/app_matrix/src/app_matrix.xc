@@ -28,10 +28,10 @@ int main(void)
 {
 
                                                   // Matrix negation: R = -X
-  xmos_dsp_matrix_negate (Src1,                   // 'input_matrix_X':  Pointer/reference to source data
-                          Dst,                    // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                          MATRIX_NUM_ROWS,        // 'row_count':       Number of rows in input and output matrices
-                          MATRIX_NUM_COLS);       // 'column_count':    Number of columns in input and output matrices
+  lib_dsp_matrix_negate (Src1,                    // 'input_matrix_X':  Pointer/reference to source data
+                         Dst,                     // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                         MATRIX_NUM_ROWS,         // 'row_count':       Number of rows in input and output matrices
+                         MATRIX_NUM_COLS);        // 'column_count':    Number of columns in input and output matrices
 
   printf ("Matrix negation: R = -X\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -39,11 +39,11 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix / scalar addition: R = X + a
-  xmos_dsp_matrix_adds (Src1,                     // 'input_matrix_X':  Pointer/reference to source data
-                        Q24(2.),                  // 'scalar_value_A':  Scalar value to add to each 'input' element
-                        Dst,                      // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                        MATRIX_NUM_ROWS,          // 'row_count':       Number of rows in input and output matrices
-                        MATRIX_NUM_COLS);         // 'column_count':    Number of columns in input and output matrices
+  lib_dsp_matrix_adds (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
+                       Q24(2.),                   // 'scalar_value_A':  Scalar value to add to each 'input' element
+                       Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                       MATRIX_NUM_ROWS,           // 'row_count':       Number of rows in input and output matrices
+                       MATRIX_NUM_COLS);          // 'column_count':    Number of columns in input and output matrices
 
   printf ("Matrix / scalar addition: R = X + a\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -51,12 +51,12 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix / scalar multiplication: R = X * a
-  xmos_dsp_matrix_muls (Src1,                     // 'input_matrix_X':  Pointer/reference to source data
-                        Q24(2.),                  // 'scalar_value_A':  Scalar value to multiply each 'input' element by
-                        Dst,                      // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                        MATRIX_NUM_ROWS,          // 'row_count':       Number of rows in input and output matrices
-                        MATRIX_NUM_COLS,          // 'column_count':    Number of columns in input and output matrices
-                        Q_N);                     // 'q_format':        Fixed point format, the number of bits making up fractional part
+  lib_dsp_matrix_muls (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
+                       Q24(2.),                   // 'scalar_value_A':  Scalar value to multiply each 'input' element by
+                       Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                       MATRIX_NUM_ROWS,           // 'row_count':       Number of rows in input and output matrices
+                       MATRIX_NUM_COLS,           // 'column_count':    Number of columns in input and output matrices
+                       Q_N);                      // 'q_format':        Fixed point format, the number of bits making up fractional part
 
   printf ("Matrix / scalar multiplication: R = X + a\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -64,11 +64,11 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix / matrix addition: R = X + Y
-  xmos_dsp_matrix_addm (Src1,                     // 'input_matrix_X':  Pointer to source data array X
-                        Src2,                     // 'input_matrix_Y':  Pointer to source data array Y
-                        Dst,                      // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                        MATRIX_NUM_ROWS,          // 'row_count':       Number of rows in input and output matrices
-                        MATRIX_NUM_COLS);         // 'column_count':    Number of columns in input and output matrices
+  lib_dsp_matrix_addm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
+                       Src2,                      // 'input_matrix_Y':  Pointer to source data array Y
+                       Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                       MATRIX_NUM_ROWS,           // 'row_count':       Number of rows in input and output matrices
+                       MATRIX_NUM_COLS);          // 'column_count':    Number of columns in input and output matrices
 
   printf ("Matrix / matrix addition: R = X + Y\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -76,11 +76,11 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix / matrix subtraction: R = X - Y
-  xmos_dsp_matrix_subm (Src1,                     // 'input_matrix_X':  Pointer to source data array X
-                        Src2,                     // 'input_matrix_Y':  Pointer to source data array Y
-                        Dst,                      // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                        MATRIX_NUM_ROWS,          // 'row_count':       Number of rows in input and output matrices
-                        MATRIX_NUM_COLS);         // 'column_count':    Number of columns in input and output matrices
+  lib_dsp_matrix_subm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
+                       Src2,                      // 'input_matrix_Y':  Pointer to source data array Y
+                       Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                       MATRIX_NUM_ROWS,           // 'row_count':       Number of rows in input and output matrices
+                       MATRIX_NUM_COLS);          // 'column_count':    Number of columns in input and output matrices
 
   printf ("Matrix / matrix subtraction: R = X - Y\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -88,12 +88,12 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix / matrix multiplication: R = X * Y
-  xmos_dsp_matrix_mulm (Src1,                     // 'input_matrix_X':  Pointer to source data array X
-                        Src2,                     // 'input_matrix_Y':  Pointer to source data array Y
-                        Dst,                      // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                        MATRIX_NUM_ROWS,          // 'row_count':       Number of rows in input and output matrices
-                        MATRIX_NUM_COLS,          // 'column_count':    Number of columns in input and output matrices
-                        Q_N);                     // 'q_format':        Fixed point format, the number of bits making up fractional part
+  lib_dsp_matrix_mulm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
+                       Src2,                      // 'input_matrix_Y':  Pointer to source data array Y
+                       Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                       MATRIX_NUM_ROWS,           // 'row_count':       Number of rows in input and output matrices
+                       MATRIX_NUM_COLS,           // 'column_count':    Number of columns in input and output matrices
+                       Q_N);                      // 'q_format':        Fixed point format, the number of bits making up fractional part
 
   printf ("Matrix / matrix multiplication: R = X * Y\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));
@@ -101,11 +101,11 @@ int main(void)
   printf ("%lf, %lf, %lf\n", F24 (Dst[6]), F24 (Dst[7]), F24 (Dst[8]));
 
                                                   // Matrix transposition
-  xmos_dsp_matrix_transpose (Src1,                // 'input_matrix_X':  Pointer to source data array
-                             Dst,                 // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
-                             MATRIX_NUM_ROWS,     // 'row_count':       Number of rows in input and output matrices
-                             MATRIX_NUM_COLS,     // 'column_count':    Number of columns in input and output matrices
-                             Q_N);                // 'q_format':        Fixed point format, the number of bits making up fractional part
+  lib_dsp_matrix_transpose (Src1,                 // 'input_matrix_X':  Pointer to source data array
+                            Dst,                  // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
+                            MATRIX_NUM_ROWS,      // 'row_count':       Number of rows in input and output matrices
+                            MATRIX_NUM_COLS,      // 'column_count':    Number of columns in input and output matrices
+                            Q_N);                 // 'q_format':        Fixed point format, the number of bits making up fractional part
 
   printf ("Matrix transposition\n");
   printf ("%lf, %lf, %lf\n", F24 (Dst[0]), F24 (Dst[1]), F24 (Dst[2]));

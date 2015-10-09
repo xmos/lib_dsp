@@ -55,7 +55,7 @@ int lib_dsp_vector_maximum
  *  the corresponding result element to its negative value.
  *
  *  Each negated element is computed by twos-compliment negation therefore the
- *  minimum negative fixed-point value can not be negated to generate it's
+ *  minimum negative fixed-point value can not be negated to generate its
  *  corresponding maximum positive fixed-point value.  For example: -Q28(-8.0)
  *  will not result in a fixed-point value representing +8.0.
  * 
@@ -92,7 +92,7 @@ void lib_dsp_vector_negate
  *  lib_dsp_vector_abs( samples, result, 256 );
  *  \endcode 
  * 
- *  If an element is less than zero it is negated to compute it's absolute
+ *  If an element is less than zero it is negated to compute its absolute
  *  value. Negation is computed via twos-compliment negation therefore the
  *  minimum negative fixed-point value can not be negated to generate its
  *  corresponding maximum positive fixed-point value. For example: -Q28(-8.0)
@@ -172,6 +172,7 @@ void lib_dsp_vector_muls
     int       q_format
 );
 
+ 
 /** Vector / vector addition: ``R[i] = X[i] + Y[i]``
  * 
  *  32-bit addition is used to compute the scaler plus vector element result.
@@ -185,14 +186,14 @@ void lib_dsp_vector_muls
  *  int input_vector_Y[256];
  *  int result_vector_R[256];  
  *  lib_dsp_vector_addv( input_vector_X, input_vector_Y, result_vector_R, 256 );
- *  \code 
+ *  \endcode 
  * 
  *  \param  input_vector_X    Pointer to source data array X.
  *  \param  input_vector_Y    Pointer to source data array Y.
  *  \param  result_vector_R   Pointer to the resulting data array.
  *  \param  vector_length     Length of the input and output vectors.
  */
- 
+
 void lib_dsp_vector_addv
 (
     const int input_vector_X[],

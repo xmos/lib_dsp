@@ -6,13 +6,13 @@
 
 	.text
     .issue_mode  dual
-	.globl	lib_dsp_fft_forward
+	.globl	lib_dsp_fft_forward_complex
 	.align	16
     .skip 8
-	.type	lib_dsp_fft_forward,@function
-	.cc_top lib_dsp_fft_forward.function,lib_dsp_fft_forward
+	.type	lib_dsp_fft_forward_complex,@function
+	.cc_top lib_dsp_fft_forward_complex.function,lib_dsp_fft_forward_complex
 	
-lib_dsp_fft_forward:
+lib_dsp_fft_forward_complex:
 
 	dualentsp 32
     
@@ -181,17 +181,17 @@ kLoop2In:
 	retsp 32
 	
 	// RETURN_REG_HOLDER
-	.cc_bottom lib_dsp_fft_forward.function
-	.set	lib_dsp_fft_forward.nstackwords,32
-	.globl	lib_dsp_fft_forward.nstackwords
-	.set	lib_dsp_fft_forward.maxcores,1
-	.globl	lib_dsp_fft_forward.maxcores
-	.set	lib_dsp_fft_forward.maxtimers,0
-	.globl	lib_dsp_fft_forward.maxtimers
-	.set	lib_dsp_fft_forward.maxchanends,0
-	.globl	lib_dsp_fft_forward.maxchanends
+	.cc_bottom lib_dsp_fft_forward_complex.function
+	.set	lib_dsp_fft_forward_complex.nstackwords,32
+	.globl	lib_dsp_fft_forward_complex.nstackwords
+	.set	lib_dsp_fft_forward_complex.maxcores,1
+	.globl	lib_dsp_fft_forward_complex.maxcores
+	.set	lib_dsp_fft_forward_complex.maxtimers,0
+	.globl	lib_dsp_fft_forward_complex.maxtimers
+	.set	lib_dsp_fft_forward_complex.maxchanends,0
+	.globl	lib_dsp_fft_forward_complex.maxchanends
 .Ltmp0:
-	.size	lib_dsp_fft_forward, .Ltmp0-lib_dsp_fft_forward
+	.size	lib_dsp_fft_forward_complex, .Ltmp0-lib_dsp_fft_forward_complex
 
     .issue_mode  single
     

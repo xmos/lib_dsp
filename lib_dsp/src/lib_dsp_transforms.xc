@@ -63,9 +63,8 @@ void lib_dsp_fft_inverse_tworeals( int re1[], int re2[], int im1[], int im2[], i
     #endif
 }
 
-/*
 #pragma unsafe arrays
-void lib_dsp_fft_forward_complex( lib_dsp_fft_complex_t pts[], int N, const int sine[] )
+void lib_dsp_fft_forward_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const int sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -128,7 +127,7 @@ void lib_dsp_fft_forward_complex( lib_dsp_fft_complex_t pts[], int N, const int 
 // Note: for an extra bit of precision change the 8 lines that use 0x80000000 or l>>31.
 
 #pragma unsafe arrays
-void lib_dsp_fft_inverse_complex( lib_dsp_fft_complex_t pts[], int N, const int sine[] )
+void lib_dsp_fft_inverse_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const int sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -183,4 +182,3 @@ void lib_dsp_fft_inverse_complex( lib_dsp_fft_complex_t pts[], int N, const int 
         }
     }
 }
-*/
