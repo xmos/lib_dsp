@@ -38,6 +38,8 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Statistics  | lib_dsp_statistics   | Vector mean, sum-of-squares, root-mean-square, variance       |
   +-------------+----------------------+---------------------------------------------------------------+
+  | Design      | lib_dsp_design       | Biquad coefficient generation for various filter types        |
+  +-------------+----------------------+---------------------------------------------------------------+
 
 Fixed-Point Format
 ------------------
@@ -253,3 +255,68 @@ Statistics Functions: Dot Product
 ---------------------------------
 
 .. doxygenfunction:: lib_dsp_vector_dotprod
+
+Transform Functions: FFT Twiddle
+--------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_twiddle
+
+Transform Functions: Forward Complex FFT
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_complex
+
+Transform Functions: Forward Real FFT's
+---------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_tworeals
+
+Transform Functions: Inverse Complex FFT
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_complex
+
+Transform Functions: Inverse Real FFT's
+---------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_tworeals
+
+Filter Design Functions: Notch Filter
+-------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_notch
+
+Filter Design Functions: Low-pass Filter
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_lowpass
+
+Filter Design Functions: High-pass Filter
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_highpass
+
+Filter Design Functions: All-pass Filter
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_allpass
+
+Filter Design Functions: Band-pass Filter
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_bandpass
+
+Filter Design Functions: Peaking Filter
+---------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_peaking
+
+Filter Design Functions: Base Shelving Filter
+---------------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_lowshelf
+
+Filter Design Functions: Treble Shelving Filter
+-----------------------------------------------
+
+.. doxygenfunction:: lib_dsp_design_biquad_highshelf
