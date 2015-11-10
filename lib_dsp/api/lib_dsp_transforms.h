@@ -28,8 +28,11 @@ typedef struct
 }
 lib_dsp_fft_complex_t;
 
-/** This function twiddles the arrays around prior to computing an FFT. A
- * calling sequence for a forward FFT involves fftTwiddle() followed by
+//TODO docs
+void lib_dsp_fft_reorder_two_real_inputs(lib_dsp_fft_complex_t pts[], unsigned N);
+
+/** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
+ * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by
  * fftForward(), and for an inverse FFT it involves fftTwiddle() followed
  * by fftInverse(). In some cases twiddling can be avoided, for example
  * when computing a convolution.
@@ -39,14 +42,14 @@ lib_dsp_fft_complex_t;
  * \param N     number of points. Must be a power of 2, both re and im should be N long
  */
 
-void lib_dsp_fft_twiddle( lib_dsp_fft_complex_t pts[], int N );
+void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N );
 
 /** This function computes a forward FFT. The complex input array is
  * supplied as two arrays of integers, with numbers represented as
  * fixed-point values. The number of points must be a power of 2, and the
  * array of sine values should contain a quarter sine-wave. Use one of
  * sine_N provided in sine.h. The function does not perform a bit-twiddle -
- * if required then fftTwiddle() should be called beforehand.
+ * if required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param pts   Array of complex input points
  *
@@ -105,7 +108,7 @@ void lib_dsp_fft_forward_tworeals
  * fixed-point values. The number of points must be a power of 2, and the
  * array of sine values should contain a quarter sine-wave. Use one of
  * sine_N provided in sine.h. The function does not perform a bit-twiddle -
- * if required then fftTwiddle() should be called beforehand.
+ * if required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param pts   Array of complex input points
  *
