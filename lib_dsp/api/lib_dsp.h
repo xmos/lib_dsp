@@ -10,6 +10,7 @@
 #include <lib_dsp_math.h>
 #include <lib_dsp_qformat.h>
 #include <lib_dsp_vector.h>
+#include <lib_dsp_transforms.h>
 
 #endif
 
