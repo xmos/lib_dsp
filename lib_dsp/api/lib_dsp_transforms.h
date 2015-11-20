@@ -158,7 +158,3 @@ void lib_dsp_fft_inverse_tworeals
 
 #endif
 
-
-void fftTwiddle(int re[], int im[], int N);
-void fftForward(int re[], int im[], int N, const int sine[]);
-void fftInverse(int re[], int im[], int N, const int sine[]);
