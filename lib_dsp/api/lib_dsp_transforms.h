@@ -1,7 +1,4 @@
-// Copyright (c) 2011, XMOS Ltd, All rights reserved
-// This software is freely distributable under a derivative of the
-// University of Illinois/NCSA Open Source License posted in
-// LICENSE.txt and at <http://github.xcore.com/>
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 
 #ifndef LIB_DSP_TRANSFORMS
 #define LIB_DSP_TRANSFORMS
@@ -160,3 +157,8 @@ void lib_dsp_fft_inverse_tworeals
     const int sine[] );
 
 #endif
+
+
+void fftTwiddle(int re[], int im[], int N);
+void fftForward(int re[], int im[], int N, const int sine[]);
+void fftInverse(int re[], int im[], int N, const int sine[]);
