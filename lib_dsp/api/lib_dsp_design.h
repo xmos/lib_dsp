@@ -1,3 +1,5 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
+
 #ifndef LIB_DSP_DESIGN
 #define LIB_DSP_DESIGN
 
