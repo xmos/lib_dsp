@@ -7,7 +7,7 @@
 #include "lib_dsp_transforms.h"
 
 #pragma unsafe arrays
-void lib_dsp_fft_twiddle( lib_dsp_fft_complex_t pts[], int N )
+void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N )
 {
     unsigned int shift = clz(N);
     for(unsigned int i = 1; i < N-1; i++) {
