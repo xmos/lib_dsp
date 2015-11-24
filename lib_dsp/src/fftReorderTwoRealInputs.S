@@ -1,3 +1,5 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
+    
 	.section	.dp.data,"awd",@progbits
 	.text
 	.cc_top lib_dsp_fft_reorder_two_real_inputs.function
