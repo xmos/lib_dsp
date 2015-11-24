@@ -1060,7 +1060,7 @@ int main( void )
         
         printf( "Forward Complex FFT, Size = %05u\n", cc );        
         tt :> t1;
-        lib_dsp_fft_twiddle        ( data, cc );
+        lib_dsp_fft_bit_reverse        ( data, cc );
         lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_8192 );
         tt :> t2;
         
@@ -1077,7 +1077,7 @@ int main( void )
         
         printf( "Reverse Complex FFT, Size = %05u\n", cc );
         tt :> t3;
-        lib_dsp_fft_twiddle        ( data, cc );
+        lib_dsp_fft_bit_reverse        ( data, cc );
         lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_8192 );
         tt :> t4;
 
