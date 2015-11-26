@@ -25,27 +25,23 @@ lib_dsp_fft_reorder_two_real_inputs:
 .issue_mode dual
 	DUALENTSP_lu6 NSTACKWORDS
 
-	ldc i, 1;
-	shl j, i, r1	//mkmsk?
-	sub j, j, 1
+	{ldc i, 1; sub j, j, 1}
 	std r5, r4, sp[0]
 
 	reorder_loop:
 	ldd im0, re0, p[i]
 	ldd im1, re1, p[j]
-
-	{sub im0, im0, im1;nop}
 	ashr im0, im0, 1
-	{add re1, im0, im1;sub im1, re1, re0}
 	ashr im1, im1, 1
-	{add re0, im1, re0;nop}
-
+	ashr re0, re0, 1
+	ashr re1, re1, 1
+	{add re0, re0, re1; sub re1, re0, re1}
+	{sub im0, im0, im1; add im1, im0, im1}
 	std im0, re0, p[i]
-	std im1, re1, p[j]
+	std re1, im1, p[j]
 	{add i, i, 1; sub j, j, 1}
 	{eq im0,  i, j;nop}
 	{bf im0, reorder_loop;nop}
-
 
 	ldd r5, r4, sp[0]
 	retsp NSTACKWORDS
