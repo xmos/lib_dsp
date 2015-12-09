@@ -5,6 +5,11 @@
 #include <xs1.h>
 #include <lib_dsp.h>
 
+#define PRINT_DATA 0
+
+#define MAX_FFT_POINTS 4096
+#define MAX_FFT_POINTS_TESTED 4096
+
 void print31( int x ) {if(x >=0) printf("+%f ",F31(x)); else printf("%f ",F31(x));}
 
 lib_dsp_fft_complex_t input[8192] =
@@ -1035,18 +1040,18 @@ lib_dsp_fft_complex_t input[8192] =
     {0x7F1,0x7F2},{0x7F3,0x7F4},{0x7F5,0x7F6},{0x7F7,0x7F8},{0x7F1,0x7F2},{0x7F5,0x7F4},{0x7F7,0x7F6},{0x7F9,0x7F8},
 };
 
-lib_dsp_fft_complex_t data [4096];
-int                   real1[4096];
-int                   real2[4096];
-int                   imag1[4096];
-int                   imag2[4096];
+lib_dsp_fft_complex_t data [MAX_FFT_POINTS];
+int                   real1[MAX_FFT_POINTS];
+int                   real2[MAX_FFT_POINTS];
+int                   imag1[MAX_FFT_POINTS];
+int                   imag2[MAX_FFT_POINTS];
 
 //void lib_dsp_fft_forward_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const int sine[] );
 //void lib_dsp_fft_inverse_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const int sine[] );
 
 int main( void )
 {
-    for( int cc = 8; cc <= 8; cc *= 2 )
+    for( int cc = 8; cc <= MAX_FFT_POINTS_TESTED; cc *= 2 )
     {
         timer tt; unsigned t1, t2, t3, t4;
         int ii, jj;
@@ -1061,17 +1066,19 @@ int main( void )
         printf( "Forward Complex FFT, Size = %05u\n", cc );        
         tt :> t1;
         lib_dsp_fft_bit_reverse        ( data, cc );
+        //FIXME: The sine table size must match N (cc). This is not the case.
         lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_8192 );
         tt :> t2;
         
+#if PRINT_DATA
         // Print forward complex FFT results
-        
         for( jj = 0; jj < cc; jj += 4 ) {
             for( ii = 0; ii < 4; ++ii ) {
                 printf( "%08x,%08x ", data[jj+ii].re, data[jj+ii].im );
             }
             printf( "\n" );
         } 
+#endif
 
         // Execute twiddle and inverse complex FFT
         
@@ -1081,17 +1088,17 @@ int main( void )
         lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_8192 );
         tt :> t4;
 
+#if PRINT_DATA
         // Print inverse complex FFT results
-        
         for( jj = 0; jj < cc; jj += 4 ) {
             for( ii = 0; ii < 4; ++ii ) {
                 printf( "%08x,%08x ", data[jj+ii].re, data[jj+ii].im );
             }
             printf( "\n" );
         }
+#endif
         
         //printf( "Complex: Size=%4u FFT_Clocks=%7u iFFT_Clocks=%7u\n", cc, (t2-t1), (t4-t3) );
-
         for( ii = 0; ii < cc; ++ii ) {
             real1[ii] = real2[ii] = input[ii].re << 20;
             imag1[ii] = imag2[ii] = input[ii].im << 20;
@@ -1104,8 +1111,8 @@ int main( void )
         lib_dsp_fft_forward_tworeals( real1, real2, imag1, imag2, cc, lib_dsp_sine_8192 );
         tt :> t2;
         
+#if PRINT_DATA
         // Print forward complex FFT results
-        
         for( jj = 0; jj < cc; jj += 2 ) {
             for( ii = 0; ii < 2; ++ii ) {
                 printf( "%08x,%08x ", real1[jj+ii], imag1[jj+ii] );
@@ -1113,6 +1120,7 @@ int main( void )
             }
             printf( "\n" );
         } 
+#endif
 
         // Execute inverse real (x2) FFT
         
@@ -1121,8 +1129,8 @@ int main( void )
         lib_dsp_fft_inverse_tworeals( real1, real2, imag1, imag2, cc, lib_dsp_sine_8192 );
         tt :> t4;
 
+#if PRINT_DATA
         // Print inverse complex FFT results
-        
         for( jj = 0; jj < cc; jj += 4 ) {
             for( ii = 0; ii < 4; ++ii ) {
                 printf( "%08x ", real1[jj+ii] );
@@ -1130,6 +1138,7 @@ int main( void )
             }
             printf( "\n" );
         }
+#endif
         
         //printf( "2xReal: Size=%4u FFT_Clocks=%7u iFFT_Clocks=%7u\n", cc, (t2-t1), (t4-t3) );
 }
