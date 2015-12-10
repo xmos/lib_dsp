@@ -1060,8 +1060,20 @@ int main( void )
         
         printf( "Forward Complex FFT, Size = %05u\n", cc );        
         tt :> t1;
-        lib_dsp_fft_bit_reverse        ( data, cc );
-        lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_8192 );
+        lib_dsp_fft_bit_reverse( data, cc );
+		switch( cc ) {
+			case 8:    lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_8    ); break;
+			case 16:   lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_16   ); break;
+			case 32:   lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_32   ); break;
+			case 64:   lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_64   ); break;
+			case 128:  lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_128  ); break;
+			case 256:  lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_256  ); break;
+			case 512:  lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_512  ); break;
+            case 1024: lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_1024 ); break;
+			case 2048: lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_2048 ); break;
+			case 4096: lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_4096 ); break;
+			case 8192: lib_dsp_fft_forward_complex( data, cc, lib_dsp_sine_8192 ); break;
+		}
         tt :> t2;
         
         // Print forward complex FFT results
@@ -1077,8 +1089,20 @@ int main( void )
         
         printf( "Reverse Complex FFT, Size = %05u\n", cc );
         tt :> t3;
-        lib_dsp_fft_bit_reverse        ( data, cc );
-        lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_8192 );
+        lib_dsp_fft_bit_reverse( data, cc );
+		switch( cc ) {
+			case 8:    lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_8    ); break;
+			case 16:   lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_16   ); break;
+			case 32:   lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_32   ); break;
+			case 64:   lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_64   ); break;
+			case 128:  lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_128  ); break;
+			case 256:  lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_256  ); break;
+			case 512:  lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_512  ); break;
+            case 1024: lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_1024 ); break;
+			case 2048: lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_2048 ); break;
+			case 4096: lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_4096 ); break;
+			case 8192: lib_dsp_fft_inverse_complex( data, cc, lib_dsp_sine_8192 ); break;
+		}
         tt :> t4;
 
         // Print inverse complex FFT results
@@ -1101,7 +1125,19 @@ int main( void )
 
         printf( "Forward 2xReal FFT, Size = %05u\n", cc );        
         tt :> t1;
-        lib_dsp_fft_forward_tworeals( real1, real2, imag1, imag2, cc, lib_dsp_sine_8192 );
+		switch( cc ) {
+			case 8:    lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_8    ); break;
+			case 16:   lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_16   ); break;
+			case 32:   lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_32   ); break;
+			case 64:   lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_64   ); break;
+			case 128:  lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_128  ); break;
+			case 256:  lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_256  ); break;
+			case 512:  lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_512  ); break;
+            case 1024: lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_1024 ); break;
+			case 2048: lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_2048 ); break;
+			case 4096: lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_4096 ); break;
+			case 8192: lib_dsp_fft_forward_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_8192 ); break;
+		}
         tt :> t2;
         
         // Print forward complex FFT results
@@ -1118,7 +1154,19 @@ int main( void )
         
         printf( "Reverse 2xReal FFT, Size = %05u\n", cc );
         tt :> t3;
-        lib_dsp_fft_inverse_tworeals( real1, real2, imag1, imag2, cc, lib_dsp_sine_8192 );
+		switch( cc ) {
+			case 8:    lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_8    ); break;
+			case 16:   lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_16   ); break;
+			case 32:   lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_32   ); break;
+			case 64:   lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_64   ); break;
+			case 128:  lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_128  ); break;
+			case 256:  lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_256  ); break;
+			case 512:  lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_512  ); break;
+            case 1024: lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_1024 ); break;
+			case 2048: lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_2048 ); break;
+			case 4096: lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_4096 ); break;
+			case 8192: lib_dsp_fft_inverse_tworeals( real1,real2,imag1,imag2,cc,lib_dsp_sine_8192 ); break;
+		}
         tt :> t4;
 
         // Print inverse complex FFT results
