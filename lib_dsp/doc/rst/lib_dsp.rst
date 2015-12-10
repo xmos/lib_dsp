@@ -256,10 +256,10 @@ Statistics Functions: Dot Product
 
 .. doxygenfunction:: lib_dsp_vector_dotprod
 
-Transform Functions: FFT Twiddle
---------------------------------
+Transform Functions: FFT Bit Reversal
+-------------------------------------
 
-.. doxygenfunction:: lib_dsp_fft_twiddle
+.. doxygenfunction:: lib_dsp_fft_bit_reverse
 
 Transform Functions: Forward Complex FFT
 ----------------------------------------
