@@ -5,3 +5,4 @@ xCORE-200 DSP library change log
 -----
 
   * Initial version
+
