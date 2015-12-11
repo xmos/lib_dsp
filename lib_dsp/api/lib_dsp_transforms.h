@@ -15,7 +15,7 @@ extern const int lib_dsp_sine_2048[];
 extern const int lib_dsp_sine_4096[];
 extern const int lib_dsp_sine_8192[];
 
-#define FFT_SINE0(N) sine_ ## N
+#define FFT_SINE0(N) lib_dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
 
 typedef struct
@@ -25,8 +25,26 @@ typedef struct
 }
 lib_dsp_fft_complex_t;
 
-//TODO docs
+/** This function takes a the output from the function lib_dsp_fft_forward_complex and
+ * reorders the data to form two frequency domain arrays.
+ *
+ * Note: pts[0].im will contain the frequency information for the real data in the N/2 index.
+ *
+ * \param pts   Array of complex input points
+ *
+ * \param N     number of points. Must be a power of 2, both re and im should be N long
+ */
 void lib_dsp_fft_reorder_two_real_inputs(lib_dsp_fft_complex_t pts[], unsigned N);
+
+/** This function takes a frequency domain array where the data is in the form of the output
+ * from  lib_dsp_fft_reorder_two_real_inputs() and rebuilds the full array ready for an inverse
+ * FFT.
+ *
+ * \param pts   Array of complex input points
+ *
+ * \param N     number of points. Must be a power of 2, both re and im should be N long
+ */
+void lib_dsp_fft_rebuild_one_real_input(lib_dsp_fft_complex_t pts[], unsigned N);
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by

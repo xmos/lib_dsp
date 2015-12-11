@@ -46,10 +46,11 @@ lib_dsp_fft_reorder_two_real_inputs:
 	{eq im0,  i, j;nop}
 	{bf im0, reorder_loop;nop}
 
-	{ldc im0, 0; shr j, r6, 1} // j = N/2
+	{shr j, r6, 1} // j = N/2
 	ldd re1, re0, p[0]
+	ldd im1, im0, p[j]
 	std im0, re0, p[0]
-	std im0, re1, p[j]
+	std im1, re1, p[j]
 	{add i, j, 1; sub j, r6, 1}	//i = N/2+1, j= N-1
 
 	second_reorder_loop:
