@@ -23,41 +23,43 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N )
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_forward_tworeals( int re1[], int re2[], int im1[], int im2[], int N, const int sine[] )
+void lib_dsp_fft_forward_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_complex_t two_im[], int N, const int sine[] )
 {
-    #if 0
-    fftTwiddle(re1, re2, N);
-    fftForward(re1, re2, N, sine);
-    #endif
-    im1[0] = 0;
-    im2[0] = 0;
+
+    lib_dsp_fft_bit_reverse(two_re, N);
+    lib_dsp_fft_forward_complex(two_re, N, sine);
+
+    two_im[0].re = 0;
+    two_im[0].im = 0;
     for(int i = N >> 1; i != 0; i--) {
-        im1[i] = (re2[i] - re2[N-i])>>1;
-        im1[N-i] = -im1[i];
-        im2[i] = (re1[N-i] - re1[i])>>1;
-        im2[N-i] = -im2[i];
+        two_im[i].re = (two_re[i].im - two_re[N-i].im)>>1;
+        two_im[N-i].re = -two_im[i].re;
+        two_im[i].im = (two_re[N-i].re - two_re[i].re)>>1;
+        two_im[N-i].im = -two_im[i].im;
     }
     for(int i = N >> 1; i != 0; i--) {
-        re1[i] = (re1[i] + re1[N-i]) >> 1;
-        re1[N-i] = re1[i];
-        re2[i] = (re2[i] + re2[N-i])>>1;
-        re2[N-i] = re2[i];
+        two_re[i].re = (two_re[i].re + two_re[N-i].re) >> 1;
+        two_re[N-i].re = two_re[i].re;
+        two_re[i].im = (two_re[i].im + two_re[N-i].im)>>1;
+        two_re[N-i].im = two_re[i].im;
     }
 }
 
+
+
 #pragma unsafe arrays
-void lib_dsp_fft_inverse_tworeals( int re1[], int re2[], int im1[], int im2[], int N, const int sine[] )
+void lib_dsp_fft_inverse_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_complex_t two_im[], int N, const int sine[] )
 {
     for(int i = N >> 1; i != 0; i--) {
-        re1[i] = re1[i] + im2[N-i];
-        re1[N-i] = re1[N-i] + im2[i];
-        re2[i] = re2[i] + im1[i];
-        re2[N-i] = re2[N-i] + im1[N-i];
+        two_re[i].re = two_re[i].re + two_im[N-i].im;
+        two_re[N-i].re = two_re[N-i].re + two_im[i].im;
+        two_re[i].im = two_re[i].im + two_im[i].re;
+        two_re[N-i].im = two_re[N-i].im + two_im[N-i].re;
     }
-    #if 0
-    fftTwiddle(re1, re2, N);
-    fftInverse(re1, re2, N, sine);
-    #endif
+
+    lib_dsp_fft_bit_reverse(two_re, N);
+    lib_dsp_fft_forward_complex(two_re, N, sine);
+
 }
 
 #pragma unsafe arrays

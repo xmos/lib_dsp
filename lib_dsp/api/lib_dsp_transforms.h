@@ -89,17 +89,11 @@ void lib_dsp_fft_forward_complex
  * the real and imaginary arrays (the output of a real FFT is still a
  * complex number).
  *
- * \param[in,out] re1    array of first set of real numbers on which to
+ * \param[in,out] two_re array containing two real signals on which to
  *                       compute FFT, on output this array stores the real
- *                       part of the complex FFT on this set of numbers.
+ *                       part of the complex FFT on the two real signals.
  *
- * \param[in,out] re2    array of second set of real numbers on which to
- *                       compute FFT, on output this array stores the real
- *                       part of the complex FFT on this set of numbers.
- *
- * \param[out]    im1    imaginary parts of complex FFT of first array
- *
- * \param[out]    im2    imaginary parts of complex FFT of second array
+ * \param[out]    two_im imaginary parts of complex FFT of two real signals in first array
  *
  * \param[in]     N      number of points
  *
@@ -111,10 +105,8 @@ void lib_dsp_fft_forward_complex
 
 void lib_dsp_fft_forward_tworeals
 (
-    int       re1[],
-    int       re2[],
-    int       im1[],
-    int       im2[],
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
     int       N,
     const int sine[] );
 
@@ -148,17 +140,11 @@ void lib_dsp_fft_inverse_complex
  * simultaneously. The outputs are in the two real arrays, the imaginary
  * arrays are unchanged.
  *
- * \param[in,out] re1    real part of first set of complex numbers on which
- *                       to compute inverse FFT
+ * \param[in,out] two_re array containing two real signals on which to
+ *                       compute FFT, on output this array stores the real
+ *                       part of the complex FFT on the two real signals
  *
- * \param[in,out] re2    real part of second set of complex numbers on which
- *                       to compute inverse FFT
- *
- * \param[in]     im1    imaginary part of first set of complex numbers on which
- *                       to compute inverse FFT
- *
- * \param[in]     im2    imaginary part of second set of complex numbers on which
- *                       to compute inverse FFT
+ * \param[out]    two_im imaginary parts of complex FFT of two real signals in first array
  *
  * \param[in]     N      number of points
  *
@@ -170,10 +156,8 @@ void lib_dsp_fft_inverse_complex
 
 void lib_dsp_fft_inverse_tworeals
 (
-    int       re1[],
-    int       re2[],
-    int       im1[],
-    int       im2[],
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
     int       N,
     const int sine[] );
 
