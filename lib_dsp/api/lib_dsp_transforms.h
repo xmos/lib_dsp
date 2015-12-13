@@ -111,10 +111,15 @@ void lib_dsp_fft_forward_complex
 
 void lib_dsp_fft_forward_tworeals
 (
-    int       re1[],
-    int       re2[],
-    int       im1[],
-    int       im2[],
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
+    int       N,
+    const int sine[] );
+
+void lib_dsp_fft_forward_tworeals_optimised
+(
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
     int       N,
     const int sine[] );
 
@@ -170,10 +175,8 @@ void lib_dsp_fft_inverse_complex
 
 void lib_dsp_fft_inverse_tworeals
 (
-    int       re1[],
-    int       re2[],
-    int       im1[],
-    int       im2[],
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
     int       N,
     const int sine[] );
 
