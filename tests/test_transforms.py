@@ -9,5 +9,5 @@ def runtest():
                                        'app_transforms', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/app_transforms.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeal_fft/app_transforms_tworeal_fft.xe',
                               tester=tester)
