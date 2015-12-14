@@ -12,9 +12,6 @@
 #define N_FFT_POINTS 32
 #define INPUT_FREQ N_FFT_POINTS/8
 
-//Select Complex FFT or Real FFT of two signals
-//#define COMPLEX_FFT
-
 // Note: Use these data types to guarantee 64 bit alignment
 // and having re and im together in one double word for efficient ldd and std
 #ifdef COMPLEX_FFT
@@ -36,6 +33,7 @@ int sin8(int x) {
        case 2: return -lib_dsp_sine_8[x-4];
        case 3: return -lib_dsp_sine_8[8-x];
     }
+    return 0; // unreachable
 }
 int cos8(int x) {
     return sin8(x+(8/4)); // cos a = sin(a + 2pi/4)
