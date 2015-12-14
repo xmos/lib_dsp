@@ -48,7 +48,7 @@ void lib_dsp_fft_rebuild_one_real_input(lib_dsp_fft_complex_t pts[], unsigned N)
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by
- * fftForward(), and for an inverse FFT it involves fftTwiddle() followed
+ * lib_dsp_fft_forward_complex(), and for an inverse FFT it involves fftTwiddle() followed
  * by fftInverse(). In some cases twiddling can be avoided, for example
  * when computing a convolution.
  *
@@ -140,11 +140,12 @@ void lib_dsp_fft_inverse_complex
  * simultaneously. The outputs are in the two real arrays, the imaginary
  * arrays are unchanged.
  *
- * \param[in,out] two_re array containing two real signals on which to
- *                       compute FFT, on output this array stores the real
- *                       part of the complex FFT on the two real signals
+ * \param[in,out] two_re array containing two real frequency domain signals on which to
+ *                       compute inverse FFT. On output this array stores two real
+ *                       time domain signals
  *
- * \param[out]    two_im imaginary parts of complex FFT of two real signals in first array
+ * \param[out]    two_im array containing two imaginary frequency domain signals on which to
+ *                       compute inverse FFT
  *
  * \param[in]     N      number of points
  *
@@ -163,3 +164,9 @@ void lib_dsp_fft_inverse_tworeals
 
 #endif
 
+void lib_dsp_fft_forward_tworeals_optimised
+(
+    lib_dsp_fft_complex_t two_re[],
+    lib_dsp_fft_complex_t two_im[],
+    int       N,
+    const int sine[] );

@@ -58,7 +58,7 @@ void lib_dsp_fft_inverse_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_c
     }
 
     lib_dsp_fft_bit_reverse(two_re, N);
-    lib_dsp_fft_forward_complex(two_re, N, sine);
+    lib_dsp_fft_inverse_complex(two_re, N, sine);
 
 }
 

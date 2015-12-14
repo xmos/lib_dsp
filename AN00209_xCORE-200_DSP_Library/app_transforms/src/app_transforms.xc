@@ -12,9 +12,6 @@
 #define N_FFT_POINTS 32
 #define INPUT_FREQ N_FFT_POINTS/8
 
-//Select Complex FFT or Real FFT of two signals
-//#define COMPLEX_FFT
-
 // Note: Use these data types to guarantee 64 bit alignment
 // and having re and im together in one double word for efficient ldd and std
 #ifdef COMPLEX_FFT
@@ -36,6 +33,7 @@ int sin8(int x) {
        case 2: return -lib_dsp_sine_8[x-4];
        case 3: return -lib_dsp_sine_8[8-x];
     }
+    return 0; // unreachable
 }
 int cos8(int x) {
     return sin8(x+(8/4)); // cos a = sin(a + 2pi/4)
@@ -62,8 +60,6 @@ int do_complex_fft_and_ifft() {
 
     printf("Generating a %d Hz sine and cosine signal for input to the Complex FFT:\n\n",N_FFT_POINTS/8);
     for(int i=0; i<N_FFT_POINTS; i++) {
-        // generate a N_FFT_POINTS/8 Hz sing and cosine signals
-        // 4 oscillations in 32 points -> Use sin8 to get 8 points per oscillation
         data[i].re = cos8(i);
         data[i].im = sin8(i);
     }
@@ -117,6 +113,10 @@ int do_complex_fft_and_ifft() {
     }
     printf( "\n" );
 #endif
+
+    printf( "DONE.\n" );
+    return 0;
+
 }
 # else
 int do_tworeal_fft_and_ifft() {
@@ -126,10 +126,8 @@ int do_tworeal_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    printf("Generating a %d Hz sine and cosine signal for input to the Forward 2xReal FFT\n\n",N_FFT_POINTS/8);
+    printf("Generating a %d Hz sine and cosine signals for input to the Forward 2xReal FFT\n\n",N_FFT_POINTS/8);
     for(int i=0; i<N_FFT_POINTS; i++) {
-        // generate a N_FFT_POINTS/8 Hz sing and cosine signals
-        // 4 oscillations in 32 points -> Use sin8 to get 8 points per oscillation
         two_re[i].re = cos8(i);
         two_re[i].im = sin8(i);
         two_im[i].re = 0;
