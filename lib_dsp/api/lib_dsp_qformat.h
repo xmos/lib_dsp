@@ -40,6 +40,7 @@
 #define F18(x) (((int)(x)<0)?((float)(int)(x))/    262144.0:((float)(x))/    262143.0)
 #define F17(x) (((int)(x)<0)?((float)(int)(x))/    131072.0:((float)(x))/    131071.0)
 #define F16(x) (((int)(x)<0)?((float)(int)(x))/     65536.0:((float)(x))/     65535.0)
+#define F15(x) (((int)(x)<0)?((float)(int)(x))/     32768.0:((float)(x))/     32767.0)
 
 #endif
 

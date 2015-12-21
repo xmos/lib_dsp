@@ -25,6 +25,15 @@ typedef struct
 }
 lib_dsp_fft_complex_t;
 
+typedef struct
+{
+    short int re_1; // highest addr in memory
+    short int re_0;
+    short int im_1;
+    short int im_0; // lowest addr in memory
+}
+lib_dsp_fft_complex_short_t;
+
 /** This function takes a the output from the function lib_dsp_fft_forward_complex and
  * reorders the data to form two frequency domain arrays.
  *
@@ -48,8 +57,8 @@ void lib_dsp_fft_rebuild_one_real_input(lib_dsp_fft_complex_t pts[], unsigned N)
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by
- * lib_dsp_fft_forward_complex(), and for an inverse FFT it involves fftTwiddle() followed
- * by fftInverse(). In some cases twiddling can be avoided, for example
+ * lib_dsp_fft_forward_complex(), and for an inverse FFT it involves lib_dsp_fft_bit_reverse() followed
+ * by lib_dsp_fft_inverse_complex(). In some cases bit reversal can be avoided, for example
  * when computing a convolution.
  *
  * \param pts   Array of complex input points
@@ -59,28 +68,60 @@ void lib_dsp_fft_rebuild_one_real_input(lib_dsp_fft_complex_t pts[], unsigned N)
 
 void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N );
 
-/** This function computes a forward FFT. The complex input array is
- * supplied as two arrays of integers, with numbers represented as
- * fixed-point values. The number of points must be a power of 2, and the
- * array of sine values should contain a quarter sine-wave. Use one of the
- * lib_dsp_sine_N tables. The function does not perform a bit-twiddle -
- * if required then lib_dsp_fft_bit_reverse() should be called beforehand.
+/** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
+ * calling sequence for a forward FFT on two complex short int signals involves lib_dsp_fft_bit_reverse_short()
+ * followed by lib_dsp_fft_forward_complex_short(), and for an inverse FFT it involves lib_dsp_fft_bit_reverse() followed
+ * by lib_dsp_fft_inverse_complex_short(). In some cases bit reversal can be avoided, for example
+ * when computing a convolution.
  *
  * \param pts   Array of complex input points
  *
  * \param N     number of points. Must be a power of 2, both re and im should be N long
- *
- * \param sine  array of N/4+1 sine values, each represented as a sign bit,
- *              and a 31 bit fraction. 1 should be represented as 0x7fffffff.
- *              Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
- *              FFT use lib_dsp_sine_1024.
  */
+void lib_dsp_fft_bit_reverse_short( lib_dsp_fft_complex_short_t pts[], int N );
 
+/** This function computes a forward FFT. The complex input signal is
+ * supplied in an array of real and imaginary fixed-point values.
+ * The same array is also used to store the output.
+ * The number of points must be a power of 2, and the array of sine values should contain a quarter sine-wave.
+ * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversal of the data.
+ * If required then lib_dsp_fft_bit_reverse() should be called beforehand.
+ *
+ * \param[in,out] pts   Array of complex input points. Must be 64-bit aligned to enable efficient double word loads and stores
+ *
+ * \param[in]     N     number of points. Must be a power of 2.
+ *
+ * \param[in]     sine  array of N/4+1 sine values, each represented as a sign bit,
+ *                and a 31 bit fraction. 1 should be represented as 0x7fffffff.
+ *                Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
+ *                FFT use lib_dsp_sine_1024.
+ */
 void lib_dsp_fft_forward_complex
 (
     lib_dsp_fft_complex_t pts[],
     int                   N,
     const int             sine[] );
+
+/** This function computes a forward FFT on two complex short int signals in one go.
+ * The complex input signal is supplied in an array of real and imaginary fixed-point values.
+ * The same array is also used to store the output.
+ * The number of points must be a power of 2, and the array of sine values should contain a quarter sine-wave.
+ * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversal of the data.
+ * If required then lib_dsp_fft_bit_reverse_short() should be called beforehand.
+ *
+ * \param[in,out] pts   Array of complex input points. Must be 64-bit aligned to enable efficient double word loads and stores
+ *
+ * \param[in]     N     number of points. Must be a power of 2, both re and im should be N long
+ *
+ * \param[in]     sine  array of N/4+1 sine values, each represented as a sign bit,
+ *                and a 31 bit fraction. 1 should be represented as 0x7fffffff.
+ *                Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
+ *                FFT use lib_dsp_sine_1024.
+ */
+void lib_dsp_fft_forward_complex_short(
+        lib_dsp_fft_complex_short_t pts[],
+        int N,
+        const int sine[] );
 
 /** This function computes the FFT of two real sequences in one go. It uses
  * a nifty trick (http://www.katjaas.nl/realFFT/realFFT.html) that enables
@@ -97,12 +138,11 @@ void lib_dsp_fft_forward_complex
  *
  * \param[in]     N      number of points
  *
- * \param[in]  sine  array of N/4+1 sine values, each represented as a sign bit,
- *              and a 31 bit fraction. 1 should be represented as 0x7fffffff.
- *              Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
- *              FFT use lib_dsp_sine_1024.
+ * \param[in]     sine  array of N/4+1 sine values, each represented as a sign bit,
+ *                and a 31 bit fraction. 1 should be represented as 0x7fffffff.
+ *                Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
+ *                FFT use lib_dsp_sine_1024.
  */
-
 void lib_dsp_fft_forward_tworeals
 (
     lib_dsp_fft_complex_t two_re[],
@@ -126,7 +166,6 @@ void lib_dsp_fft_forward_tworeals
  *              Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
  *              FFT use lib_dsp_sine_1024.
  */
-
 void lib_dsp_fft_inverse_complex
 (
     lib_dsp_fft_complex_t pts[],
@@ -149,12 +188,11 @@ void lib_dsp_fft_inverse_complex
  *
  * \param[in]     N      number of points
  *
- * \param[in] sine  array of N/4+1 sine values, each represented as a sign bit,
- *              and a 31 bit fraction. 1 should be represented as 0x7fffffff.
- *              Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
- *              FFT use lib_dsp_sine_1024.
+ * \param[in]     sine  array of N/4+1 sine values, each represented as a sign bit,
+ *                and a 31 bit fraction. 1 should be represented as 0x7fffffff.
+ *                Arrays are provided in lib_dsp_tables.c; for example, for a 1024 point
+ *                FFT use lib_dsp_sine_1024.
  */
-
 void lib_dsp_fft_inverse_tworeals
 (
     lib_dsp_fft_complex_t two_re[],
@@ -164,9 +202,3 @@ void lib_dsp_fft_inverse_tworeals
 
 #endif
 
-void lib_dsp_fft_forward_tworeals_optimised
-(
-    lib_dsp_fft_complex_t two_re[],
-    lib_dsp_fft_complex_t two_im[],
-    int       N,
-    const int sine[] );
