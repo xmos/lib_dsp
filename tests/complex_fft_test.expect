@@ -1,6 +1,6 @@
 
 
-++++ Test 0: FFT of complex signal:: Real: 4 Hz cosine, Imag: 0
+++++ Test 0: FFT/iFFT of complex signal:: Real: 4 Hz cosine, Imag: 0
 Generated Signal:
 re,           im         
 1.0000000005, 0.0000000000
@@ -107,7 +107,7 @@ re,           im
 0.7071067694, 0.0000000000
 
 
-++++ Test 1: FFT of complex signal:: Real: 4 Hz sine, Imag: 0
+++++ Test 1: FFT/iFFT of complex signal:: Real: 4 Hz sine, Imag: 0
 Generated Signal:
 re,           im         
 0.0000000000, 0.0000000000
@@ -214,7 +214,7 @@ re,           im
 -0.7071067691, 0.0000000000
 
 
-++++ Test 2: FFT of complex signal: Real: 0, Imag: 4 Hz cosine
+++++ Test 2: FFT/iFFT of complex signal: Real: 0, Imag: 4 Hz cosine
 Generated Signal:
 re,           im         
 0.0000000000, 1.0000000005
@@ -321,7 +321,7 @@ re,           im
 0.0000000000, 0.7071067694
 
 
-++++ Test 3: FFT of complex signal: Real: 0, Imag: 4 Hz sine
+++++ Test 3: FFT/iFFT of complex signal: Real: 0, Imag: 4 Hz sine
 Generated Signal:
 re,           im         
 0.0000000000, 0.0000000000

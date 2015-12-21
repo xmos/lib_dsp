@@ -54,11 +54,11 @@ int main( void )
 
 #ifdef COMPLEX_FFT
 
-void generate_complex_test_signal(lib_dsp_FFT/iFFT_complex_t data[], int N, int test) {
+void generate_complex_test_signal(lib_dsp_fft_complex_t data[], int N, int test) {
     printf("\n" ); // Test delimiter
     switch(test) {
     case 0: {
-        printf("\n++++ Test 0: FFT/iFFT of complex signal:: Real: %d Hz cosine, Imag: 0\n",N_FFT/iFFT_POINTS/8);
+        printf("\n++++ Test 0: FFT/iFFT of complex signal:: Real: %d Hz cosine, Imag: 0\n",N_FFT_POINTS/8);
         for(int i=0; i<N; i++) {
             data[i].re = cos8(i);
             data[i].im = 0;
@@ -66,7 +66,7 @@ void generate_complex_test_signal(lib_dsp_FFT/iFFT_complex_t data[], int N, int 
         break;
     }
     case 1: {
-        printf("++++ Test 1: FFT/iFFT of complex signal:: Real: %d Hz sine, Imag: 0\n",N_FFT/iFFT_POINTS/8);
+        printf("++++ Test 1: FFT/iFFT of complex signal:: Real: %d Hz sine, Imag: 0\n",N_FFT_POINTS/8);
         for(int i=0; i<N; i++) {
             data[i].re = sin8(i);
             data[i].im = 0;
@@ -74,7 +74,7 @@ void generate_complex_test_signal(lib_dsp_FFT/iFFT_complex_t data[], int N, int 
         break;
     }
     case 2: {
-        printf("++++ Test 2: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz cosine\n",N_FFT/iFFT_POINTS/8);
+        printf("++++ Test 2: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz cosine\n",N_FFT_POINTS/8);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
             data[i].im = cos8(i);
@@ -82,7 +82,7 @@ void generate_complex_test_signal(lib_dsp_FFT/iFFT_complex_t data[], int N, int 
         break;
     }
     case 3: {
-        printf("++++ Test 3: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz sine\n",N_FFT/iFFT_POINTS/8);
+        printf("++++ Test 3: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz sine\n",N_FFT_POINTS/8);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
             data[i].im = sin8(i);
