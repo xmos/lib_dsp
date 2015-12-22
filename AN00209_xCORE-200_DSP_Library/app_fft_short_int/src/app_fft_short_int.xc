@@ -128,7 +128,7 @@ int do_complex_fft_and_ifft() {
 
         tmr :> start_time;
         lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
-        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -147,8 +147,32 @@ int do_complex_fft_and_ifft() {
         for(int i=0; i<N_FFT_POINTS; i++) {
             printf( "%.5f, %.5f\n", F15(data[i].re_1), F15(data[i].im_1));
         }
-        printf("\n" ); // Test delimiter
 #endif
+
+        tmr :> start_time;
+        lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
+        lib_dsp_fft_inverse_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        tmr :> end_time;
+        cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for iFFT: %d\n", cycles_taken);
+#endif
+
+#if PRINT_IFFT_OUTPUT
+        printf( "////// Time domain signals after lib_dsp_fft_inverse_complex_short\n");
+        printf("Complex signal 0:\n");
+        printf("re,      im         \n");
+        for(int i=0; i<N_FFT_POINTS; i++) {
+            printf("%.5f, %.5f\n",F15(data[i].re_0), F15(data[i].im_0));
+        }
+        printf("Complex signal 1:\n");
+        printf("re,      im         \n");
+        for(int i=0; i<N_FFT_POINTS; i++) {
+            printf("%.5f, %.5f\n",F15(data[i].re_1), F15(data[i].im_1));
+        }
+#endif
+
+        printf("\n" ); // Test delimiter
     }
 
     printf( "DONE.\n" );
@@ -186,7 +210,7 @@ int do_tworeal_fft_and_ifft() {
 
     printf("Forward 2xReal FFT, Size = %05u\n", N_FFT_POINTS );
     tmr :> start_time;
-    lib_dsp_fft_forward_tworeals( two_re, two_im, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS) );
+    lib_dsp_fft_forward_tworeals( two_re, two_im, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS) );
     tmr :> end_time;
 
     cycles_taken = end_time-start_time-overhead_time;
@@ -207,7 +231,7 @@ int do_tworeal_fft_and_ifft() {
         
     printf( "Inverse 2xReal FFT, Size = %05u\n", N_FFT_POINTS );
     tmr :> start_time;
-    lib_dsp_fft_inverse_tworeals( two_re, two_im, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS) );
+    lib_dsp_fft_inverse_tworeals( two_re, two_im, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS) );
     tmr :> end_time;
 
     cycles_taken = end_time-start_time-overhead_time;
