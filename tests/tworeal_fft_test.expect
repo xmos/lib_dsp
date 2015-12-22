@@ -1,5 +1,4 @@
-Generating a 4 Hz sine and cosine signals for input to the Forward 2xReal FFT
-
+32 point FFT/iFFT of two real signals: Signal 0: 4 Hz cosine. Signal 1: 4 Hz sine
 Generated Two Real Input Signals:
 re,           re         
 1.0000000005, 0.0000000000
@@ -35,8 +34,7 @@ re,           re
 0.0000000000, -1.0000000000
 0.7071067694, -0.7071067691
 Forward 2xReal FFT, Size = 00032
-Cycles taken for FFT: 2881
-Complex FFT output spectrum of Real signal 0:
+Complex FFT output spectrum of Real signal 0 (cosine):
 re,           im         
 0.0000000000, 0.0000000000
 0.0000000000, 0.0000000000
@@ -70,7 +68,7 @@ re,           im
 0.0000000000, 0.0000000000
 0.0000000000, 0.0000000000
 0.0000000000, 0.0000000000
-Complex FFT output spectrum of Real signal 1:
+Complex FFT output spectrum of Real signal 1 (sine):
 re,           im         
 0.0000000000, 0.0000000000
 0.0000000000, 0.0000000000
@@ -105,7 +103,6 @@ re,           im
 0.0000000000, 0.0000000000
 0.0000000000, 0.0000000000
 Inverse 2xReal FFT, Size = 00032
-Cycles taken for iFFT: 2588
 ////// Time domain signal after lib_dsp_fft_inverse_tworeals
 Recovered Two Real Input Signals:
 re,           re         

@@ -8,6 +8,7 @@
 #define PRINT_FFT_INPUT 1
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1
+#define PRINT_CYCLE_COUNT 0
 
 #define N_FFT_POINTS 32
 #define INPUT_FREQ N_FFT_POINTS/8
@@ -54,10 +55,10 @@ int main( void )
 
 #ifdef COMPLEX_FFT
 void generate_two_short_complex_test_signals(lib_dsp_fft_complex_short_t data[], int N, int test) {
-    printf("\n" ); // Test delimiter
     switch(test) {
     case 0: {
-        printf("\n++++ Test 0: FFT of two complex short int signals:: Real: %d Hz cosine, Imag: 0\n",N_FFT_POINTS/8);
+        printf("++++ Test 0: %d point FFT of two complex short int signals:: Real: %d Hz cosine, Imag: 0\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = cos8(i)>>16;
             data[i].re_1 = cos8(i)>>16;
@@ -67,7 +68,8 @@ void generate_two_short_complex_test_signals(lib_dsp_fft_complex_short_t data[],
         break;
     }
     case 1: {
-        printf("++++ Test 1: FFT of two complex short int signals:: Real: %d Hz sine, Imag: 0\n",N_FFT_POINTS/8);
+        printf("++++ Test 1: %d point FFT of two complex short int signals:: Real: %d Hz sine, Imag: 0\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = sin8(i)>>16;
             data[i].re_1 = sin8(i)>>16;
@@ -77,7 +79,8 @@ void generate_two_short_complex_test_signals(lib_dsp_fft_complex_short_t data[],
         break;
     }
     case 2: {
-        printf("++++ Test 2: FFT of two complex short int signals: Real: 0, Imag: %d Hz cosine\n",N_FFT_POINTS/8);
+        printf("++++ Test 2: %d point FFT of two complex short int signals: Real: 0, Imag: %d Hz cosine\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = 0;
             data[i].re_1 = 0;
@@ -87,7 +90,8 @@ void generate_two_short_complex_test_signals(lib_dsp_fft_complex_short_t data[],
         break;
     }
     case 3: {
-        printf("++++ Test 3: FFT of two complex short int signals: Real: 0, Imag: %d Hz sine\n",N_FFT_POINTS/8);
+        printf("++++ Test 3: %d point FFT of two complex short int signals: Real: 0, Imag: %d Hz sine\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = 0;
             data[i].re_1 = 0;
@@ -127,7 +131,9 @@ int do_complex_fft_and_ifft() {
         lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
         printf("Cycles taken for %d point complex FFT of two complex short signals: %d\n", N_FFT_POINTS, cycles_taken);
+#endif
 
 #if PRINT_FFT_OUTPUT
         // Print forward complex FFT results
@@ -141,6 +147,7 @@ int do_complex_fft_and_ifft() {
         for(int i=0; i<N_FFT_POINTS; i++) {
             printf( "%.5f, %.5f\n", F15(data[i].re_1), F15(data[i].im_1));
         }
+        printf("\n" ); // Test delimiter
 #endif
     }
 

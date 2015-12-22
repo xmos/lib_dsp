@@ -9,6 +9,8 @@
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1
 
+#define PRINT_CYCLE_COUNT 0
+
 #define N_FFT_POINTS 32
 #define INPUT_FREQ N_FFT_POINTS/8
 
@@ -55,10 +57,10 @@ int main( void )
 #ifdef COMPLEX_FFT
 
 void generate_complex_test_signal(lib_dsp_fft_complex_t data[], int N, int test) {
-    printf("\n" ); // Test delimiter
     switch(test) {
     case 0: {
-        printf("\n++++ Test 0: FFT/iFFT of complex signal:: Real: %d Hz cosine, Imag: 0\n",N_FFT_POINTS/8);
+        printf("++++ Test 0: %d point FFT/iFFT of complex signal:: Real: %d Hz cosine, Imag: 0\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = cos8(i);
             data[i].im = 0;
@@ -66,7 +68,8 @@ void generate_complex_test_signal(lib_dsp_fft_complex_t data[], int N, int test)
         break;
     }
     case 1: {
-        printf("++++ Test 1: FFT/iFFT of complex signal:: Real: %d Hz sine, Imag: 0\n",N_FFT_POINTS/8);
+        printf("++++ Test 1: %d point FFT/iFFT of complex signal:: Real: %d Hz sine, Imag: 0\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = sin8(i);
             data[i].im = 0;
@@ -74,7 +77,8 @@ void generate_complex_test_signal(lib_dsp_fft_complex_t data[], int N, int test)
         break;
     }
     case 2: {
-        printf("++++ Test 2: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz cosine\n",N_FFT_POINTS/8);
+        printf("++++ Test 2: %d point FFT/iFFT of complex signal: Real: 0, Imag: %d Hz cosine\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
             data[i].im = cos8(i);
@@ -82,7 +86,8 @@ void generate_complex_test_signal(lib_dsp_fft_complex_t data[], int N, int test)
         break;
     }
     case 3: {
-        printf("++++ Test 3: FFT/iFFT of complex signal: Real: 0, Imag: %d Hz sine\n",N_FFT_POINTS/8);
+        printf("++++ Test 3: %d point FFT/iFFT of complex signal: Real: 0, Imag: %d Hz sine\n"
+                ,N_FFT_POINTS,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
             data[i].im = sin8(i);
@@ -115,7 +120,9 @@ int do_complex_fft_and_ifft() {
         lib_dsp_fft_forward_complex(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
         printf("Cycles taken for FFT: %d\n", cycles_taken);
+#endif
 
 #if PRINT_FFT_OUTPUT
         // Print forward complex FFT results
@@ -131,7 +138,9 @@ int do_complex_fft_and_ifft() {
         lib_dsp_fft_inverse_complex(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
         printf("Cycles taken for iFFT: %d\n", cycles_taken);
+#endif
 
 #if PRINT_IFFT_OUTPUT
         printf( "////// Time domain signal after lib_dsp_fft_inverse_complex\n");
@@ -139,7 +148,7 @@ int do_complex_fft_and_ifft() {
         for(int i=0; i<N_FFT_POINTS; i++) {
             printf( "%.10f, %.10f\n", F31(data[i].re), F31(data[i].im));
         }
-        printf( "\n" );
+        printf("\n" ); // Test delimiter
 #endif
     }
 
@@ -155,7 +164,8 @@ int do_tworeal_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    printf("Generating a %d Hz sine and cosine signals for input to the Forward 2xReal FFT\n\n",INPUT_FREQ);
+    printf("%d point FFT/iFFT of two real signals: Signal 0: %d Hz cosine. Signal 1: %d Hz sine\n"
+            ,N_FFT_POINTS,INPUT_FREQ,INPUT_FREQ);
     for(int i=0; i<N_FFT_POINTS; i++) {
         two_re[i].re = cos8(i);
         two_re[i].im = sin8(i);
@@ -177,7 +187,9 @@ int do_tworeal_fft_and_ifft() {
     tmr :> end_time;
 
     cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
     printf("Cycles taken for FFT: %d\n", cycles_taken);
+#endif
 
 #if PRINT_FFT_OUTPUT
     // Print forward complex FFT results
@@ -199,7 +211,9 @@ int do_tworeal_fft_and_ifft() {
     tmr :> end_time;
 
     cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
     printf("Cycles taken for iFFT: %d\n", cycles_taken);
+#endif
 
 #if PRINT_IFFT_OUTPUT
     printf( "////// Time domain signal after lib_dsp_fft_inverse_tworeals\n");
