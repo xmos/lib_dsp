@@ -18,6 +18,21 @@ extern const int lib_dsp_sine_8192[];
 #define FFT_SINE0(N) lib_dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
 
+extern const short lib_dsp_sine_short_8[3];
+extern const short lib_dsp_sine_short_16[5];
+extern const short lib_dsp_sine_short_32[9];
+extern const short lib_dsp_sine_short_64[17];
+extern const short lib_dsp_sine_short_128[33];
+extern const short lib_dsp_sine_short_256[65];
+extern const short lib_dsp_sine_short_512[129];
+extern const short lib_dsp_sine_short_1024[257];
+extern const short lib_dsp_sine_short_2048[513];
+extern const short lib_dsp_sine_short_4096[1025];
+extern const short lib_dsp_sine_short_8192[2049];
+
+#define FFT_SINE_SHORT0(N) lib_dsp_sine_short_ ## N
+#define FFT_SINE_SHORT(N) FFT_SINE_SHORT0(N)
+
 typedef struct
 {
     int re;
