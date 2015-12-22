@@ -135,8 +135,14 @@ void lib_dsp_fft_forward_complex
  */
 void lib_dsp_fft_forward_complex_short(
         lib_dsp_fft_complex_short_t pts[],
-        int N,
-        const int sine[] );
+        int                         N,
+        const short                 sine[] );
+
+
+void lib_dsp_fft_inverse_complex_short(
+        lib_dsp_fft_complex_short_t pts[],
+        int                         N,
+        const short                 sine[] );
 
 /** This function computes the FFT of two real sequences in one go. It uses
  * a nifty trick (http://www.katjaas.nl/realFFT/realFFT.html) that enables
