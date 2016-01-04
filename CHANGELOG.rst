@@ -1,17 +1,18 @@
 xCORE-200 DSP library change log
 ================================
 
-1.0.0
+1.0.2
 -----
 
-  * Initial version
+  * FFT and inverse FFT for two complex short int signals
 
 1.0.1
 -----
 
   * FFT and inverse FFT for complex signals or two real signals.
 
-1.0.2
+1.0.0
 -----
 
-  * FFT and inverse FFT for two complex short int signals
+  * Initial version
+
