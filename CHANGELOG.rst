@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+1.0.3
+-----
+
+  * Update to source code license and copyright
+
 1.0.2
 -----
 
