@@ -3,7 +3,7 @@ xCORE-200 DSP Elements Library
 
 .. appnote:: AN00209
 
-.. version:: 1.0.2
+.. version:: 1.0.3
 
 Summary
 -------

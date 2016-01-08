@@ -1,8 +1,6 @@
 xCORE-200 DSP Library
 =====================
 
-.. version:: 1.0.0
-
 Summary
 -------
 
