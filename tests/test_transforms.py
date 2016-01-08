@@ -26,12 +26,22 @@ def runtest():
 
     resources = xmostest.request_resource("xsim")
      
-    tester = xmostest.ComparisonTester(open('complex_short_int_fft_test.expect'),
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_two_complex.xe.expect'),
                                        'lib_dsp', 'simple_tests',
                                        'app_fft_short_int', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/app_fft_short_int.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/two_complex/app_fft_short_int_two_complex.xe',
+                              tester=tester)
+
+    resources = xmostest.request_resource("xsim")
+     
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_complex.xe.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_fft_short_int', {})
+     
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/complex/app_fft_short_int_complex.xe',
                               tester=tester)
 
 
