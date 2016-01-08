@@ -1,4 +1,4 @@
-// Copyright (c) 2015, XMOS Ltd, All rights reserved
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Example to use FFT and inverse FFT
 
 #include <stdio.h>

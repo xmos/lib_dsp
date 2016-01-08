@@ -1,4 +1,4 @@
-// Copyright (c) 2015, XMOS Ltd, All rights reserved
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Matrix Functions Test Program
 // Uses Q24 format
 
