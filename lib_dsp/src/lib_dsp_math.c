@@ -4,41 +4,16 @@
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
 
-/**  Scalar multipliplication
- * 
- *  This function multiplies two scalar values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- * 
- *  The two operands are multiplied to produce a 64-bit result which is tested for overflow,
- *  clamped at the minimum/maximum value given the fixed-point format if overflow occurs,
- *  and finally shifted right by ``q_format`` bits. 
- *
- *  Algorithm:
- * 
- *  \code
- *  1) Y = X1 * X2
- *  2) Y = min( max( Q_FORMAT_MIN, Y ), Q_FORMAT_MAX, Y )
- *  3) Y = Y >> q_format
- *  \endcode
- *
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
- *  \endcode
- * 
- *  While saturation is employed after multiplication an overflow condition when preparing the final
- *  result must still be considered when specifying a Q-format whose fixed-point numerical range do
- *  not accomodate the final result of multiplication and saturation (if applied).
- * 
- *  \param  input1_value  Multiply operand #1.
- *  \param  input2_value  Multiply operand #2.
- *  \param  q_format      Fixed point format (i.e. number of fractional bits).
- *  \returns              input1_value * input2_value.
- */
-
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
+{
+    int ah; unsigned al;
+    asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
+    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
+    return ah;
+}
+
+
+int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
     asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
@@ -176,3 +151,52 @@ int lib_dsp_math_squareroot( int input_value, int q_format )
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
+
+
+
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite, fixed point sin/cos chapter.
+ ******************************************************************/
+#define ONE_OVER_HALFPI 10680707
+#define r0 -11184804
+#define r1   2236879
+#define r2   -212681
+#define r3     11175
+
+int lib_dsp_math_sin(int rad, int q_format) {
+    int finalSign;
+    int modulo;
+    int sqr;
+
+    if (rad < 0) {
+        rad = -rad;
+        finalSign = -1;
+    } else /* rad >= 0 */ {
+        finalSign = 1;
+    }
+    // Now rad >= 0.
+
+    modulo = lib_dsp_math_multiply(rad, ONE_OVER_HALFPI, q_format) >> q_format;
+    rad -= (modulo >> 2) * PI2;
+    if (modulo & 2) {
+        finalSign = -finalSign;
+        rad -= (PI2+1)>>1;
+    }
+    if (modulo & 1) {
+        rad = ((PI2+1)>>1) - rad;
+    }
+    sqr = lib_dsp_math_multiply(rad/2, rad/2, q_format);
+    return (rad +
+            lib_dsp_math_multiply(
+            lib_dsp_math_multiply(
+            lib_dsp_math_multiply(
+            lib_dsp_math_multiply(
+            lib_dsp_math_multiply(r3, sqr, q_format)
+            + r2, sqr, q_format)
+            + r1, sqr, q_format)
+            + r0, sqr, q_format)
+            ,rad, q_format))
+            * finalSign;
+}
+
