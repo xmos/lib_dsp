@@ -4,12 +4,34 @@
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
 
+#define ASM_OPTIMISED
+//#define ASM_ROUNDING
+
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
+
+#ifdef ASM_OPTIMISED
+
     int ah; unsigned al;
-    asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
-    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
-    return ah;
+    int result;
+    //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<((32-q_format)*2-1)));
+    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)));
+    asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(ah),"r"(al),"r"(q_format));
+#ifdef ASM_ROUNDING
+    int round;
+    asm("lextract %0,%1,%2,%3,32":"=r"(round):"r"(ah),"r"(al),"r"(q_format+1));
+    // rounding
+    result = result + (round & 1);
+#endif
+    return result;
+#else
+    // Brute force testing of lib_dsp_math_sin shows that the additional rounding here is not required to achieve accuracy of 1 LSB (error <= 1)
+    long long aa = input1_value;
+    long long bb = input2_value;
+    long long res = aa * bb;
+    long long result = (res >> q_format) + ((res >> (q_format - 1)) & 1);
+    return result;
+#endif
 }
 
 
@@ -152,22 +174,24 @@ int lib_dsp_math_squareroot( int input_value, int q_format )
     return ah;
 }
 
-
-
 /******************************************************************
  * Derived from "Software Manual for the Elementary
  * Functions" by Cody and Waite, fixed point sin/cos chapter.
  ******************************************************************/
-#define ONE_OVER_HALFPI 10680707
-#define r0 -11184804
-#define r1   2236879
-#define r2   -212681
-#define r3     11175
 
-int lib_dsp_math_sin(int rad, int q_format) {
+// coefficients are scaled up for improved rounding
+#define R0 (-11184804*8)
+#define R1   (2236879*4)
+#define R2   (-212681*2)
+#define R3     (11175)
+
+//int lib_dsp_math_sin(int rad, lib_dsp_sine_coeffs_t coeffs) {
+q8_24 lib_dsp_math_sin(q8_24 rad) {
     int finalSign;
     int modulo;
     int sqr;
+    //int q_format = coeffs.q_format;
+    int q_format = 24;
 
     if (rad < 0) {
         rad = -rad;
@@ -186,17 +210,19 @@ int lib_dsp_math_sin(int rad, int q_format) {
     if (modulo & 1) {
         rad = ((PI2+1)>>1) - rad;
     }
-    sqr = lib_dsp_math_multiply(rad/2, rad/2, q_format);
+    sqr = (lib_dsp_math_multiply(rad, rad, q_format)+1)>>1;
     return (rad +
-            lib_dsp_math_multiply(
-            lib_dsp_math_multiply(
-            lib_dsp_math_multiply(
-            lib_dsp_math_multiply(
-            lib_dsp_math_multiply(r3, sqr, q_format)
-            + r2, sqr, q_format)
-            + r1, sqr, q_format)
-            + r0, sqr, q_format)
-            ,rad, q_format))
-            * finalSign;
+            ((lib_dsp_math_multiply(
+              lib_dsp_math_multiply(
+                lib_dsp_math_multiply(
+                  lib_dsp_math_multiply(
+                    lib_dsp_math_multiply(R3, sqr, q_format) + R2,
+                    sqr, q_format) + R1,
+                  sqr, q_format) + R0,
+                sqr, q_format)
+            ,rad, q_format)+6)>>4)
+            )* finalSign;
 }
+
+
 
