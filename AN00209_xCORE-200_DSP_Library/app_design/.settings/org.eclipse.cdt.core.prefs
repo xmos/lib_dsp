@@ -1,9 +1,0 @@
-eclipse.preferences.version=1
-environment/project/com.xmos.cdt.toolchain.1447749893/XDE_BUILD/delimiter=;
-environment/project/com.xmos.cdt.toolchain.1447749893/XDE_BUILD/operation=append
-environment/project/com.xmos.cdt.toolchain.1447749893/XDE_BUILD/value=true
-environment/project/com.xmos.cdt.toolchain.1447749893/XMOS_MODULE_PATH/delimiter=;
-environment/project/com.xmos.cdt.toolchain.1447749893/XMOS_MODULE_PATH/operation=append
-environment/project/com.xmos.cdt.toolchain.1447749893/XMOS_MODULE_PATH/value=C\:\\Users\\johne2\\.myrepos\\lib_dsp\\lib_dsp
-environment/project/com.xmos.cdt.toolchain.1447749893/append=true
-environment/project/com.xmos.cdt.toolchain.1447749893/appendContributed=true
