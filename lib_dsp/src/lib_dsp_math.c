@@ -185,7 +185,6 @@ int lib_dsp_math_squareroot( int input_value, int q_format )
 #define R2   (-212681*2)
 #define R3     (11175)
 
-//int lib_dsp_math_sin(int rad, lib_dsp_sine_coeffs_t coeffs) {
 q8_24 lib_dsp_math_sin(q8_24 rad) {
     int finalSign;
     int modulo;

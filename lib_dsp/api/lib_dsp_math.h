@@ -3,6 +3,43 @@
 #ifndef LIB_DSP_MATH
 #define LIB_DSP_MATH
 
+#include "xccompat.h"
+
+
+/** Q8.24 fixed point format with 24 fractional bits
+ * Explcit type to make it clear which functions use this Q format.
+ */
+typedef int q8_24;
+
+// Constants for the Q8.24 format
+
+/** This constant defines the smallest number that is defined in the fixed
+ * point range of Q8.24, which is -128.
+ */
+#define MIN_Q8_24 (0x80000000)
+
+/** This constant defines the biggest number that is defined in the fixed
+ * point range of Q8.24, which is 127.999999940395355224609375
+ */
+#define MAX_Q8_24 (0x7FFFFFFF)
+
+/** This constant is the closest q8_24 fixed point representation of 2 PI.
+ */
+#define PI2     (105414357)
+
+/** This constant is the closest q8_24 fixed point representation of PI.
+ */
+#define PI     (105414357>>1)
+
+/** This constant is the q8_24 fixed point representation of PI/2
+ */
+#define PIHALF   (26353589)
+
+/** This constant is the q8_24 fixed point representation of 2/PI
+ */
+#define ONE_OVER_HALFPI (10680707)
+
+
 /**  Scalar multipliplication
  * 
  *  This function multiplies two scalar values and produces a result according
@@ -153,52 +190,22 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format );
 int lib_dsp_math_squareroot( int input_value, int q_format );
 
 
-
-// Note: This was ported from mathf8_24.h (
-
-/** This constant defines the smallest number that is defined in the fixed
- * point range, which is -128.
- */
-#define MINint (0x80000000)
-
-/** This constant defines the biggest number that is defined in the fixed
- * point range, which is 127.999999940395355224609375
- */
-#define MAXint (0x7FFFFFFF)
-
-/** This constant is the fixed point representation of the number 0.5
- */
-#define HALF    (1<<(MATHint_BITS-1))
-
-/** This constant is the fixed point representation of the number 1.0
- */
-#define ONE     (HALF * 2)
-
-/** This constant is the closest fixed point representation of 2 PI.
- */
-#define PI2     (105414357)
-
-/** This constant is the fixed point representation of PI/2
- */
-#define PIHALF   (26353589)
-
-
-/** This function returns the sine of a fixed point number in radians. The
- * input number has to be in the range -MAXint + PI and MAXint - PI.
+/** This function returns the sine of a q8_24 fixed point number in radians. The
+ * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
  *
  * \param x input value in radians
  * \returns sine(x)
  **/
-int lib_dsp_math_sin(int rad, int q_format);
+q8_24 lib_dsp_math_sin(q8_24 rad);
 
-/** This function returns the cosine of a fixed point number in radians. The
- * input number has to be in the range -MAXint + PI and MAXint - PI.
+/** This function returns the cosine of a q8_24 fixed point number in radians. The
+ * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
  *
  * \param x input value in radians
  * \returns cosine(x)
  **/
-inline int lib_dsp_math_cos(int x, int q_format) {
-    return lib_dsp_math_sin(x+PIHALF, q_format);
+inline q8_24 lib_dsp_math_cos(q8_24 rad) {
+    return lib_dsp_math_sin(rad+PIHALF);
 }
 
 
