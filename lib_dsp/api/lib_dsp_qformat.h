@@ -17,7 +17,7 @@
 #define Q(N) Q0(N)
 
 // Convert from fixed point to double precision floating point
-#define Q31(f) round(f * (double)(1<<31))
+#define Q31(f) round(f * (double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
 #define Q30(f) round(f * (double)(1<<30))
 #define Q29(f) round(f * (double)(1<<29))
 #define Q28(f) round(f * (double)(1<<28))
@@ -35,7 +35,7 @@
 #define Q16(f) round(f * (double)(1<<16))
 
 // Convert from double precision floating point to fixed point
-#define F31(x) ((double)(x)/(double)(1<<31))
+#define F31(x) ((double)(x)/(double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
 #define F30(x) ((double)(x)/(double)(1<<30))
 #define F29(x) ((double)(x)/(double)(1<<29))
 #define F28(x) ((double)(x)/(double)(1<<28))
