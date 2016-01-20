@@ -104,6 +104,29 @@ void lib_dsp_fft_forward_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_c
     }
 }
 
+#pragma unsafe arrays
+void lib_dsp_fft_forward_tworeals_short( lib_dsp_fft_complex_short_t two_re[], lib_dsp_fft_complex_short_t two_im[], int N, const short int sine[] )
+{
+
+    lib_dsp_fft_bit_reverse_short(two_re, N);
+    lib_dsp_fft_forward_complex_short(two_re, N, sine);
+
+    two_im[0].re = 0;
+    two_im[0].im = 0;
+    for(int i = N >> 1; i != 0; i--) {
+        two_im[i].re = (two_re[i].im - two_re[N-i].im)>>1;
+        two_im[N-i].re = -two_im[i].re;
+        two_im[i].im = (two_re[N-i].re - two_re[i].re)>>1;
+        two_im[N-i].im = -two_im[i].im;
+    }
+    for(int i = N >> 1; i != 0; i--) {
+        two_re[i].re = (two_re[i].re + two_re[N-i].re) >> 1;
+        two_re[N-i].re = two_re[i].re;
+        two_re[i].im = (two_re[i].im + two_re[N-i].im)>>1;
+        two_re[N-i].im = two_re[i].im;
+    }
+}
+
 
 
 #pragma unsafe arrays
@@ -118,6 +141,21 @@ void lib_dsp_fft_inverse_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_c
 
     lib_dsp_fft_bit_reverse(two_re, N);
     lib_dsp_fft_inverse_complex(two_re, N, sine);
+
+}
+
+#pragma unsafe arrays
+void lib_dsp_fft_inverse_tworeals_short( lib_dsp_fft_complex_short_t two_re[], lib_dsp_fft_complex_short_t two_im[], int N, const short int sine[] )
+{
+    for(int i = N >> 1; i != 0; i--) {
+        two_re[i].re = two_re[i].re + two_im[N-i].im;
+        two_re[N-i].re = two_re[N-i].re + two_im[i].im;
+        two_re[i].im = two_re[i].im + two_im[i].re;
+        two_re[N-i].im = two_re[N-i].im + two_im[N-i].re;
+    }
+
+    lib_dsp_fft_bit_reverse_short(two_re, N);
+    lib_dsp_fft_inverse_complex_short(two_re, N, sine);
 
 }
 
