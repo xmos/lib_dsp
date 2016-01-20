@@ -50,9 +50,9 @@ sin(2.9845108986) = 0.1564365625
 sin(3.1415904760) = 0.0000022054
 num calculations:       41; Errors >=1:        3 ( 7.32%); Errors >=2:     0 ( 0.00%)
 Max absolute error: 1
-Cycles taken for lib_dsp_math_sin function: 63
+Cycles taken for lib_dsp_math_sin function: 62
 math.h sin(0.7853981634) = 0.7071067691
-Cycles taken for math.h sine function: 5116748
+Cycles taken for math.h sine function: 14112
 
 Cosine wave (one cycle from -Pi to +Pi) :
 cos(-3.1415926218) = -1.0000000000
@@ -98,7 +98,7 @@ cos(2.9845108986) = -0.9876880050
 cos(3.1415904760) = -1.0000000000
 num calculations:       41; Errors >=1:       18 (43.90%); Errors >=2:     0 ( 0.00%)
 Max absolute error: 1
-Cycles taken for cosine function: 65
+Cycles taken for cosine function: 64
 math.h cos(0.7853981634) = 0.7071067691
-Cycles taken for math.h cosine function: 5116484
+Cycles taken for math.h cosine function: 14112
 

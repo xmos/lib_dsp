@@ -16,10 +16,6 @@
 #define PRINT_AND_ABORT_ON_ERROR 1
 #define PRINT_INPUTS_AND_OUTPUTS 1
 
-// max input to sine and cosine is 2*Pi which is < 7.
-// That means 3 data bits before the decimal point are enough. Plus one sign bit.
-#define SINE_Q 24
-
 int main(void)
 {
     int q_format; // location of the decimal point
@@ -49,7 +45,7 @@ int main(void)
     maxerror=0;
     val_count = 0;
     int error_cnt = 0;
-    for(q8_24 rad = -PI; rad <= PI; rad += PI2/TEST_ITERATIONS) {
+    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += PI2_Q8_24/TEST_ITERATIONS) {
         tmr :> start_time;
         q8_24 sine = lib_dsp_math_sin(rad);
         tmr :> end_time;
@@ -122,8 +118,7 @@ int main(void)
     maxerror=0;
     val_count = 0;
 
-    //for(int rad = -coeffs.pi; rad <= coeffs.pi; rad += coeffs.two_pi/40) {
-    for(q8_24 rad = -PI; rad <= PI; rad += PI2/TEST_ITERATIONS) {
+    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += PI2_Q8_24/TEST_ITERATIONS) {
         tmr :> start_time;
         int cosine=lib_dsp_math_cos(rad);
         tmr :> end_time;
