@@ -48,7 +48,7 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N )
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_bit_reverse_short( lib_dsp_fft_complex_short_t pts[], int N )
+void lib_dsp_fft_bit_reverse_twoshort( lib_dsp_fft_complex_twoshort_t pts[], int N )
 {
     // same functionality as lib_dsp_fft_bit_reverse!
     unsigned int shift = clz(N);
@@ -65,7 +65,7 @@ void lib_dsp_fft_bit_reverse_short( lib_dsp_fft_complex_short_t pts[], int N )
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_bit_reverse_single_short( lib_dsp_fft_complex_single_short_t pts[], int N )
+void lib_dsp_fft_bit_reverse_short( lib_dsp_fft_complex_short_t pts[], int N )
 {
     // same functionality as lib_dsp_fft_bit_reverse!
     unsigned int shift = clz(N);
@@ -239,7 +239,7 @@ void check_overflow(int h) {
 #define SHORT_FFT_RESULT_RIGHT_SHIFT 0
 #endif
 #pragma unsafe arrays
-void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
+void lib_dsp_fft_forward_complex_twoshort( lib_dsp_fft_complex_twoshort_t pts[], int N, const short sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -490,7 +490,7 @@ void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N
 
 #define SHORT_IFFT_BASE 0x4000
 #pragma unsafe arrays
-void lib_dsp_fft_inverse_complex_short( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
+void lib_dsp_fft_inverse_complex_twoshort( lib_dsp_fft_complex_twoshort_t pts[], int N, const short sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -727,11 +727,11 @@ void lib_dsp_fft_inverse_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const 
 
 //#define LDST16
 #ifdef LDST16
-#error("LDST16 actually performs worse than ldw, shift and and")
+#warning("LDST16 actually performs worse than ldw, shift and and")
 #endif
 
 #pragma unsafe arrays
-void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_t pts[], int N, const short sine[] )
+void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -755,14 +755,16 @@ void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_
 #else
                 unsigned tImRe;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe): "r"(pts), "r" (block));
-                tRe = (tImRe >> 16);
-                tIm = (tImRe);
+                tIm = (short) (tImRe >> 16);
+                tRe = (short) (tImRe);
 
                 unsigned tImRe2; //= pts[block + step2].re;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe2): "r"(pts), "r" (block+step2));
-                tRe2 = (tImRe2 >> 16);
-                tIm2 = (tImRe2);
+                tIm2 = (short) (tImRe2 >> 16);
+                tRe2 = (short) (tImRe2);
 #endif
+                //printf("tRe: 0x%x, tIm: 0x%x\n",tRe, tIm);
+                //printf("tRe2: 0x%x, tIm2: 0x%x\n",tRe2, tIm2);
 
                 int h;
                 unsigned l;
@@ -808,14 +810,14 @@ void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_
                 pts[block+step2].im = (short) im_step;
 #else
                 // pack 16 bit values into 32 bit words before storing to memory
-                im &= 0xffff; // lower 16 bit
-                im |= (re << 16); // or in upper 16 bit (real part)
+                re &= 0xffff; // lower 16 bit
+                re |= (im << 16); // or in upper 16 bit (real part)
 
-                im_step &= 0xffff; // lower 16 bit
-                im_step |= (re_step << 16); // or in upper 16 bit (real part)
+                re_step &= 0xffff; // lower 16 bit
+                re_step |= (im_step << 16); // or in upper 16 bit (real part)
 
-                asm("stw %0,%1[%2]" :: "r"(im), "r"(pts), "r" (block));
-                asm("stw %0,%1[%2]" :: "r"(im_step), "r"(pts), "r" (block+step2));
+                asm("stw %0,%1[%2]" :: "r"(re), "r"(pts), "r" (block));
+                asm("stw %0,%1[%2]" :: "r"(re_step), "r"(pts), "r" (block+step2));
 #endif
 
 #ifdef DEBUG_PRINT_STORES
@@ -844,13 +846,13 @@ void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_
 #else
                 unsigned tImRe;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe): "r"(pts), "r" (block));
-                tRe = (tImRe >> 16);
-                tIm = (tImRe);
+                tIm = (short) (tImRe >> 16);
+                tRe = (short) (tImRe);
 
                 unsigned tImRe2; //= pts[block + step2].re;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe2): "r"(pts), "r" (block+step2));
-                tRe2 = (tImRe2 >> 16);
-                tIm2 = (tImRe2);
+                tIm2 = (short) (tImRe2 >> 16);
+                tRe2 = (short) (tImRe2);
 #endif
 
                 int h;
@@ -897,14 +899,14 @@ void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_
                 pts[block+step2].im = (short) im_step;
 #else
                 // pack 16 bit values into 32 bit words before storing to memory
-                im &= 0xffff; // lower 16 bit
-                im |= (re << 16); // or in upper 16 bit (real part)
+                re &= 0xffff; // lower 16 bit
+                re |= (im << 16); // or in upper 16 bit (real part)
 
-                im_step &= 0xffff; // lower 16 bit
-                im_step |= (re_step << 16); // or in upper 16 bit (real part)
+                re_step &= 0xffff; // lower 16 bit
+                re_step |= (im_step << 16); // or in upper 16 bit (real part)
 
-                asm("stw %0,%1[%2]" :: "r"(im), "r"(pts), "r" (block));
-                asm("stw %0,%1[%2]" :: "r"(im_step), "r"(pts), "r" (block+step2));
+                asm("stw %0,%1[%2]" :: "r"(re), "r"(pts), "r" (block));
+                asm("stw %0,%1[%2]" :: "r"(re_step), "r"(pts), "r" (block+step2));
 #endif
 
 #ifdef DEBUG_PRINT_STORES
@@ -921,7 +923,7 @@ void lib_dsp_fft_forward_complex_single_short( lib_dsp_fft_complex_single_short_
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_inverse_complex_single_short( lib_dsp_fft_complex_single_short_t pts[], int N, const short sine[] )
+void lib_dsp_fft_inverse_complex_short( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -945,13 +947,13 @@ void lib_dsp_fft_inverse_complex_single_short( lib_dsp_fft_complex_single_short_
 #else
                 unsigned tImRe;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe): "r"(pts), "r" (block));
-                tRe = (tImRe >> 16);
-                tIm = (tImRe);
+                tIm = (short) (tImRe >> 16);
+                tRe = (short) (tImRe);
 
                 unsigned tImRe2; //= pts[block + step2].re;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe2): "r"(pts), "r" (block+step2));
-                tRe2 = (tImRe2 >> 16);
-                tIm2 = (tImRe2);
+                tIm2 = (short) (tImRe2 >> 16);
+                tRe2 = (short) (tImRe2);
 #endif
 
                 int h;
@@ -982,14 +984,15 @@ void lib_dsp_fft_inverse_complex_single_short( lib_dsp_fft_complex_single_short_
                 pts[block+step2].im = (short) im_step;
 #else
                 // pack 16 bit values into 32 bit words before storing to memory
-                im &= 0xffff; // lower 16 bit
-                im |= (re << 16); // or in upper 16 bit (real part)
+                re &= 0xffff; // lower 16 bit
+                re |= (im << 16); // or in upper 16 bit (real part)
 
-                im_step &= 0xffff; // lower 16 bit
-                im_step |= (re_step << 16); // or in upper 16 bit (real part)
+                re_step &= 0xffff; // lower 16 bit
+                re_step |= (im_step << 16); // or in upper 16 bit (real part)
 
-                asm("stw %0,%1[%2]" :: "r"(im), "r"(pts), "r" (block));
-                asm("stw %0,%1[%2]" :: "r"(im_step), "r"(pts), "r" (block+step2));
+                asm("stw %0,%1[%2]" :: "r"(re), "r"(pts), "r" (block));
+                asm("stw %0,%1[%2]" :: "r"(re_step), "r"(pts), "r" (block+step2));
+
 #endif
 
 
@@ -1012,13 +1015,13 @@ void lib_dsp_fft_inverse_complex_single_short( lib_dsp_fft_complex_single_short_
 #else
                 unsigned tImRe;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe): "r"(pts), "r" (block));
-                tRe = (tImRe >> 16);
-                tIm = (tImRe);
+                tIm = (short) (tImRe >> 16);
+                tRe = (short) (tImRe);
 
                 unsigned tImRe2; //= pts[block + step2].re;
                 asm volatile("ldw %0,%1[%2]" : "=r"(tImRe2): "r"(pts), "r" (block+step2));
-                tRe2 = (tImRe2 >> 16);
-                tIm2 = (tImRe2);
+                tIm2 = (short) (tImRe2 >> 16);
+                tRe2 = (short) (tImRe2);
 #endif
 
                 int h;
@@ -1049,14 +1052,14 @@ void lib_dsp_fft_inverse_complex_single_short( lib_dsp_fft_complex_single_short_
                 pts[block+step2].im = (short) im_step;
 #else
                 // pack 16 bit values into 32 bit words before storing to memory
-                im &= 0xffff; // lower 16 bit
-                im |= (re << 16); // or in upper 16 bit (real part)
+                re &= 0xffff; // lower 16 bit
+                re |= (im << 16); // or in upper 16 bit (real part)
 
-                im_step &= 0xffff; // lower 16 bit
-                im_step |= (re_step << 16); // or in upper 16 bit (real part)
+                re_step &= 0xffff; // lower 16 bit
+                re_step |= (im_step << 16); // or in upper 16 bit (real part)
 
-                asm("stw %0,%1[%2]" :: "r"(im), "r"(pts), "r" (block));
-                asm("stw %0,%1[%2]" :: "r"(im_step), "r"(pts), "r" (block+step2));
+                asm("stw %0,%1[%2]" :: "r"(re), "r"(pts), "r" (block));
+                asm("stw %0,%1[%2]" :: "r"(re_step), "r"(pts), "r" (block+step2));
 #endif
             }
         }

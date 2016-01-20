@@ -5,10 +5,19 @@
 #include <xs1.h>
 #include <lib_dsp.h>
 
+#define TRACE_VALUES
+
+#ifdef TRACE_VALUES
 #define PRINT_FFT_INPUT 1
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1
-#define PRINT_CYCLE_COUNT 0
+#else
+#define PRINT_FFT_INPUT 0
+#define PRINT_FFT_OUTPUT 0
+#define PRINT_IFFT_OUTPUT 0
+#endif
+
+#define PRINT_CYCLE_COUNT 1
 
 #define N_FFT_POINTS 32
 #define INPUT_FREQ N_FFT_POINTS/8
@@ -16,9 +25,10 @@
 // enumerate the macros
 #define SINGLE_COMPLEX 0
 #define TWO_COMPLEX 1
-
+#define TWO_REALS 2
 #ifndef TEST_MODE
-#define TEST_MODE SINGLE_COMPLEX
+//#define TEST_MODE SINGLE_COMPLEX
+#define TEST_MODE TWO_REALS
 #endif
 
 // Note:
@@ -27,11 +37,15 @@
 // Note: Use these data types to guarantee 64 bit alignment
 #if TEST_MODE==TWO_COMPLEX
 // and having re and im together in one double word for efficient ldd and std
-lib_dsp_fft_complex_short_t data[N_FFT_POINTS];
+lib_dsp_fft_complex_twoshort_t data[N_FFT_POINTS];
 int do_two_complex_short_fft_and_ifft();
 #elif TEST_MODE==SINGLE_COMPLEX
-lib_dsp_fft_complex_single_short_t data[N_FFT_POINTS];
+lib_dsp_fft_complex_short_t data[N_FFT_POINTS];
 int do_complex_short_fft_and_ifft();
+#elif TEST_MODE==TWO_REALS
+lib_dsp_fft_complex_short_t  two_re[N_FFT_POINTS];
+lib_dsp_fft_complex_short_t  two_im[N_FFT_POINTS];
+int do_tworeals_short_fft_and_ifft();
 #endif
 
 // sine signal with 8 samples per cycle
@@ -39,10 +53,10 @@ int sin8(int x) {
     x = x & (8-1); // mask off 3 bits
     switch (x >> 1) {
        // upper two bits determine the quadrant.
-       case 0: return lib_dsp_sine_8[x];
-       case 1: return lib_dsp_sine_8[4-x];
-       case 2: return -lib_dsp_sine_8[x-4];
-       case 3: return -lib_dsp_sine_8[8-x];
+       case 0: return lib_dsp_sine_short_8[x];
+       case 1: return lib_dsp_sine_short_8[4-x];
+       case 2: return -lib_dsp_sine_short_8[x-4];
+       case 3: return -lib_dsp_sine_short_8[8-x];
     }
     return 0; // unreachable
 }
@@ -57,19 +71,21 @@ int main( void )
     do_two_complex_short_fft_and_ifft();
 #elif TEST_MODE==SINGLE_COMPLEX
     do_complex_short_fft_and_ifft();
+#elif TEST_MODE==TWO_REALS
+    do_tworeals_short_fft_and_ifft();
 #endif
     return 0;
 };
 
 #if TEST_MODE==TWO_COMPLEX
-void generate_two_test_signals(lib_dsp_fft_complex_short_t data[], int N, int test) {
+void generate_two_test_signals(int N, int test) {
     switch(test) {
     case 0: {
         printf("++++ Test 0: %d point FFT of two complex short int signals:: Real: %d Hz cosine, Imag: 0\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
-            data[i].re_0 = cos8(i)>>16;
-            data[i].re_1 = cos8(i)>>16;
+            data[i].re_0 = cos8(i);
+            data[i].re_1 = cos8(i);
             data[i].im_0 = 0;
             data[i].im_1 = 0;
         }
@@ -77,10 +93,10 @@ void generate_two_test_signals(lib_dsp_fft_complex_short_t data[], int N, int te
     }
     case 1: {
         printf("++++ Test 1: %d point FFT of two complex short int signals:: Real: %d Hz sine, Imag: 0\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
-            data[i].re_0 = sin8(i)>>16;
-            data[i].re_1 = sin8(i)>>16;
+            data[i].re_0 = sin8(i);
+            data[i].re_1 = sin8(i);
             data[i].im_0 = 0;
             data[i].im_1 = 0;
         }
@@ -88,23 +104,23 @@ void generate_two_test_signals(lib_dsp_fft_complex_short_t data[], int N, int te
     }
     case 2: {
         printf("++++ Test 2: %d point FFT of two complex short int signals: Real: 0, Imag: %d Hz cosine\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = 0;
             data[i].re_1 = 0;
-            data[i].im_0 = cos8(i)>>16;
-            data[i].im_1 = cos8(i)>>16;
+            data[i].im_0 = cos8(i);
+            data[i].im_1 = cos8(i);
         }
         break;
     }
     case 3: {
         printf("++++ Test 3: %d point FFT of two complex short int signals: Real: 0, Imag: %d Hz sine\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re_0 = 0;
             data[i].re_1 = 0;
-            data[i].im_0 = sin8(i)>>16;
-            data[i].im_1 = sin8(i)>>16;
+            data[i].im_0 = sin8(i);
+            data[i].im_1 = sin8(i);
         }
         break;
     }
@@ -135,12 +151,12 @@ int do_two_complex_short_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    for(int test=0; test<1; test++) {
-        generate_two_test_signals(data, N_FFT_POINTS, test);
+    for(int test=0; test<4; test++) {
+        generate_two_test_signals(N_FFT_POINTS, test);
 
         tmr :> start_time;
-        lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
-        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        lib_dsp_fft_bit_reverse_twoshort(data, N_FFT_POINTS);
+        lib_dsp_fft_forward_complex_twoshort(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -162,8 +178,8 @@ int do_two_complex_short_fft_and_ifft() {
 #endif
 
         tmr :> start_time;
-        lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
-        lib_dsp_fft_inverse_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        lib_dsp_fft_bit_reverse_twoshort(data, N_FFT_POINTS);
+        lib_dsp_fft_inverse_complex_twoshort(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -171,7 +187,7 @@ int do_two_complex_short_fft_and_ifft() {
 #endif
 
 #if PRINT_IFFT_OUTPUT
-        printf( "////// Time domain signals after lib_dsp_fft_inverse_complex_short\n");
+        printf( "////// Time domain signals after lib_dsp_fft_inverse_complex_twoshort\n");
         printf("Complex signal 0:\n");
         printf("re,      im         \n");
         for(int i=0; i<N_FFT_POINTS; i++) {
@@ -192,41 +208,41 @@ int do_two_complex_short_fft_and_ifft() {
 
 }
 #elif TEST_MODE==SINGLE_COMPLEX
-void generate_test_signal(lib_dsp_fft_complex_single_short_t data[], int N, int test) {
+void generate_test_signal(lib_dsp_fft_complex_short_t data[], int N, int test) {
     switch(test) {
     case 0: {
         printf("++++ Test 0: %d point FFT of complex short int signal:: Real: %d Hz cosine, Imag: 0\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
-            data[i].re = cos8(i)>>16;
+            data[i].re = cos8(i);
             data[i].im = 0;
         }
         break;
     }
     case 1: {
         printf("++++ Test 1: %d point FFT of complex short int signal:: Real: %d Hz sine, Imag: 0\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
-            data[i].re = sin8(i)>>16;
+            data[i].re = sin8(i);
             data[i].im= 0;
         }
         break;
     }
     case 2: {
         printf("++++ Test 2: %d point FFT of complex short int signal: Real: 0, Imag: %d Hz cosine\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
-            data[i].im = cos8(i)>>16;
+            data[i].im = cos8(i);
         }
         break;
     }
     case 3: {
         printf("++++ Test 3: %d point FFT of complex short int signal: Real: 0, Imag: %d Hz sine\n"
-                ,N_FFT_POINTS,INPUT_FREQ);
+                ,N,INPUT_FREQ);
         for(int i=0; i<N; i++) {
             data[i].re = 0;
-            data[i].im = sin8(i)>>16;
+            data[i].im = sin8(i);
         }
         break;
     }
@@ -256,9 +272,10 @@ int do_complex_short_fft_and_ifft() {
         generate_test_signal(data, N_FFT_POINTS, test);
 
         tmr :> start_time;
-        lib_dsp_fft_bit_reverse_single_short(data, N_FFT_POINTS);
-        lib_dsp_fft_forward_complex_single_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
-        //Still buggy: lib_dsp_fft_forward_complex_single_short_asm(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
+        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        //Still buggy:
+        //lib_dsp_fft_forward_complex_short_asm(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -275,8 +292,8 @@ int do_complex_short_fft_and_ifft() {
 #endif
 
         tmr :> start_time;
-        lib_dsp_fft_bit_reverse_single_short(data, N_FFT_POINTS);
-        lib_dsp_fft_inverse_complex_single_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
+        lib_dsp_fft_inverse_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
 
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;

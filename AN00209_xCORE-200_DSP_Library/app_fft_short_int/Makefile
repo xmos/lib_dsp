@@ -18,6 +18,7 @@ USED_MODULES = lib_dsp
 # xcc for the final link (mapping) stage.
 XCC_FLAGS_complex = -O2 -g -report -DTEST_MODE=SINGLE_COMPLEX
 XCC_FLAGS_two_complex = -O2 -g -report  -DTEST_MODE=TWO_COMPLEX
+XCC_FLAGS_tworeals = -O2 -g -report  -DTEST_MODE=TWO_REALS
 
 
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this

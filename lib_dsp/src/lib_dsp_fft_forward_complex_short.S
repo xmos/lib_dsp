@@ -6,14 +6,14 @@
 
 	.text
     .issue_mode  dual
-	.globl	lib_dsp_fft_forward_complex_single_short_asm
+	.globl	lib_dsp_fft_forward_complex_short_asm
 	.align	16
     .skip 8
-	.type	lib_dsp_fft_forward_complex_single_short_asm,@function
-	.cc_top lib_dsp_fft_forward_complex_single_short_asm.function,lib_dsp_fft_forward_complex_single_short_asm
+	.type	lib_dsp_fft_forward_complex_short_asm,@function
+	.cc_top lib_dsp_fft_forward_complex_short_asm.function,lib_dsp_fft_forward_complex_short_asm
 	
-lib_dsp_fft_forward_complex_single_short_asm: //void lib_dsp_fft_forward_complex_single_short_asm(
-        //lib_dsp_fft_complex_single_short_t pts[],
+lib_dsp_fft_forward_complex_short_asm: //void lib_dsp_fft_forward_complex_short_asm(
+        //lib_dsp_fft_complex_short_t pts[],
         //int                         N,
         //const short                 sine[] );
 
@@ -248,17 +248,17 @@ kLoop2In:
 	retsp 32
 	
 	// RETURN_REG_HOLDER
-	.cc_bottom lib_dsp_fft_forward_complex_single_short_asm.function
-	.set	lib_dsp_fft_forward_complex_single_short_asm.nstackwords,32
-	.globl	lib_dsp_fft_forward_complex_single_short_asm.nstackwords
-	.set	lib_dsp_fft_forward_complex_single_short_asm.maxcores,1
-	.globl	lib_dsp_fft_forward_complex_single_short_asm.maxcores
-	.set	lib_dsp_fft_forward_complex_single_short_asm.maxtimers,0
-	.globl	lib_dsp_fft_forward_complex_single_short_asm.maxtimers
-	.set	lib_dsp_fft_forward_complex_single_short_asm.maxchanends,0
-	.globl	lib_dsp_fft_forward_complex_single_short_asm.maxchanends
+	.cc_bottom lib_dsp_fft_forward_complex_short_asm.function
+	.set	lib_dsp_fft_forward_complex_short_asm.nstackwords,32
+	.globl	lib_dsp_fft_forward_complex_short_asm.nstackwords
+	.set	lib_dsp_fft_forward_complex_short_asm.maxcores,1
+	.globl	lib_dsp_fft_forward_complex_short_asm.maxcores
+	.set	lib_dsp_fft_forward_complex_short_asm.maxtimers,0
+	.globl	lib_dsp_fft_forward_complex_short_asm.maxtimers
+	.set	lib_dsp_fft_forward_complex_short_asm.maxchanends,0
+	.globl	lib_dsp_fft_forward_complex_short_asm.maxchanends
 .Ltmp0:
-	.size	lib_dsp_fft_forward_complex_single_short_asm, .Ltmp0-lib_dsp_fft_forward_complex_single_short_asm
+	.size	lib_dsp_fft_forward_complex_short_asm, .Ltmp0-lib_dsp_fft_forward_complex_short_asm
 
     .issue_mode  single
     

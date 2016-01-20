@@ -9,7 +9,7 @@ def runtest():
                                        'app_transforms', {})
      
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeal_fft/app_transforms_tworeal_fft.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeals_fft/app_transforms_tworeals_fft.xe',
                               tester=tester)
 
 
@@ -44,4 +44,11 @@ def runtest():
                               '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/complex/app_fft_short_int_complex.xe',
                               tester=tester)
 
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_tworeals.xe.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_fft_short_int', {})
+     
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/tworeals/app_fft_short_int_tworeals.xe',
+                              tester=tester)
 
