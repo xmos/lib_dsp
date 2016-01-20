@@ -189,8 +189,6 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
     int finalSign;
     int modulo;
     int sqr;
-    //int q_format = coeffs.q_format;
-    int q_format = 24;
 
     if (rad < 0) {
         rad = -rad;
@@ -200,26 +198,26 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
     }
     // Now rad >= 0.
 
-    modulo = lib_dsp_math_multiply(rad, ONE_OVER_HALFPI, q_format) >> q_format;
-    rad -= (modulo >> 2) * PI2;
+    modulo = lib_dsp_math_multiply(rad, ONE_OVER_HALFPI_Q8_24, 24) >> 24;
+    rad -= (modulo >> 2) * PI2_Q8_24;
     if (modulo & 2) {
         finalSign = -finalSign;
-        rad -= (PI2+1)>>1;
+        rad -= (PI2_Q8_24+1)>>1;
     }
     if (modulo & 1) {
-        rad = ((PI2+1)>>1) - rad;
+        rad = ((PI2_Q8_24+1)>>1) - rad;
     }
-    sqr = (lib_dsp_math_multiply(rad, rad, q_format)+1)>>1;
+    sqr = (lib_dsp_math_multiply(rad, rad, 24)+1)>>1;
     return (rad +
             ((lib_dsp_math_multiply(
               lib_dsp_math_multiply(
                 lib_dsp_math_multiply(
                   lib_dsp_math_multiply(
-                    lib_dsp_math_multiply(R3, sqr, q_format) + R2,
-                    sqr, q_format) + R1,
-                  sqr, q_format) + R0,
-                sqr, q_format)
-            ,rad, q_format)+6)>>4)
+                    lib_dsp_math_multiply(R3, sqr, 24) + R2,
+                    sqr, 24) + R1,
+                  sqr, 24) + R0,
+                sqr, 24)
+            ,rad, 24)+6)>>4)
             )* finalSign;
 }
 

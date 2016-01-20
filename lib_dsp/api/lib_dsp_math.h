@@ -25,19 +25,19 @@ typedef int q8_24;
 
 /** This constant is the closest q8_24 fixed point representation of 2 PI.
  */
-#define PI2     (105414357)
+#define PI2_Q8_24     (105414357)
 
 /** This constant is the closest q8_24 fixed point representation of PI.
  */
-#define PI     (105414357>>1)
+#define PI_Q8_24     (105414357>>1)
 
 /** This constant is the q8_24 fixed point representation of PI/2
  */
-#define PIHALF   (26353589)
+#define PIHALF_Q8_24   (26353589)
 
 /** This constant is the q8_24 fixed point representation of 2/PI
  */
-#define ONE_OVER_HALFPI (10680707)
+#define ONE_OVER_HALFPI_Q8_24 (10680707)
 
 
 /**  Scalar multipliplication
@@ -205,7 +205,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad);
  * \returns cosine(x)
  **/
 inline q8_24 lib_dsp_math_cos(q8_24 rad) {
-    return lib_dsp_math_sin(rad+PIHALF);
+    return lib_dsp_math_sin(rad+PIHALF_Q8_24);
 }
 
 
