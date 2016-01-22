@@ -1,6 +1,14 @@
 xCORE-200 DSP library change log
 ================================
 
+1.0.4
+-----
+
+  * Added fixed point sine and cosine functions
+  * Performance: 62 cycles for lib_dsp_math_sin, 64 cycles for lib_dsp_math_cos.
+  * Brute force testing of all input values proved accuracy to within one LSB (error is <= 1) 
+  * Added short int tworeal FFT 
+
 1.0.3
 -----
 

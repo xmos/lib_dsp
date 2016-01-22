@@ -4,41 +4,38 @@
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
 
-/**  Scalar multipliplication
- * 
- *  This function multiplies two scalar values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- * 
- *  The two operands are multiplied to produce a 64-bit result which is tested for overflow,
- *  clamped at the minimum/maximum value given the fixed-point format if overflow occurs,
- *  and finally shifted right by ``q_format`` bits. 
- *
- *  Algorithm:
- * 
- *  \code
- *  1) Y = X1 * X2
- *  2) Y = min( max( Q_FORMAT_MIN, Y ), Q_FORMAT_MAX, Y )
- *  3) Y = Y >> q_format
- *  \endcode
- *
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
- *  \endcode
- * 
- *  While saturation is employed after multiplication an overflow condition when preparing the final
- *  result must still be considered when specifying a Q-format whose fixed-point numerical range do
- *  not accomodate the final result of multiplication and saturation (if applied).
- * 
- *  \param  input1_value  Multiply operand #1.
- *  \param  input2_value  Multiply operand #2.
- *  \param  q_format      Fixed point format (i.e. number of fractional bits).
- *  \returns              input1_value * input2_value.
- */
+#define ASM_OPTIMISED
+//#define ASM_ROUNDING
 
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
+{
+
+#ifdef ASM_OPTIMISED
+
+    int ah; unsigned al;
+    int result;
+    //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<((32-q_format)*2-1)));
+    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)));
+    asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(ah),"r"(al),"r"(q_format));
+#ifdef ASM_ROUNDING
+    int round;
+    asm("lextract %0,%1,%2,%3,32":"=r"(round):"r"(ah),"r"(al),"r"(q_format+1));
+    // rounding
+    result = result + (round & 1);
+#endif
+    return result;
+#else
+    // Brute force testing of lib_dsp_math_sin shows that the additional rounding here is not required to achieve accuracy of 1 LSB (error <= 1)
+    long long aa = input1_value;
+    long long bb = input2_value;
+    long long res = aa * bb;
+    long long result = (res >> q_format) + ((res >> (q_format - 1)) & 1);
+    return result;
+#endif
+}
+
+
+int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
     asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
@@ -176,3 +173,53 @@ int lib_dsp_math_squareroot( int input_value, int q_format )
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
+
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite, fixed point sin/cos chapter.
+ ******************************************************************/
+
+// coefficients are scaled up for improved rounding
+#define R0 (-11184804*8)
+#define R1   (2236879*4)
+#define R2   (-212681*2)
+#define R3     (11175)
+
+q8_24 lib_dsp_math_sin(q8_24 rad) {
+    int finalSign;
+    int modulo;
+    int sqr;
+
+    if (rad < 0) {
+        rad = -rad;
+        finalSign = -1;
+    } else /* rad >= 0 */ {
+        finalSign = 1;
+    }
+    // Now rad >= 0.
+
+    modulo = lib_dsp_math_multiply(rad, ONE_OVER_HALFPI_Q8_24, 24) >> 24;
+    rad -= (modulo >> 2) * PI2_Q8_24;
+    if (modulo & 2) {
+        finalSign = -finalSign;
+        rad -= (PI2_Q8_24+1)>>1;
+    }
+    if (modulo & 1) {
+        rad = ((PI2_Q8_24+1)>>1) - rad;
+    }
+    sqr = (lib_dsp_math_multiply(rad, rad, 24)+1)>>1;
+    return (rad +
+            ((lib_dsp_math_multiply(
+              lib_dsp_math_multiply(
+                lib_dsp_math_multiply(
+                  lib_dsp_math_multiply(
+                    lib_dsp_math_multiply(R3, sqr, 24) + R2,
+                    sqr, 24) + R1,
+                  sqr, 24) + R0,
+                sqr, 24)
+            ,rad, 24)+6)>>4)
+            )* finalSign;
+}
+
+
+
