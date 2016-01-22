@@ -89,7 +89,7 @@ innerLoop1:
  	{ld16s r5, r4[r9]; sub r9, r9, 1}              // r5: tRE, reset r9
 	//ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 
-	ldd r10, r7, sp[10]              //  0x80000 x 2
+	ldd r10, r7, sp[10]              //  0x8000 x 2
 	maccs r8, r7, r5, r1             // rRe x tRe2
 	maccs r8, r7, r2, r0             // rIM x tIm2
 	                                 // r7: sRE2
@@ -108,23 +108,23 @@ innerLoop1:
 
     // pack the 16 bit data into 32 bit words.
     // Note: st16 can't be used because it's only available in format l3r so dual issue cant' be used
-    // im &= 0xffff; // lower 16 bit
+    // re &= 0xffff; // lower 16 bit
     ldc r8, 0xffff
-    and r3, r3, r8
-    // im |= (re << 16); // or in upper 16 bit (real part)
-    shl r6, r6, 16
-    or r3, r3, r6
+    and r6, r6, r8
+    // re |= (im << 16); // or in upper 16 bit (real part)
+    shl r3, r3, 16
+    or r6, r6, r3
 
-	stw r3, r4[0]     // pts[block].im = (short) im; pts[block].re = (short) re;
+	stw r6, r4[0]     // pts[block].im = (short) im; pts[block].re = (short) re;
 	//std  r3, r6, r4[0]
 
-    // im_step &= 0xffff; // lower 16 bit
-    and r10, r10, r8
-    // im_step |= (re_step << 16); // or in upper 16 bit (real part)
-    shl r7, r7, 16
-    or r10, r10, r7
+    // re_step &= 0xffff; // lower 16 bit
+    and r7, r7, r8
+    // re_step |= (im_step << 16); // or in upper 16 bit (real part)
+    shl r10, r10, 16
+    or r7, r7, r10
 
-	stw r10, r4[r9]    // pts[block+step].im = (short) im; pts[block+step2].re = (short) re_step;
+	stw r7, r4[r9]    // pts[block+step].im = (short) im; pts[block+step2].re = (short) re_step;
 	//std  r7, r8, r4[r9]
 
 
@@ -176,7 +176,6 @@ innerLoop2:
 	//ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 
 	ldd r10, r7, sp[10]              //  0x8000 x 2
-
 	maccs r8, r7, r5, r1            // rRe x tRe2
 	maccs r8, r7, r2, r0            // rIM x tIm2
 		                            // r7: sRE2
@@ -195,23 +194,23 @@ innerLoop2:
 
     // pack the 16 bit data into 32 bit words.
     // Note: st16 can't be used because it's only available in format l3r so dual issue cant' be used
-    // im &= 0xffff; // lower 16 bit
+    // re &= 0xffff; // lower 16 bit
     ldc r8, 0xffff
-    and r3, r3, r8
-    // im |= (re << 16); // or in upper 16 bit (real part)
-    shl r6, r6, 16
-    or r3, r3, r6
+    and r6, r6, r8
+    // re |= (im << 16); // or in upper 16 bit (real part)
+    shl r3, r3, 16
+    or r6, r6, r3
 
-	stw r3, r4[0]     // pts[block].im = (short) im; pts[block].re = (short) re;
+	stw r6, r4[0]     // pts[block].im = (short) im; pts[block].re = (short) re;
 	//std  r3, r6, r4[0]
 
-    // im_step &= 0xffff; // lower 16 bit
-    and r10, r10, r8
-    // im_step |= (re_step << 16); // or in upper 16 bit (real part)
-    shl r7, r7, 16
-    or r10, r10, r7
+    // re_step &= 0xffff; // lower 16 bit
+    and r7, r7, r8
+    // re_step |= (im_step << 16); // or in upper 16 bit (real part)
+    shl r10, r10, 16
+    or r7, r7, r10
 
-	stw r10, r4[r9]    // pts[block+step].im = (short) im; pts[block+step2].re = (short) re_step;
+	stw r7, r4[r9]    // pts[block+step].im = (short) im; pts[block+step2].re = (short) re_step;
 	//std  r7, r8, r4[r9]
 
 	{ldw r6, sp[16]         ;  sub r4, r4, r11}
