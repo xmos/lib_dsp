@@ -9,7 +9,7 @@ def runtest():
                                        'app_transforms', {'config':'tworeals'})
 
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeals_fft/app_transforms_tworeals_fft.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeal_fft/app_transforms_tworeal_fft.xe',
                               tester=tester)
 
     # Test app_transforms: 'complex' configuration
