@@ -4,12 +4,12 @@ def runtest():
     # Test app_transforms: 'tworeals' configuration
     resources = xmostest.request_resource("xsim")
 
-    tester = xmostest.ComparisonTester(open('tworeal_fft_test.expect'),
+    tester = xmostest.ComparisonTester(open('tworeals_fft_test.expect'),
                                        'lib_dsp', 'simple_tests',
                                        'app_transforms', {'config':'tworeals'})
 
     xmostest.run_on_simulator(resources['xsim'],
-                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeal_fft/app_transforms_tworeal_fft.xe',
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeals_fft/app_transforms_tworeals_fft.xe',
                               tester=tester)
 
     # Test app_transforms: 'complex' configuration
