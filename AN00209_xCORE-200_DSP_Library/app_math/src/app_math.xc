@@ -10,11 +10,18 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define PRINT_CYCLE_COUNT 1
+#define PRINT_CYCLE_COUNT 0
 #define CHECK_RESULTS 1
-#define TEST_ITERATIONS 40
 #define PRINT_AND_ABORT_ON_ERROR 1
+#define TEST_ALL_RAD 0
+
+#if TEST_ALL_RAD
+#define PRINT_INPUTS_AND_OUTPUTS 0
+#define RAD_INCR 1
+#else
 #define PRINT_INPUTS_AND_OUTPUTS 1
+#define RAD_INCR PI2_Q8_24/40
+#endif
 
 int main(void)
 {
@@ -27,13 +34,31 @@ int main(void)
     overhead_time = end_time - start_time;
 
     q_format = 24;
-    printf ("Multiplication (2.1234567891 x 4.9876543219) : %.10f\n\n", F24(lib_dsp_math_multiply (Q24(2.1234567891), Q24(4.9876543219), q_format)));;
+    printf("Test example for Math functions\n");
+    printf("===============================\n");
+    printf("Note: All calculations are done in Q8.24 format. That gives 7 digits of precion after the decimal point\n\n");
 
-    printf ("Reciprocal (3.0) : %.10f\n\n", F24(lib_dsp_math_reciprocal (Q24(3.0), q_format)));;
+    // Multiply the square root of 128 (maximum double representation of Q8.24)
+    printf ("Multiplication (11.31370850 x 11.31370850): %.7f\n\n", F24(lib_dsp_math_multiply(Q24(11.31370850), Q24(11.31370850), q_format)));;
 
-    printf ("Inverse square root (2) : %.10f\n\n", F24(lib_dsp_math_invsqrroot (Q24(2.), q_format)));;
+    printf ("Multiplication (11.4 x 11.4). Will overflow!: %.7f\n", F24(lib_dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
 
-    printf ("Square Root (2) : %.10f\n\n", F24(lib_dsp_math_squareroot (Q24(2.), q_format)));;
+    printf ("Saturated Multiplication (11.4 x 11.4): %.7f\n", F24(lib_dsp_math_multiply_sat(Q24(11.4), Q24(11.4), q_format)));;
+    printf ("Note: Maximum double representation of Q8.24 format: %.7f\n\n", F24(0x7FFFFFFF));
+
+    /*
+    The result of 0.0005 x 0.0005 is 0.00000025. But this number is not representable as a binary.
+    The closest representation in Q8.24 format is (4/2^24) = 0.000000238418579
+    printf rounds this to 0.0000002 because the formatting string to printf specifies 7 digits of precision after the decimal point.
+    This is the maximum precision that can be achieved with the 24 fractional bits of the Q8.24 format.
+    */
+    printf ("Multiplication of small numbers (0.0005 x 0.0005): %.7f\n\n", F24(lib_dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
+
+    printf ("Reciprocal (3.0) : %.7f\n\n", F24(lib_dsp_math_reciprocal (Q24(3.0), q_format)));;
+
+    printf ("Inverse square root (2) : %.7f\n\n", F24(lib_dsp_math_invsqrroot (Q24(2.), q_format)));;
+
+    printf ("Square Root (2) : %.7f\n\n", F24(lib_dsp_math_squareroot (Q24(2.), q_format)));;
 
     int error_cnt_1 = 0, error_cnt_2 = 0;
     int maxerror = 0;
@@ -44,15 +69,15 @@ int main(void)
     error_cnt_2=0;
     maxerror=0;
     val_count = 0;
-    int error_cnt = 0;
-    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += PI2_Q8_24/TEST_ITERATIONS) {
+
+    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
         tmr :> start_time;
         q8_24 sine = lib_dsp_math_sin(rad);
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 
 #ifdef PRINT_INPUTS_AND_OUTPUTS
-        printf("sin(%.10f) = %.10f\n",F24(rad), F24(sine));
+        printf("sin(%.7f) = %.7f\n",F24(rad), F24(sine));
 #endif
 
 #if CHECK_RESULTS
@@ -70,23 +95,14 @@ int main(void)
         if (abs_diff >= 2) {
             error_cnt_2++;
 #if PRINT_AND_ABORT_ON_ERROR
-            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error is 0x%d\n",abs_diff);
-            printf("lib_dsp_math_sin(%.10f) = %.10f\n",F24(rad), F24(sine));
+            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error for rad 0x%x is 0x%x\n",rad,abs_diff);
+            printf("lib_dsp_math_sin(%.7f) = %.7f\n",F24(rad), F24(sine));
             break;
 #endif
         }
         if (abs_diff > maxerror) {
             maxerror = abs_diff;
         }
-
-        /*
-        if (abs(abs_diff) >= CHECK_MIN_VALUE) {
-            error_cnt++;
-            //printf("ERROR: More than three bit difference (%.10f) between expected float result %.10f (reference) and fixed point result %.10f\n",F24(abs_diff),F24(sine_ref), F24(sine));
-            printf("ERROR: More than %d bit difference (0x%x) between expected float result 0x%x (reference) and fixed point result 0x%x\n"
-                    ,CHECK_RESULTS_BIT_ACCURACY,abs_diff,sine_ref, sine);
-        }
-        */
 
         val_count++;
 #endif
@@ -95,7 +111,6 @@ int main(void)
 #if CHECK_RESULTS
     printf("num calculations: %8d; Errors >=1: %8d (%5.2f%%); Errors >=2: %5d (%5.2f%%)\n", val_count, error_cnt_1, error_cnt_1*100.0/val_count, error_cnt_2, error_cnt_2*100.0/val_count);
     printf("Max absolute error: %d\n",maxerror);
-    //printf("Number of Errors >= %d from lib_dsp_math_sin: %d\n",CHECK_MIN_VALUE, error_cnt);
 #endif
 
 #if PRINT_CYCLE_COUNT
@@ -103,7 +118,7 @@ int main(void)
     // just to measure cycles
     tmr :> start_time;
     float sine_float = sin(3.141592653589793/4);
-    printf("math.h sin(%.10f) = %.10f\n",3.141592653589793/4, sine_float);
+    printf("math.h sin(%.7f) = %.7f\n",3.141592653589793/4, sine_float);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
     printf("Cycles taken for math.h sine function: %d\n", cycles_taken);
@@ -112,23 +127,30 @@ int main(void)
 
 
     printf("Cosine wave (one cycle from -Pi to +Pi) :\n");
-    error_cnt=0;
+
     error_cnt_1=0;
     error_cnt_2=0;
     maxerror=0;
     val_count = 0;
 
-    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += PI2_Q8_24/TEST_ITERATIONS) {
+    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
         tmr :> start_time;
         int cosine=lib_dsp_math_cos(rad);
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #ifdef PRINT_INPUTS_AND_OUTPUTS
-        printf("cos(%.10f) = %.10f\n",F24(rad), F24(cosine));
+        printf("cos(%.7f) = %.7f\n",F24(rad), F24(cosine));
 #endif
 #if CHECK_RESULTS
         // check the fixed point result vs the floating point result from math.h
         double d_rad = F24(rad);
+#if 0
+        double d_rad_old = F24_old(rad);
+        if(d_rad != d_rad_old) {
+            printf("F24(rad) difference!\n");
+        }
+#endif
+
         double d_cosine_ref = cos(d_rad);
         q8_24 cosine_ref = Q24(d_cosine_ref);
 
@@ -139,23 +161,14 @@ int main(void)
         if (abs_diff >= 2) {
             error_cnt_2++;
 #if PRINT_AND_ABORT_ON_ERROR
-            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error is 0x%d\n",abs_diff);
-            printf("lib_dsp_math_cos(%.10f) = %.10f\n",F24(rad), F24(cosine));
+            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error for rad 0x%x is 0x%x\n",rad,abs_diff);
+            printf("lib_dsp_math_cos(%.7f) = %.7f\n",F24(rad), F24(cosine));
             break;
 #endif
         }
         if (abs_diff > maxerror) {
             maxerror = abs_diff;
         }
-
-        /*
-        if (abs(abs_diff) >= CHECK_MIN_VALUE) {
-            error_cnt++;
-            //printf("ERROR: More than three bit difference (%.10f) between expected float result %.10f (reference) and fixed point result %.10f\n",F24(abs_diff),F24(cosine_ref), F24(sine));
-            //printf("ERROR: More than %d bit difference (0x%x) between expected float result 0x%x (reference) and fixed point result 0x%x\n"
-            //        ,CHECK_RESULTS_BIT_ACCURACY,abs_diff,cosine_ref, cosine);
-        }
-        */
 #endif
         val_count++;
 
@@ -164,7 +177,6 @@ int main(void)
 #if CHECK_RESULTS
     printf("num calculations: %8d; Errors >=1: %8d (%5.2f%%); Errors >=2: %5d (%5.2f%%)\n", val_count, error_cnt_1, error_cnt_1*100.0/val_count, error_cnt_2, error_cnt_2*100.0/val_count);
     printf("Max absolute error: %d\n",maxerror);
-    //printf("Number of Errors >= %d from lib_dsp_math_cos: %d\n",CHECK_MIN_VALUE, error_cnt);
 #endif
 
 
@@ -173,7 +185,7 @@ int main(void)
     // just to measure cycles
     tmr :> start_time;
     float cosine_float = cos(3.141592653589793/4);
-    printf("math.h cos(%.10f) = %.10f\n",3.141592653589793/4, cosine_float);
+    printf("math.h cos(%.7f) = %.7f\n",3.141592653589793/4, cosine_float);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
     printf("Cycles taken for math.h cosine function: %d\n", cycles_taken);
