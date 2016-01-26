@@ -11,16 +11,20 @@
 #define PRINT_FFT_INPUT 1
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1
+#define N_FFT_POINTS 32
 #else
 #define PRINT_FFT_INPUT 0
 #define PRINT_FFT_OUTPUT 0
 #define PRINT_IFFT_OUTPUT 0
+#define N_FFT_POINTS 4096
 #endif
 
 #define PRINT_CYCLE_COUNT 1
 
-#define N_FFT_POINTS 32
+
 #define INPUT_FREQ N_FFT_POINTS/8
+
+#define INVERSE_TWOREALS_SHORT_FFT_SUPPORTED
 
 // enumerate the macros
 #define SINGLE_COMPLEX 0
