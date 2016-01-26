@@ -1,4 +1,4 @@
-// Copyright (c) 2015, XMOS Ltd, All rights reserved
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
     
 #if defined(__XS2A__)
 #include <xs1.h>
