@@ -4,34 +4,15 @@
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
 
-#define ASM_OPTIMISED
-//#define ASM_ROUNDING
 
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
-
-#ifdef ASM_OPTIMISED
-
     int ah; unsigned al;
     int result;
-    //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<((32-q_format)*2-1)));
+    // For rounding, accumulator is pre-loaded (1<<(q_format-1))
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)));
     asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(ah),"r"(al),"r"(q_format));
-#ifdef ASM_ROUNDING
-    int round;
-    asm("lextract %0,%1,%2,%3,32":"=r"(round):"r"(ah),"r"(al),"r"(q_format+1));
-    // rounding
-    result = result + (round & 1);
-#endif
     return result;
-#else
-    // Brute force testing of lib_dsp_math_sin shows that the additional rounding here is not required to achieve accuracy of 1 LSB (error <= 1)
-    long long aa = input1_value;
-    long long bb = input2_value;
-    long long res = aa * bb;
-    long long result = (res >> q_format) + ((res >> (q_format - 1)) & 1);
-    return result;
-#endif
 }
 
 

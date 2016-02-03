@@ -16,25 +16,25 @@
 #define Q0(N) Q ## N
 #define Q(N) Q0(N)
 
-// Convert from fixed point to double precision floating point
-#define Q31(f) round(f * (double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
-#define Q30(f) round(f * (double)(1<<30))
-#define Q29(f) round(f * (double)(1<<29))
-#define Q28(f) round(f * (double)(1<<28))
-#define Q27(f) round(f * (double)(1<<27))
-#define Q26(f) round(f * (double)(1<<26))
-#define Q25(f) round(f * (double)(1<<25))
-#define Q24(f) round(f * (double)(1<<24))
-#define Q23(f) round(f * (double)(1<<23))
-#define Q22(f) round(f * (double)(1<<22))
-#define Q21(f) round(f * (double)(1<<21))
-#define Q20(f) round(f * (double)(1<<20))
-#define Q19(f) round(f * (double)(1<<19))
-#define Q18(f) round(f * (double)(1<<18))
-#define Q17(f) round(f * (double)(1<<17))
-#define Q16(f) round(f * (double)(1<<16))
+// Convert from floating point to fixed point
+#define Q31(f) (int)((signed long long)((f) * ((unsigned long long)1 << (31+20)) + (1<<19)) >> 20)
+#define Q30(f) (int)((signed long long)((f) * ((unsigned long long)1 << (30+20)) + (1<<19)) >> 20)
+#define Q29(f) (int)((signed long long)((f) * ((unsigned long long)1 << (29+20)) + (1<<19)) >> 20)
+#define Q28(f) (int)((signed long long)((f) * ((unsigned long long)1 << (28+20)) + (1<<19)) >> 20)
+#define Q27(f) (int)((signed long long)((f) * ((unsigned long long)1 << (27+20)) + (1<<19)) >> 20)
+#define Q26(f) (int)((signed long long)((f) * ((unsigned long long)1 << (26+20)) + (1<<19)) >> 20)
+#define Q25(f) (int)((signed long long)((f) * ((unsigned long long)1 << (25+20)) + (1<<19)) >> 20)
+#define Q24(f) (int)((signed long long)((f) * ((unsigned long long)1 << (24+20)) + (1<<19)) >> 20)
+#define Q23(f) (int)((signed long long)((f) * ((unsigned long long)1 << (23+20)) + (1<<19)) >> 20)
+#define Q22(f) (int)((signed long long)((f) * ((unsigned long long)1 << (22+20)) + (1<<19)) >> 20)
+#define Q21(f) (int)((signed long long)((f) * ((unsigned long long)1 << (21+20)) + (1<<19)) >> 20)
+#define Q20(f) (int)((signed long long)((f) * ((unsigned long long)1 << (20+20)) + (1<<19)) >> 20)
+#define Q19(f) (int)((signed long long)((f) * ((unsigned long long)1 << (19+20)) + (1<<19)) >> 20)
+#define Q18(f) (int)((signed long long)((f) * ((unsigned long long)1 << (18+20)) + (1<<19)) >> 20)
+#define Q17(f) (int)((signed long long)((f) * ((unsigned long long)1 << (17+20)) + (1<<19)) >> 20)
+#define Q16(f) (int)((signed long long)((f) * ((unsigned long long)1 << (16+20)) + (1<<19)) >> 20)
 
-// Convert from double precision floating point to fixed point
+// Convert from fixed point to double precision floating point
 #define F31(x) ((double)(x)/(double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
 #define F30(x) ((double)(x)/(double)(1<<30))
 #define F29(x) ((double)(x)/(double)(1<<29))
