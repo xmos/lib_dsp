@@ -30,7 +30,7 @@ int do_complex_fft_and_ifft();
 #else
 lib_dsp_fft_complex_t  two_re[N_FFT_POINTS];
 lib_dsp_fft_complex_t  two_im[N_FFT_POINTS];
-int do_tworeal_fft_and_ifft();
+int do_tworeals_fft_and_ifft();
 #endif
 
 // sine signal with 8 samples per cycle
@@ -55,7 +55,7 @@ int main( void )
 #ifdef COMPLEX_FFT
     do_complex_fft_and_ifft();
 #else
-    do_tworeal_fft_and_ifft();
+    do_tworeals_fft_and_ifft();
 #endif
     return 0;
 };
@@ -165,7 +165,7 @@ int do_complex_fft_and_ifft() {
 
 }
 # else
-void generate_tworeal_test_signal(int N, int test) {
+void generate_tworeals_test_signal(int N, int test) {
     switch(test) {
     case 0: {
         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz cosine, re1: %d Hz cosine\n"
@@ -220,7 +220,7 @@ void generate_tworeal_test_signal(int N, int test) {
     }
 #endif
 }
-int do_tworeal_fft_and_ifft() {
+int do_tworeals_fft_and_ifft() {
     timer tmr;
     unsigned start_time, end_time, overhead_time, cycles_taken;
     tmr :> start_time;
@@ -228,7 +228,7 @@ int do_tworeal_fft_and_ifft() {
     overhead_time = end_time - start_time;
 
     for(int test=0; test<4; test++) {
-        generate_tworeal_test_signal(N_FFT_POINTS, test);
+        generate_tworeals_test_signal(N_FFT_POINTS, test);
 
         printf("Forward 2xReal FFT, Size = %05u\n", N_FFT_POINTS );
         tmr :> start_time;

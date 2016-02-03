@@ -17,7 +17,7 @@ USED_MODULES = lib_dsp
 # If the variable XCC_MAP_FLAGS is set it overrides the flags passed to
 # xcc for the final link (mapping) stage.
 XCC_FLAGS_complex_fft = -O2 -g -report -DCOMPLEX_FFT
-XCC_FLAGS_tworeal_fft = -O2 -g -report
+XCC_FLAGS_tworeals_fft = -O2 -g -report
 
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this
 # project to create both xCORE and ARM binaries.
