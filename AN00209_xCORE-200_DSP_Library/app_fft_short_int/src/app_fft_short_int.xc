@@ -12,26 +12,25 @@
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1
 #define N_FFT_POINTS 32
+#define PRINT_CYCLE_COUNT 0
 #else
+// Configuration for Benchmarking
 #define PRINT_FFT_INPUT 0
 #define PRINT_FFT_OUTPUT 0
 #define PRINT_IFFT_OUTPUT 0
 #define N_FFT_POINTS 4096
-#endif
-
 #define PRINT_CYCLE_COUNT 1
+#endif
 
 
 #define INPUT_FREQ N_FFT_POINTS/8
-
-#define INVERSE_TWOREALS_SHORT_FFT_SUPPORTED
 
 // enumerate the macros
 #define SINGLE_COMPLEX 0
 #define TWO_COMPLEX 1
 #define TWO_REALS 2
+
 #ifndef TEST_MODE
-//#define TEST_MODE SINGLE_COMPLEX
 #define TEST_MODE TWO_REALS
 #endif
 
@@ -415,10 +414,9 @@ int do_tworeals_short_fft_and_ifft() {
         }
 #endif
 
-#ifdef INVERSE_TWOREALS_SHORT_FFT_SUPPORTED
         tmr :> start_time;
+        // input: Q15format , output: Q14 format
         lib_dsp_fft_inverse_tworeals_short( two_re, two_im, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS) );
-
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -426,13 +424,12 @@ int do_tworeals_short_fft_and_ifft() {
 #endif
 
 #if PRINT_IFFT_OUTPUT
-        printf( "////// Time domain signals after lib_dsp_fft_inverse_complex_twoshort\n");
+        printf( "////// Time domain signals after lib_dsp_fft_inverse_tworeals_short\n");
         printf("Complex signal:\n");
         printf("re,      im         \n");
         for(int i=0; i<N_FFT_POINTS; i++) {
-            printf("%.5f, %.5f\n",F15(two_re[i].re), F15(two_re[i].im));
+            printf("%.5f, %.5f\n",F14(two_re[i].re), F14(two_re[i].im));
         }
-#endif
 #endif
 
         printf("\n" ); // Test delimiter
