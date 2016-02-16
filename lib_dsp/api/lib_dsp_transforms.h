@@ -42,7 +42,7 @@ lib_dsp_fft_complex_t;
 
 typedef struct
 {
-    short int re_1;
+    short int re_1; // lower memory
     short int re_0;
     short int im_1;
     short int im_0;
@@ -51,7 +51,7 @@ lib_dsp_fft_complex_twoshort_t;
 
 typedef struct
 {
-    short int re;
+    short int re; // lower memory
     short int im;
 }
 lib_dsp_fft_complex_short_t;
@@ -94,6 +94,8 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], int N );
 /** This function computes a forward FFT. The complex input signal is
  * supplied in an array of real and imaginary fixed-point values.
  * The same array is also used to store the output.
+ * The magnitude of the FFT output is right shifted log2(N) times which corresponds to
+ * division by N as shown in EQUATION 31-5 of http://www.dspguide.com/CH31.PDF
  * The number of points must be a power of 2, and the array of sine values should contain a quarter sine-wave.
  * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversal of the data.
  * If required then lib_dsp_fft_bit_reverse() should be called beforehand.
@@ -191,10 +193,11 @@ void lib_dsp_fft_forward_complex_short_asm(
 
 /** This function computes the FFT of two real signals in one go. It uses
  * a nifty trick (http://www.katjaas.nl/realFFT/realFFT.html) that enables
- * one to use a single complex FFT to compute two real FFTs simultaneously.
- * The real inputs should be in the first two real arrays, the output is in
- * the real and imaginary arrays (the output of a real FFT is still a
- * complex number).
+ * using a single complex FFT to compute two real FFTs simultaneously.
+ * The two real inputs should be in the re and im variables of the two_re array.
+ * On output, the complex spectrum of signal 1 is in two_re.re (real) and two_im.re (imaginary)
+ * The complex spectrum of signal 2 is in two_re.im (real) and two_im.im (imaginary)
+ * The output of a real FFT is still a complex number: http://www.dspguide.com/CH31.PDF
  *
  * \param[in,out] two_re array containing two real signals on which to
  *                       compute FFT, on output this array stores the real
@@ -218,10 +221,11 @@ void lib_dsp_fft_forward_tworeals
 
 /** This function computes the FFT of two real short int signals in one go. It uses
  * a nifty trick (http://www.katjaas.nl/realFFT/realFFT.html) that enables
- * one to use a single complex FFT to compute two real FFTs simultaneously.
- * The real inputs should be in the first two real arrays, the output is in
- * the real and imaginary arrays (the output of a real FFT is still a
- * complex number).
+ * using a single complex FFT to compute two real FFTs simultaneously.
+ * The real inputs should be in the re and im variables of the two_re array.
+ * On output, the complex spectrum of signal 1 is in two_re.re (real) and two_im.re (imaginary)
+ * The complex spectrum of signal 2 is in two_re.im (real) and two_im.im (imaginary)
+ * The output of a real FFT is still a complex number: http://www.dspguide.com/CH31.PDF
  *
  * \param[in,out] two_re array containing two real short int signals on which to
  *                       compute FFT, on output this array stores the real
@@ -272,9 +276,10 @@ void lib_dsp_fft_inverse_complex
  * simultaneously. The outputs are in the two real arrays, the imaginary
  * arrays are unchanged.
  *
- * \param[in,out] two_re array containing two real frequency domain signals on which to
- *                       compute inverse FFT. On output this array stores two real
- *                       time domain signals
+ * \param[in,out] two_re array containing two real frequency domain signals in Q1.15 format
+ *                       on which to compute inverse FFT.
+ *                       The signal is shifted down to Q2.14 format to avoid integer overflow.
+ *                       On output this array stores two real time domain signals in Q2.14 format.
  *
  * \param[out]    two_im array containing two imaginary frequency domain signals on which to
  *                       compute inverse FFT
