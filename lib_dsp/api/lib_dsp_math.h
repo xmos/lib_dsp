@@ -6,6 +6,12 @@
 #include "xccompat.h"
 
 
+/** Q1.31 fixed point format with 31 fractional bits
+ * Explcit type to make it clear which functions use this Q format.
+ */
+typedef int q1_31;
+
+
 /** Q8.24 fixed point format with 24 fractional bits
  * Explcit type to make it clear which functions use this Q format.
  */
