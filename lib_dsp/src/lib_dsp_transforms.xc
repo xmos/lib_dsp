@@ -97,7 +97,7 @@ void lib_dsp_fft_forward_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_c
         two_im[N-i].im = -two_im[i].im;
     }
     for(int i = N >> 1; i != 0; i--) {
-        two_re[i].re = (two_re[i].re + two_re[N-i].re) >> 1;
+        two_re[i].re = (two_re[i].re + two_re[N-i].re)>>1;
         two_re[N-i].re = two_re[i].re;
         two_re[i].im = (two_re[i].im + two_re[N-i].im)>>1;
         two_re[N-i].im = two_re[i].im;
@@ -148,10 +148,12 @@ void lib_dsp_fft_inverse_tworeals( lib_dsp_fft_complex_t two_re[], lib_dsp_fft_c
 void lib_dsp_fft_inverse_tworeals_short( lib_dsp_fft_complex_short_t two_re[], lib_dsp_fft_complex_short_t two_im[], int N, const short int sine[] )
 {
     for(int i = N >> 1; i != 0; i--) {
-        two_re[i].re = two_re[i].re + two_im[N-i].im;
-        two_re[N-i].re = two_re[N-i].re + two_im[i].im;
-        two_re[i].im = two_re[i].im + two_im[i].re;
-        two_re[N-i].im = two_re[N-i].im + two_im[N-i].re;
+        // right shift (>> 1) is to convert from Q15 to Q14 format.
+        // This is to avoid integer overflow in the lib_dsp_fft_inverse_complex_short
+        two_re[i].re = (two_re[i].re + two_im[N-i].im) >> 1;
+        two_re[N-i].re = (two_re[N-i].re + two_im[i].im) >> 1;
+        two_re[i].im = (two_re[i].im + two_im[i].re) >> 1;
+        two_re[N-i].im = (two_re[N-i].im + two_im[N-i].re) >> 1;
     }
 
     lib_dsp_fft_bit_reverse_short(two_re, N);

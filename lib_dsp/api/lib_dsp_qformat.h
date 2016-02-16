@@ -16,7 +16,8 @@
 #define Q0(N) Q ## N
 #define Q(N) Q0(N)
 
-// Convert from floating point to fixed point
+// Convert from floating point to fixed point Q format.
+// The number indicates the fractional bits or the position of the binary point
 #define Q31(f) (int)((signed long long)((f) * ((unsigned long long)1 << (31+20)) + (1<<19)) >> 20)
 #define Q30(f) (int)((signed long long)((f) * ((unsigned long long)1 << (30+20)) + (1<<19)) >> 20)
 #define Q29(f) (int)((signed long long)((f) * ((unsigned long long)1 << (29+20)) + (1<<19)) >> 20)
@@ -33,8 +34,11 @@
 #define Q18(f) (int)((signed long long)((f) * ((unsigned long long)1 << (18+20)) + (1<<19)) >> 20)
 #define Q17(f) (int)((signed long long)((f) * ((unsigned long long)1 << (17+20)) + (1<<19)) >> 20)
 #define Q16(f) (int)((signed long long)((f) * ((unsigned long long)1 << (16+20)) + (1<<19)) >> 20)
+#define Q15(f) (int)((signed long long)((f) * ((unsigned long long)1 << (15+20)) + (1<<19)) >> 20)
+#define Q14(f) (int)((signed long long)((f) * ((unsigned long long)1 << (14+20)) + (1<<19)) >> 20)
 
 // Convert from fixed point to double precision floating point
+// The number indicates the fractional bits or the position of the binary point
 #define F31(x) ((double)(x)/(double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
 #define F30(x) ((double)(x)/(double)(1<<30))
 #define F29(x) ((double)(x)/(double)(1<<29))
@@ -52,6 +56,7 @@
 #define F17(x) ((double)(x)/(double)(1<<17))
 #define F16(x) ((double)(x)/(double)(1<<16))
 #define F15(x) ((double)(x)/(double)(1<<15))
+#define F14(x) ((double)(x)/(double)(1<<14))
 
 #endif
 
