@@ -115,6 +115,13 @@ void lib_dsp_fft_forward_complex
     int                   N,
     const int             sine[] );
 
+void lib_dsp_fft_forward_complex_xs1
+(
+    lib_dsp_fft_complex_t pts[],
+    int                   N,
+    const int             sine[] );
+
+
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT on two complex short int signals involves lib_dsp_fft_bit_reverse_twoshort()
  * followed by lib_dsp_fft_forward_complex_twoshort(), and for an inverse FFT it involves lib_dsp_fft_bit_reverse_twoshort()
