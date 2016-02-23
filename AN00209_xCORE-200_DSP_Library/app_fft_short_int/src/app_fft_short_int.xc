@@ -23,7 +23,8 @@
 #define PRINT_CYCLE_COUNT 1
 #endif
 
-#define NUM_TESTS 1
+// Valid values: 1..4
+#define NUM_TESTS 4
 
 #define INPUT_FREQ N_FFT_POINTS/8
 
