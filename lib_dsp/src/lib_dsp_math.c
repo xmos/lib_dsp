@@ -203,4 +203,162 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 }
 
 
+// The below algorithm is from ftp://ftp.update.uu.se/pub/pdp11/rt/cmath/atan.c
+// It is based on Cody and Waite
+
+/*
+ *              a t a n . c
+ */
+
+/*)LIBRARY
+*/
+
+#ifdef  DOCUMENTATION
+title   atan    arctan function
+index   arctan function atan
+index   arctan function atan2
+usage
+    .s
+    double f, x, atan();
+    .br
+    f = atan(x);
+    .br
+    double g, u, v, atan2();
+    .br
+    g = atan2(v, u);
+    .s
+description
+    .s
+    atan(x) returns the arctangent of x.
+    .s
+    atan2(v, u) returns the arctangent of v / u.
+    .s
+diagnostics
+    .s
+    If both arguments of atan2 are zero the result is indeterminate.
+    The message 'atan2 args both zero' followed by the value of the
+    denominator, is written to stderr and a value of zero is returned.
+    .s
+internal
+    .s
+    Algorithm based on Cody and Waite pp. 194-216.  The algorithm here
+    has been modified slightly to avoid the test for overflow in v/u.
+    By checking which of u or v is greater in magnitude all overflows
+    become underflows which are set to zero without a message.  This
+    has meant that the division of the work between atan(), atan2()
+    and the internal function _atan() is slightly different from that
+    suggested in Cody and Waite.
+    .s
+author
+    .s
+    Hamish Ross.
+    .s
+date
+    .s
+    1-Jan-85
+#endif
+
+#include <math.h>
+
+#define PI 3.1415926536
+#define HALF_PI PI/2
+#define PI_BY_2 HALF_PI //why use a different constant for the same thing?
+
+double _lib_dsp_math_atan(double f, int n);
+
+double lib_dsp_math_atan(double x)
+//double x;
+{
+    //double _lib_dsp_math_atan(), f;
+    double f;
+
+    f = x < 0.0 ? -x : x;
+    if (f > 1.0)
+    f = _lib_dsp_math_atan(1.0 / f, 2);
+    else
+    f = _lib_dsp_math_atan(f, 0);
+    return(x < 0.0 ? -f : f);
+}
+
+//returns the arctangent of v / u.
+double lib_dsp_math_atan2(double v, double u)
+//double v, u;
+{
+    //double _lib_dsp_math_atan(), au, av, f;
+    double  au, av, f;
+
+    av = v < 0.0 ? -v : v;
+    au = u < 0.0 ? -u : u;
+    if (u != 0.0) {
+    if (av > au) {
+        if ((f = au / av) == 0.0) {
+            f = HALF_PI;
+        }
+        else {
+            f = _lib_dsp_math_atan(f, 2);
+        }
+    }
+    else {
+        if ((f = av / au) == 0.0)
+            f = 0.0;
+        else
+            f = _lib_dsp_math_atan(f, 0);
+    }
+    }
+    else {
+        if (v != 0) {
+            f = HALF_PI;
+        }
+        else {
+            printf("ERROR: atan2 args both zero");
+            f = 0.0;
+        }
+    }
+    if (u < 0.0)
+    f = PI - f;
+    return(v < 0.0 ? -f : f);
+}
+
+static double  p0 = -0.136887688941919269e2;
+static double  p1 = -0.205058551958616520e2;
+static double  p2 = -0.849462403513206835e1;
+static double  p3 = -0.837582993681500593e0;
+static double  q0 =  0.410663066825757813e2;
+static double  q1 =  0.861573495971302425e2;
+static double  q2 =  0.595784361425973445e2;
+static double  q3 =  0.150240011600285761e2;
+static double a[] = {
+    0.0,
+    0.523598775598298873,       /* pi / 6           */
+    PI_BY_2,                /* pi / 2           */
+    1.047197551196597746        /* pi / 3           */
+};
+
+#define CON1 0.267949192431122706   /* 2 - sqrt(3)          */
+#define ROOT_3M1 0.732050807568877294   /* sqrt(3) - 1          */
+#define ROOT_3 1.732050807568877
+// From ftp://ftp.update.uu.se/pub/pdp11/rt/cmath/math.h:
+#define ROOT_EPS 0.372529029846191406e-8    /* 2**-(t/2), t = 56    */
+
+double _lib_dsp_math_atan(double f, int n)
+//double f;
+//int n;
+{
+    double g, q, r;
+
+    if (f > CON1) {
+        f = (((ROOT_3M1 * f - 0.5) - 0.5) + f) / (ROOT_3 + f);
+        n++;
+    }
+    if (f > ROOT_EPS || f < -ROOT_EPS) {
+        g = f * f;
+        q = (((g + q3)*g + q2)*g + q1)*g + q0;
+        r = (((p3*g + p2)*g + p1)*g + p0)*g / q;
+        f = f + f * r;
+    }
+    if (n > 1)
+        f = -f;
+    return(f + a[n]);
+}
+
 
