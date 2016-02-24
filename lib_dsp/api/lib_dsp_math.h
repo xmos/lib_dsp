@@ -215,7 +215,7 @@ inline q8_24 lib_dsp_math_cos(q8_24 rad) {
 }
 
 
-double lib_dsp_math_atan(double x);
-double lib_dsp_math_atan2(double v, double u);
+q8_24 lib_dsp_math_atan(q8_24 x);
+q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u);
 
 #endif

@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define PRINT_CYCLE_COUNT 0
+#define PRINT_CYCLE_COUNT 1
 #define CHECK_RESULTS 1
 #define PRINT_AND_ABORT_ON_ERROR 1
 #define TEST_ALL_RAD 0
@@ -24,12 +24,12 @@
 #define RAD_INCR PI2_Q8_24/40
 #endif
 
-
 int main(void)
 {
     int q_format; // location of the decimal point
 
-    unsigned start_time, end_time, overhead_time, cycles_taken;
+    int start_time, end_time;
+    unsigned overhead_time, cycles_taken; // absolute positive values
     timer tmr;
     tmr :> start_time;
     tmr :> end_time;
@@ -129,10 +129,10 @@ int main(void)
     printf("Cycles taken for lib_dsp_math_sin function: %d\n", cycles_taken);
     // just to measure cycles
     tmr :> start_time;
-    float sine_float = sin(3.141592653589793/4);
-    printf("math.h sin(%.7f) = %.7f\n",3.141592653589793/4, sine_float);
+    double sine_float = sin(3.141592653589793/4);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
+    printf("math.h sin(%.7f) = %.7f\n",3.141592653589793/4, sine_float);
     printf("Cycles taken for math.h sine function: %d\n", cycles_taken);
 #endif
     printf("\n");
@@ -191,10 +191,10 @@ int main(void)
     printf("Cycles taken for cosine function: %d\n", cycles_taken);
     // just to measure cycles
     tmr :> start_time;
-    float cosine_float = cos(3.141592653589793/4);
-    printf("math.h cos(%.7f) = %.7f\n",3.141592653589793/4, cosine_float);
+    double cosine_float = cos(3.141592653589793/4);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
+    printf("math.h cos(%.7f) = %.7f\n",3.141592653589793/4, cosine_float);
     printf("Cycles taken for math.h cosine function: %d\n", cycles_taken);
 #endif
 
@@ -208,24 +208,29 @@ int main(void)
     error_cnt_2=0;
     maxerror=0;
     val_count = 0;
-    //or(q8_24 x = 0; x < 0x7FFFFFFF; x+=  0x7FFFFFFF/100 ) { // 100 steps
-    double x_=0;
-    while(x_<DBL_MAX) {
-    //for(double x_ = 0; x_ < DBL_MAX; x_==0 ? x_++ : x_*=2) { // 100 steps
+
+    printf("F24(0x%x) is %.7f\n",MAX_Q8_24, F24(MAX_Q8_24));
+    printf("ROOT_EPS is 0x%x\n", Q24(0.372529029846191406e-8));
+    //for(unsigned x = 0; x < MAX_Q8_24; x += (MAX_Q8_24>>10)) { // 1k steps
+    unsigned x=0;
+    while(x < MAX_Q8_24) {
         tmr :> start_time;
         //double x_ = F24(x);
-        double arctan_=lib_dsp_math_atan(x_);
+
+        q8_24 arctan=lib_dsp_math_atan(x);
+        //double arctan_=lib_dsp_math_atan(x_);
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #ifdef PRINT_INPUTS_AND_OUTPUTS
-        printf("atan(%.7f) = %.7f\n",x_,arctan_);
+        printf("x is 0x%x\n",x);
+        printf("atan(%.7f) = %.7f\n",F24(x),F24(arctan));
 #endif
 #if CHECK_RESULTS
         //double d_x = F24(x);
-        double d_x = x_;
+        double d_x = F24(x);
         double d_arctan_ref = atan(d_x);
         q8_24 arctan_ref = Q24(d_arctan_ref);
-        q8_24 arctan = Q24(arctan_);
+        //q8_24 arctan = Q24(arctan_);
         q8_24 abs_diff = abs(arctan - arctan_ref);
         if (abs_diff >= 1) {
             error_cnt_1++;
@@ -234,11 +239,11 @@ int main(void)
             error_cnt_2++;
 #if PRINT_AND_ABORT_ON_ERROR
             //printf("ERROR: absolute error >= 2 is a failure criteria. absolute error for rad 0x%x is 0x%x\n",x,abs_diff);
-            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error is 0x%x\n",abs_diff);
+            printf("ERROR: absolute error >= 2 is a failure criteria. absolute error is 0x%x (%5.2f%%)\n",abs_diff, abs_diff*100.0/arctan_ref);
             //printf("lib_dsp_math_atan(%.7f) = %.7f\n",F24(x), F24(arctan));
             //printf("Expected: atan(%.7f) = %.7f\n",F24(x), F24(arctan_ref));
-            printf("lib_dsp_math_atan(%.7f) = %.7f\n",x_, arctan_);
-            printf("Expected: atan(%.7f) = %.7f\n",x_, d_arctan_ref);
+            printf("lib_dsp_math_atan(%.7f) = %.7f\n",F24(x), F24(arctan));
+            printf("Expected: atan(%.7f) = %.7f\n",d_x, d_arctan_ref);
             printf("\n");
             //break;
 #endif
@@ -248,16 +253,31 @@ int main(void)
         }
 #endif
         val_count++;
-        if(x_ == 0) {
-          x_ = DBL_MIN;
+
+        // this generates input values 0, x = 2^y
+        if(x == 0) {
+          x = 1; // second smallest value in q4_28
         } else {
-          x_ *= 2;
+          x *= 2;
         }
+
     }
 
 #if CHECK_RESULTS
     printf("num calculations: %8d; Errors >=1: %8d (%5.2f%%); Errors >=2: %5d (%5.2f%%)\n", val_count, error_cnt_1, error_cnt_1*100.0/val_count, error_cnt_2, error_cnt_2*100.0/val_count);
     printf("Max absolute error: %d\n",maxerror);
+#endif
+
+#if PRINT_CYCLE_COUNT
+    printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
+    // just to measure cycles
+    double d_x = F24(MAX_Q8_24);
+    tmr :> start_time;
+    double d_arctan = atan(d_x);
+    tmr :> end_time;
+    cycles_taken = end_time-start_time-overhead_time;
+    printf("math.h atan(%.7f) = %.7f\n",d_x, d_arctan);
+    printf("Cycles taken for math.h atan function: %u\n", cycles_taken);
 #endif
 
     return (0);

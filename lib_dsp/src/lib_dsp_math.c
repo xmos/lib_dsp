@@ -264,97 +264,119 @@ date
 #define HALF_PI PI/2
 #define PI_BY_2 HALF_PI //why use a different constant for the same thing?
 
-double _lib_dsp_math_atan(double f, int n);
+q8_24 _lib_dsp_math_atan(q8_24 f, int n);
 
-double lib_dsp_math_atan(double x)
-//double x;
+//TODO: Fix issues:
+// For x > 1, lib_dsp_math_atan(x) jumps from 0.5235988 (33.33% too small) to the maximum value pi/2 ( 1.5707963)
+// That means this mode is not working: if (f > Q24(1.0))
+// This also means that the else clause ( f = _lib_dsp_math_atan(f, 0);) produces values that are too small
+q8_24 lib_dsp_math_atan(q8_24 x)
+//q8_24 x;
 {
-    //double _lib_dsp_math_atan(), f;
-    double f;
+    //q8_24 _lib_dsp_math_atan(), f;
+    q8_24 f;
 
-    f = x < 0.0 ? -x : x;
-    if (f > 1.0)
-    f = _lib_dsp_math_atan(1.0 / f, 2);
+    f = x < 0 ? -x : x;
+    if (f > Q24(1.0))
+        f = _lib_dsp_math_atan(Q24(1.0) / f, 2);
     else
-    f = _lib_dsp_math_atan(f, 0);
-    return(x < 0.0 ? -f : f);
+        f = _lib_dsp_math_atan(f, 0);
+    return(x < 0 ? -f : f);
 }
 
 //returns the arctangent of v / u.
-double lib_dsp_math_atan2(double v, double u)
-//double v, u;
+q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u)
+//q8_24 v, u;
 {
-    //double _lib_dsp_math_atan(), au, av, f;
-    double  au, av, f;
+    //q8_24 _lib_dsp_math_atan(), au, av, f;
+    q8_24  au, av, f;
 
-    av = v < 0.0 ? -v : v;
-    au = u < 0.0 ? -u : u;
-    if (u != 0.0) {
+    av = v < 0 ? -v : v;
+    au = u < 0 ? -u : u;
+    if (u != 0) {
     if (av > au) {
-        if ((f = au / av) == 0.0) {
-            f = HALF_PI;
+        if ((f = au / av) == 0) {
+            f = PIHALF_Q8_24;
         }
         else {
             f = _lib_dsp_math_atan(f, 2);
         }
     }
     else {
-        if ((f = av / au) == 0.0)
-            f = 0.0;
+        if ((f = av / au) == 0)
+            f = 0;
         else
             f = _lib_dsp_math_atan(f, 0);
     }
     }
     else {
         if (v != 0) {
-            f = HALF_PI;
+            f = PIHALF_Q8_24;
         }
         else {
             printf("ERROR: atan2 args both zero");
-            f = 0.0;
+            f = 0;
         }
     }
-    if (u < 0.0)
+    if (u < 0)
     f = PI - f;
-    return(v < 0.0 ? -f : f);
+    return(v < 0 ? -f : f);
 }
 
-static double  p0 = -0.136887688941919269e2;
-static double  p1 = -0.205058551958616520e2;
-static double  p2 = -0.849462403513206835e1;
-static double  p3 = -0.837582993681500593e0;
-static double  q0 =  0.410663066825757813e2;
-static double  q1 =  0.861573495971302425e2;
-static double  q2 =  0.595784361425973445e2;
-static double  q3 =  0.150240011600285761e2;
-static double a[] = {
-    0.0,
-    0.523598775598298873,       /* pi / 6           */
-    PI_BY_2,                /* pi / 2           */
-    1.047197551196597746        /* pi / 3           */
+static q8_24  p0 = Q24(-0.136887688941919269e2);
+static q8_24  p1 = Q24(-0.205058551958616520e2);
+static q8_24  p2 = Q24(-0.849462403513206835e1);
+static q8_24  p3 = Q24(-0.837582993681500593e0);
+static q8_24  q0 = Q24( 0.410663066825757813e2);
+static q8_24  q1 = Q24( 0.861573495971302425e2);
+static q8_24  q2 = Q24( 0.595784361425973445e2);
+static q8_24  q3 = Q24( 0.150240011600285761e2);
+static q8_24 a[] = {
+    0,
+    Q24(0.523598775598298873),       /* pi / 6           */
+    PIHALF_Q8_24,                /* pi / 2           */
+    Q24(1.047197551196597746)        /* pi / 3           */
 };
 
-#define CON1 0.267949192431122706   /* 2 - sqrt(3)          */
-#define ROOT_3M1 0.732050807568877294   /* sqrt(3) - 1          */
-#define ROOT_3 1.732050807568877
+#define CON1     Q24(0.267949192431122706)   /* 2 - sqrt(3)          */
+#define ROOT_3M1 Q24(0.732050807568877294)   /* sqrt(3) - 1          */
+#define ROOT_3   Q24(1.732050807568877)
 // From ftp://ftp.update.uu.se/pub/pdp11/rt/cmath/math.h:
-#define ROOT_EPS 0.372529029846191406e-8    /* 2**-(t/2), t = 56    */
+#define ROOT_EPS Q24(0.372529029846191406e-8)    /* 2**-(t/2), t = 56    */
 
-double _lib_dsp_math_atan(double f, int n)
-//double f;
+q8_24 _lib_dsp_math_atan(q8_24 f, int n)
+//q8_24 f;
 //int n;
 {
-    double g, q, r;
-
+    q8_24 g, q, r;
+    q8_24 half = Q24(0.5);
     if (f > CON1) {
-        f = (((ROOT_3M1 * f - 0.5) - 0.5) + f) / (ROOT_3 + f);
+        //f = (((ROOT_3M1 * f - 0.5) - 0.5) + f) / (ROOT_3 + f);
+        f = (((lib_dsp_math_multiply(ROOT_3M1, f, 24) - half) - half) + f) / (ROOT_3 + f);
         n++;
     }
     if (f > ROOT_EPS || f < -ROOT_EPS) {
-        g = f * f;
-        q = (((g + q3)*g + q2)*g + q1)*g + q0;
-        r = (((p3*g + p2)*g + p1)*g + p0)*g / q;
-        f = f + f * r;
+        //g = f * f;
+        g = lib_dsp_math_multiply(f, f, 24);
+
+        //q = (((g + q3)*g + q2)*g + q1)*g + q0;
+        q = lib_dsp_math_multiply(
+                lib_dsp_math_multiply(
+                    lib_dsp_math_multiply((g + q3), g, 24) + q2,
+                g, 24) + q1,
+            g, 24)
+            + q0;
+        //r = (((p3*g + p2)*g + p1)*g + p0)*g / q;
+        r = lib_dsp_math_multiply(
+                lib_dsp_math_multiply(
+                    lib_dsp_math_multiply(
+                        lib_dsp_math_multiply(p3, g, 24) + p2,
+                    g, 24) + p1,
+                g, 24) + p0,
+            g, 24);
+
+        r =  r / q; // rational function (division 5th order polynomial by 4th order polynomial)
+        f = f + lib_dsp_math_multiply(f, r, 24);
     }
     if (n > 1)
         f = -f;
