@@ -24,6 +24,8 @@
 #define RAD_INCR PI2_Q8_24/40
 #endif
 
+//#define EXPONENTIAL_INPUT
+
 int main(void)
 {
     int q_format; // location of the decimal point
@@ -208,9 +210,27 @@ int main(void)
     error_cnt_2=0;
     maxerror=0;
     val_count = 0;
+    int worst_cycles=0;
+    int worst_cycles_input;
 
-    //printf("p2 = 0x%x\n", Q24(-0.849462403513206835e1));
-    //printf("q2 = 0x%x\n", Q24( 0.595784361425973445e2));
+#if 0
+    printf("p0 = %d\n", Q24(-0.136887688941919269e2));
+    printf("p1 = %d\n", Q24(-0.205058551958616520e2));
+    printf("p2 = %d\n", Q24(-0.849462403513206835e1));
+    printf("q2 = %d\n", Q24( 0.595784361425973445e2));
+
+    //Just to get a trace of the funtion
+    lib_dsp_math_atan(Q24(1.0111983));
+    return;
+#endif
+
+    //Test result in terms of Errors:
+    //num calculations:    10001; Errors >=1:     8538 (85.37%); Errors >=2:  3641 (36.41%)
+    //Max absolute error: 176
+
+    //Using lib_dsp_math_multiply (does rounding) improves the result:
+    //num calculations: 10001; Errors >=1: 6341 (63.40%); Errors >=2: 1373 (13.73%)
+    //Max absolute error: 176
 
 #ifdef EXPONENTIAL_INPUT
     unsigned x=0;
@@ -220,11 +240,18 @@ int main(void)
 #endif
         tmr :> start_time;
         //double x_ = F24(x);
-
         q8_24 arctan=lib_dsp_math_atan(x);
         //double arctan_=lib_dsp_math_atan(x_);
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
+
+        if(cycles_taken>worst_cycles) {
+            worst_cycles = cycles_taken;
+            worst_cycles_input = x;
+        }
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
+#endif
 #ifdef PRINT_INPUTS_AND_OUTPUTS
         printf("x is 0x%x\n",x);
         printf("atan(%.7f) = %.7f\n",F24(x),F24(arctan));
@@ -258,7 +285,7 @@ int main(void)
 #endif
         val_count++;
 
-#if EXPONENTIAL_INPUT
+#ifdef EXPONENTIAL_INPUT
         // this generates input values 0, x = 2^y
         if(x == 0) {
           x = 1; // second smallest value in q4_28
@@ -275,9 +302,9 @@ int main(void)
 #endif
 
 #if PRINT_CYCLE_COUNT
-    printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
+    printf("max cyles taken for lib_dsp_math_atan function: %d, input value was %.7f\n", worst_cycles, F24(worst_cycles_input));
     // just to measure cycles
-    double d_x = F24(MAX_Q8_24);
+    double d_x = F24(worst_cycles_input);
     tmr :> start_time;
     double d_arctan = atan(d_x);
     tmr :> end_time;

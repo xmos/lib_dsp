@@ -336,15 +336,17 @@ q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u)
 
 // Polynomial coefficients
 #define p0 (-7899259)
-#define p1  (-854121)
-#define q0  11848915
-#define q1   8388608
+#define p1 (-854121)
+
+#define q0 11848915
+#define q1 8388608
+
 
 #define TS3      4495441  // 2 - sqrt(3)
 #define ROOT_3M1 14529495 // sqrt(3) - 1
 #define ROOT_3   7264748
 
-inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
+inline q8_24 _lib_dsp_math_atan_mul24(q8_24 f, int n)
 {
 
     const int AN[4] = {
@@ -364,8 +366,9 @@ inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
     }
     int g = mul24(f, f);
 
-    int gPg = mul24(mul24(p1, g) + p0, g);
     int Qg = mul24(q1, g) + q0;
+    int gPg = mul24(mul24(p1, g) + p0, g);
+
     int Rg = div24(gPg, 2*Qg);
     int ffR = f + mul24(f, Rg);
     if (n > 1) {
@@ -376,41 +379,37 @@ inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
     return ffR;
 }
 
+inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
+{
 
-
-q8_24 lib_dsp_math_atan_libmult(q8_24 x) {
-    int f = x;
     const int AN[4] = {
-        0, 8784530, 26353589, 17569060
+        0,
+        8784530,  // pi/6
+        26353589, // pi/2
+        17569060  // pi/3
     };
-    int negative = f < 0;
-    if (negative) {
-        f = -f;
-    }
-    int N = 0;
-    if (f > (1<<24)) {
-        f = div24(1<<24, f);
-        N = 2;
-    }
+
     f = f / 2;
 
     if (f > TS3) {
         f = div24(lib_dsp_math_multiply(ROOT_3M1, f, 24)-(1<<22), (f>>1) + ROOT_3);
-        N = N + 1;
+        n++;
     } else {
-        f = lib_dsp_math_multiply(f, f, 24);
+        f = f + f;
     }
     int g = lib_dsp_math_multiply(f, f, 24);
 
-    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 24) + p0, g, 24);
     int Qg = lib_dsp_math_multiply(q1, g, 24) + q0;
+    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 24) + p0, g, 24);
+
     int Rg = div24(gPg, 2*Qg);
     int ffR = f + lib_dsp_math_multiply(f, Rg, 24);
-    if (N > 1) {
+    if (n > 1) {
         ffR = -ffR;
     }
-    ffR = AN[N] + ffR;
-    if (negative) ffR = - ffR;
-    return ffR;
+    ffR = AN[n] + ffR;
 
+    return ffR;
 }
+
+
