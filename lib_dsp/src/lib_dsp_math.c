@@ -266,10 +266,17 @@ date
 
 q8_24 _lib_dsp_math_atan(q8_24 f, int n);
 
-//TODO: Fix issues:
-// For x > 1, lib_dsp_math_atan(x) jumps from 0.5235988 (33.33% too small) to the maximum value pi/2 ( 1.5707963)
-// That means this mode is not working: if (f > Q24(1.0))
-// This also means that the else clause ( f = _lib_dsp_math_atan(f, 0);) produces values that are too small
+int mul24(int x, int y) {
+    long long z = x * (long long) y;
+    return z >> 24;
+}
+
+int div24(int x, int y) {
+    long long z = (((long long)x) << 24) / y;
+    return z;
+}
+
+//returns the arctangent of x
 q8_24 lib_dsp_math_atan(q8_24 x)
 //q8_24 x;
 {
@@ -277,10 +284,14 @@ q8_24 lib_dsp_math_atan(q8_24 x)
     q8_24 f;
 
     f = x < 0 ? -x : x;
-    if (f > Q24(1.0))
-        f = _lib_dsp_math_atan(Q24(1.0) / f, 2);
-    else
+
+    if (f > (1<<24)) {
+        f = div24(1<<24, f);
+        f = _lib_dsp_math_atan(f, 2);
+    }
+    else {
         f = _lib_dsp_math_atan(f, 0);
+    }
     return(x < 0 ? -f : f);
 }
 
@@ -323,64 +334,83 @@ q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u)
     return(v < 0 ? -f : f);
 }
 
-static q8_24  p0 = Q24(-0.136887688941919269e2);
-static q8_24  p1 = Q24(-0.205058551958616520e2);
-static q8_24  p2 = Q24(-0.849462403513206835e1);
-static q8_24  p3 = Q24(-0.837582993681500593e0);
-static q8_24  q0 = Q24( 0.410663066825757813e2);
-static q8_24  q1 = Q24( 0.861573495971302425e2);
-static q8_24  q2 = Q24( 0.595784361425973445e2);
-static q8_24  q3 = Q24( 0.150240011600285761e2);
-static q8_24 a[] = {
-    0,
-    Q24(0.523598775598298873),       /* pi / 6           */
-    PIHALF_Q8_24,                /* pi / 2           */
-    Q24(1.047197551196597746)        /* pi / 3           */
-};
+// Polynomial coefficients
+#define p0 (-7899259)
+#define p1  (-854121)
+#define q0  11848915
+#define q1   8388608
 
-#define CON1     Q24(0.267949192431122706)   /* 2 - sqrt(3)          */
-#define ROOT_3M1 Q24(0.732050807568877294)   /* sqrt(3) - 1          */
-#define ROOT_3   Q24(1.732050807568877)
-// From ftp://ftp.update.uu.se/pub/pdp11/rt/cmath/math.h:
-#define ROOT_EPS Q24(0.372529029846191406e-8)    /* 2**-(t/2), t = 56    */
+#define TS3      4495441  // 2 - sqrt(3)
+#define ROOT_3M1 14529495 // sqrt(3) - 1
+#define ROOT_3   7264748
 
-q8_24 _lib_dsp_math_atan(q8_24 f, int n)
-//q8_24 f;
-//int n;
+inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
 {
-    q8_24 g, q, r;
-    q8_24 half = Q24(0.5);
-    if (f > CON1) {
-        //f = (((ROOT_3M1 * f - 0.5) - 0.5) + f) / (ROOT_3 + f);
-        f = (((lib_dsp_math_multiply(ROOT_3M1, f, 24) - half) - half) + f) / (ROOT_3 + f);
+
+    const int AN[4] = {
+        0,
+        8784530,  // pi/6
+        26353589, // pi/2
+        17569060  // pi/3
+    };
+
+    f = f / 2;
+
+    if (f > TS3) {
+        f = div24(mul24(ROOT_3M1, f)-(1<<22), (f>>1) + ROOT_3);
         n++;
+    } else {
+        f = f + f;
     }
-    if (f > ROOT_EPS || f < -ROOT_EPS) {
-        //g = f * f;
-        g = lib_dsp_math_multiply(f, f, 24);
+    int g = mul24(f, f);
 
-        //q = (((g + q3)*g + q2)*g + q1)*g + q0;
-        q = lib_dsp_math_multiply(
-                lib_dsp_math_multiply(
-                    lib_dsp_math_multiply((g + q3), g, 24) + q2,
-                g, 24) + q1,
-            g, 24)
-            + q0;
-        //r = (((p3*g + p2)*g + p1)*g + p0)*g / q;
-        r = lib_dsp_math_multiply(
-                lib_dsp_math_multiply(
-                    lib_dsp_math_multiply(
-                        lib_dsp_math_multiply(p3, g, 24) + p2,
-                    g, 24) + p1,
-                g, 24) + p0,
-            g, 24);
-
-        r =  r / q; // rational function (division 5th order polynomial by 4th order polynomial)
-        f = f + lib_dsp_math_multiply(f, r, 24);
+    int gPg = mul24(mul24(p1, g) + p0, g);
+    int Qg = mul24(q1, g) + q0;
+    int Rg = div24(gPg, 2*Qg);
+    int ffR = f + mul24(f, Rg);
+    if (n > 1) {
+        ffR = -ffR;
     }
-    if (n > 1)
-        f = -f;
-    return(f + a[n]);
+    ffR = AN[n] + ffR;
+
+    return ffR;
 }
 
 
+
+q8_24 lib_dsp_math_atan_libmult(q8_24 x) {
+    int f = x;
+    const int AN[4] = {
+        0, 8784530, 26353589, 17569060
+    };
+    int negative = f < 0;
+    if (negative) {
+        f = -f;
+    }
+    int N = 0;
+    if (f > (1<<24)) {
+        f = div24(1<<24, f);
+        N = 2;
+    }
+    f = f / 2;
+
+    if (f > TS3) {
+        f = div24(lib_dsp_math_multiply(ROOT_3M1, f, 24)-(1<<22), (f>>1) + ROOT_3);
+        N = N + 1;
+    } else {
+        f = lib_dsp_math_multiply(f, f, 24);
+    }
+    int g = lib_dsp_math_multiply(f, f, 24);
+
+    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 24) + p0, g, 24);
+    int Qg = lib_dsp_math_multiply(q1, g, 24) + q0;
+    int Rg = div24(gPg, 2*Qg);
+    int ffR = f + lib_dsp_math_multiply(f, Rg, 24);
+    if (N > 1) {
+        ffR = -ffR;
+    }
+    ffR = AN[N] + ffR;
+    if (negative) ffR = - ffR;
+    return ffR;
+
+}

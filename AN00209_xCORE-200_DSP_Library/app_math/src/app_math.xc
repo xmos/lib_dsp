@@ -209,11 +209,15 @@ int main(void)
     maxerror=0;
     val_count = 0;
 
-    printf("F24(0x%x) is %.7f\n",MAX_Q8_24, F24(MAX_Q8_24));
-    printf("ROOT_EPS is 0x%x\n", Q24(0.372529029846191406e-8));
-    //for(unsigned x = 0; x < MAX_Q8_24; x += (MAX_Q8_24>>10)) { // 1k steps
+    //printf("p2 = 0x%x\n", Q24(-0.849462403513206835e1));
+    //printf("q2 = 0x%x\n", Q24( 0.595784361425973445e2));
+
+#ifdef EXPONENTIAL_INPUT
     unsigned x=0;
     while(x < MAX_Q8_24) {
+#else
+    for(unsigned x=0; x <= MAX_Q8_24; x+= MAX_Q8_24/10000) {
+#endif
         tmr :> start_time;
         //double x_ = F24(x);
 
@@ -254,12 +258,14 @@ int main(void)
 #endif
         val_count++;
 
+#if EXPONENTIAL_INPUT
         // this generates input values 0, x = 2^y
         if(x == 0) {
           x = 1; // second smallest value in q4_28
         } else {
           x *= 2;
         }
+#endif
 
     }
 
