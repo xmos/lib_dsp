@@ -11,17 +11,19 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define PRINT_CYCLE_COUNT 1
+#define PRINT_CYCLE_COUNT 0
 #define CHECK_RESULTS 1
 #define PRINT_AND_ABORT_ON_ERROR 1
-#define TEST_ALL_RAD 0
+#define TEST_ALL_INPUTS 1
 
-#if TEST_ALL_RAD
+#if TEST_ALL_INPUTS
 #define PRINT_INPUTS_AND_OUTPUTS 0
 #define RAD_INCR 1
+#define X_INCR 1
 #else
 #define PRINT_INPUTS_AND_OUTPUTS 1
 #define RAD_INCR PI2_Q8_24/40
+#define X_INCR MAX_INT/40
 #endif
 
 //#define EXPONENTIAL_INPUT
@@ -90,7 +92,7 @@ int main(void)
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 
-#ifdef PRINT_INPUTS_AND_OUTPUTS
+#if PRINT_INPUTS_AND_OUTPUTS
         printf("sin(%.7f) = %.7f\n",F24(rad), F24(sine));
 #endif
 
@@ -154,7 +156,7 @@ int main(void)
         int cosine=lib_dsp_math_cos(rad);
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
-#ifdef PRINT_INPUTS_AND_OUTPUTS
+#if PRINT_INPUTS_AND_OUTPUTS
         printf("cos(%.7f) = %.7f\n",F24(rad), F24(cosine));
 #endif
 #if CHECK_RESULTS
@@ -204,7 +206,7 @@ int main(void)
     /*
      * Testing lib_dsp_math_atan
      */
-    printf("Calculate and check atan for input values from TBD\n");
+    printf("Test lib_dsp_math_atan\n");
 
     error_cnt_1=0;
     error_cnt_2=0;
@@ -236,7 +238,7 @@ int main(void)
     unsigned x=0;
     while(x < MAX_Q8_24) {
 #else
-    for(unsigned x=0; x <= MAX_Q8_24; x+= MAX_Q8_24/10000) {
+    for(unsigned x=0; x <= MAX_Q8_24; x+= X_INCR) {
 #endif
         tmr :> start_time;
         //double x_ = F24(x);
@@ -252,8 +254,7 @@ int main(void)
 #if PRINT_CYCLE_COUNT
         printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
 #endif
-#ifdef PRINT_INPUTS_AND_OUTPUTS
-        printf("x is 0x%x\n",x);
+#if PRINT_INPUTS_AND_OUTPUTS
         printf("atan(%.7f) = %.7f\n",F24(x),F24(arctan));
 #endif
 #if CHECK_RESULTS

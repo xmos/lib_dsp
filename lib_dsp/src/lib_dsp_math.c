@@ -276,6 +276,16 @@ int div24(int x, int y) {
     return z;
 }
 
+int mul28(int x, int y) {
+    long long z = x * (long long) y;
+    return z >> 28;
+}
+
+int div28(int x, int y) {
+    long long z = (((long long)x) << 28) / y;
+    return z;
+}
+
 //returns the arctangent of x
 q8_24 lib_dsp_math_atan(q8_24 x)
 //q8_24 x;
@@ -286,11 +296,11 @@ q8_24 lib_dsp_math_atan(q8_24 x)
     f = x < 0 ? -x : x;
 
     if (f > (1<<24)) {
-        f = div24(1<<24, f);
+        f = div24(1<<28, f);
         f = _lib_dsp_math_atan(f, 2);
     }
     else {
-        f = _lib_dsp_math_atan(f, 0);
+        f = _lib_dsp_math_atan(f<<4, 0);
     }
     return(x < 0 ? -f : f);
 }
@@ -335,81 +345,72 @@ q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u)
 }
 
 // Polynomial coefficients
-#define p0 (-7899259)
-#define p1 (-854121)
+#define p0 (-126388141)//(-7899259*16)
+#define p1  (-13665937) // (-854121*16)
+#define q0  (189582640) // (11848915*16)
+#define q1   (8388608*16)
 
-#define q0 11848915
-#define q1 8388608
+#define TS3  (4495441*16)  // 2247721 //
+#define A   232471924//(14529495*16)  // was ROOT_3M1
+#define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
 
 
-#define TS3      4495441  // 2 - sqrt(3)
-#define ROOT_3M1 14529495 // sqrt(3) - 1
-#define ROOT_3   7264748
-
-inline q8_24 _lib_dsp_math_atan_mul24(q8_24 f, int n)
+inline q8_24 _lib_dsp_math_atan_newmul(int f, int n)
 {
 
     const int AN[4] = {
         0,
-        8784530,  // pi/6
-        26353589, // pi/2
-        17569060  // pi/3
+        140552476, // pi/6
+        421657428, // pi/2
+        281104952  // pi/3
     };
 
-    f = f / 2;
-
     if (f > TS3) {
-        f = div24(mul24(ROOT_3M1, f)-(1<<22), (f>>1) + ROOT_3);
+        f = div28(mul28(A, f)-(1<<27), (f>>1) + B);
         n++;
-    } else {
-        f = f + f;
     }
-    int g = mul24(f, f);
+    int g = mul28(f, f);
 
-    int Qg = mul24(q1, g) + q0;
-    int gPg = mul24(mul24(p1, g) + p0, g);
 
-    int Rg = div24(gPg, 2*Qg);
-    int ffR = f + mul24(f, Rg);
+    int gPg = mul28(mul28(p1, g) + p0, g);
+    int Qg = mul28(q1, g) + q0;
+    int Rg = div28(gPg, 2*Qg);
+    int ffR = f + mul28(f, Rg);
     if (n > 1) {
         ffR = -ffR;
     }
     ffR = AN[n] + ffR;
 
-    return ffR;
+    return (ffR + 8)>>4;
 }
 
-inline q8_24 _lib_dsp_math_atan(q8_24 f, int n)
+inline q8_24 _lib_dsp_math_atan(int f, int n)
 {
 
     const int AN[4] = {
         0,
-        8784530,  // pi/6
-        26353589, // pi/2
-        17569060  // pi/3
+        140552476, // pi/6
+        421657428, // pi/2
+        281104952  // pi/3
     };
 
-    f = f / 2;
-
     if (f > TS3) {
-        f = div24(lib_dsp_math_multiply(ROOT_3M1, f, 24)-(1<<22), (f>>1) + ROOT_3);
+        f = div28(lib_dsp_math_multiply(A, f, 28) - (1<<27), (f>>1) + B);
         n++;
-    } else {
-        f = f + f;
     }
-    int g = lib_dsp_math_multiply(f, f, 24);
+    int g = lib_dsp_math_multiply(f, f, 28);
 
-    int Qg = lib_dsp_math_multiply(q1, g, 24) + q0;
-    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 24) + p0, g, 24);
+    int Qg = lib_dsp_math_multiply(q1, g, 28) + q0;
+    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 28) + p0, g, 28);
 
-    int Rg = div24(gPg, 2*Qg);
-    int ffR = f + lib_dsp_math_multiply(f, Rg, 24);
+    int Rg = div28(gPg, 2*Qg);
+    int ffR = f + lib_dsp_math_multiply(f, Rg, 28);
     if (n > 1) {
         ffR = -ffR;
     }
     ffR = AN[n] + ffR;
 
-    return ffR;
+    return (ffR + 8)>>4;
 }
 
 
