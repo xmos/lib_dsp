@@ -286,131 +286,83 @@ int div28(int x, int y) {
     return z;
 }
 
-//returns the arctangent of x
-q8_24 lib_dsp_math_atan(q8_24 x)
-//q8_24 x;
-{
-    //q8_24 _lib_dsp_math_atan(), f;
-    q8_24 f;
-
-    f = x < 0 ? -x : x;
-
-    if (f > (1<<24)) {
-        f = div24(1<<28, f);
-        f = _lib_dsp_math_atan(f, 2);
-    }
-    else {
-        f = _lib_dsp_math_atan(f<<4, 0);
-    }
-    return(x < 0 ? -f : f);
-}
-
-//returns the arctangent of v / u.
-q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u)
-//q8_24 v, u;
-{
-    //q8_24 _lib_dsp_math_atan(), au, av, f;
-    q8_24  au, av, f;
-
-    av = v < 0 ? -v : v;
-    au = u < 0 ? -u : u;
-    if (u != 0) {
-    if (av > au) {
-        if ((f = au / av) == 0) {
-            f = PIHALF_Q8_24;
-        }
-        else {
-            f = _lib_dsp_math_atan(f, 2);
-        }
-    }
-    else {
-        if ((f = av / au) == 0)
-            f = 0;
-        else
-            f = _lib_dsp_math_atan(f, 0);
-    }
-    }
-    else {
-        if (v != 0) {
-            f = PIHALF_Q8_24;
-        }
-        else {
-            printf("ERROR: atan2 args both zero");
-            f = 0;
-        }
-    }
-    if (u < 0)
-    f = PI - f;
-    return(v < 0 ? -f : f);
-}
-
 // Polynomial coefficients
-#define p0 (-126388141)//(-7899259*16)
-#define p1  (-13665937) // (-854121*16)
-#define q0  (189582640) // (11848915*16)
-#define q1   (8388608*16)
+#define p0 (126388141)//(-7899259*16)
+#define p1 (13665937) // (-854121*16)
+#define q0 (189582640) // (11848915*16)
+#define q1 (8388608*16)
 
+#define ONEOVERTS3 62613429
 #define TS3  (4495441*16)  // 2247721 //
 #define A   232471924//(14529495*16)  // was ROOT_3M1
 #define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
 
-
-inline q8_24 _lib_dsp_math_atan_newmul(int f, int n)
-{
-
-    const int AN[4] = {
-        0,
-        140552476, // pi/6
-        421657428, // pi/2
-        281104952  // pi/3
-    };
-
-    if (f > TS3) {
-        f = div28(mul28(A, f)-(1<<27), (f>>1) + B);
-        n++;
+#pragma unsafe arrays
+q8_24 lib_dsp_math_atan(q8_24 f) {
+    int negative = f < 0;
+    if (negative) {
+        f = -f;
     }
-    int g = mul28(f, f);
-
-
-    int gPg = mul28(mul28(p1, g) + p0, g);
-    int Qg = mul28(q1, g) + q0;
-    int Rg = div28(gPg, 2*Qg);
-    int ffR = f + mul28(f, Rg);
-    if (n > 1) {
-        ffR = -ffR;
+    unsigned int XN;
+    int d, r;
+    if (f > ONEOVERTS3) {      // F large
+        XN = 421657428; // pi/2 in Q4.28 format
+        // 1 / f.
+        asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (1<<20), "r" (0), "r" (f));
+        f = d;
+    } else if (f > (1<<24)) {  // F less than 3.6 greater than 1
+        XN = 281104952; // pi/3 in Q4.28 format
+        f = f << 4;
+        unsigned thed = lib_dsp_math_multiply((1<<27), f, 28);
+        unsigned then = (1<<27) + lib_dsp_math_multiply(B, f, 28);
+        if (A >= thed) {
+            thed = A-thed;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (thed), "r" (0), "r" (then));
+            f = d >> 4;
+        } else {
+            thed = thed-A;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (thed), "r" (0), "r" (then));
+            f = -d >> 4;
+        }
+    } else if (f > (TS3 >> 4)) { // F less than 1 > 0.28
+        XN = 140552476; // pi/6 in Q4.28 format
+        f = f << 4;
+        unsigned thed = lib_dsp_math_multiply(A, f, 28);
+        unsigned then = (f>>1) + B;
+        if (thed >> 27) {
+            thed = thed -(1<<27);
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (thed), "r" (0), "r" (then));
+            f = d >> 4;
+        } else {
+            thed = (1<<27) - thed;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (thed), "r" (0), "r" (then));
+            f = -d >> 4;
+        }
+    } else {    // F tiny
+        XN = 0;
+        f = f << 4;
     }
-    ffR = AN[n] + ffR;
 
-    return (ffR + 8)>>4;
-}
-
-inline q8_24 _lib_dsp_math_atan(int f, int n)
-{
-
-    const int AN[4] = {
-        0,
-        140552476, // pi/6
-        421657428, // pi/2
-        281104952  // pi/3
-    };
-
-    if (f > TS3) {
-        f = div28(lib_dsp_math_multiply(A, f, 28) - (1<<27), (f>>1) + B);
-        n++;
-    }
     int g = lib_dsp_math_multiply(f, f, 28);
 
-    int Qg = lib_dsp_math_multiply(q1, g, 28) + q0;
-    int gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 28) + p0, g, 28);
 
-    int Rg = div28(gPg, 2*Qg);
-    int ffR = f + lib_dsp_math_multiply(f, Rg, 28);
-    if (n > 1) {
+    unsigned gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 28) + p0, g, 28);   // Positive - p0/p1 positive
+    unsigned Qg = lib_dsp_math_multiply(q1, g, 28) + q0;              // Positive - q0/q1 positive
+    asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (gPg >> 4), "r" (gPg << 28), "r" (2*Qg));
+    int Rg = d;
+    int ffR = f + lib_dsp_math_multiply(f, -Rg, 28);
+    if (XN >> 28) {
         ffR = -ffR;
     }
-    ffR = AN[n] + ffR;
-
+    ffR = XN + ffR;
+    if (negative) {
+        ffR = - ffR;
+    }
     return (ffR + 8)>>4;
+
 }
+
+
+
 
 
