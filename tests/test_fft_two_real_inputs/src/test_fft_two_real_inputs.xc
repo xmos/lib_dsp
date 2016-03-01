@@ -53,7 +53,42 @@ void reorder_two_real_inputs(lib_dsp_fft_complex_t f[], unsigned n) {
         f[n - i]  = a;
     }
 }
+/*
 
+FFT length: 8
+    Max delta of two reals going forwards:             2
+    Max delta of one real going forwards and reverse:  16
+    Max delta of two reals going forwards and reverse: 8
+FFT length: 16
+    Max delta of two reals going forwards:             3
+    Max delta of one real going forwards and reverse:  26
+    Max delta of two reals going forwards and reverse: 22
+FFT length: 32
+    Max delta of two reals going forwards:             3
+    Max delta of one real going forwards and reverse:  41
+    Max delta of two reals going forwards and reverse: 42
+FFT length: 64
+    Max delta of two reals going forwards:             4
+    Max delta of one real going forwards and reverse:  67
+    Max delta of two reals going forwards and reverse: 72
+FFT length: 128
+    Max delta of two reals going forwards:             4
+    Max delta of one real going forwards and reverse:  108
+    Max delta of two reals going forwards and reverse: 124
+FFT length: 256
+    Max delta of two reals going forwards:             4
+    Max delta of one real going forwards and reverse:  183
+    Max delta of two reals going forwards and reverse: 228
+FFT length: 512
+    Max delta of two reals going forwards:             4
+    Max delta of one real going forwards and reverse:  324
+    Max delta of two reals going forwards and reverse: 376
+FFT length: 1024
+    Max delta of two reals going forwards:             5
+    Max delta of one real going forwards and reverse:  595
+    Max delta of two reals going forwards and reverse: 682
+
+ */
 unsafe int main(){
 
     unsigned x=0x52435674;
@@ -75,7 +110,7 @@ unsafe int main(){
         int max_two_real_delta = 0;
         int max_forward_inverse_delta = 0;
         int max_forward_inverse_two_real_delta = 0;
-        for(unsigned s=0;s<1024*64;s++){
+        for(unsigned s=0;s<64*1024;s++){
             random(x);
 
             //generate a frame
