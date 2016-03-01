@@ -1,7 +1,10 @@
-// Copyright (c) 2015, XMOS Ltd, All rights reserved
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
 
 #ifndef LIB_DSP_FILTERS
 #define LIB_DSP_FILTERS
+
+#define LIB_DSP_NUM_COEFFS_PER_BIQUAD  5  // Number of coefficients per biquad
+#define LIB_DSP_NUM_STATES_PER_BIQUAD  4  // Number of state values per biquad
 
 /** This function implements a Finite Impulse Response (FIR) filter.
  *  
@@ -186,8 +189,8 @@ int lib_dsp_filters_decimate
 int lib_dsp_filters_biquad
 (
     int       input_sample,
-    const int filter_coeffs[],
-    int       state_data[],
+    const int filter_coeffs[LIB_DSP_NUM_COEFFS_PER_BIQUAD],
+    int       state_data   [LIB_DSP_NUM_STATES_PER_BIQUAD],
     int       q_format
 );
 

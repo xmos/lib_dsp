@@ -1,6 +1,4 @@
-// (c) 2015 Henk Muller
-// LICENSE: this code cannot be used without permission of the author
-// neither in binary nor in source.
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
     
 #if defined(__XS2A__)
 

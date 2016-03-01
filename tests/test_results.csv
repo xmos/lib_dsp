@@ -1,7 +1,0 @@
-Product,Test Group,Test,Config,Environment,Result
-lib_dsp,simple_tests,app_adaptive,,,PASS
-lib_dsp,simple_tests,app_filters,,,PASS
-lib_dsp,simple_tests,app_math,,,PASS
-lib_dsp,simple_tests,app_matrix,,,PASS
-lib_dsp,simple_tests,app_statistics,,,PASS
-lib_dsp,simple_tests,app_vector,,,PASS
