@@ -156,13 +156,9 @@ kLoop2In:
     {lsu r10, r7, r10            ;    stw r7, sp[10]}             // k
 	bt r10, kLoop2
 
-    ldw r11, sp[15]
-    sub r11, r11, 1
-    stw r11, sp[15]              // shift -= 1
-    
-    ldw r11, sp[14]
-    shl r11, r11, 1
-    stw r11, sp[14]              // step *= 2
+	ldd r10, r11, sp[7]
+	{sub r10, r10, 1; shl r11, r11, 1}
+	std r10, r11, sp[7]
 
     ldw r10, sp[17]
     add r10, r10, 1

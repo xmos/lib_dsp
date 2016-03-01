@@ -69,22 +69,24 @@ kLoop1:
 
     { ldw r11, sp[16]	  ; ldc r8, 0}
     { add r4, r11, r3   ; ldw r11, sp[9]  }          // & pts[block]
-    ldw r9, sp[13]             // step2
+    {ldw r9, sp[13]     ; ldc r3, 31        }// step2
 
 innerLoop1:
     
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
+
+	lextract r8, r8, r7, r3, 32
 	                                 // r8: sIM2
 	{ ldc r7, 0            ; neg r2, r2}
 	maccs r7, r10, r5, r1            // rRE x tRE2
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2    
-	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
+	lextract r7, r7, r10, r3, 32
 
+ 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	{add  r6, r6, r7       ; sub r7, r6, r7}
 	{add  r3, r3, r8       ; sub r8, r3, r8}
 	std  r3, r6, r4[0]
@@ -93,7 +95,7 @@ innerLoop1:
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	lsu r8, r4, r6    
 
-	bf r8, innerLoop1
+	{bf r8, innerLoop1 ;ldc r3, 31}
 
     ldw r9, sp[10]             // k
     add r9, r9, 1
@@ -124,28 +126,33 @@ kLoop2:
     {add r4, r11, r3   ;     ldw r9, sp[13] }            // step2        // & pts[block]
 
 	{ldc r8, 0                   ;    ldw r11, sp[9]}
+ 	{ldc r3, 31; nop}
 innerLoop2:
     
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
 	                                 // r8: sIM2
+	lextract r8, r8, r7, r3, 32
+
 	{ ldc r7, 0            ; neg r2, r2}
 	maccs r7, r10, r5, r1            // rRE x tRE2
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2    
-	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
+	lextract r7, r7, r10, r3, 32
+
+ 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	{add  r6, r6, r7       ; sub r7, r6, r7}
 	{add  r3, r3, r8       ; sub r8, r3, r8}
+
 	std  r3, r6, r4[0]
 	std  r8, r7, r4[r9]
 	    	    
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	{lsu r8, r4, r6         ;    ldw r7, sp[10]}             // k
 
-	bf r8, innerLoop2
+	{bf r8, innerLoop2; ldc r3, 31}
 
     {add r7, r7, 1              ;	ldw r10, sp[12]}             // step4
 
@@ -153,13 +160,9 @@ kLoop2In:
     {lsu r10, r7, r10            ;    stw r7, sp[10]}             // k
 	bt r10, kLoop2
 
-    ldw r11, sp[15]
-    sub r11, r11, 1
-    stw r11, sp[15]              // shift -= 1
-    
-    ldw r11, sp[14]
-    shl r11, r11, 1
-    stw r11, sp[14]              // step *= 2
+	ldd r10, r11, sp[7]
+	{sub r10, r10, 1; shl r11, r11, 1}
+	std r10, r11, sp[7]
 
     ldw r10, sp[17]
     add r10, r10, 1
