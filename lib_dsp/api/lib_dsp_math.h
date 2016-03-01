@@ -145,6 +145,45 @@ int lib_dsp_math_multiply_sat(
 
 int lib_dsp_math_reciprocal( int input_value, int q_format );
 
+/** Signed Division
+ *
+ *  This function divides two signed integer values and produces a result according
+ *  to fixed-point format specified by the ``q_format`` parameter.
+ *  It was optimised for performance using a dedicated instruction for unsinged long division.
+ *
+ *  Example:
+ *
+ *  \code
+ *  q8_24 quotient;
+ *  quotient = lib_dsp_math_divide(divident, divisor, 24);
+ *  \endcode
+ *
+ *  \param  dividend     Value to be divided
+ *  \param  divisor      Dividing value
+ *  \returns             Quotient of dividend/divisor
+ */
+int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
+
+/** Unsigned Division
+ *
+ *  This function divides two unsigned integer values and produces a result according
+ *  to fixed-point format specified by the ``q_format`` parameter.
+ *  It was optimised for performance using a dedicated instruction for unsinged long division.
+ *
+ *  Example:
+ *
+ *  \code
+ *  unsigned quotient;
+ *  quotient = lib_dsp_math_divide(divident, divisor, 24);
+ *  \endcode
+ *
+ *  \param  dividend     Value to be divided
+ *  \param  divisor      Dividing value
+ *  \returns             Quotient of dividend/divisor
+ */
+int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format );
+
+
 /** Scalar inverse square root
  * 
  *  This function computes the reciprocal of the square root of the input value
@@ -167,7 +206,6 @@ int lib_dsp_math_reciprocal( int input_value, int q_format );
  *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             The inverse square root of the input value.
  */
-
 int lib_dsp_math_invsqrroot( int input_value, int q_format );
 
 /** Scalar square root
@@ -192,30 +230,44 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format );
  *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             The square root of the input value.
  */
-
 int lib_dsp_math_squareroot( int input_value, int q_format );
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
  * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
  *
- * \param x input value in radians
- * \returns sine(x)
+ * \param rad input value in radians
+ * \returns sine(rad)
  **/
 q8_24 lib_dsp_math_sin(q8_24 rad);
 
 /** This function returns the cosine of a q8_24 fixed point number in radians. The
  * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
  *
- * \param x input value in radians
- * \returns cosine(x)
+ * \param rad input value in radians
+ * \returns cosine(rad)
  **/
 inline q8_24 lib_dsp_math_cos(q8_24 rad) {
     return lib_dsp_math_sin(rad+PIHALF_Q8_24);
 }
 
-
+/** This function returns the arctangent of x.
+ *  It uses an algorithm based on Cody and Waite pp. 194-216.
+ *  The algorihm was optimised for accuracy (using improved precision and rounding)
+ *  and performance (using a dedicated instruction for unsinged long division)
+ *  Error compared to atan from math.h is <= 1 LSB. Performance is 84 cycles worst case.
+ *
+ *  Example:
+ *
+ *  \code
+ *  q8_24 x = Q24(0.005);
+ *  q8_24 rad = lib_dsp_math_atan(x);
+ *  \endcode
+ *
+ *  \param x in Q8.24 format.
+ *  \returns arctangent of x in radians between -pi/2 .. +pi/2
+ */
 q8_24 lib_dsp_math_atan(q8_24 x);
-q8_24 lib_dsp_math_atan2(q8_24 v, q8_24 u);
+
 
 #endif

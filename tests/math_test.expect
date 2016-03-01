@@ -1,57 +1,64 @@
-.gdbinit: No such file or directory.
-connect --adapter-id uzB_a0hi --xscope
-0x00040000 in _start ()
-load
-Loading section .text, size 0x18c lma 0x40000
-Loading section .cp.rodata, size 0x18 lma 0x4018c
-Loading section .dp.data, size 0x1c lma 0x401a4
-Start address 0x40000, load size 448
-Transfer rate: 109 KB/sec, 149 bytes/write.
-Loading section .text, size 0x40 lma 0x40000
-Loading section .cp.rodata, size 0x18 lma 0x40040
-Loading section .dp.data, size 0x8 lma 0x40058
-Start address 0x40000, load size 96
-Transfer rate: 31 KB/sec, 32 bytes/write.
-Loading section .text, size 0x7e98 lma 0x40000
-Loading section .init, size 0x1c lma 0x47e98
-Loading section .fini, size 0x30 lma 0x47eb4
-Loading section .cp.rodata, size 0x180 lma 0x47ee8
-Loading section .cp.rodata.4, size 0x668 lma 0x48068
-Loading section .cp.const4, size 0x24 lma 0x486d0
-Loading section .cp.rodata.cst16, size 0x10 lma 0x486f4
-Loading section .cp.rodata.cst4, size 0x2dc lma 0x48704
-Loading section .cp.rodata.string, size 0x18c lma 0x489e0
-Loading section .ctors, size 0x4 lma 0x48b6c
-Loading section .dp.data, size 0x30 lma 0x48b70
-Loading section .dp.data.4, size 0x28 lma 0x48ba0
-Start address 0x40000, load size 35780
-Transfer rate: 187 KB/sec, 2981 bytes/write.
-Loading section .text, size 0xc lma 0x40000
-Loading section .dp.data, size 0x8 lma 0x4000c
-Start address 0x40000, load size 20
-Transfer rate: 19 KB/sec, 10 bytes/write.
-info program
-Program stopped at 0x40000.
-It stopped with signal SIGTRAP, Trace/breakpoint trap.
-Type "info stack" or "info registers" for more information.
 Test example for Math functions
 ===============================
+Test Multiplication and Division
+--------------------------------
 Note: All calculations are done in Q8.24 format. That gives 7 digits of precion after the decimal point
+Note: Maximum double representation of Q8.24 format: 127.9999999
 
-Multiplication (11.31370850 x 11.31370850): 127.9999996
+Multiplication (11.3137085 x ): 11.3137085
 
 Multiplication (11.4 x 11.4). Will overflow!: -126.0400006
+
 Saturated Multiplication (11.4 x 11.4): 127.9999999
-Note: Maximum double representation of Q8.24 format: 127.9999999
 
 Multiplication of small numbers (0.0005 x 0.0005): 0.0000002
 
 Reciprocal (3.0) : 0.3333333
 
+Signed Division 1.1234560 / -128.0000000): -0.0087770
+
+Signed Division -1.1234560 / -128.0000000): 0.0087770
+
+Signed Division -1.1234560 / 127.9999999): -0.0087770
+
+Signed Division 1.1234560 / 127.9999999): 0.0087770
+
+Division 1.1234560 / 127.9999999): 0.0087770
+
+Error report from test_multipliation_and_division:
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 3
+Cases Error == 0: 1
+Cases Error == 1: 2
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 1
+Maximum Negative Error: -1
+Number of values checked: 6
+Percentage of 0 Error: 16.67%
+
+Test Roots
+----------
 Inverse square root (2) : 0.7071068
 
 Square Root (2) : 1.4142135
 
+Error report from test_roots:
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 0
+Cases Error == 0: 2
+Cases Error == 1: 0
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 0
+Maximum Negative Error: 0
+Number of values checked: 2
+Percentage of 0 Error: 100.00%
+
+Test Trigonometric Functions
+----------------------------
 Sine wave (one cycle from -Pi to +Pi) :
 sin(-3.1415926) = -0.0000001
 sin(-3.0787608) = -0.0627905
@@ -154,8 +161,18 @@ sin(2.9530938) = 0.1873845
 sin(3.0159256) = 0.1253365
 sin(3.0787575) = 0.0627939
 sin(3.1415893) = 0.0000034
-num calculations:      101; Errors >=1:       13 (12.87%); Errors >=2:     0 ( 0.00%)
-Max absolute error: 1
+Error report from lib_dsp_math_sin:
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 10
+Cases Error == 0: 88
+Cases Error == 1: 3
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 1
+Maximum Negative Error: -1
+Number of values checked: 101
+Percentage of 0 Error: 87.13%
 
 Cosine wave (one cycle from -Pi to +Pi) :
 cos(-3.1415926) = -1.0000000
@@ -259,112 +276,74 @@ cos(2.9530938) = -0.9822866
 cos(3.0159256) = -0.9921142
 cos(3.0787575) = -0.9980265
 cos(3.1415893) = -1.0000000
-num calculations:      101; Errors >=1:       31 (30.69%); Errors >=2:     0 ( 0.00%)
-Max absolute error: 1
+Error report from lib_dsp_math_cos:
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 11
+Cases Error == 0: 70
+Cases Error == 1: 20
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 1
+Maximum Negative Error: -1
+Number of values checked: 101
+Percentage of 0 Error: 69.31%
 
 Test lib_dsp_math_atan
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 11
+Cases Error == 0: 70
+Cases Error == 1: 20
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 1
+Maximum Negative Error: -1
+Number of values checked: 101
+Percentage of 0 Error: 69.31%
 atan(0.0000000) = 0.0000000
-atan(1.2800000) = 0.9075933
-atan(2.5599999) = 1.1983979
-atan(3.8399999) = 1.3160380
-atan(5.1199999) = 1.3779120
-atan(6.3999999) = 1.4157996
-atan(7.6799998) = 1.4413164
-atan(8.9599998) = 1.4596491
-atan(10.2399998) = 1.4734488
-atan(11.5199997) = 1.4842078
-atan(12.7999997) = 1.4928297
-atan(14.0799997) = 1.4998927
-atan(15.3599997) = 1.5057839
-atan(16.6399996) = 1.5107723
-atan(17.9199996) = 1.5150506
-atan(19.1999996) = 1.5187600
-atan(20.4799995) = 1.5220069
-atan(21.7599995) = 1.5248728
-atan(23.0399995) = 1.5274208
-atan(24.3199995) = 1.5297011
-atan(25.5999994) = 1.5317537
-atan(26.8799994) = 1.5336111
-atan(28.1599994) = 1.5352999
-atan(29.4399993) = 1.5368420
-atan(30.7199993) = 1.5382558
-atan(31.9999993) = 1.5395565
-atan(33.2799993) = 1.5407573
-atan(34.5599992) = 1.5418692
-atan(35.8399992) = 1.5429018
-atan(37.1199992) = 1.5438632
-atan(38.3999991) = 1.5447605
-atan(39.6799991) = 1.5456001
-atan(40.9599991) = 1.5463871
-atan(42.2399991) = 1.5471265
-atan(43.5199990) = 1.5478224
-atan(44.7999990) = 1.5484786
-atan(46.0799990) = 1.5490984
-atan(47.3599989) = 1.5496846
-atan(48.6399989) = 1.5502400
-atan(49.9199989) = 1.5507669
-atan(51.1999989) = 1.5512676
-atan(52.4799988) = 1.5517437
-atan(53.7599988) = 1.5521973
-atan(55.0399988) = 1.5526297
-atan(56.3199987) = 1.5530425
-atan(57.5999987) = 1.5534369
-atan(58.8799987) = 1.5538143
-atan(60.1599987) = 1.5541755
-atan(61.4399986) = 1.5545217
-atan(62.7199986) = 1.5548538
-atan(63.9999986) = 1.5551726
-atan(65.2799985) = 1.5554789
-atan(66.5599985) = 1.5557734
-atan(67.8399985) = 1.5560569
-atan(69.1199985) = 1.5563297
-atan(70.3999984) = 1.5565928
-atan(71.6799984) = 1.5568463
-atan(72.9599984) = 1.5570911
-atan(74.2399983) = 1.5573273
-atan(75.5199983) = 1.5575556
-atan(76.7999983) = 1.5577762
-atan(78.0799983) = 1.5579897
-atan(79.3599982) = 1.5581962
-atan(80.6399982) = 1.5583962
-atan(81.9199982) = 1.5585899
-atan(83.1999981) = 1.5587777
-atan(84.4799981) = 1.5589598
-atan(85.7599981) = 1.5591364
-atan(87.0399981) = 1.5593079
-atan(88.3199980) = 1.5594743
-atan(89.5999980) = 1.5596361
-atan(90.8799980) = 1.5597932
-atan(92.1599979) = 1.5599461
-atan(93.4399979) = 1.5600947
-atan(94.7199979) = 1.5602393
-atan(95.9999979) = 1.5603800
-atan(97.2799978) = 1.5605171
-atan(98.5599978) = 1.5606506
-atan(99.8399978) = 1.5607806
-atan(101.1199977) = 1.5609074
-atan(102.3999977) = 1.5610310
-atan(103.6799977) = 1.5611516
-atan(104.9599977) = 1.5612692
-atan(106.2399976) = 1.5613840
-atan(107.5199976) = 1.5614960
-atan(108.7999976) = 1.5616054
-atan(110.0799975) = 1.5617123
-atan(111.3599975) = 1.5618167
-atan(112.6399975) = 1.5619187
-atan(113.9199975) = 1.5620185
-atan(115.1999974) = 1.5621160
-atan(116.4799974) = 1.5622114
-atan(117.7599974) = 1.5623047
-atan(119.0399973) = 1.5623960
-atan(120.3199973) = 1.5624853
-atan(121.5999973) = 1.5625728
-atan(122.8799973) = 1.5626585
-atan(124.1599972) = 1.5627424
-atan(125.4399972) = 1.5628245
-atan(126.7199972) = 1.5629051
-atan(127.9999971) = 1.5629840
-num calculations:      101; Errors >=1:        1 ( 0.99%); Errors >=2:     0 ( 0.00%)
-Max absolute error: 1
+atan(0.0000001) = 0.0000001
+atan(0.0000001) = 0.0000001
+atan(0.0000002) = 0.0000002
+atan(0.0000005) = 0.0000005
+atan(0.0000010) = 0.0000010
+atan(0.0000019) = 0.0000019
+atan(0.0000038) = 0.0000038
+atan(0.0000076) = 0.0000076
+atan(0.0000153) = 0.0000153
+atan(0.0000305) = 0.0000305
+atan(0.0000610) = 0.0000610
+atan(0.0001221) = 0.0001221
+atan(0.0002441) = 0.0002441
+atan(0.0004883) = 0.0004883
+atan(0.0009766) = 0.0009766
+atan(0.0019531) = 0.0019531
+atan(0.0039062) = 0.0039062
+atan(0.0078125) = 0.0078123
+atan(0.0156250) = 0.0156237
+atan(0.0312500) = 0.0312398
+atan(0.0625000) = 0.0624188
+atan(0.1250000) = 0.1243550
+atan(0.2500000) = 0.2449787
+atan(0.5000000) = 0.4636476
+atan(1.0000000) = 0.7853982
+atan(2.0000000) = 1.1071487
+atan(4.0000000) = 1.3258176
+atan(8.0000000) = 1.4464414
+atan(16.0000000) = 1.5083775
+atan(32.0000000) = 1.5395565
+atan(64.0000000) = 1.5551726
+Error report from lib_dsp_math_atan:
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 11
+Cases Error == 0: 102
+Cases Error == 1: 20
+Cases Error == 2: 0
+Cases Error >= 3: 0
+Maximum Positive Error: 1
+Maximum Negative Error: -1
+Number of values checked: 133
+Percentage of 0 Error: 76.69%
 
 

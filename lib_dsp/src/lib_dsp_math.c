@@ -4,7 +4,6 @@
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
 
-
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
@@ -15,7 +14,6 @@ int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
     return result;
 }
 
-
 int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
@@ -23,6 +21,54 @@ int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format 
     asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
+}
+
+int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format )
+{
+    //h and l hold a 64-bit value
+    unsigned h; unsigned l;
+    unsigned quotient=0, remainder=0;
+    int result;
+    unsigned negative=0;
+
+    // Create long dividend by shift dividend up q_format positions
+    if(dividend<0) {
+        dividend = -dividend;
+        negative++;
+    }
+    h = dividend >> (32-q_format);
+    l = dividend << (q_format);
+
+    if(divisor<0) {
+        divisor = -divisor;
+        negative++;
+    }
+    // Unsigned Long division
+    asm("ldivu %0,%1,%2,%3,%4":"=r"(quotient):"r"(remainder),"r"(h),"r"(l),"r"(divisor));
+
+    if(negative==1) {
+        result = -quotient;
+    } else {
+        // for negative 0 or 2 (minus divided by minus)
+        result = quotient;
+    }
+    return result;
+}
+
+int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format )
+{
+    //h and l hold a 64-bit value
+    unsigned h; unsigned l;
+    unsigned quotient=0, remainder=0;
+
+    // Create long dividend by shift dividend up q_format positions
+    h = dividend >> (32-q_format);
+    l = dividend << (q_format);
+
+    // Unsigned Long division
+    asm("ldivu %0,%1,%2,%3,%4":"=r"(quotient):"r"(remainder),"r"(h),"r"(l),"r"(divisor));
+
+    return quotient;
 }
 
 /** Scalar reciprocal
@@ -202,91 +248,9 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
             )* finalSign;
 }
 
-
-// The below algorithm is from ftp://ftp.update.uu.se/pub/pdp11/rt/cmath/atan.c
-// It is based on Cody and Waite
-
-/*
- *              a t a n . c
- */
-
-/*)LIBRARY
-*/
-
-#ifdef  DOCUMENTATION
-title   atan    arctan function
-index   arctan function atan
-index   arctan function atan2
-usage
-    .s
-    double f, x, atan();
-    .br
-    f = atan(x);
-    .br
-    double g, u, v, atan2();
-    .br
-    g = atan2(v, u);
-    .s
-description
-    .s
-    atan(x) returns the arctangent of x.
-    .s
-    atan2(v, u) returns the arctangent of v / u.
-    .s
-diagnostics
-    .s
-    If both arguments of atan2 are zero the result is indeterminate.
-    The message 'atan2 args both zero' followed by the value of the
-    denominator, is written to stderr and a value of zero is returned.
-    .s
-internal
-    .s
-    Algorithm based on Cody and Waite pp. 194-216.  The algorithm here
-    has been modified slightly to avoid the test for overflow in v/u.
-    By checking which of u or v is greater in magnitude all overflows
-    become underflows which are set to zero without a message.  This
-    has meant that the division of the work between atan(), atan2()
-    and the internal function _atan() is slightly different from that
-    suggested in Cody and Waite.
-    .s
-author
-    .s
-    Hamish Ross.
-    .s
-date
-    .s
-    1-Jan-85
-#endif
-
-#include <math.h>
-
-#define PI 3.1415926536
-#define HALF_PI PI/2
-#define PI_BY_2 HALF_PI //why use a different constant for the same thing?
-
-q8_24 _lib_dsp_math_atan(q8_24 f, int n);
-
-int mul24(int x, int y) {
-    long long z = x * (long long) y;
-    return z >> 24;
-}
-
-int div24(int x, int y) {
-    long long z = (((long long)x) << 24) / y;
-    return z;
-}
-
-int mul28(int x, int y) {
-    long long z = x * (long long) y;
-    return z >> 28;
-}
-
-int div28(int x, int y) {
-    long long z = (((long long)x) << 28) / y;
-    return z;
-}
-
 // Polynomial coefficients
+// coefficients are scaled up for improved rounding
+// they are also changed to positive values to enable using the dedicated instruction fur unsigned long division: ldivu
 #define p0 (126388141)//(-7899259*16)
 #define p1 (13665937) // (-854121*16)
 #define q0 (189582640) // (11848915*16)
