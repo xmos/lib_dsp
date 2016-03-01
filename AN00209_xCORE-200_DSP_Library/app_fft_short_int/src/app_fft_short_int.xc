@@ -6,6 +6,7 @@
 #include <lib_dsp.h>
 
 #define TRACE_VALUES
+#define ASM_OPTIMISED_FFT
 
 #ifdef TRACE_VALUES
 #define PRINT_FFT_INPUT 1
@@ -22,6 +23,8 @@
 #define PRINT_CYCLE_COUNT 1
 #endif
 
+// Valid values: 1..4
+#define NUM_TESTS 4
 
 #define INPUT_FREQ N_FFT_POINTS/8
 
@@ -154,7 +157,7 @@ int do_two_complex_short_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    for(int test=0; test<4; test++) {
+    for(int test=0; test<NUM_TESTS; test++) {
         generate_two_test_signals(N_FFT_POINTS, test);
 
         tmr :> start_time;
@@ -271,14 +274,17 @@ int do_complex_short_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    for(int test=0; test<4; test++) {
+    for(int test=0; test<NUM_TESTS; test++) {
         generate_test_signal(data, N_FFT_POINTS, test);
 
         tmr :> start_time;
         lib_dsp_fft_bit_reverse_short(data, N_FFT_POINTS);
-        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+#ifdef ASM_OPTIMISED_FFT
         //Still buggy:
-        //lib_dsp_fft_forward_complex_short_asm(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+        lib_dsp_fft_forward_complex_short_asm(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+#else
+        lib_dsp_fft_forward_complex_short(data, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS));
+#endif
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
 #if PRINT_CYCLE_COUNT
@@ -389,7 +395,7 @@ int do_tworeals_short_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-    for(int test=0; test<4; test++) {
+    for(int test=0; test<NUM_TESTS; test++) {
         generate_test_signal(N_FFT_POINTS, test);
 
         tmr :> start_time;

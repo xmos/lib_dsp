@@ -7,9 +7,10 @@
 #include "lib_dsp_transforms.h"
 
 //#define DEBUG_PRINT
-//#define DEBUG_PRINT_STORES
 //#define SHORT_FFT_MORE_ACCURATE
 //#define CONDITIONAL_SHIFT
+//#define DEBUG_PRINT_STORES
+//#define PRINT_FFT_INDEXING
 
 inline int shiftdown(int sum) {
 #ifdef SHORT_FFT_MORE_ACCURATE
@@ -733,7 +734,7 @@ void lib_dsp_fft_inverse_complex_xs1( lib_dsp_fft_complex_t pts[], int N, const 
 #endif
 
 #pragma unsafe arrays
-void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
+void lib_dsp_fft_forward_complex_short_xs1( lib_dsp_fft_complex_short_t pts[], int N, const short sine[] )
 {
     unsigned int shift = 30-clz(N);
     for(unsigned int step = 2 ; step <= N; step = step * 2, shift--) {
@@ -743,11 +744,20 @@ void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N
         for(k = 0; k < step4 + (step2&1); k++) {
             short rRe = sine[(N>>2)-(k<<shift)];
             short rIm = sine[k<<shift];
+#ifdef PRINT_FFT_INDEXING
+            printf("111111 First k loop. k = %d\n",k);
+            printf("step2       = %d\n",step2);
+#endif
             for(int block = k+N-step; block >= 0; block-=step) {
                 short tRe;
                 short tIm;
                 short tRe2;
                 short tIm2;
+
+#ifdef PRINT_FFT_INDEXING
+                printf("   block       = %d\n",block);
+                printf("   block+step2 = %d\n",block+step2);
+#endif
 
 #ifdef LDST16
                 tRe = pts[block].re; // (tImRe >> 16);
@@ -823,10 +833,10 @@ void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N
 #endif
 
 #ifdef DEBUG_PRINT_STORES
-                printf("stored at first  index=%d: re: %08x, im: %08x\n"
-                        ,block ,re_0, im_0);
-                printf("stored at second index=%d: re: %08x, im: %08x\n"
-                        ,block+step2,re_0_step, im_0_step);
+                printf("stored at index block=%d:      im|re: %08x\n"
+                        ,block ,re);
+                printf("stored at index block+step=%d: im|re: %08x\n"
+                        ,block+step2,re_step);
 #endif
 
             }
@@ -834,11 +844,19 @@ void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N
         for(k=(step2 & 1); k < step4; k++) {
             short rRe = -sine[k<<shift];
             short rIm = sine[(N>>2)-(k<<shift)];
+#ifdef PRINT_FFT_INDEXING
+            printf("222222 Second k loop. k = %d\n",k);
+            printf("step2       = %d\n",step2);
+#endif
             for(int block = k+step4+N-step; block >= 0; block-=step) {
                 short tRe;
                 short tIm;
                 short tRe2;
                 short tIm2;
+#ifdef PRINT_FFT_INDEXING
+                printf("   block       = %d\n",block);
+                printf("   block+step2 = %d\n",block+step2);
+#endif
 
 #ifdef LDST16
                 tRe = pts[block].re; // (tImRe >> 16);
@@ -912,10 +930,10 @@ void lib_dsp_fft_forward_complex_short( lib_dsp_fft_complex_short_t pts[], int N
 #endif
 
 #ifdef DEBUG_PRINT_STORES
-                printf("stored at first  index=%d: re: %08x, im: %08x\n"
-                        ,block ,re_0, im_0);
-                printf("stored at second index=%d: re: %08x, im: %08x\n"
-                        ,block+step2,re_0_step, im_0_step);
+                printf("stored at index block=%d:      im|re: %08x\n"
+                        ,block ,re);
+                printf("stored at index block+step=%d: im|re: %08x\n"
+                        ,block+step2,re_step);
 #endif
 
             }
