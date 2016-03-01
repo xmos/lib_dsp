@@ -3,12 +3,15 @@
 #ifndef LIB_DSP_QFORMAT
 #define LIB_DSP_QFORMAT
 
-#include <math.h>
-
 /** These Macros can be used to parameterize the conversion macros.
  * E.g.
+ * \code
  * #define BP 20  // location of the binary point
- * Then use the macro like this: F(BP)(fixed_point_val)
+ * \endcode
+ * Then use the macro like this:
+ * \code
+ * Q(BP)(1.234567)
+ * \endcode
  */
 #define F0(N) F ## N
 #define F(N) F0(N)

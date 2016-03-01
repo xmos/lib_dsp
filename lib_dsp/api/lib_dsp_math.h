@@ -160,6 +160,7 @@ int lib_dsp_math_reciprocal( int input_value, int q_format );
  *
  *  \param  dividend     Value to be divided
  *  \param  divisor      Dividing value
+ *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             Quotient of dividend/divisor
  */
 int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
@@ -179,6 +180,7 @@ int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
  *
  *  \param  dividend     Value to be divided
  *  \param  divisor      Dividing value
+ *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             Quotient of dividend/divisor
  */
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format );
