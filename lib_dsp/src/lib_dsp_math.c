@@ -267,7 +267,6 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 #define A   232471924//(14529495*16)  // was ROOT_3M1
 #define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
 
-#pragma unsafe arrays
 q8_24 lib_dsp_math_atan(q8_24 f) {
     int negative = f < 0;
     if (negative) {
