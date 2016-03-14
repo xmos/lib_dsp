@@ -57,8 +57,8 @@ void lib_dsp_design_biquad_notch
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a low-pass filter.
@@ -105,8 +105,8 @@ void lib_dsp_design_biquad_lowpass
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a high-pass filter.
@@ -153,8 +153,8 @@ void lib_dsp_design_biquad_highpass
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for an all-pass filter.
@@ -201,8 +201,8 @@ void lib_dsp_design_biquad_allpass
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a band-pass filter.
@@ -252,8 +252,8 @@ void lib_dsp_design_biquad_bandpass
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a peaking filter.
@@ -305,8 +305,8 @@ void lib_dsp_design_biquad_peaking
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a bass shelving filter.
@@ -358,8 +358,8 @@ void lib_dsp_design_biquad_lowshelf
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
 
 /** This function generates BiQuad filter coefficients for a treble shelving filter.
@@ -411,6 +411,6 @@ void lib_dsp_design_biquad_highshelf
 	coefficients[0] = _float2fixed( b0/a0, q_format );
 	coefficients[1] = _float2fixed( b1/a0, q_format );
 	coefficients[2] = _float2fixed( b2/a0, q_format );
-	coefficients[3] = _float2fixed( a1/a0, q_format );
-	coefficients[4] = _float2fixed( a2/a0, q_format );
+	coefficients[3] = _float2fixed( -a1/a0, q_format );
+	coefficients[4] = _float2fixed( -a2/a0, q_format );
 }
