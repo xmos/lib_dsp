@@ -23,36 +23,26 @@ int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format 
     return ah;
 }
 
+#define  ldivu(a,b,c,d,e) asm("ldivu %0,%1,%2,%3,%4" : "=r" (a), "=r" (b): "r" (c), "r" (d), "r" (e))
+
 int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format )
 {
-    //h and l hold a 64-bit value
-    unsigned h; unsigned l;
-    unsigned quotient=0, remainder=0;
-    int result;
-    unsigned negative=0;
-
-    // Create long dividend by shift dividend up q_format positions
-    if(dividend<0) {
+    int sgn = 1;
+    unsigned int d, d2, r;
+    if (dividend < 0) {
+        sgn = -1;
         dividend = -dividend;
-        negative++;
     }
-    h = dividend >> (32-q_format);
-    l = dividend << (q_format);
-
-    if(divisor<0) {
+    if (divisor < 0) {
+        sgn = -sgn;
         divisor = -divisor;
-        negative++;
     }
-    // Unsigned Long division
-    asm("ldivu %0,%1,%2,%3,%4":"=r"(quotient):"r"(remainder),"r"(h),"r"(l),"r"(divisor));
+    ldivu(d, r, 0, dividend, divisor);
+    ldivu(d2, r, r, 0, divisor);
 
-    if(negative==1) {
-        result = -quotient;
-    } else {
-        // for negative 0 or 2 (minus divided by minus)
-        result = quotient;
-    }
-    return result;
+    r = d << q_format |
+        (d2 + (1<<(31-q_format))) >> (32-q_format);
+    return r * sgn;
 }
 
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format )
@@ -184,21 +174,37 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format )
  *  result = lib_dsp_math_squareroot( sample, 28 );
  *  \endcode
  * 
- *  \param  input_value  Input value for computation.
+ *  \param  x            Input value for computation.
  *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             The square root of the input value.
  */
 
-int lib_dsp_math_squareroot( int input_value, int q_format )
+#define SQRT_COEFF_A (12466528/2) // 7143403
+#define SQRT_COEFF_B 10920575 // 9633812
+
+q8_24 lib_dsp_math_squareroot( int x)
 {
-    int ah; unsigned al;
-    ah = lib_dsp_math_invsqrroot( input_value, q_format );
-    // <FIXME> Determine appropriate initial lower-word value
-    //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(1<<(q_format-1)) );
-    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(0) );
-    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
-    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
-    return ah;
+    int zeroes;
+    q8_24 approx;
+    q8_24 corr;
+
+    if (x <= 0) return 0;
+
+    asm("clz %0,%1" : "=r" (zeroes) : "r" (x));
+
+    zeroes = zeroes & ~1;
+    zeroes = (zeroes - 8) >> 1;
+    if (zeroes >= 0) {
+        approx = (SQRT_COEFF_A >> zeroes) + lib_dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
+    } else {
+        zeroes = -zeroes;
+        approx = (SQRT_COEFF_A << zeroes) + lib_dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
+    }
+    for(int i = 0; i < 3; i++) {
+        corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
+        approx -= corr;
+    }
+    return approx;
 }
 
 /******************************************************************
@@ -250,7 +256,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 
 // Polynomial coefficients
 // coefficients are scaled up for improved rounding
-// they are also changed to positive values to enable using the dedicated instruction fur unsigned long division: ldivu
+// they are also changed to positive values to enable using the dedicated instruction fur unsigned long division:
 #define p0 (126388141)//(-7899259*16)
 #define p1 (13665937) // (-854121*16)
 #define q0 (189582640) // (11848915*16)

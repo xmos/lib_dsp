@@ -39,6 +39,8 @@
 #define Q16(f) (int)((signed long long)((f) * ((unsigned long long)1 << (16+20)) + (1<<19)) >> 20)
 #define Q15(f) (int)((signed long long)((f) * ((unsigned long long)1 << (15+20)) + (1<<19)) >> 20)
 #define Q14(f) (int)((signed long long)((f) * ((unsigned long long)1 << (14+20)) + (1<<19)) >> 20)
+#define Q13(f) (int)((signed long long)((f) * ((unsigned long long)1 << (13+20)) + (1<<19)) >> 20)
+#define Q12(f) (int)((signed long long)((f) * ((unsigned long long)1 << (12+20)) + (1<<19)) >> 20)
 
 // Convert from fixed point to double precision floating point
 // The number indicates the fractional bits or the position of the binary point
@@ -60,6 +62,7 @@
 #define F16(x) ((double)(x)/(double)(1<<16))
 #define F15(x) ((double)(x)/(double)(1<<15))
 #define F14(x) ((double)(x)/(double)(1<<14))
-
+#define F13(x) ((double)(x)/(double)(1<<13))
+#define F12(x) ((double)(x)/(double)(1<<12))
 #endif
 

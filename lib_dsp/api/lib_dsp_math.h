@@ -5,6 +5,8 @@
 
 #include "xccompat.h"
 
+#define MIN_INT (0x80000000)
+#define MAX_INT (0x7FFFFFFF)
 
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions use this Q format.
@@ -232,7 +234,7 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format );
  *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             The square root of the input value.
  */
-int lib_dsp_math_squareroot( int input_value, int q_format );
+int lib_dsp_math_squareroot( int input_value);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The

@@ -11,8 +11,10 @@
 #include <stdlib.h>
 
 #define CHECK_RESULTS 1
-#define PRINT_AND_ABORT_ON_ERROR 1
+#define PRINT_ERROR_TOO_BIG 1
+#define EXIT_ON_ERROR_TOO_BIG 0
 //#define TEST_ALL_INPUTS 1
+#define NO_Q 0
 
 #if TEST_ALL_INPUTS
 #define PRINT_INPUTS_AND_OUTPUTS 0
@@ -26,13 +28,54 @@
 #define X_INCR MAX_Q8_24/100
 #endif
 
+
+static short square16LUT [256];
+
+unsigned short sqrt32_lut_iter (const unsigned long src)
+
+{
+  unsigned short root;
+  unsigned short newBit = 0x80;
+  unsigned short newWord;
+  unsigned long  square;
+  const short *offset = square16LUT;
+
+  int i = src >> 16;
+
+                                                  // Calculate upper 16 bits using look up table
+  if (offset[128] <= i) offset += 128;
+  if (offset[ 64] <= i) offset += 64;
+  if (offset[ 32] <= i) offset += 32;
+  if (offset[ 16] <= i) offset += 16;
+  if (offset[  8] <= i) offset += 8;
+  if (offset[  4] <= i) offset += 4;
+  if (offset[  2] <= i) offset += 2;
+  if (offset[  1] <= i) offset += 1;
+  root = (offset - square16LUT) << 8;
+
+  for (i = 0; i < 8; i++)                         // Iterate remaining 16 bits
+  {
+    newWord = root | newBit;                      // Add in new bit
+    square = newWord * newWord;
+    if (src >= square)
+    {
+      root = newWord;
+    }
+    newBit >>= 1;
+  }
+
+  return root;
+}
+
+
+
 //#define EXPONENTIAL_INPUT
 // errors from -3..+3
 #define ERROR_RANGE 7
 typedef struct {
     int errors[ERROR_RANGE];
-    int max_error;
-    int min_error;
+    int max_positive_error;
+    int max_negative_error;
     int num_checked;
 } error_s;
 
@@ -52,8 +95,8 @@ int report_errors(unsigned max_abs_error, error_s *e) {
             result = 0;
         }
     }
-    printf("Maximum Positive Error: %d\n",e->max_error);
-    printf("Maximum Negative Error: %d\n",e->min_error);
+    printf("Maximum Positive Error: %d\n",e->max_positive_error);
+    printf("Maximum Negative Error: %d\n",e->max_negative_error);
     printf("Number of values checked: %d\n", e->num_checked);
     printf("Percentage of 0 Error: %5.2f%%\n", 100.0*e->errors[half_range]/e->num_checked);
     return result;
@@ -62,8 +105,8 @@ void reset_errors(error_s *e) {
     for(int i=0; i<ERROR_RANGE; i++) {
         e->errors[i] = 0;
     }
-    e->max_error = 0;
-    e->min_error = 0;
+    e->max_positive_error = 0;
+    e->max_negative_error = 0;
     e->num_checked = 0;
 }
 
@@ -71,33 +114,56 @@ void reset_errors(error_s *e) {
 int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
     int error = result - expected;
     int half_range = ERROR_RANGE/2;
+    int check_result;
+
+    // Save max positive and negative error
+    if (error < e->max_negative_error) e->max_negative_error = error;
+    if (error > e->max_positive_error) e->max_positive_error = error;
+
+    if (error > (int) max_abs_error || error < -((int) max_abs_error)) {
+    //if (error > max_error) {
+#if PRINT_ERROR_TOO_BIG
+        printf("ERROR: absolute error > %d is a failure criteria. Error found is %d\n",max_abs_error, error);
+        printf("result is 0x%x, Expected is 0x%x\n",result, expected);
+        printf("\n");
+#if EXIT_ON_ERROR_TOO_BIG
+        report_errors(max_abs_error, e);
+        exit (0);
+#endif
+#endif
+        check_result = 0;
+    } else {
+        check_result = 1;
+    }
+
     // saturate Errors
     if (error < -half_range) error = -half_range;
     if (error > half_range) error = half_range;
     e->errors[error+half_range]++; // increment the error counter
 
-    if (error < e->min_error) e->min_error = error;
-    if (error > e->max_error) e->max_error = error;
-
     e->num_checked++;
 
-    if (error > (int) max_abs_error || error < -((int) max_abs_error)) {
-    //if (error > max_error) {
-#if PRINT_AND_ABORT_ON_ERROR
-        printf("ERROR: absolute error > 0x%x is a failure criteria. Error found is 0x%x\n",max_abs_error, error);
-        printf("result is 0x%x, Expected is 0x%x\n",result, expected);
-        report_errors(max_abs_error, e);
-        exit (0);
-#endif
-        return 0;
+
+    return check_result;
+}
+
+signed long long update_input(signed long long x) {
+    // this generates input values -max..-1, 0, 1..max
+    if(x<0) {
+        x >>= 1; // x = x/2. Negative numbers decrease exponentially (-(2^x)..-1)
+    } else if(x == -1) {
+        x = 0;
+    } else if(x == 0) {
+        x = 1;
+    } else {
+        x <<= 1; // x = x*2. Positive numbers increase exponentially (1..(2^x))
     }
-    return 1;
+    return x;
 }
 
 unsigned overhead_time;
 
 void test_roots() {
-    int q_format = 24; // location of the decimal point
     int start_time, end_time;
     unsigned cycles_taken; // absolute positive values
     timer tmr;
@@ -105,22 +171,55 @@ void test_roots() {
 
     reset_errors(&err);
 
+    for (int i = 0; i < 256; i++)                       // Initialize look up table
+    {
+      square16LUT[i] = i*i;
+    }
+
     printf("Test Roots\n");
     printf("----------\n");
 
-    q8_24 result, expected;
-    tmr :> start_time;
-    result = lib_dsp_math_invsqrroot (Q24(2.), q_format);
-    tmr :> end_time;
-    cycles_taken = end_time-start_time-overhead_time;
-    printf ("Inverse square root (2) : %.7f\n\n", F24(result));
-    expected = Q24(1/sqrt(2));
-    check_result(result, expected, 1, &err);
 
-    result = lib_dsp_math_squareroot (Q24(2.), q_format);
-    printf ("Square Root (2) : %.7f\n\n", F24(result));;
-    expected =  Q24(sqrt(2));
-    check_result(result, expected, 1, &err);
+    q8_24 result, expected;
+    for(int i=1; i<=31; i++) { // exponent
+        int x = (1<<i)-1; // 2^x - 1 (x in 1..31)
+
+        printf ("x == 0x%x\n", x);
+        printf("\n");
+
+        TIME_FUNCTION(result = (int) sqrt32_lut_iter((unsigned long) x));
+        printf ("Short Square Root (%.7f) : %.7f\n", F24(x), F12(result));
+        printf ("result 0x%x\n", result);
+#if NO_Q
+        double d_sqrt = sqrt((float) x);
+        expected =  (int) sqrt((float) x);
+#else
+        double d_sqrt = sqrt(F24(x));
+        expected =  Q12(sqrt(F24(x)));
+#endif
+        printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
+        check_result(result, expected, 1, &err);
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for sqrt32_lut_iter function: %d\n", cycles_taken);
+#endif
+        printf("\n");
+
+        TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
+        printf ("Square Root (%.7f) : %.7f\n", F24(x), F24(result));;
+        printf ("result 0x%x\n", result);
+        d_sqrt = sqrt(F24(x));
+
+        expected =  Q24(d_sqrt);
+        check_result(result, expected, 1, &err);
+        printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
+#if PRINT_CYCLE_COUNT
+    printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
+#endif
+        printf("\n");
+
+
+    }
+
 
     printf("Error report from test_roots:\n");
     report_errors(1, &err);
@@ -143,7 +242,7 @@ void test_multipliation_and_division() {
     f0 = 11.3137085;
     f1 = 11.3137085;
     // Multiply the square root of 128 (maximum double representation of Q8.24)
-    printf ("Multiplication (%.7f x %.7): %.7f\n\n",f0, f1, F24(lib_dsp_math_multiply(Q24(f0), Q24(f1), q_format)));;
+    printf ("Multiplication (%.7f x %.7f): %.7f\n\n",f0, f1, F24(lib_dsp_math_multiply(Q24(f0), Q24(f1), q_format)));
 
     printf ("Multiplication (11.4 x 11.4). Will overflow!: %.7f\n\n", F24(lib_dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
 
@@ -157,11 +256,6 @@ void test_multipliation_and_division() {
     */
     printf ("Multiplication of small numbers (0.0005 x 0.0005): %.7f\n\n", F24(lib_dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
 
-
-    result = lib_dsp_math_reciprocal (Q24(3.0), q_format);
-    printf ("Reciprocal (3.0) : %.7f\n\n", F24(result));
-    expected = Q24(1.0/3.0);
-    check_result(result, expected, 1, &err);
 
     double dividend, divisor;
 
@@ -219,10 +313,8 @@ void test_trigonometric() {
     printf ("Sine wave (one cycle from -Pi to +Pi) :\n");
 
     for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
-        tmr :> start_time;
-        q8_24 sine = lib_dsp_math_sin(rad);
-        tmr :> end_time;
-        cycles_taken = end_time-start_time-overhead_time;
+        q8_24 sine;
+        TIME_FUNCTION(sine = lib_dsp_math_sin(rad));
 
 #if PRINT_INPUTS_AND_OUTPUTS
         printf("sin(%.7f) = %.7f\n",F24(rad), F24(sine));
@@ -261,10 +353,8 @@ void test_trigonometric() {
     reset_errors(&err);
 
     for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
-        tmr :> start_time;
-        int cosine=lib_dsp_math_cos(rad);
-        tmr :> end_time;
-        cycles_taken = end_time-start_time-overhead_time;
+        q8_24 cosine;
+        TIME_FUNCTION(cosine=lib_dsp_math_cos(rad));
 #if PRINT_INPUTS_AND_OUTPUTS
         printf("cos(%.7f) = %.7f\n",F24(rad), F24(cosine));
 #endif
@@ -310,16 +400,23 @@ void test_trigonometric() {
     */
 
 #ifdef EXPONENTIAL_INPUT
-    unsigned x=0;
-    while(x < MAX_Q8_24) {
+    for(int i=-31; i<=31; i++) {
+        int x;
+        if(i<0) {
+            // negative numbers
+            x = sext((1<<-i), -i+1); // -2^x (x in 31..1)
+        } else if(i>0) {
+            x = (1<<i)-1; // 2^x-1 (x in 1..31)
+        } else {
+            x = 0;
+        }
 #else
     for(unsigned x=0; x <= MAX_Q8_24; x+= X_INCR) {
 #endif
-        tmr :> start_time;
-        q8_24 arctan=lib_dsp_math_atan(x);
 
-        tmr :> end_time;
-        cycles_taken = end_time-start_time-overhead_time;
+
+        q8_24 arctan;
+        TIME_FUNCTION(arctan=lib_dsp_math_atan(x));
 
         if(cycles_taken>worst_cycles) {
             worst_cycles = cycles_taken;
@@ -336,15 +433,6 @@ void test_trigonometric() {
         double d_arctan_ref = atan(d_x);
         q8_24 expected = Q24(d_arctan_ref);
         check_result(arctan, expected, 1, &err);
-#endif
-
-#ifdef EXPONENTIAL_INPUT
-        // this generates input values 0, x = 2^y
-        if(x == 0) {
-          x = 1; // second smallest value in q4_28
-        } else {
-          x *= 2;
-        }
 #endif
 
     }

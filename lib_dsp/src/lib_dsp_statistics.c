@@ -200,7 +200,7 @@ int lib_dsp_vector_rms
     int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format,     q_format );
     int vectort_pwr = lib_dsp_vector_power   ( input_vector_X, vector_length, q_format );
     int mean_square = lib_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
-    int rt_mean_sqr = lib_dsp_math_squareroot( mean_square,                   q_format );
+    int rt_mean_sqr = lib_dsp_math_squareroot( mean_square); //ou ,                   q_format );
     return rt_mean_sqr;
 }
 
