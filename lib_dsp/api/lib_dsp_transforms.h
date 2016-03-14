@@ -68,6 +68,25 @@ lib_dsp_fft_complex_short_t;
  */
 void lib_dsp_fft_reorder_two_real_inputs(lib_dsp_fft_complex_t pts[], unsigned N);
 
+
+/** This function converts an input array of type lib_dsp_fft_complex_short_t into
+ * an output array of type lib_dsp_fft_complex_t
+ *
+ * \param pts_in   Input array containing a short int complex signal
+ * \param pts_out  Output array containing a int complex signal
+ * \param N        number of points. Must be a power of 2, both re and im should be N long
+ */
+void lib_dsp_fft_short_to_long(lib_dsp_fft_complex_short_t pts_in[], lib_dsp_fft_complex_t pts_out[], unsigned N);
+
+/** This function converts an input array of type lib_dsp_fft_complex_t into
+ * an output array of type lib_dsp_fft_complex_short_t
+ *
+ * \param pts_in   Input array containing a int complex signal
+ * \param pts_out  Output array containing a short int complex signal
+ * \param N        number of points. Must be a power of 2, both re and im should be N long
+ */
+void lib_dsp_fft_long_to_short(lib_dsp_fft_complex_t pts_in[], lib_dsp_fft_complex_short_t pts_out[], unsigned N);
+
 /** This function takes a frequency domain array where the data is in the form of the output
  * from  lib_dsp_fft_reorder_two_real_inputs() and rebuilds the full array ready for an inverse
  * FFT.
