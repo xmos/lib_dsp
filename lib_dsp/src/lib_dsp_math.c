@@ -209,7 +209,7 @@ unsigned short lib_dsp_math_squareroot(unsigned x)
     // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
     // I.e. Q4.12*Q4.12 = Q4+4.12+12 = Q8.24
     // move binary point from 24 to 12.
-    return (short) (approx >> 12);
+    return (unsigned short) (approx >> 12);
 }
 
 /******************************************************************
