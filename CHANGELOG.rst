@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+2.0.0
+-----
+  
+  * FFT interface update. Consolidated interface and improved testing.
+
 1.0.4
 -----
 
