@@ -29,47 +29,52 @@
 #endif
 
 
-static short square16LUT [256];
+static unsigned short square16LUT [256];
 
-unsigned short sqrt32_lut_iter (const unsigned long src)
-
+/** Scalar square root
+ *
+ *  This function computes the square root of the input value x
+ *  The square root of a 32 bit number is a 16 bit result.
+ *
+ *  \param  x            Unsigned 32-bit input value for computation.
+ *  \returns             Unsigned 16-bit output value.
+ */
+#pragma unsafe arrays
+unsigned short sqrt32_lut_iter (const unsigned src)
 {
-  unsigned short root;
-  unsigned short newBit = 0x80;
-  unsigned short newWord;
-  unsigned long  square;
-  const short *offset = square16LUT;
+   unsigned short      root;
+   unsigned short      newBit = 0x80;
+   unsigned            newWord;
+   unsigned long long  square;
+   const unsigned short *offset = square16LUT;
 
-  int i = src >> 16;
+   unsigned i = src >> 16;
 
-                                                  // Calculate upper 16 bits using look up table
-  if (offset[128] <= i) offset += 128;
-  if (offset[ 64] <= i) offset += 64;
-  if (offset[ 32] <= i) offset += 32;
-  if (offset[ 16] <= i) offset += 16;
-  if (offset[  8] <= i) offset += 8;
-  if (offset[  4] <= i) offset += 4;
-  if (offset[  2] <= i) offset += 2;
-  if (offset[  1] <= i) offset += 1;
-  root = (offset - square16LUT) << 8;
+                                                   // Calculate upper 16 bits using look up table
+   if (offset[128] <= i) offset += 128;
+   if (offset[ 64] <= i) offset += 64;
+   if (offset[ 32] <= i) offset += 32;
+   if (offset[ 16] <= i) offset += 16;
+   if (offset[  8] <= i) offset += 8;
+   if (offset[  4] <= i) offset += 4;
+   if (offset[  2] <= i) offset += 2;
+   if (offset[  1] <= i) offset += 1;
+   root = (offset - square16LUT) << 8;
 
-  for (i = 0; i < 8; i++)                         // Iterate remaining 16 bits
-  {
-    newWord = root | newBit;                      // Add in new bit
-    square = newWord * newWord;
-    if (src >= square)
-    {
-      root = newWord;
-    }
-    newBit >>= 1;
-  }
+   for (i = 0; i < 8; i++)                         // Iterate remaining 16 bits
+   {
+     newWord = root | newBit;                      // Add in new bit
+     square = (unsigned long long) newWord * newWord;
+     if (src >= square)
+     {
+       root = newWord;
+     }
+     newBit >>= 1;
+   }
+   return root;
 
-  return root;
 }
 
-
-
-//#define EXPONENTIAL_INPUT
 // errors from -3..+3
 #define ERROR_RANGE 7
 typedef struct {
@@ -79,6 +84,9 @@ typedef struct {
     int num_checked;
 } error_s;
 
+/*
+ * Report Errors within the Error Range. Top and Bottom or range contain saturated values
+ */
 int report_errors(unsigned max_abs_error, error_s *e) {
     int result = 1; // PASS
     int half_range = ERROR_RANGE/2;
@@ -110,7 +118,14 @@ void reset_errors(error_s *e) {
     e->num_checked = 0;
 }
 
-// Returns true if check passed
+/* Function to check a result against a expected result and store error statistics
+ *
+ * \param[in]      result
+ * \param[in]      expected result
+ * \param[in]      max absolute error
+ * \param[in,out]  pointer to error struct object
+ * \returns        true if check passed
+*/
 int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
     int error = result - expected;
     int half_range = ERROR_RANGE/2;
@@ -147,21 +162,17 @@ int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
     return check_result;
 }
 
-signed long long update_input(signed long long x) {
-    // this generates input values -max..-1, 0, 1..max
-    if(x<0) {
-        x >>= 1; // x = x/2. Negative numbers decrease exponentially (-(2^x)..-1)
-    } else if(x == -1) {
-        x = 0;
-    } else if(x == 0) {
-        x = 1;
-    } else {
-        x <<= 1; // x = x*2. Positive numbers increase exponentially (1..(2^x))
-    }
-    return x;
-}
-
 unsigned overhead_time;
+#define TEST_LUT_SQRT  // LUT interpolation method
+#define TEST_NR_SQRT   // Newton Raphson approximation method
+
+#define RI_Q 20  // Q format of root input
+#define RO_Q 10  // Q format of root output
+
+//Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
+int qs(double d, const int q_format) {
+  return (int)((signed long long)((d) * ((unsigned long long)1 << (q_format+20)) + (1<<19)) >> 20);
+}
 
 void test_roots() {
     int start_time, end_time;
@@ -187,35 +198,36 @@ void test_roots() {
         printf ("x == 0x%x\n", x);
         printf("\n");
 
-        TIME_FUNCTION(result = (int) sqrt32_lut_iter((unsigned long) x));
-        printf ("Short Square Root (%.7f) : %.7f\n", F24(x), F12(result));
-        printf ("result 0x%x\n", result);
-#if NO_Q
-        double d_sqrt = sqrt((float) x);
-        expected =  (int) sqrt((float) x);
-#else
-        double d_sqrt = sqrt(F24(x));
-        expected =  Q12(sqrt(F24(x)));
-#endif
-        printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
+        double d_sqrt;
+#ifdef TEST_LUT_SQRT
+        TIME_FUNCTION(result = sqrt32_lut_iter((unsigned long) x));
+        // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
+        // I.e.
+        printf ("Square Root LUT Method (%.7f) : %.5f\n", F(RI_Q)(x), F(RO_Q)(result));
+        d_sqrt = sqrt(F(RI_Q)(x));
+        expected =  qs(sqrt(F(RI_Q)(x)), RO_Q);
+
+        //printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
         check_result(result, expected, 1, &err);
 #if PRINT_CYCLE_COUNT
         printf("Cycles taken for sqrt32_lut_iter function: %d\n", cycles_taken);
 #endif
         printf("\n");
+#endif
 
+#ifdef TEST_NR_SQRT
         TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
-        printf ("Square Root (%.7f) : %.7f\n", F24(x), F24(result));;
-        printf ("result 0x%x\n", result);
-        d_sqrt = sqrt(F24(x));
-
-        expected =  Q24(d_sqrt);
+        // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
+        printf ("Square Root NR Method (%.7f) : %.5f\n", F(RI_Q)(x), F(RO_Q)(result));
+        d_sqrt = sqrt(F(RI_Q)(x));
+        expected =  Q(RO_Q)(d_sqrt);
         check_result(result, expected, 1, &err);
-        printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
+        //printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
 #endif
         printf("\n");
+#endif
 
 
     }
@@ -388,7 +400,7 @@ void test_trigonometric() {
      * Testing lib_dsp_math_atan
      */
     printf("Test lib_dsp_math_atan\n");
-    report_errors(1, &err);
+    reset_errors(&err);
 
     int worst_cycles=0;
     int worst_cycles_input;
@@ -403,8 +415,9 @@ void test_trigonometric() {
     for(int i=-31; i<=31; i++) {
         int x;
         if(i<0) {
-            // negative numbers
-            x = sext((1<<-i), -i+1); // -2^x (x in 31..1)
+            // create negative numbers
+            //x = sext((1<<i), i+1); // -2^x (x in 31..1)
+            x = -((1<<-i)-1); //-(2^x-1) (x in 31..1)
         } else if(i>0) {
             x = (1<<i)-1; // 2^x-1 (x in 1..31)
         } else {
@@ -434,7 +447,6 @@ void test_trigonometric() {
         q8_24 expected = Q24(d_arctan_ref);
         check_result(arctan, expected, 1, &err);
 #endif
-
     }
 
 #if CHECK_RESULTS
@@ -456,7 +468,7 @@ void test_trigonometric() {
     printf("\n");
 }
 
-int main(void)
+int test_math(void)
 {
 
     int start_time, end_time;
@@ -475,5 +487,25 @@ int main(void)
     test_trigonometric();
 
     return (0);
+}
+
+void divide() {
+    int divisor = 3;
+    int result = 0x7FFFFFFF;;
+    while(1) {
+        result = lib_dsp_math_divide(result, divisor, 24);
+        if(result==0) result = 0x7FFFFFFF;
+    }
+}
+
+
+void main(void) {
+    par {
+        test_math();
+        divide();
+        divide();
+        divide();
+        divide();
+    }
 }
 

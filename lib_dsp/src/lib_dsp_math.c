@@ -3,6 +3,7 @@
 #include <platform.h>
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
+#include "stdio.h"
 
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
@@ -182,11 +183,11 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format )
 #define SQRT_COEFF_A (12466528/2) // 7143403
 #define SQRT_COEFF_B 10920575 // 9633812
 
-q8_24 lib_dsp_math_squareroot( int x)
+unsigned short lib_dsp_math_squareroot(unsigned x)
 {
     int zeroes;
-    q8_24 approx;
-    q8_24 corr;
+    unsigned approx;
+    unsigned corr;
 
     if (x <= 0) return 0;
 
@@ -202,9 +203,13 @@ q8_24 lib_dsp_math_squareroot( int x)
     }
     for(int i = 0; i < 3; i++) {
         corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
+        //printf("corr is %d for index %d. x is 0x%x\n",corr, i, x);
         approx -= corr;
     }
-    return approx;
+    // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
+    // I.e. Q4.12*Q4.12 = Q4+4.12+12 = Q8.24
+    // move binary point from 24 to 12.
+    return (short) (approx >> 12);
 }
 
 /******************************************************************

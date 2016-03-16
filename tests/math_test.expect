@@ -40,377 +40,202 @@ Test Roots
 ----------
 x == 0x1
 
-Short Square Root (0.0000001) : 0.0002441
-result 0x1
-double sqrt: (0.0002441), hex conversion 0x1
+Square Root LUT Method (0.0000010) : 0.00098
 
-Square Root (0.0000001) : 0.0002608
-result 0x1118
-ERROR: absolute error > 1 is a failure criteria. Error found is 280
-result is 0x1118, Expected is 0x1000
-
-double sqrt: (0.0002441), hex conversion 0x1000
+Square Root NR Method (0.0000010) : 0.00098
 
 x == 0x3
 
-Short Square Root (0.0000002) : 0.0002441
-result 0x1
-double sqrt: (0.0004229), hex conversion 0x2
+Square Root LUT Method (0.0000029) : 0.00098
 
-Square Root (0.0000002) : 0.0004197
-result 0x1b82
-ERROR: absolute error > 1 is a failure criteria. Error found is -52
-result is 0x1b82, Expected is 0x1bb6
-
-double sqrt: (0.0004229), hex conversion 0x1bb6
+Square Root NR Method (0.0000029) : 0.00098
 
 x == 0x7
 
-Short Square Root (0.0000004) : 0.0004883
-result 0x2
-double sqrt: (0.0006459), hex conversion 0x3
+Square Root LUT Method (0.0000067) : 0.00195
 
-Square Root (0.0000004) : 0.0006409
-result 0x2a01
-ERROR: absolute error > 1 is a failure criteria. Error found is -84
-result is 0x2a01, Expected is 0x2a55
-
-double sqrt: (0.0006459), hex conversion 0x2a55
+Square Root NR Method (0.0000067) : 0.00195
 
 x == 0xf
 
-Short Square Root (0.0000009) : 0.0007324
-result 0x3
-double sqrt: (0.0009456), hex conversion 0x4
+Square Root LUT Method (0.0000143) : 0.00293
 
-Square Root (0.0000009) : 0.0009587
-result 0x3ed5
-ERROR: absolute error > 1 is a failure criteria. Error found is 221
-result is 0x3ed5, Expected is 0x3df8
-
-double sqrt: (0.0009456), hex conversion 0x3df8
+Square Root NR Method (0.0000143) : 0.00293
 
 x == 0x1f
 
-Short Square Root (0.0000018) : 0.0012207
-result 0x5
-double sqrt: (0.0013593), hex conversion 0x6
+Square Root LUT Method (0.0000296) : 0.00488
 
-Square Root (0.0000018) : 0.0013636
-result 0x595e
-ERROR: absolute error > 1 is a failure criteria. Error found is 72
-result is 0x595e, Expected is 0x5916
-
-double sqrt: (0.0013593), hex conversion 0x5916
+Square Root NR Method (0.0000296) : 0.00488
 
 x == 0x3f
 
-Short Square Root (0.0000038) : 0.0017090
-result 0x7
-double sqrt: (0.0019378), hex conversion 0x8
+Square Root LUT Method (0.0000601) : 0.00684
 
-Square Root (0.0000038) : 0.0019319
-result 0x7e9c
-ERROR: absolute error > 1 is a failure criteria. Error found is -99
-result is 0x7e9c, Expected is 0x7eff
-
-double sqrt: (0.0019378), hex conversion 0x7eff
+Square Root NR Method (0.0000601) : 0.00684
 
 x == 0x7f
 
-Short Square Root (0.0000076) : 0.0026855
-result 0xb
-double sqrt: (0.0027513), hex conversion 0xb
+Square Root LUT Method (0.0001211) : 0.01074
 
-Square Root (0.0000076) : 0.0027567
-result 0xb4a9
-ERROR: absolute error > 1 is a failure criteria. Error found is 89
-result is 0xb4a9, Expected is 0xb450
-
-double sqrt: (0.0027513), hex conversion 0xb450
+Square Root NR Method (0.0001211) : 0.01074
 
 x == 0xff
 
-Short Square Root (0.0000152) : 0.0036621
-result 0xf
-double sqrt: (0.0038986), hex conversion 0x10
+Square Root LUT Method (0.0002432) : 0.01465
 
-Square Root (0.0000152) : 0.0039017
-result 0xffb4
-ERROR: absolute error > 1 is a failure criteria. Error found is 52
-result is 0xffb4, Expected is 0xff80
-
-double sqrt: (0.0038986), hex conversion 0xff80
+Square Root NR Method (0.0002432) : 0.01465
 
 x == 0x1ff
 
-Short Square Root (0.0000305) : 0.0053711
-result 0x16
-double sqrt: (0.0055189), hex conversion 0x17
+Square Root LUT Method (0.0004873) : 0.02148
 
-Square Root (0.0000305) : 0.0055169
-result 0x1698f
-ERROR: absolute error > 1 is a failure criteria. Error found is -32
-result is 0x1698f, Expected is 0x169af
-
-double sqrt: (0.0055189), hex conversion 0x169af
+Square Root NR Method (0.0004873) : 0.02148
 
 x == 0x3ff
 
-Short Square Root (0.0000610) : 0.0075684
-result 0x1f
-double sqrt: (0.0078087), hex conversion 0x20
+Square Root LUT Method (0.0009756) : 0.03027
 
-Square Root (0.0000610) : 0.0078074
-result 0x1ffaa
-ERROR: absolute error > 1 is a failure criteria. Error found is -22
-result is 0x1ffaa, Expected is 0x1ffc0
-
-double sqrt: (0.0078087), hex conversion 0x1ffc0
+Square Root NR Method (0.0009756) : 0.03027
 
 x == 0x7ff
 
-Short Square Root (0.0001220) : 0.0109863
-result 0x2d
-double sqrt: (0.0110458), hex conversion 0x2d
+Square Root LUT Method (0.0019522) : 0.04395
 
-Square Root (0.0001220) : 0.0110467
-result 0x2d3f5
-ERROR: absolute error > 1 is a failure criteria. Error found is 14
-result is 0x2d3f5, Expected is 0x2d3e7
-
-double sqrt: (0.0110458), hex conversion 0x2d3e7
+Square Root NR Method (0.0019522) : 0.04395
 
 x == 0xfff
 
-Short Square Root (0.0002441) : 0.0153809
-result 0x3f
-double sqrt: (0.0156231), hex conversion 0x40
+Square Root LUT Method (0.0039053) : 0.06152
 
-Square Root (0.0002441) : 0.0156224
-result 0x3ffd4
-ERROR: absolute error > 1 is a failure criteria. Error found is -12
-result is 0x3ffd4, Expected is 0x3ffe0
-
-double sqrt: (0.0156231), hex conversion 0x3ffe0
+Square Root NR Method (0.0039053) : 0.06152
 
 x == 0x1fff
 
-Short Square Root (0.0004882) : 0.0219727
-result 0x5a
-double sqrt: (0.0220957), hex conversion 0x5b
+Square Root LUT Method (0.0078115) : 0.08789
 
-Square Root (0.0004882) : 0.0220958
-result 0x5a812
-double sqrt: (0.0220957), hex conversion 0x5a811
+Square Root NR Method (0.0078115) : 0.08789
 
 x == 0x3fff
 
-Short Square Root (0.0009765) : 0.0310059
-result 0x7f
-double sqrt: (0.0312490), hex conversion 0x80
+Square Root LUT Method (0.0156240) : 0.12402
 
-Square Root (0.0009765) : 0.0312486
-result 0x7ffe9
-ERROR: absolute error > 1 is a failure criteria. Error found is -7
-result is 0x7ffe9, Expected is 0x7fff0
-
-double sqrt: (0.0312490), hex conversion 0x7fff0
+Square Root NR Method (0.0156240) : 0.12402
 
 x == 0x7fff
 
-Short Square Root (0.0019531) : 0.0441895
-result 0xb5
-double sqrt: (0.0441935), hex conversion 0xb5
+Square Root LUT Method (0.0312490) : 0.17676
 
-Square Root (0.0019531) : 0.0441935
-result 0xb5044
-double sqrt: (0.0441935), hex conversion 0xb5044
+Square Root NR Method (0.0312490) : 0.17676
 
 x == 0xffff
 
-Short Square Root (0.0039062) : 0.0622559
-result 0xff
-double sqrt: (0.0624995), hex conversion 0x100
+Square Root LUT Method (0.0624990) : 0.24902
 
-Square Root (0.0039062) : 0.0624993
-result 0xffff4
-ERROR: absolute error > 1 is a failure criteria. Error found is -4
-result is 0xffff4, Expected is 0xffff8
-
-double sqrt: (0.0624995), hex conversion 0xffff8
+Square Root NR Method (0.0624990) : 0.24902
 
 x == 0x1ffff
 
-Short Square Root (0.0078124) : 0.0883789
-result 0x16a
-double sqrt: (0.0883880), hex conversion 0x16a
+Square Root LUT Method (0.1249990) : 0.35352
 
-Square Root (0.0078124) : 0.0883879
-result 0x16a097
-ERROR: absolute error > 1 is a failure criteria. Error found is -2
-result is 0x16a097, Expected is 0x16a099
-
-double sqrt: (0.0883880), hex conversion 0x16a099
+Square Root NR Method (0.1249990) : 0.35352
 
 x == 0x3ffff
 
-Short Square Root (0.0156249) : 0.1247559
-result 0x1ff
-double sqrt: (0.1249998), hex conversion 0x200
+Square Root LUT Method (0.2499990) : 0.49902
 
-Square Root (0.0156249) : 0.1249996
-result 0x1ffffa
-ERROR: absolute error > 1 is a failure criteria. Error found is -2
-result is 0x1ffffa, Expected is 0x1ffffc
-
-double sqrt: (0.1249998), hex conversion 0x1ffffc
+Square Root NR Method (0.2499990) : 0.49902
 
 x == 0x7ffff
 
-Short Square Root (0.0312499) : 0.1767578
-result 0x2d4
-double sqrt: (0.1767765), hex conversion 0x2d4
+Square Root LUT Method (0.4999990) : 0.70703
 
-Square Root (0.0312499) : 0.1767765
-result 0x2d413a
-double sqrt: (0.1767765), hex conversion 0x2d413a
+Square Root NR Method (0.4999990) : 0.70703
 
 x == 0xfffff
 
-Short Square Root (0.0624999) : 0.2497559
-result 0x3ff
-double sqrt: (0.2499999), hex conversion 0x400
+Square Root LUT Method (0.9999990) : 0.99902
 
-Square Root (0.0624999) : 0.2499998
-result 0x3ffffd
-double sqrt: (0.2499999), hex conversion 0x3ffffe
+Square Root NR Method (0.9999990) : 0.99902
 
 x == 0x1fffff
 
-Short Square Root (0.1249999) : 0.3535156
-result 0x5a8
-double sqrt: (0.3535533), hex conversion 0x5a8
+Square Root LUT Method (1.9999990) : 1.41406
 
-Square Root (0.1249999) : 0.3535533
-result 0x5a8278
-double sqrt: (0.3535533), hex conversion 0x5a8278
+Square Root NR Method (1.9999990) : 1.41406
 
 x == 0x3fffff
 
-Short Square Root (0.2499999) : 0.4997559
-result 0x7ff
-double sqrt: (0.4999999), hex conversion 0x800
+Square Root LUT Method (3.9999990) : 1.99902
 
-Square Root (0.2499999) : 0.4999999
-result 0x7fffff
-double sqrt: (0.4999999), hex conversion 0x7fffff
+Square Root NR Method (3.9999990) : 1.99902
 
 x == 0x7fffff
 
-Short Square Root (0.4999999) : 0.7070312
-result 0xb50
-double sqrt: (0.7071067), hex conversion 0xb50
+Square Root LUT Method (7.9999990) : 2.82812
 
-Square Root (0.4999999) : 0.7071068
-result 0xb504f3
-double sqrt: (0.7071067), hex conversion 0xb504f2
+Square Root NR Method (7.9999990) : 2.82812
 
 x == 0xffffff
 
-Short Square Root (0.9999999) : 0.9997559
-result 0xfff
-double sqrt: (1.0000000), hex conversion 0x1000
+Square Root LUT Method (15.9999990) : 3.99902
 
-Square Root (0.9999999) : 1.0000000
-result 0x1000000
-double sqrt: (1.0000000), hex conversion 0xffffff
+Square Root NR Method (15.9999990) : 4.00000
 
 x == 0x1ffffff
 
-Short Square Root (1.9999999) : 1.4140625
-result 0x16a0
-double sqrt: (1.4142135), hex conversion 0x16a1
+Square Root LUT Method (31.9999990) : 5.65625
 
-Square Root (1.9999999) : 1.4142135
-result 0x16a09e6
-double sqrt: (1.4142135), hex conversion 0x16a09e6
+Square Root NR Method (31.9999990) : 5.65625
 
 x == 0x3ffffff
 
-Short Square Root (3.9999999) : 1.9997559
-result 0x1fff
-double sqrt: (2.0000000), hex conversion 0x2000
+Square Root LUT Method (63.9999990) : 7.99902
 
-Square Root (3.9999999) : 2.0000000
-result 0x2000000
-double sqrt: (2.0000000), hex conversion 0x2000000
+Square Root NR Method (63.9999990) : 8.00000
 
 x == 0x7ffffff
 
-Short Square Root (7.9999999) : 2.8283691
-result 0x2d41
-double sqrt: (2.8284271), hex conversion 0x2d41
+Square Root LUT Method (127.9999990) : 11.31348
 
-Square Root (7.9999999) : 2.8284271
-result 0x2d413cd
-double sqrt: (2.8284271), hex conversion 0x2d413cd
+Square Root NR Method (127.9999990) : 11.31348
 
 x == 0xfffffff
 
-Short Square Root (15.9999999) : 3.9997559
-result 0x3fff
-double sqrt: (4.0000000), hex conversion 0x4000
+Square Root LUT Method (255.9999990) : 15.99902
 
-Square Root (15.9999999) : 4.0000000
-result 0x4000000
-double sqrt: (4.0000000), hex conversion 0x4000000
+Square Root NR Method (255.9999990) : 16.00000
 
 x == 0x1fffffff
 
-Short Square Root (31.9999999) : 5.6567383
-result 0x5a82
-double sqrt: (5.6568542), hex conversion 0x5a82
+Square Root LUT Method (511.9999990) : 22.62695
 
-Square Root (31.9999999) : 5.6568543
-result 0x5a8279a
-double sqrt: (5.6568542), hex conversion 0x5a8279a
+Square Root NR Method (511.9999990) : 22.62695
 
 x == 0x3fffffff
 
-Short Square Root (63.9999999) : 7.9997559
-result 0x7fff
-double sqrt: (8.0000000), hex conversion 0x8000
+Square Root LUT Method (1023.9999990) : 31.99902
 
-Square Root (63.9999999) : 8.0000000
-result 0x8000000
-double sqrt: (8.0000000), hex conversion 0x8000000
+Square Root NR Method (1023.9999990) : 32.00000
 
 x == 0x7fffffff
 
-Short Square Root (127.9999999) : 15.9375000
-result 0xff00
-double sqrt: (11.3137085), hex conversion 0xb505
-ERROR: absolute error > 1 is a failure criteria. Error found is 18939
-result is 0xff00, Expected is 0xb505
+Square Root LUT Method (2047.9999990) : 45.25391
 
-
-Square Root (127.9999999) : 11.3137085
-result 0xb504f33
-double sqrt: (11.3137085), hex conversion 0xb504f33
+Square Root NR Method (2047.9999990) : 45.25391
 
 Error report from test_roots:
-Cases Error <= -3: 8
-Cases Error == -2: 2
-Cases Error == -1: 21
-Cases Error == 0: 21
-Cases Error == 1: 3
+Cases Error <= -3: 0
+Cases Error == -2: 0
+Cases Error == -1: 38
+Cases Error == 0: 24
+Cases Error == 1: 0
 Cases Error == 2: 0
-Cases Error >= 3: 7
-Maximum Positive Error: 18939
-Maximum Negative Error: -99
+Cases Error >= 3: 0
+Maximum Positive Error: 0
+Maximum Negative Error: -1
 Number of values checked: 62
-Percentage of 0 Error: 33.87%
+Percentage of 0 Error: 38.71%
 
 Test Trigonometric Functions
 ----------------------------
@@ -645,49 +470,35 @@ Number of values checked: 101
 Percentage of 0 Error: 69.31%
 
 Test lib_dsp_math_atan
-Cases Error <= -3: 0
-Cases Error == -2: 0
-Cases Error == -1: 11
-Cases Error == 0: 70
-Cases Error == 1: 20
-Cases Error == 2: 0
-Cases Error >= 3: 0
-Maximum Positive Error: 1
-Maximum Negative Error: -1
-Number of values checked: 101
-Percentage of 0 Error: 69.31%
-atan(-128.0000000) = 0.0000000
-ERROR: absolute error > 1 is a failure criteria. Error found is 26222520
-result is 0x0, Expected is 0xfe6fe048
-
-atan(-64.0000000) = -1.5551726
-atan(-32.0000000) = -1.5395565
-atan(-16.0000000) = -1.5083775
-atan(-8.0000000) = -1.4464414
-atan(-4.0000000) = -1.3258176
-atan(-2.0000000) = -1.1071487
-atan(-1.0000000) = -0.7853982
-atan(-0.5000000) = -0.4636476
-atan(-0.2500000) = -0.2449787
-atan(-0.1250000) = -0.1243550
-atan(-0.0625000) = -0.0624188
-atan(-0.0312500) = -0.0312398
-atan(-0.0156250) = -0.0156237
-atan(-0.0078125) = -0.0078123
+atan(-127.9999999) = -1.5629840
+atan(-63.9999999) = -1.5551726
+atan(-31.9999999) = -1.5395565
+atan(-15.9999999) = -1.5083775
+atan(-7.9999999) = -1.4464414
+atan(-3.9999999) = -1.3258176
+atan(-1.9999999) = -1.1071487
+atan(-0.9999999) = -0.7853981
+atan(-0.4999999) = -0.4636475
+atan(-0.2499999) = -0.2449786
+atan(-0.1249999) = -0.1243550
+atan(-0.0624999) = -0.0624188
+atan(-0.0312499) = -0.0312397
+atan(-0.0156249) = -0.0156237
+atan(-0.0078124) = -0.0078123
 atan(-0.0039062) = -0.0039062
 atan(-0.0019531) = -0.0019531
-atan(-0.0009766) = -0.0009766
-atan(-0.0004883) = -0.0004883
+atan(-0.0009765) = -0.0009765
+atan(-0.0004882) = -0.0004882
 atan(-0.0002441) = -0.0002441
-atan(-0.0001221) = -0.0001221
+atan(-0.0001220) = -0.0001220
 atan(-0.0000610) = -0.0000610
 atan(-0.0000305) = -0.0000305
-atan(-0.0000153) = -0.0000153
+atan(-0.0000152) = -0.0000152
 atan(-0.0000076) = -0.0000076
 atan(-0.0000038) = -0.0000038
-atan(-0.0000019) = -0.0000019
-atan(-0.0000010) = -0.0000010
-atan(-0.0000005) = -0.0000005
+atan(-0.0000018) = -0.0000018
+atan(-0.0000009) = -0.0000009
+atan(-0.0000004) = -0.0000004
 atan(-0.0000002) = -0.0000002
 atan(-0.0000001) = -0.0000001
 atan(0.0000000) = 0.0000000
@@ -725,13 +536,14 @@ atan(127.9999999) = 1.5629840
 Error report from lib_dsp_math_atan:
 Cases Error <= -3: 0
 Cases Error == -2: 0
-Cases Error == -1: 11
-Cases Error == 0: 132
-Cases Error == 1: 20
+Cases Error == -1: 0
+Cases Error == 0: 63
+Cases Error == 1: 0
 Cases Error == 2: 0
-Cases Error >= 3: 1
-Maximum Positive Error: 26222520
-Maximum Negative Error: -1
-Number of values checked: 164
-Percentage of 0 Error: 80.49%
+Cases Error >= 3: 0
+Maximum Positive Error: 0
+Maximum Negative Error: 0
+Number of values checked: 63
+Percentage of 0 Error: 100.00%
+
 

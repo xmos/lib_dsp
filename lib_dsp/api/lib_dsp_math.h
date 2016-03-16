@@ -234,7 +234,8 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format );
  *  \param  q_format     Fixed point format (i.e. number of fractional bits).
  *  \returns             The square root of the input value.
  */
-int lib_dsp_math_squareroot( int input_value);
+//int lib_dsp_math_squareroot( int input_value);
+unsigned short lib_dsp_math_squareroot(unsigned x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
