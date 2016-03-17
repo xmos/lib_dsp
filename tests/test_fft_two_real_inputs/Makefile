@@ -6,17 +6,17 @@ TARGET = XCORE-200-EXPLORER
 # The APP_NAME variable determines the name of the final .xe file. It should
 # not include the .xe postfix. If left blank the name will default to
 # the project name
-APP_NAME = test
+APP_NAME = test_fft_two_real_inputs
 
 # The USED_MODULES variable lists other module used by the application.
-USED_MODULES = lib_dsp lib_logging
+USED_MODULES = lib_dsp
 
 # The flags passed to xcc when building the application
 # You can also set the following to override flags for a particular language:
 # XCC_XC_FLAGS, XCC_C_FLAGS, XCC_ASM_FLAGS, XCC_CPP_FLAGS
 # If the variable XCC_MAP_FLAGS is set it overrides the flags passed to
 # xcc for the final link (mapping) stage.
-XCC_FLAGS = -O2 -g -report -DDEBUG_PRINT_ENABLE=1
+XCC_FLAGS = -O2 -g 
 
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this
 # project to create both xCORE and ARM binaries.
