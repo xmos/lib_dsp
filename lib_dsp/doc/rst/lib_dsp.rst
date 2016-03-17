@@ -299,17 +299,55 @@ Filter Design Functions: Treble Shelving Filter
 
 .. doxygenfunction:: lib_dsp_design_biquad_highshelf
 
-FFT functions
--------------
+FFT Functions: 32 bit FFT Bit Reversal
+--------------------------------------
 
-.. doxygenfunction:: lib_dsp_fft_split_spectrum
-.. doxygenfunction:: lib_dsp_fft_merge_spectra
-.. doxygenfunction:: lib_dsp_fft_short_to_long
-.. doxygenfunction:: lib_dsp_fft_long_to_short
 .. doxygenfunction:: lib_dsp_fft_bit_reverse
-.. doxygenfunction:: lib_dsp_fft_forward
-.. doxygenfunction:: lib_dsp_fft_inverse
 
+FFT Functions: 16 bit FFT Bit Reversal
+--------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_bit_reverse_short
+
+FFT Functions: 32 bit Forward Complex FFT
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_complex
+
+FFT Functions: 16 bit Forward Complex FFT
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_complex_short
+
+FFT Functions: 32 bit Inverse Complex FFT
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_complex
+
+FFT Functions: 16 bit Inverse Complex FFT
+-----------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_complex_short
+
+FFT Functions: 32 bit Forward Tworeals FFT
+------------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_tworeals
+
+FFT Functions: 16 bit Forward Tworeals FFT
+------------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_forward_tworeals_short
+
+FFT Functions: 32 bit Inverse Tworeals FFT
+------------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_tworeals
+
+FFT Functions: 16 bit Inverse Tworeals FFT
+------------------------------------------
+
+.. doxygenfunction:: lib_dsp_fft_inverse_tworeals_short
 
 |appendix|
 

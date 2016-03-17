@@ -1,63 +1,57 @@
-#!/usr/bin/env python
 import xmostest
-import sys
-sys.path.insert(0, 'test_fft_correctness/src')
-import gen_test
-import shutil
-import os.path
-import random
-import tempfile
-
-class DeletyComparisonTester(xmostest.ComparisonTester):
-    def __init__(self, golden, product, group, test, dir_to_delete, config = {}, env = {},
-                 regexp = False, ignore=[]):
-        super(DeletyComparisonTester, self).__init__( golden, product, group, test,  config, env,
-                 regexp, ignore)
-        self.d = dir_to_delete
-
-
-    def run(self, output):
-        super(DeletyComparisonTester, self).run(output)
-        shutil.rmtree(self.d)
-
-       
-def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
-
-    seed  = random.randrange(4294967294);
-
-    directory_name = tempfile.mkdtemp(dir='.')
-
-    source_directory =  os.path.join(directory_name, 'src')
-
-    os.mkdir(source_directory)
-
-    gen_test.generate(180, length_log2, 1, seed, source_directory)
-    shutil.copy(os.path.join(test_dir_name,'src','test.xc'), source_directory)
-    shutil.copy(os.path.join(test_dir_name,'Makefile'), directory_name)
-    
-    resources = xmostest.request_resource("xsim")
-
-    binary = os.path.join(directory_name, 'bin', 'test.xe')
-
-    tester = DeletyComparisonTester(open(test_dir_name + '.expect'),
-                                       'lib_dsp',
-                                       'fft_tests',
-                                       test_name, directory_name,
-                                       {'FFT length':(1<<length_log2), 'Seed':seed})
-                                       
-    tester.set_min_testlevel(testlevel)
-
-    xmostest.run_on_simulator(resources['xsim'], binary,
-                              simargs=[],
-                              tester = tester)
 
 def runtest():
+    # Test app_transforms: 'tworeals' configuration
+    resources = xmostest.request_resource("xsim")
 
-   for r in range(3, 14):
-       do_fft_test(r, "smoke", 'test_fft_forward', "forward_fft")
-       do_fft_test(r, "smoke", 'test_fft_inverse', "inverse_fft")
-       do_fft_test(r, "smoke", 'test_fft_index_bit_reverse', "index_bit_reversal")
-       do_fft_test(r, "smoke", 'test_fft_split_and_merge', "fft_split_and_merge")
-       do_fft_test(r, "smoke", 'test_fft_short_long', "short_and_long_conversion ")
+    tester = xmostest.ComparisonTester(open('tworeals_fft_test.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_transforms', {'config':'tworeals'})
 
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/tworeals_fft/app_transforms_tworeals_fft.xe',
+                              tester=tester)
 
+    # Test app_transforms: 'complex' configuration
+    resources = xmostest.request_resource("xsim")
+
+    tester = xmostest.ComparisonTester(open('complex_fft_test.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_transforms', {'config':'complex'})
+
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_transforms/bin/complex_fft/app_transforms_complex_fft.xe',
+                              tester=tester)
+
+    # Test app_fft_short_int: 'two_complex' configuration
+    resources = xmostest.request_resource("xsim")
+
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_two_complex.xe.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_fft_short_int', {'config':'two_complex'})
+
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/two_complex/app_fft_short_int_two_complex.xe',
+                              tester=tester)
+
+    # Test app_fft_short_int: 'complex' configuration
+    resources = xmostest.request_resource("xsim")
+
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_complex.xe.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_fft_short_int', {'config':'complex'})
+
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/complex/app_fft_short_int_complex.xe',
+                              tester=tester)
+
+    # Test app_fft_short_int: 'tworeals' configuration
+    resources = xmostest.request_resource("xsim")
+
+    tester = xmostest.ComparisonTester(open('app_fft_short_int_tworeals.xe.expect'),
+                                       'lib_dsp', 'simple_tests',
+                                       'app_fft_short_int', {'config':'tworeals'})
+
+    xmostest.run_on_simulator(resources['xsim'],
+                              '../AN00209_xCORE-200_DSP_Library/app_fft_short_int/bin/tworeals/app_fft_short_int_tworeals.xe',
+                              tester=tester)

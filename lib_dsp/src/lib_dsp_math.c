@@ -78,7 +78,7 @@ int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q
  * 
  *  \code
  *  1) result = 1.0
- *  2) result = result + result * (1 input_value * result)
+ *  2) result = result + result * (1 − input_value * result)
  *  3) Repeat step #2 until desired precision is achieved
  *  \endcode
  * 
@@ -106,7 +106,7 @@ int lib_dsp_math_reciprocal( int input_value, int q_format )
     if( sign ) input_value = -input_value + 1;    
     if( q_format == 31 ) result = Q31(0.9999999999); // FIXME
     else {
-        // Approximation algorithm: x[0] = min, loop: x[k+1] = x[k] + x[k] * (1 d * x[k])
+        // Approximation algorithm: x[0] = min, loop: x[k+1] = x[k] + x[k] * (1 − d * x[k])
         for( int i = 0; i < 30; ++i ) {
             asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(-input_value),"0"(one),"1"(1<<(q_format-1)) );
             asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
@@ -261,6 +261,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 #define A   232471924//(14529495*16)  // was ROOT_3M1
 #define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
 
+#pragma unsafe arrays
 q8_24 lib_dsp_math_atan(q8_24 f) {
     int negative = f < 0;
     if (negative) {

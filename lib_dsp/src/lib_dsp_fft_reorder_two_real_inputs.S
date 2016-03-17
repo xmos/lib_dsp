@@ -2,12 +2,10 @@
     
 	.section	.dp.data,"awd",@progbits
 	.text
-
-#if defined(__XS2A__)
-	.cc_top lib_dsp_fft_split_spectrum_xs2.function
-	.globl	lib_dsp_fft_split_spectrum_xs2
+	.cc_top lib_dsp_fft_reorder_two_real_inputs.function
+	.globl	lib_dsp_fft_reorder_two_real_inputs
 	.align	4
-	.type	lib_dsp_fft_split_spectrum_xs2,@function
+	.type	lib_dsp_fft_reorder_two_real_inputs,@function
 
 #define NSTACKWORDS 4
 #define p  			 	 r0
@@ -20,9 +18,9 @@
 
 #define i   			 r11
 
-// void lib_dsp_fft_split_spectrum_xs2(fft_complex f[], unsigned N)
+// void lib_dsp_fft_reorder_two_real_inputs(fft_complex f[], unsigned N)
 
-lib_dsp_fft_split_spectrum_xs2:
+lib_dsp_fft_reorder_two_real_inputs:
 .align 8
 .issue_mode dual
 	DUALENTSP_lu6 NSTACKWORDS
@@ -68,17 +66,16 @@ lib_dsp_fft_split_spectrum_xs2:
 	ldd r6, r7, sp[1]
 	retsp NSTACKWORDS
 
-.tmp_lib_dsp_fft_split_spectrum_xs2:
-	.size	lib_dsp_fft_split_spectrum_xs2, .tmp_lib_dsp_fft_split_spectrum_xs2-lib_dsp_fft_split_spectrum_xs2
+.tmp_lib_dsp_fft_reorder_two_real_inputs:
+	.size	lib_dsp_fft_reorder_two_real_inputs, .tmp_lib_dsp_fft_reorder_two_real_inputs-lib_dsp_fft_reorder_two_real_inputs
 	.align	4
-	.cc_bottom lib_dsp_fft_split_spectrum_xs2.function
+	.cc_bottom lib_dsp_fft_reorder_two_real_inputs.function
 
-	.set	lib_dsp_fft_split_spectrum_xs2.nstackwords,NSTACKWORDS
-	.globl	lib_dsp_fft_split_spectrum_xs2.nstackwords
-	.set	lib_dsp_fft_split_spectrum_xs2.maxcores,1
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxcores
-	.set	lib_dsp_fft_split_spectrum_xs2.maxtimers,0
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxtimers
-	.set	lib_dsp_fft_split_spectrum_xs2.maxchanends,0
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxchanends
-#endif
+	.set	lib_dsp_fft_reorder_two_real_inputs.nstackwords,NSTACKWORDS
+	.globl	lib_dsp_fft_reorder_two_real_inputs.nstackwords
+	.set	lib_dsp_fft_reorder_two_real_inputs.maxcores,1
+	.globl	lib_dsp_fft_reorder_two_real_inputs.maxcores
+	.set	lib_dsp_fft_reorder_two_real_inputs.maxtimers,0
+	.globl	lib_dsp_fft_reorder_two_real_inputs.maxtimers
+	.set	lib_dsp_fft_reorder_two_real_inputs.maxchanends,0
+	.globl	lib_dsp_fft_reorder_two_real_inputs.maxchanends
