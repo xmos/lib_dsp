@@ -3,17 +3,8 @@
 import argparse
 import os.path
 import numpy
-import scipy
 import ctypes
-import matplotlib
-import sys
-import math
 import datetime
-from scipy import signal
-import matplotlib.pyplot as plt
-
-#This controls the resolution of the FIR compansation
-response_point_count = 100
 
 ###############################################################################
 
