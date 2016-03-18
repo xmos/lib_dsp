@@ -23,8 +23,7 @@ lib_dsp_fft_inverse_xs2:
 	stw r10, sp[19]
     
     ldc r4, 1
-    ldc r5, 31
-    //mkmsk r4, r5
+    ldc r5, 30
     shl r4, r4, r5
 	std r4, r4, sp[10]              //  0x800000000 x 2
 
@@ -75,12 +74,13 @@ kLoop1:
 #define HIRES 0
 
 innerLoop1:
-#if HIRES
+
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
+
+#if HIRES
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
-
 	lextract r8, r8, r7, r3, 32
 	                                 // r8: sIM2
 	{ ldc r7, 0            ; neg r2, r2}
@@ -88,16 +88,9 @@ innerLoop1:
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2
 	lextract r7, r7, r10, r3, 32
-
  	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	{add  r6, r6, r7       ; sub r7, r6, r7}
-	{add  r3, r3, r8       ; sub r8, r3, r8}
-	std  r3, r6, r4[0]
-	std  r8, r7, r4[r9]
 #else
     ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
 	                                 // r8: sIM2
@@ -106,13 +99,13 @@ innerLoop1:
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2
 	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
+#endif
 
 	{add  r6, r6, r7       ; sub r7, r6, r7}
 	{add  r3, r3, r8       ; sub r8, r3, r8}
 	std  r3, r6, r4[0]
 	std  r8, r7, r4[r9]
 
-#endif
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	lsu r8, r4, r6    
 
@@ -149,31 +142,23 @@ kLoop2:
 	{ldc r8, 0                   ;    ldw r11, sp[9]}
  	{ldc r3, 31; nop}
 innerLoop2:
-    #if HIRES
+
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
+
+#if HIRES
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
-	                                 // r8: sIM2
 	lextract r8, r8, r7, r3, 32
-
+	                                 // r8: sIM2
 	{ ldc r7, 0            ; neg r2, r2}
 	maccs r7, r10, r5, r1            // rRE x tRE2
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2
 	lextract r7, r7, r10, r3, 32
-
  	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	{add  r6, r6, r7       ; sub r7, r6, r7}
-	{add  r3, r3, r8       ; sub r8, r3, r8}
-
-	std  r3, r6, r4[0]
-	std  r8, r7, r4[r9]
-	    #else
-
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
+#else
+    ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	maccs r8, r7, r5, r0             // rIM x tRe2
 	maccs r8, r7, r2, r1             // rRE x tIm2
 	                                 // r8: sIM2
@@ -182,11 +167,14 @@ innerLoop2:
 	maccs r7, r10, r2, r0            // -rIM x tIM2
                                      // r7: sRE2
 	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
+#endif
+
 	{add  r6, r6, r7       ; sub r7, r6, r7}
 	{add  r3, r3, r8       ; sub r8, r3, r8}
+
 	std  r3, r6, r4[0]
 	std  r8, r7, r4[r9]
-	    #endif
+
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	{lsu r8, r4, r6         ;    ldw r7, sp[10]}             // k
 
