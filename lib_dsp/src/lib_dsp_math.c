@@ -18,7 +18,7 @@ int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
-    asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
+    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
     asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
@@ -45,6 +45,7 @@ int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format )
         (d2 + (1<<(31-q_format))) >> (32-q_format);
     return r * sgn;
 }
+
 
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format )
 {
@@ -157,60 +158,49 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format )
     return ah;
 }
 
-/** Scalar square root
- * 
- *  This function computes the square root of the input value using the
- *  following steps:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( input )
- *  result = lib_dsp_math_reciprocal( result )
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_squareroot( sample, 28 );
- *  \endcode
- * 
- *  \param  x            Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The square root of the input value.
- */
+#define SQRT_COEFF_A ((12466528)/2) // 7143403
+#define SQRT_COEFF_B (10920575) // 9633812
+//#define NEWTON_RAPHSON
 
-#define SQRT_COEFF_A (12466528/2) // 7143403
-#define SQRT_COEFF_B 10920575 // 9633812
-
-unsigned short lib_dsp_math_squareroot(unsigned x)
+unsigned lib_dsp_math_squareroot(unsigned x)
 {
     int zeroes;
-    unsigned approx;
-    unsigned corr;
-
-    if (x <= 0) return 0;
+    unsigned long long approx;
 
     asm("clz %0,%1" : "=r" (zeroes) : "r" (x));
 
-    zeroes = zeroes & ~1;
+    zeroes = zeroes & ~1; // make even
     zeroes = (zeroes - 8) >> 1;
+
+    // initial linear approximation of the result.
     if (zeroes >= 0) {
         approx = (SQRT_COEFF_A >> zeroes) + lib_dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
     } else {
+        // For Q8.24 values > 1 (0x01.000000)
         zeroes = -zeroes;
         approx = (SQRT_COEFF_A << zeroes) + lib_dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
     }
+
+    // successive approximation
     for(int i = 0; i < 3; i++) {
-        corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
+#ifdef NEWTON_RAPHSON
+        //corr = (f(xn) - x) / f'(xn) = (xn^2 - x) / 2xn
+        signed long long corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
         //printf("corr is %d for index %d. x is 0x%x\n",corr, i, x);
         approx -= corr;
+#else
+        // Linear approximation. Babylonian Method: Successive averaging
+        // xn+1 = (xn + y/xn) / 2
+        //approx = (approx + (((unsigned long long) x<<24) / approx)) >> 1;
+        approx = (approx + lib_dsp_math_divide_unsigned(x, approx, 24)) >> 1;
+        //printf("approx is 0x%llx for index %d\n",approx, i);
+#endif
     }
-    // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
-    // I.e. Q4.12*Q4.12 = Q4+4.12+12 = Q8.24
-    // move binary point from 24 to 12.
-    return (unsigned short) (approx >> 12);
+
+    // Return format is Q8.24
+    return approx;
 }
+
 
 /******************************************************************
  * Derived from "Software Manual for the Elementary

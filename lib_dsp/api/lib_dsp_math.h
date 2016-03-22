@@ -214,28 +214,14 @@ int lib_dsp_math_invsqrroot( int input_value, int q_format );
 
 /** Scalar square root
  * 
- *  This function computes the square root of the input value using the
- *  following steps:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( input )
- *  result = lib_dsp_math_reciprocal( result )
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_squareroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The square root of the input value.
+ *  This function computes the square root of an unsigned input value
+ *  using the Newton-Raphson approximation method.
+ *  Result is irrational so Q5.27 format is used to maximise the precision.
+ *
+ *  \param  x            Unsigned 32-bit value in Q8.24 format
+ *  \returns             Unsigned 32-bit value in Q5.27 format
  */
-//int lib_dsp_math_squareroot( int input_value);
-unsigned short lib_dsp_math_squareroot(unsigned x);
+unsigned lib_dsp_math_squareroot(unsigned x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The

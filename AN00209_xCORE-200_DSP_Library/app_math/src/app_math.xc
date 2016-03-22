@@ -28,13 +28,11 @@
 #define X_INCR MAX_Q8_24/100
 #endif
 
-
 static unsigned short square16LUT [256];
 
 /** Scalar square root
  *
  *  This function computes the square root of the input value x
- *  The square root of a 32 bit number is a 16 bit result.
  *
  *  \param  x            Unsigned 32-bit input value for computation.
  *  \returns             Unsigned 16-bit output value.
@@ -126,16 +124,23 @@ void reset_errors(error_s *e) {
  * \param[in,out]  pointer to error struct object
  * \returns        true if check passed
 */
+//#define CHECK_UNSIGNED_RESULT
+
 int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
+    static int half_range = ERROR_RANGE/2;
+    unsigned error_found=0;
+
     int error = result - expected;
-    int half_range = ERROR_RANGE/2;
-    int check_result;
 
     // Save max positive and negative error
     if (error < e->max_negative_error) e->max_negative_error = error;
     if (error > e->max_positive_error) e->max_positive_error = error;
 
     if (error > (int) max_abs_error || error < -((int) max_abs_error)) {
+        error_found=1;
+    }
+
+    if (error_found) {
     //if (error > max_error) {
 #if PRINT_ERROR_TOO_BIG
         printf("ERROR: absolute error > %d is a failure criteria. Error found is %d\n",max_abs_error, error);
@@ -146,31 +151,27 @@ int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
         exit (0);
 #endif
 #endif
-        check_result = 0;
-    } else {
-        check_result = 1;
     }
-
     // saturate Errors
     if (error < -half_range) error = -half_range;
     if (error > half_range) error = half_range;
+
     e->errors[error+half_range]++; // increment the error counter
 
     e->num_checked++;
 
-
-    return check_result;
+    return error_found;
 }
 
 unsigned overhead_time;
-#define TEST_LUT_SQRT  // LUT interpolation method
+//#define TEST_LUT_SQRT  // LUT interpolation method
 #define TEST_NR_SQRT   // Newton Raphson approximation method
 
-#define RI_Q 20  // Q format of root input
-#define RO_Q 10  // Q format of root output
+
+//#define CHECK_SQRT_SQUARED
 
 //Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
-int qs(double d, const int q_format) {
+inline int qs(double d, const int q_format) {
   return (int)((signed long long)((d) * ((unsigned long long)1 << (q_format+20)) + (1<<19)) >> 20);
 }
 
@@ -190,57 +191,61 @@ void test_roots() {
     printf("Test Roots\n");
     printf("----------\n");
 
+    unsigned result, expected;
 
-    q8_24 result, expected;
-    for(int i=1; i<=31; i++) { // exponent
-        int x = (1<<i)-1; // 2^x - 1 (x in 1..31)
+    for(int i=1; i<=32; i++) { // exponent
+        unsigned x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
 
-        printf ("x == 0x%x\n", x);
-        printf("\n");
+        //printf ("x == 0x%x\n", x);
+        //printf("\n");
 
         double d_sqrt;
 #ifdef TEST_LUT_SQRT
-        TIME_FUNCTION(result = sqrt32_lut_iter((unsigned long) x));
-        // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
-        // I.e.
-        printf ("Square Root LUT Method (%.7f) : %.5f\n", F(RI_Q)(x), F(RO_Q)(result));
-        d_sqrt = sqrt(F(RI_Q)(x));
-        expected =  qs(sqrt(F(RI_Q)(x)), RO_Q);
+        TIME_FUNCTION(result = sqrt32_lut_iter(x));
+        printf ("Square Root LUT Method (%.8f) : %.5f\n", F24(x), F12(result));
+        d_sqrt = sqrt(F24(x));
+        expected =  qs(d_sqrt, 12);
 
-        //printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
         check_result(result, expected, 1, &err);
 #if PRINT_CYCLE_COUNT
         printf("Cycles taken for sqrt32_lut_iter function: %d\n", cycles_taken);
 #endif
-        printf("\n");
 #endif
 
 #ifdef TEST_NR_SQRT
         TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
-        // precision of the result of sqrt(x) is half that of x. Because sqrt(x)*sqrt(x) = x
-        printf ("Square Root NR Method (%.7f) : %.5f\n", F(RI_Q)(x), F(RO_Q)(result));
-        d_sqrt = sqrt(F(RI_Q)(x));
-        expected =  Q(RO_Q)(d_sqrt);
-        check_result(result, expected, 1, &err);
-        //printf("double sqrt: (%.7f), hex conversion 0x%x\n",d_sqrt, expected);
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
 #endif
-        printf("\n");
+        printf ("Square Root (%.8f) : %.8f\n", F24(x), F24(result));
+#ifdef CHECK_SQRT_SQUARED
+        int squared_result = lib_dsp_math_multiply(result, result, 27); // sqrt(x) * sqrt(x) = x
+        expected = x;
+        printf("Result 0x%x, Squared_Result 0x%x, Expected 0x%x\n",result, squared_result, expected);
+        check_result(squared_result, expected, 1, &err);
+#else
+        TIME_FUNCTION(d_sqrt = sqrt(F24(x)));
+#if PRINT_CYCLE_COUNT
+    printf("Cycles taken for sqrt function: %d\n", cycles_taken);
+#endif
+        expected =  Q24(d_sqrt);
+
+        check_result(result, expected, 1, &err);
+#endif
+
 #endif
 
 
     }
 
-
-    printf("Error report from test_roots:\n");
+    printf("Error report: lib_dsp_math_squareroot vs sqrt:\n");
     report_errors(1, &err);
     printf("\n");
 
 }
 
 void test_multipliation_and_division() {
-    int q_format = 24; // location of the decimal point
+    int q_format = 24; // location of the decimal point. Gives 8 digits of precision after conversion to floating point.
     q8_24 result, expected;
     error_s err;
     reset_errors(&err);
@@ -248,55 +253,55 @@ void test_multipliation_and_division() {
     printf("Test Multiplication and Division\n");
     printf("--------------------------------\n");
     printf("Note: All calculations are done in Q8.24 format. That gives 7 digits of precion after the decimal point\n");
-    printf("Note: Maximum double representation of Q8.24 format: %.7f\n\n", F24(0x7FFFFFFF));
+    printf("Note: Maximum double representation of Q8.24 format: %.8f\n\n", F24(0x7FFFFFFF));
 
     double f0, f1;
     f0 = 11.3137085;
     f1 = 11.3137085;
     // Multiply the square root of 128 (maximum double representation of Q8.24)
-    printf ("Multiplication (%.7f x %.7f): %.7f\n\n",f0, f1, F24(lib_dsp_math_multiply(Q24(f0), Q24(f1), q_format)));
+    printf ("Multiplication (%.8f x %.8f): %.8f\n\n",f0, f1, F24(lib_dsp_math_multiply(Q24(f0), Q24(f1), q_format)));
 
-    printf ("Multiplication (11.4 x 11.4). Will overflow!: %.7f\n\n", F24(lib_dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
+    printf ("Multiplication (11.4 x 11.4). Will overflow!: %.8f\n\n", F24(lib_dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
 
-    printf ("Saturated Multiplication (11.4 x 11.4): %.7f\n\n", F24(lib_dsp_math_multiply_sat(Q24(11.4), Q24(11.4), q_format)));;
+    printf ("Saturated Multiplication (11.4 x 11.4): %.8f\n\n", F24(lib_dsp_math_multiply_sat(Q24(11.4), Q24(11.4), q_format)));;
 
     /*
     The result of 0.0005 x 0.0005 is 0.00000025. But this number is not representable as a binary.
     The closest representation in Q8.24 format is (4/2^24) = 0.000000238418579
-    printf rounds this to 0.0000002 because the formatting string to printf specifies 7 digits of precision after the decimal point.
+    printf rounds this to 0.0000002 because the formatting string to printf specifies 8 digits of precision after the decimal point.
     This is the maximum precision that can be achieved with the 24 fractional bits of the Q8.24 format.
     */
-    printf ("Multiplication of small numbers (0.0005 x 0.0005): %.7f\n\n", F24(lib_dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
+    printf ("Multiplication of small numbers (0.0005 x 0.0005): %.8f\n\n", F24(lib_dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
 
 
     double dividend, divisor;
 
     dividend = 1.123456; divisor = -128;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
-    printf ("Signed Division %.7f / %.7f): %.7f\n\n",dividend, divisor, F24(result));
+    printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, 1, &err);
 
     dividend = -1.123456; divisor = -128;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
-    printf ("Signed Division %.7f / %.7f): %.7f\n\n",dividend, divisor, F24(result));
+    printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, 1, &err);
 
     dividend = -1.123456; divisor = 127.9999999;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
-    printf ("Signed Division %.7f / %.7f): %.7f\n\n",dividend, divisor, F24(result));
+    printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, 1, &err);
 
     dividend = 1.123456; divisor = 127.9999999;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
-    printf ("Signed Division %.7f / %.7f): %.7f\n\n",dividend, divisor, F24(result));
+    printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, 1, &err);
 
     result = lib_dsp_math_divide_unsigned(Q24(dividend), Q24(divisor), q_format);
-    printf ("Division %.7f / %.7f): %.7f\n\n",dividend, divisor, F24(result));
+    printf ("Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, 1, &err);
 
@@ -329,7 +334,7 @@ void test_trigonometric() {
         TIME_FUNCTION(sine = lib_dsp_math_sin(rad));
 
 #if PRINT_INPUTS_AND_OUTPUTS
-        printf("sin(%.7f) = %.7f\n",F24(rad), F24(sine));
+        printf("sin(%.8f) = %.8f\n",F24(rad), F24(sine));
 #endif
 
 #if CHECK_RESULTS
@@ -342,7 +347,7 @@ void test_trigonometric() {
 
     }
 #if CHECK_RESULTS
-    printf("Error report from lib_dsp_math_sin:\n");
+    printf("Error report: lib_dsp_math_sin vs sin:\n");
     report_errors(1, &err);
 #endif
 
@@ -353,7 +358,7 @@ void test_trigonometric() {
     double sine_float = sin(3.141592653589793/4);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h sin(%.7f) = %.7f\n",3.141592653589793/4, sine_float);
+    printf("math.h sin(%.8f) = %.8f\n",3.141592653589793/4, sine_float);
     printf("Cycles taken for math.h sine function: %d\n", cycles_taken);
 #endif
     printf("\n");
@@ -368,7 +373,7 @@ void test_trigonometric() {
         q8_24 cosine;
         TIME_FUNCTION(cosine=lib_dsp_math_cos(rad));
 #if PRINT_INPUTS_AND_OUTPUTS
-        printf("cos(%.7f) = %.7f\n",F24(rad), F24(cosine));
+        printf("cos(%.8f) = %.8f\n",F24(rad), F24(cosine));
 #endif
 #if CHECK_RESULTS
         // check the fixed point result vs the floating point result from math.h
@@ -380,7 +385,7 @@ void test_trigonometric() {
     }
 
 #if CHECK_RESULTS
-    printf("Error report from lib_dsp_math_cos:\n");
+    printf("Error report: lib_dsp_math_cos vs cos:\n");
     report_errors(1, &err);
 #endif
 
@@ -391,7 +396,7 @@ void test_trigonometric() {
     double cosine_float = cos(3.141592653589793/4);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h cos(%.7f) = %.7f\n",3.141592653589793/4, cosine_float);
+    printf("math.h cos(%.8f) = %.8f\n",3.141592653589793/4, cosine_float);
     printf("Cycles taken for math.h cosine function: %d\n", cycles_taken);
 #endif
     printf("\n");
@@ -439,7 +444,7 @@ void test_trigonometric() {
         printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
 #endif
 #if PRINT_INPUTS_AND_OUTPUTS
-        printf("atan(%.7f) = %.7f\n",F24(x),F24(arctan));
+        printf("atan(%.8f) = %.8f\n",F24(x),F24(arctan));
 #endif
 #if CHECK_RESULTS
         double d_x = F24(x);
@@ -455,14 +460,14 @@ void test_trigonometric() {
 #endif
 
 #if PRINT_CYCLE_COUNT
-    printf("max cyles taken for lib_dsp_math_atan function: %d, input value was %.7f\n", worst_cycles, F24(worst_cycles_input));
+    printf("max cyles taken for lib_dsp_math_atan function: %d, input value was %.8f\n", worst_cycles, F24(worst_cycles_input));
     // just to measure cycles
     double d_x = F24(worst_cycles_input);
     tmr :> start_time;
     double d_arctan = atan(d_x);
     tmr :> end_time;
     cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h atan(%.7f) = %.7f\n",d_x, d_arctan);
+    printf("math.h atan(%.8f) = %.8f\n",d_x, d_arctan);
     printf("Cycles taken for math.h atan function: %u\n", cycles_taken);
 #endif
     printf("\n");
@@ -498,14 +503,18 @@ void divide() {
     }
 }
 
+#define DIVIDE_STRESS
 
-void main(void) {
+int main(void) {
     par {
         test_math();
+#ifdef DIVIDE_STRESS
         divide();
         divide();
         divide();
         divide();
+#endif
     }
+    return 0;
 }
 
