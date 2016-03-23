@@ -4,13 +4,13 @@
 
 	.text
     .issue_mode  dual
-	.globl	lib_dsp_fft_forward_complex
+	.globl	lib_dsp_fft_forward_xs2
 	.align	16
     .skip 8
-	.type	lib_dsp_fft_forward_complex,@function
-	.cc_top lib_dsp_fft_forward_complex.function,lib_dsp_fft_forward_complex
+	.type	lib_dsp_fft_forward_xs2,@function
+	.cc_top lib_dsp_fft_forward_xs2.function,lib_dsp_fft_forward_xs2
 	
-lib_dsp_fft_forward_complex:
+lib_dsp_fft_forward_xs2:
 
 	dualentsp 32
     
@@ -22,9 +22,10 @@ lib_dsp_fft_forward_complex:
 	stw r9, sp[22]
 	stw r10, sp[19]
     
-    ldc r4, 1
+    ldc r6, 1
     ldc r5, 31
-    shl r4, r4, r5
+    mkmsk r4, r5
+    shl r5, r6, r5
 	std r4, r4, sp[10]              //  0x800000000 x 2
 
 	stw r2, sp[18]             // sine
@@ -71,8 +72,35 @@ kLoop1:
     { add r4, r11, r3   ; ldw r11, sp[9]  }          // & pts[block]
     ldw r9, sp[13]             // step2
 
+#define HIRES 0
+
 innerLoop1:
-    
+#if HIRES
+	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
+	ldd r10, r7, sp[10]              //  0x800000000 x 2
+	maccs r8, r7, r5, r1             // rRe x tRe2
+	maccs r8, r7, r2, r0             // rIM x tIm2
+	                                 // r8: sRE2
+
+ 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
+
+	maccs r8, r7, r6, r10
+	{stw r8, r4[0]; neg r10, r10}
+	maccs r8, r7, r6, r10
+	maccs r8, r7, r6, r10
+
+	ldd r6, r10, sp[10]              //  0x800000000 x 2
+	{ ldc r7, 0            ; neg r5, r5}
+	maccs r7, r10, r5, r0            // rIM x -tRE2
+	maccs r7, r10, r2, r1            // rRE x tIM2
+                                     // r7: sIM2
+	maccs r7, r10, r3, r6
+	{stw r7, r4[1]; neg r6, r6}
+	maccs r7, r10, r3, r6
+	maccs r7, r10, r3, r6
+	{neg r8, r8; neg r7, r7}
+	std  r7, r8, r4[r9]
+#else
  	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
 	ashr r6, r6, 1                   // tRE
 	ashr r3, r3, 1                   // tIM
@@ -89,7 +117,7 @@ innerLoop1:
 	{add  r3, r3, r7       ; sub r7, r3, r7}
 	std  r3, r6, r4[0]
 	std  r7, r8, r4[r9]
-
+#endif
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	lsu r8, r4, r6    
 
@@ -124,7 +152,32 @@ kLoop2:
 
 	{ldc r8, 0                   ;    ldw r11, sp[9]}
 innerLoop2:
+#if HIRES
+	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
+	ldd r10, r7, sp[10]              //  0x800000000 x 2
+	maccs r8, r7, r5, r1             // rRe x tRe2
+	maccs r8, r7, r2, r0             // rIM x tIm2
+	                                 // r8: sRE2
 
+ 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
+
+	maccs r8, r7, r6, r10
+	{stw r8, r4[0]; neg r10, r10}
+	maccs r8, r7, r6, r10
+	maccs r8, r7, r6, r10
+
+	ldd r6, r10, sp[10]              //  0x800000000 x 2
+	{ ldc r7, 0            ; neg r5, r5}
+	maccs r7, r10, r5, r0            // rIM x -tRE2
+	maccs r7, r10, r2, r1            // rRE x tIM2
+                                     // r7: sIM2
+	maccs r7, r10, r3, r6
+	{stw r7, r4[1]; neg r6, r6}
+	maccs r7, r10, r3, r6
+	maccs r7, r10, r3, r6
+	{neg r8, r8; neg r7, r7}
+	std  r7, r8, r4[r9]
+#else
  	ldd r3, r6, r4[0]               // r6: tRE,  r3: tIM
 	ashr r6, r6, 1                  // tRE
 	ashr r3, r3, 1                  // tIM
@@ -144,7 +197,7 @@ innerLoop2:
 	{add  r3, r3, r7           ; sub r7, r3, r7}
 	std  r3, r6, r4[0]
 	std  r7, r8, r4[r9]
-	    	    
+#endif
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	{lsu r8, r4, r6         ;    ldw r7, sp[10]}             // k
 
@@ -175,17 +228,17 @@ kLoop2In:
 	retsp 32
 	
 	// RETURN_REG_HOLDER
-	.cc_bottom lib_dsp_fft_forward_complex.function
-	.set	lib_dsp_fft_forward_complex.nstackwords,32
-	.globl	lib_dsp_fft_forward_complex.nstackwords
-	.set	lib_dsp_fft_forward_complex.maxcores,1
-	.globl	lib_dsp_fft_forward_complex.maxcores
-	.set	lib_dsp_fft_forward_complex.maxtimers,0
-	.globl	lib_dsp_fft_forward_complex.maxtimers
-	.set	lib_dsp_fft_forward_complex.maxchanends,0
-	.globl	lib_dsp_fft_forward_complex.maxchanends
+	.cc_bottom lib_dsp_fft_forward_xs2.function
+	.set	lib_dsp_fft_forward_xs2.nstackwords,32
+	.globl	lib_dsp_fft_forward_xs2.nstackwords
+	.set	lib_dsp_fft_forward_xs2.maxcores,1
+	.globl	lib_dsp_fft_forward_xs2.maxcores
+	.set	lib_dsp_fft_forward_xs2.maxtimers,0
+	.globl	lib_dsp_fft_forward_xs2.maxtimers
+	.set	lib_dsp_fft_forward_xs2.maxchanends,0
+	.globl	lib_dsp_fft_forward_xs2.maxchanends
 .Ltmp0:
-	.size	lib_dsp_fft_forward_complex, .Ltmp0-lib_dsp_fft_forward_complex
+	.size	lib_dsp_fft_forward_xs2, .Ltmp0-lib_dsp_fft_forward_xs2
 
     .issue_mode  single
     
