@@ -82,7 +82,7 @@ int lib_dsp_vector_mean
     int        vector_length,
     int        q_format
 ) {
-    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format, q_format );
+    int divide_by_N = lib_dsp_math_divide(1, vector_length, q_format );
     int vectort_sum = lib_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
     return lib_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
 }
@@ -197,7 +197,7 @@ int lib_dsp_vector_rms
     int        vector_length,
     int        q_format
 ) {
-    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format,     q_format );
+    int divide_by_N = lib_dsp_math_divide( 1, vector_length,    q_format ); // reciprocal
     int vectort_pwr = lib_dsp_vector_power   ( input_vector_X, vector_length, q_format );
     int mean_square = lib_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
     int rt_mean_sqr = lib_dsp_math_squareroot( mean_square); //ou ,                   q_format );

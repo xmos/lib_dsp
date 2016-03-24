@@ -187,39 +187,14 @@ int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
  */
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format );
 
-
-/** Scalar inverse square root
- * 
- *  This function computes the reciprocal of the square root of the input value
- *  using an iterative approximation method as follows:
- * 
- *  \code
- *  1) result = 1.0
- *  2) result = result + result * (1 - input * result^2) / 2
- *  3) Repeat step #2 until desired precision is achieved
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The inverse square root of the input value.
- */
-int lib_dsp_math_invsqrroot( int input_value, int q_format );
-
 /** Scalar square root
  * 
  *  This function computes the square root of an unsigned input value
- *  using the Newton-Raphson approximation method.
- *  Result is irrational so Q5.27 format is used to maximise the precision.
+ *  using the Babylonian method of successive averaging
+ *  Error is <= 1 LSB and worst case performance is 96 cycles.
  *
  *  \param  x            Unsigned 32-bit value in Q8.24 format
- *  \returns             Unsigned 32-bit value in Q5.27 format
+ *  \returns             Unsigned 32-bit value in Q8.24 format
  */
 unsigned lib_dsp_math_squareroot(unsigned x);
 

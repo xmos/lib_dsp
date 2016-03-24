@@ -196,7 +196,8 @@ int lib_dsp_adaptive_nlms
     energy = energy >> (q_format - qq);
     // Saturate the reciprocal value to max value for the given q_format
     if( energy < (1 << (31-(31-qq)*2)) ) energy = (1 << (31-(31-qq)*2)) + 0;
-    energy = lib_dsp_math_reciprocal( energy, qq );
+    //Todo: Investigate why result is different after usign lib_dsp_math_divide instead of lib_dsp_math_reciprocal
+    energy = lib_dsp_math_divide(1, energy, qq ); // reciprocal
     adjustment = lib_dsp_math_multiply( *error_sample, step_size, q_format );
     adjustment = lib_dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
     
