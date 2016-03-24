@@ -17,8 +17,8 @@
 #define NO_Q 0
 
 #if TEST_ALL_INPUTS
-#define PRINT_INPUTS_AND_OUTPUTS 0
 #define PRINT_CYCLE_COUNT 0
+#define PRINT_INPUTS_AND_OUTPUTS 0
 #define RAD_INCR 1
 #define X_INCR 1
 #else
@@ -26,6 +26,10 @@
 #define PRINT_INPUTS_AND_OUTPUTS 1
 #define RAD_INCR PI2_Q8_24/100
 #define X_INCR MAX_Q8_24/100
+#endif
+
+#if PRINT_CYCLE_COUNT
+#define DIVIDE_STRESS
 #endif
 
 // errors from -3..+3
@@ -395,7 +399,7 @@ void test_trigonometric() {
     printf("\n");
 }
 
-int test_math(void)
+void test_math(void)
 {
 
     int start_time, end_time;
@@ -413,7 +417,7 @@ int test_math(void)
 
     test_trigonometric();
 
-    return (0);
+    exit (0);
 }
 
 void divide() {
@@ -424,8 +428,6 @@ void divide() {
         if(result==0) result = 0x7FFFFFFF;
     }
 }
-
-#define DIVIDE_STRESS
 
 int main(void) {
     par {
