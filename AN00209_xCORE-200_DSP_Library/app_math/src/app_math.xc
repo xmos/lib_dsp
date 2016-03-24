@@ -28,51 +28,6 @@
 #define X_INCR MAX_Q8_24/100
 #endif
 
-static unsigned short square16LUT [256];
-
-/** Scalar square root
- *
- *  This function computes the square root of the input value x
- *
- *  \param  x            Unsigned 32-bit input value for computation.
- *  \returns             Unsigned 16-bit output value.
- */
-#pragma unsafe arrays
-unsigned short sqrt32_lut_iter (const unsigned src)
-{
-   unsigned short      root;
-   unsigned short      newBit = 0x80;
-   unsigned            newWord;
-   unsigned long long  square;
-   const unsigned short *offset = square16LUT;
-
-   unsigned i = src >> 16;
-
-                                                   // Calculate upper 16 bits using look up table
-   if (offset[128] <= i) offset += 128;
-   if (offset[ 64] <= i) offset += 64;
-   if (offset[ 32] <= i) offset += 32;
-   if (offset[ 16] <= i) offset += 16;
-   if (offset[  8] <= i) offset += 8;
-   if (offset[  4] <= i) offset += 4;
-   if (offset[  2] <= i) offset += 2;
-   if (offset[  1] <= i) offset += 1;
-   root = (offset - square16LUT) << 8;
-
-   for (i = 0; i < 8; i++)                         // Iterate remaining 16 bits
-   {
-     newWord = root | newBit;                      // Add in new bit
-     square = (unsigned long long) newWord * newWord;
-     if (src >= square)
-     {
-       root = newWord;
-     }
-     newBit >>= 1;
-   }
-   return root;
-
-}
-
 // errors from -3..+3
 #define ERROR_RANGE 7
 typedef struct {
@@ -124,7 +79,6 @@ void reset_errors(error_s *e) {
  * \param[in,out]  pointer to error struct object
  * \returns        true if check passed
 */
-//#define CHECK_UNSIGNED_RESULT
 
 int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
     static int half_range = ERROR_RANGE/2;
@@ -164,11 +118,6 @@ int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
 }
 
 unsigned overhead_time;
-//#define TEST_LUT_SQRT  // LUT interpolation method
-#define TEST_NR_SQRT   // Newton Raphson approximation method
-
-
-//#define CHECK_SQRT_SQUARED
 
 //Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
 inline int qs(double d, const int q_format) {
@@ -183,11 +132,6 @@ void test_roots() {
 
     reset_errors(&err);
 
-    for (int i = 0; i < 256; i++)                       // Initialize look up table
-    {
-      square16LUT[i] = i*i;
-    }
-
     printf("Test Roots\n");
     printf("----------\n");
 
@@ -200,41 +144,19 @@ void test_roots() {
         //printf("\n");
 
         double d_sqrt;
-#ifdef TEST_LUT_SQRT
-        TIME_FUNCTION(result = sqrt32_lut_iter(x));
-        printf ("Square Root LUT Method (%.8f) : %.5f\n", F24(x), F12(result));
-        d_sqrt = sqrt(F24(x));
-        expected =  qs(d_sqrt, 12);
 
-        check_result(result, expected, 1, &err);
-#if PRINT_CYCLE_COUNT
-        printf("Cycles taken for sqrt32_lut_iter function: %d\n", cycles_taken);
-#endif
-#endif
-
-#ifdef TEST_NR_SQRT
         TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
 #endif
         printf ("Square Root (%.8f) : %.8f\n", F24(x), F24(result));
-#ifdef CHECK_SQRT_SQUARED
-        int squared_result = lib_dsp_math_multiply(result, result, 27); // sqrt(x) * sqrt(x) = x
-        expected = x;
-        printf("Result 0x%x, Squared_Result 0x%x, Expected 0x%x\n",result, squared_result, expected);
-        check_result(squared_result, expected, 1, &err);
-#else
+
         TIME_FUNCTION(d_sqrt = sqrt(F24(x)));
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for sqrt function: %d\n", cycles_taken);
 #endif
         expected =  Q24(d_sqrt);
-
         check_result(result, expected, 1, &err);
-#endif
-
-#endif
-
 
     }
 

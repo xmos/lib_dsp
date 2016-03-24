@@ -70,7 +70,7 @@ Square Root (31.99999994) : 5.65685421
 Square Root (63.99999994) : 7.99999994
 Square Root (127.99999994) : 11.31370848
 Square Root (255.99999994) : 15.99999994
-Error report from test_roots:
+Error report: lib_dsp_math_squareroot vs sqrt:
 Cases Error <= -3: 0
 Cases Error == -2: 0
 Cases Error == -1: 24
@@ -187,7 +187,7 @@ sin(2.95309383) = 0.18738455
 sin(3.01592565) = 0.12533653
 sin(3.07875746) = 0.06279385
 sin(3.14158928) = 0.00000340
-Error report from lib_dsp_math_sin:
+Error report: lib_dsp_math_sin vs sin:
 Cases Error <= -3: 0
 Cases Error == -2: 0
 Cases Error == -1: 10
@@ -302,7 +302,7 @@ cos(2.95309383) = -0.98228663
 cos(3.01592565) = -0.99211425
 cos(3.07875746) = -0.99802649
 cos(3.14158928) = -1.00000000
-Error report from lib_dsp_math_cos:
+Error report: lib_dsp_math_cos vs cos:
 Cases Error <= -3: 0
 Cases Error == -2: 0
 Cases Error == -1: 11
