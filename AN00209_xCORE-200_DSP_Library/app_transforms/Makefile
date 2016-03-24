@@ -19,6 +19,9 @@ USED_MODULES = lib_dsp
 XCC_FLAGS_complex_fft = -O2 -g -report -DCOMPLEX_FFT
 XCC_FLAGS_tworeals_fft = -O2 -g -report
 
+XCC_FLAGS_complex_fft_int16_buf = -O2 -g -report -DCOMPLEX_FFT -DINT16_BUFFERS
+XCC_FLAGS_tworeals_fft_int16_buf = -O2 -g -report  -DINT16_BUFFERS
+
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this
 # project to create both xCORE and ARM binaries.
 XCORE_ARM_PROJECT = 0
