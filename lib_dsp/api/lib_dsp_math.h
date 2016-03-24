@@ -145,26 +145,6 @@ int lib_dsp_math_multiply_sat(
  *  \returns             The reciprocal of the input value.
  */
 
-int lib_dsp_math_reciprocal( int input_value, int q_format );
-
-/** Signed Division
- *
- *  This function divides two signed integer values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- *  It was optimised for performance using a dedicated instruction for unsinged long division.
- *
- *  Example:
- *
- *  \code
- *  q8_24 quotient;
- *  quotient = lib_dsp_math_divide(divident, divisor, 24);
- *  \endcode
- *
- *  \param  dividend     Value to be divided
- *  \param  divisor      Dividing value
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             Quotient of dividend/divisor
- */
 int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
 
 /** Unsigned Division
