@@ -3,6 +3,7 @@
 #include <platform.h>
 #include "lib_dsp_qformat.h"
 #include "lib_dsp_math.h"
+#include "stdio.h"
 
 int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 {
@@ -17,43 +18,34 @@ int lib_dsp_math_multiply( int input1_value, int input2_value, int q_format )
 int lib_dsp_math_multiply_sat( int input1_value, int input2_value, int q_format )
 {
     int ah; unsigned al;
-    asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
+    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
     asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
     asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
     return ah;
 }
 
+#define  ldivu(a,b,c,d,e) asm("ldivu %0,%1,%2,%3,%4" : "=r" (a), "=r" (b): "r" (c), "r" (d), "r" (e))
+
 int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format )
 {
-    //h and l hold a 64-bit value
-    unsigned h; unsigned l;
-    unsigned quotient=0, remainder=0;
-    int result;
-    unsigned negative=0;
-
-    // Create long dividend by shift dividend up q_format positions
-    if(dividend<0) {
+    int sgn = 1;
+    unsigned int d, d2, r;
+    if (dividend < 0) {
+        sgn = -1;
         dividend = -dividend;
-        negative++;
     }
-    h = dividend >> (32-q_format);
-    l = dividend << (q_format);
-
-    if(divisor<0) {
+    if (divisor < 0) {
+        sgn = -sgn;
         divisor = -divisor;
-        negative++;
     }
-    // Unsigned Long division
-    asm("ldivu %0,%1,%2,%3,%4":"=r"(quotient):"r"(remainder),"r"(h),"r"(l),"r"(divisor));
+    ldivu(d, r, 0, dividend, divisor);
+    ldivu(d2, r, r, 0, divisor);
 
-    if(negative==1) {
-        result = -quotient;
-    } else {
-        // for negative 0 or 2 (minus divided by minus)
-        result = quotient;
-    }
-    return result;
+    r = d << q_format |
+        (d2 + (1<<(31-q_format))) >> (32-q_format);
+    return r * sgn;
 }
+
 
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format )
 {
@@ -71,135 +63,48 @@ int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q
     return quotient;
 }
 
-/** Scalar reciprocal
- * 
- *  This function computes the reciprocal of the input value using an iterative
- *  approximation method as follows:
- * 
- *  \code
- *  1) result = 1.0
- *  2) result = result + result * (1 input_value * result)
- *  3) Repeat step #2 until desired precision is achieved
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_reciprocal( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The reciprocal of the input value.
- */
+#define SQRT_COEFF_A ((12466528)/2) // 7143403
+#define SQRT_COEFF_B (10920575) // 9633812
+//#define NEWTON_RAPHSON
 
-int lib_dsp_math_reciprocal( int input_value, int q_format )
+unsigned lib_dsp_math_squareroot(unsigned x)
 {
-    int ah, temp; unsigned al;
-    int sign = input_value < 0;
-    // <FIXME> Limit calculation to q_format range, return early for out-of-range operands
-    // Value of one for upper word of 64-bit accumulator for the given 'q_format'
-    int one = 1 << (2 * q_format - 32); 
-    // Start with the minimum positive 32-bit fixed-point value
-    int result = 0x080000000 >> (63 - 2 * q_format);
-    if( sign ) input_value = -input_value + 1;    
-    if( q_format == 31 ) result = Q31(0.9999999999); // FIXME
-    else {
-        // Approximation algorithm: x[0] = min, loop: x[k+1] = x[k] + x[k] * (1 d * x[k])
-        for( int i = 0; i < 30; ++i ) {
-            asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(-input_value),"0"(one),"1"(1<<(q_format-1)) );
-            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
-            asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
-            asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(result),"r"(temp),"0"(0),"1"(1<<(q_format-1)) );
-            asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
-            asm("lextract %0,%1,%2,%3,32":"=r"(temp):"r"(ah),"r"(al),"r"(q_format));
-            result += temp;
-        }
+    int zeroes;
+    unsigned long long approx;
+
+    asm("clz %0,%1" : "=r" (zeroes) : "r" (x));
+
+    zeroes = zeroes & ~1; // make even
+    zeroes = (zeroes - 8) >> 1;
+
+    // initial linear approximation of the result.
+    if (zeroes >= 0) {
+        approx = (SQRT_COEFF_A >> zeroes) + lib_dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
+    } else {
+        // For Q8.24 values > 1 (0x01.000000)
+        zeroes = -zeroes;
+        approx = (SQRT_COEFF_A << zeroes) + lib_dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
     }
-    if( sign ) result = -result;
-    return result;
-}
 
-/** Scalar inverse square root
- * 
- *  This function computes the reciprocal of the square root of the input value
- *  using an iterative approximation method as follows:
- * 
- *  \code
- *  1) result = 1.0
- *  2) result = result + result * (1 - input * result^2) / 2
- *  3) Repeat step #2 until desired precision is achieved
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The inverse square root of the input value.
- */
-
-int lib_dsp_math_invsqrroot( int input_value, int q_format )
-{
-    int ah = 1 << q_format, result; unsigned al;
-    // Approximation algorithm: ah = 1.0, loop[ yy = ah + ah*(1-x*ah^2)/2, ah=yy ]
-    // <TODO> Determine iteration count per required precision, use 10 for now ...
-    int one = 1 << (2 * q_format - 32);
-    for( int i = 0; i < 10; ++i )
-    {
-        asm("maccs %0,%1,%2,%3":"=r"(result),"=r"(al):"r"(ah),"r"(ah),"0"(0),"1"(1<<(q_format-1)) );
-        asm("lsats %0,%1,%2":"=r"(result),"=r"(al):"r"(q_format),"0"(result),"1"(al));
-        asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(result),"r"(al),"r"(q_format));
-        asm("maccs %0,%1,%2,%3":"=r"(result),"=r"(al):"r"(result),"r"(-input_value),"0"(one),"1"(1<<(q_format-1)) );
-        asm("lsats %0,%1,%2":"=r"(result),"=r"(al):"r"(q_format),"0"(result),"1"(al));
-        asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(result),"r"(al),"r"(q_format));
-        asm("maccs %0,%1,%2,%3":"=r"(result),"=r"(al):"r"(ah),"r"(result/2),"0"(0),"1"(1<<(q_format-1)) );
-        asm("lsats %0,%1,%2":"=r"(result),"=r"(al):"r"(q_format),"0"(result),"1"(al));
-        asm("lextract %0,%1,%2,%3,32":"=r"(result):"r"(result),"r"(al),"r"(q_format));
-        ah += result;
+    // successive approximation
+    for(int i = 0; i < 3; i++) {
+#ifdef NEWTON_RAPHSON
+        //corr = (f(xn) - x) / f'(xn) = (xn^2 - x) / 2xn
+        signed long long corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
+        //printf("corr is %d for index %d. x is 0x%x\n",corr, i, x);
+        approx -= corr;
+#else
+        // Linear approximation. Babylonian Method: Successive averaging
+        // xn+1 = (xn + y/xn) / 2
+        approx = (approx + lib_dsp_math_divide_unsigned(x, approx, 24)) >> 1;
+        //printf("approx is 0x%llx for index %d\n",approx, i);
+#endif
     }
-    return ah;
+
+    // Return format is Q8.24
+    return approx;
 }
 
-/** Scalar square root
- * 
- *  This function computes the square root of the input value using the
- *  following steps:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( input )
- *  result = lib_dsp_math_reciprocal( result )
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_squareroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The square root of the input value.
- */
-
-int lib_dsp_math_squareroot( int input_value, int q_format )
-{
-    int ah; unsigned al;
-    ah = lib_dsp_math_invsqrroot( input_value, q_format );
-    // <FIXME> Determine appropriate initial lower-word value
-    //asm( "maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(1<<(q_format-1)) );
-    asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(ah),"r"(input_value),"0"(0),"1"(0) );
-    asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
-    asm("lextract %0,%1,%2,%3,32":"=r"(ah):"r"(ah),"r"(al),"r"(q_format));
-    return ah;
-}
 
 /******************************************************************
  * Derived from "Software Manual for the Elementary
@@ -250,7 +155,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 
 // Polynomial coefficients
 // coefficients are scaled up for improved rounding
-// they are also changed to positive values to enable using the dedicated instruction fur unsigned long division: ldivu
+// they are also changed to positive values to enable using the dedicated instruction fur unsigned long division:
 #define p0 (126388141)//(-7899259*16)
 #define p1 (13665937) // (-854121*16)
 #define q0 (189582640) // (11848915*16)

@@ -4,8 +4,6 @@
 #include <xs1.h>
 #include <lib_dsp.h>
 
-
-
 /**
 Example showing FFT processing of a configurable number of input signals received through a double buffer.
 ----------------------------------------------------------------------------------------------------------

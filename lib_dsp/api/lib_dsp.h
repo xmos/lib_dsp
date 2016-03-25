@@ -13,5 +13,14 @@
 #include <lib_dsp_vector.h>
 #include <lib_dsp_transforms.h>
 
+
+/* Macro to time function calls
+ * After execution of this line the value in cycle_taken is valid.
+ * The calling context must contain the variables tmr, start_time, end_time, overhead_time, cycle_time
+ * overhead_time must have a valid value before the call.
+ */
+#define TIME_FUNCTION(function_call) do {tmr :> start_time; function_call; tmr :> end_time; cycles_taken = end_time-start_time-overhead_time;} while(0)
+
+
 #endif
 

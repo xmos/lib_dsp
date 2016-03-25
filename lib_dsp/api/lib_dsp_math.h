@@ -5,6 +5,8 @@
 
 #include "xccompat.h"
 
+#define MIN_INT (0x80000000)
+#define MAX_INT (0x7FFFFFFF)
 
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions use this Q format.
@@ -143,26 +145,6 @@ int lib_dsp_math_multiply_sat(
  *  \returns             The reciprocal of the input value.
  */
 
-int lib_dsp_math_reciprocal( int input_value, int q_format );
-
-/** Signed Division
- *
- *  This function divides two signed integer values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- *  It was optimised for performance using a dedicated instruction for unsinged long division.
- *
- *  Example:
- *
- *  \code
- *  q8_24 quotient;
- *  quotient = lib_dsp_math_divide(divident, divisor, 24);
- *  \endcode
- *
- *  \param  dividend     Value to be divided
- *  \param  divisor      Dividing value
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             Quotient of dividend/divisor
- */
 int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
 
 /** Unsigned Division
@@ -185,54 +167,16 @@ int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
  */
 int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format );
 
-
-/** Scalar inverse square root
- * 
- *  This function computes the reciprocal of the square root of the input value
- *  using an iterative approximation method as follows:
- * 
- *  \code
- *  1) result = 1.0
- *  2) result = result + result * (1 - input * result^2) / 2
- *  3) Repeat step #2 until desired precision is achieved
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The inverse square root of the input value.
- */
-int lib_dsp_math_invsqrroot( int input_value, int q_format );
-
 /** Scalar square root
  * 
- *  This function computes the square root of the input value using the
- *  following steps:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_invsqrroot( input )
- *  result = lib_dsp_math_reciprocal( result )
- *  \endcode
- * 
- *  Example:
- * 
- *  \code
- *  int result;
- *  result = lib_dsp_math_squareroot( sample, 28 );
- *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The square root of the input value.
+ *  This function computes the square root of an unsigned input value
+ *  using the Babylonian method of successive averaging
+ *  Error is <= 1 LSB and worst case performance is 96 cycles.
+ *
+ *  \param  x            Unsigned 32-bit value in Q8.24 format
+ *  \returns             Unsigned 32-bit value in Q8.24 format
  */
-int lib_dsp_math_squareroot( int input_value, int q_format );
+unsigned lib_dsp_math_squareroot(unsigned x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
