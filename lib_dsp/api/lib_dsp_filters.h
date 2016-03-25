@@ -3,6 +3,8 @@
 #ifndef LIB_DSP_FILTERS
 #define LIB_DSP_FILTERS
 
+#include "stdint.h"
+
 #define LIB_DSP_NUM_COEFFS_PER_BIQUAD  5  // Number of coefficients per biquad
 #define LIB_DSP_NUM_STATES_PER_BIQUAD  4  // Number of state values per biquad
 
@@ -23,9 +25,9 @@
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
  *  \code
- *  int filter_coeff[5] = { Q28(0.5),Q(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
- *  int filter_state[4] = { 0, 0, 0, 0 };
- *  int result = lib_dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
+ *  int32_t filter_coeff[5] = { Q28(0.5),Q(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
+ *  int32_t filter_state[4] = { 0, 0, 0, 0 };
+ *  int32_t result = lib_dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
  *  \endcode
  *
  *  The FIR algorithm involves multiplication between 32-bit filter
@@ -46,13 +48,13 @@
  *  \returns                The resulting filter output sample.
  */
  
-int lib_dsp_filters_fir
+int32_t lib_dsp_filters_fir
 (
-    int       input_sample,
-    const int filter_coeffs[],
-    int       state_data[],
-    int       tap_count,
-    int       q_format
+    int32_t       input_sample,
+    const int32_t filter_coeffs[],
+    int32_t       state_data[],
+    int32_t       tap_count,
+    int32_t       q_format
 );
 
 /** This function implements an interpolating FIR filter.
@@ -96,13 +98,13 @@ int lib_dsp_filters_fir
  
 void lib_dsp_filters_interpolate
 (
-    int       input_sample,
-    const int filter_coeffs[],
-    int       state_data[],
-    int       tap_count,
-    int       interp_factor,
-    int       output_samples[],
-    int       q_format
+    int32_t       input_sample,
+    const int32_t filter_coeffs[],
+    int32_t       state_data[],
+    int32_t       tap_count,
+    int32_t       interp_factor,
+    int32_t       output_samples[],
+    int32_t       q_format
 );
 
 /** This function implements an decimating FIR filter.
@@ -139,14 +141,14 @@ void lib_dsp_filters_interpolate
  *  \returns               The resulting decimated sample.
  */
  
-int lib_dsp_filters_decimate
+int32_t lib_dsp_filters_decimate
 (
-    int       input_samples[],
-    const int filter_coeffs[],
-    int       state_data[],
-    int       tap_count,
-    int       decim_factor,
-    int       q_format
+    int32_t       input_samples[],
+    const int32_t filter_coeffs[],
+    int32_t       state_data[],
+    int32_t       tap_count,
+    int32_t       decim_factor,
+    int32_t       q_format
 );
 
 /** This function implements a second order IIR (direct form I).
@@ -165,9 +167,9 @@ int lib_dsp_filters_decimate
  *  represented in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[5] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int filter_state[4] = { 0, 0, 0, 0 };
- *  int result = lib_dsp_biquad( sample, filter_coeff, filter_state, 28 );
+ *  int32_t filter_coeff[5] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
+ *  int32_t filter_state[4] = { 0, 0, 0, 0 };
+ *  int32_t result = lib_dsp_biquad( sample, filter_coeff, filter_state, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
@@ -186,12 +188,12 @@ int lib_dsp_filters_decimate
  *  \returns               The resulting filter output sample.
  */
  
-int lib_dsp_filters_biquad
+int32_t lib_dsp_filters_biquad
 (
-    int       input_sample,
-    const int filter_coeffs[LIB_DSP_NUM_COEFFS_PER_BIQUAD],
-    int       state_data   [LIB_DSP_NUM_STATES_PER_BIQUAD],
-    int       q_format
+    int32_t       input_sample,
+    const int32_t filter_coeffs[LIB_DSP_NUM_COEFFS_PER_BIQUAD],
+    int32_t       state_data   [LIB_DSP_NUM_STATES_PER_BIQUAD],
+    int32_t       q_format
 );
 
 /** This function implements a cascaded direct form I BiQuad filter
@@ -211,12 +213,12 @@ int lib_dsp_filters_biquad
  *  represented in Q28 fixed-point format:
  *   
  *  \code
- *  int filter_coeff[20] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
+ *  int32_t filter_coeff[20] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int filter_state[16] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
- *  int result = lib_dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
+ *  int32_t filter_state[16] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
+ *  int32_t result = lib_dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
@@ -237,13 +239,13 @@ int lib_dsp_filters_biquad
  *  \returns               The resulting filter output sample.
  */
  
-int lib_dsp_filters_biquads
+int32_t lib_dsp_filters_biquads
 (
-    int       input_sample,
-    const int filter_coeffs[],
-    int       state_data[],
-    int       num_sections,
-    int       q_format
+    int32_t       input_sample,
+    const int32_t filter_coeffs[],
+    int32_t       state_data[],
+    int32_t       num_sections,
+    int32_t       q_format
 );
 
 #endif

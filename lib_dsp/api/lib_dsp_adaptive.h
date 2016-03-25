@@ -3,6 +3,8 @@
 #ifndef LIB_DSP_ADAPTIVE
 #define LIB_DSP_ADAPTIVE
 
+#include <stdint.h>
+
 /** This function implements a least-mean-squares adaptive FIR filter.
  *
  *  LMS filters are a class of adaptive filters that adjust filter coefficients
@@ -28,10 +30,10 @@
  *  in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[100] = { ... not shown for brevity };
- *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ *  int32_t filter_coeff[100] = { ... not shown for brevity };
+ *  int32_t filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
  *
- *  int output_sample = lib_dsp_adaptive_lms
+ *  int32_t output_sample = lib_dsp_adaptive_lms
  *  (
  *    input_sample, reference_sample, &error_sample,
  *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
@@ -61,16 +63,16 @@
  *  \returns                  The resulting filter output sample.
  */
 
-int lib_dsp_adaptive_lms
+int32_t lib_dsp_adaptive_lms
 (
-    int input_sample,
-    int reference_sample,
-    int error_sample[],
-    int filter_coeffs[],
-    int state_data[],
-    int tap_count,
-    int step_size,
-    int q_format
+    int32_t input_sample,
+    int32_t reference_sample,
+    int32_t error_sample[],
+    int32_t filter_coeffs[],
+    int32_t state_data[],
+    int32_t tap_count,
+    int32_t step_size,
+    int32_t q_format
 );
 
 /** This function implements a normalized LMS FIR filter. LMS filters are a class of
@@ -98,10 +100,10 @@ int lib_dsp_adaptive_lms
  *  in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[100] = { ... not shown for brevity };
- *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ *  int32_t filter_coeff[100] = { ... not shown for brevity };
+ *  int32_t filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
  * 
- *  int output_sample = lib_dsp_adaptive_nlms
+ *  int32_t output_sample = lib_dsp_adaptive_nlms
  *  (
  *    input_sample, reference_sample, &error_sample,
  *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
@@ -137,16 +139,16 @@ int lib_dsp_adaptive_lms
  *  \returns                  The resulting filter output sample.
  */
 
-int lib_dsp_adaptive_nlms
+int32_t lib_dsp_adaptive_nlms
 (
-    int input_sample,
-    int reference_sample,
-    int error_sample[],
-    int filter_coeffs[],
-    int state_data[],
-    int tap_count,
-    int step_size,
-    int q_format
+    int32_t input_sample,
+    int32_t reference_sample,
+    int32_t error_sample[],
+    int32_t filter_coeffs[],
+    int32_t state_data[],
+    int32_t tap_count,
+    int32_t step_size,
+    int32_t q_format
 );
 
 #endif

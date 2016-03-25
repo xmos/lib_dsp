@@ -14,14 +14,14 @@
  * dct32() comprises two calls two dct16();
  */
 
-static const int costable8[4] = {
+static const int32_t costable8[4] = {
     2106220352,
     1785567396,
     1193077991,
     418953276,
 };
 
-static const int costable16[8] = {
+static const int32_t costable16[8] = {
     2137142927,
     2055013723,
     1893911494,
@@ -32,7 +32,7 @@ static const int costable16[8] = {
     210490206,
 };
 
-static const int costable32[16] = {
+static const int32_t costable32[16] = {
     2144896910,
     2124240380,
     2083126254,
@@ -51,13 +51,13 @@ static const int costable32[16] = {
     105372028,
 };
 
-static const int costable6[3] = {
+static const int32_t costable6[3] = {
     2074309917,
     1518500250,
     555809667,
 };
 
-static const int costable12[6] = {
+static const int32_t costable12[6] = {
     2129111628,
     1984016189,
     1703713325,
@@ -66,7 +66,7 @@ static const int costable12[6] = {
     280302863,
 };
 
-static const int costable24[12] = {
+static const int32_t costable24[12] = {
     2142885721,
     2106220352,
     2033516969,
@@ -81,39 +81,39 @@ static const int costable24[12] = {
     140452151,
 };
 
-static inline int mulcos(int x, int cos) {
+static inline int32_t mulcos(int32_t x, int32_t cos) {
     long long r = cos * (long long) x;
     return r >> 31;
 }
 
 #define DCT(N,M)                                \
-void dct##N(int output[N], int input[N]) { \
-    int temp[N/2], temp2[N/2]; \
-    for(int i = 0; i < N/2; i++) { \
+void dct##N(int32_t output[N], int32_t input[N]) { \
+    int32_t temp[N/2], temp2[N/2]; \
+    for(int32_t i = 0; i < N/2; i++) { \
         temp[i] = input[i] + input[N-1-i]; \
     } \
     dct##M(temp2, temp); \
-    for(int i = 0; i < N/2; i++) { \
+    for(int32_t i = 0; i < N/2; i++) { \
         output[2*i] = temp2[i]; \
     } \
-    for(int i = 0; i < N/2; i++) { \
-        int z = input[i] - input[N-1-i]; \
+    for(int32_t i = 0; i < N/2; i++) { \
+        int32_t z = input[i] - input[N-1-i]; \
         temp[i] = mulcos(z, costable##N[i]); \
     } \
     dct##M(temp2, temp); \
-    int last = temp2[0]; \
+    int32_t last = temp2[0]; \
     output[1] = last; \
-    for(int i = 1; i < N/2; i++) { \
+    for(int32_t i = 1; i < N/2; i++) { \
         last = temp2[i]*2 - last; \
         output[2*i+1] = last; \
     } \
 }
 
-void dct4(int output[4], int input[4]) {
-    int i03 = input[0] + input[3];
-    int i12 = input[1] + input[2];
-    int i03_ = input[0] - input[3];
-    int i12_ = input[1] - input[2];
+void dct4(int32_t output[4], int32_t input[4]) {
+    int32_t i03 = input[0] + input[3];
+    int32_t i12 = input[1] + input[2];
+    int32_t i03_ = input[0] - input[3];
+    int32_t i12_ = input[1] - input[2];
     output[0] = i03 + i12;
     output[2] = mulcos(i03 - i12, 1518500250);
     output[1] =  mulcos(i03_, 1984016189) +
@@ -122,19 +122,19 @@ void dct4(int output[4], int input[4]) {
         mulcos(i12_, -1984016189);
 }
 
-void dct3(int output[3], int input[3]) {
+void dct3(int32_t output[3], int32_t input[3]) {
     output[0] = input[0] + input[1] + input[2];
     output[1] = mulcos(input[0] - input[2], 1859775393);
     output[2] = ((input[0]+input[2])>>1) - input[1];
 }
 
-void dct2(int output[2], int input[2]) {
+void dct2(int32_t output[2], int32_t input[2]) {
     output[0] = input[0] + input[1];
-    int z = input[0] - input[1];
+    int32_t z = input[0] - input[1];
     output[1] = mulcos(z, 1518500250);
 }
 
-void dct1(int output[1], int input[1]) {
+void dct1(int32_t output[1], int32_t input[1]) {
     output[0] = input[0];
 }
 
@@ -149,10 +149,10 @@ DCT(32,16)
 #ifdef INCLUDE_REFERENCE_DCT
 #include <math.h>
 
-void referenceDCT(int output[], int input[], int N) {
-    for(int k = 0; k < N; k++) {
+void referenceDCT(int32_t output[], int32_t input[], int32_t N) {
+    for(int32_t k = 0; k < N; k++) {
         double sum = 0;
-        for(int i = 0; i < N; i++) {
+        for(int32_t i = 0; i < N; i++) {
             double z = input[i] * cos(M_PI*(2*i+1)*k/(2*N));
             sum += z;
         }

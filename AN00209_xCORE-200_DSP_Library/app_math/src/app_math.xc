@@ -35,20 +35,20 @@
 // errors from -3..+3
 #define ERROR_RANGE 7
 typedef struct {
-    int errors[ERROR_RANGE];
-    int max_positive_error;
-    int max_negative_error;
-    int num_checked;
+    int32_t errors[ERROR_RANGE];
+    int32_t max_positive_error;
+    int32_t max_negative_error;
+    int32_t num_checked;
 } error_s;
 
 /*
  * Report Errors within the Error Range. Top and Bottom or range contain saturated values
  */
-int report_errors(unsigned max_abs_error, error_s *e) {
-    int result = 1; // PASS
-    int half_range = ERROR_RANGE/2;
-    for(int i=0; i<ERROR_RANGE; i++) {
-        int error = -half_range+i;
+int32_t report_errors(uint32_t max_abs_error, error_s *e) {
+    int32_t result = 1; // PASS
+    int32_t half_range = ERROR_RANGE/2;
+    for(int32_t i=0; i<ERROR_RANGE; i++) {
+        int32_t error = -half_range+i;
         if(i == 0) {
            printf("Cases Error <= %d: %d\n",error, e->errors[i]);
         } else if (i == ERROR_RANGE-1) {
@@ -67,7 +67,7 @@ int report_errors(unsigned max_abs_error, error_s *e) {
     return result;
 }
 void reset_errors(error_s *e) {
-    for(int i=0; i<ERROR_RANGE; i++) {
+    for(int32_t i=0; i<ERROR_RANGE; i++) {
         e->errors[i] = 0;
     }
     e->max_positive_error = 0;
@@ -84,11 +84,11 @@ void reset_errors(error_s *e) {
  * \returns        true if check passed
 */
 
-int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
-    static int half_range = ERROR_RANGE/2;
-    unsigned error_found=0;
+int32_t check_result(int32_t result, int32_t expected, uint32_t max_abs_error, error_s *e) {
+    static int32_t half_range = ERROR_RANGE/2;
+    uint32_t error_found=0;
 
-    int error = result - expected;
+    int32_t error = result - expected;
 
     // Save max positive and negative error
     if (error < e->max_negative_error) e->max_negative_error = error;
@@ -121,16 +121,16 @@ int check_result(int result, int expected, unsigned max_abs_error, error_s *e) {
     return error_found;
 }
 
-unsigned overhead_time;
+uint32_t overhead_time;
 
 //Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
-inline int qs(double d, const int q_format) {
+inline int32_t qs(double d, const int32_t q_format) {
   return (int)((signed long long)((d) * ((unsigned long long)1 << (q_format+20)) + (1<<19)) >> 20);
 }
 
 void test_roots() {
-    int start_time, end_time;
-    unsigned cycles_taken; // absolute positive values
+    int32_t start_time, end_time;
+    uint32_t cycles_taken; // absolute positive values
     timer tmr;
     error_s err;
 
@@ -139,10 +139,10 @@ void test_roots() {
     printf("Test Roots\n");
     printf("----------\n");
 
-    unsigned result, expected;
+    uint32_t result, expected;
 
-    for(int i=1; i<=32; i++) { // exponent
-        unsigned x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
+    for(int32_t i=1; i<=32; i++) { // exponent
+        uint32_t x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
 
         //printf ("x == 0x%x\n", x);
         //printf("\n");
@@ -171,7 +171,7 @@ void test_roots() {
 }
 
 void test_multipliation_and_division() {
-    int q_format = 24; // location of the decimal point. Gives 8 digits of precision after conversion to floating point.
+    int32_t q_format = 24; // location of the decimal point. Gives 8 digits of precision after conversion to floating point.
     q8_24 result, expected;
     error_s err;
     reset_errors(&err);
@@ -240,8 +240,8 @@ void test_multipliation_and_division() {
 #define EXPONENTIAL_INPUT
 
 void test_trigonometric() {
-    int start_time, end_time;
-    unsigned cycles_taken; // absolute positive values
+    int32_t start_time, end_time;
+    uint32_t cycles_taken; // absolute positive values
     timer tmr;
 
     error_s err;
@@ -333,8 +333,8 @@ void test_trigonometric() {
     printf("Test lib_dsp_math_atan\n");
     reset_errors(&err);
 
-    int worst_cycles=0;
-    int worst_cycles_input;
+    int32_t worst_cycles=0;
+    int32_t worst_cycles_input;
 
     /*
     * Test result in terms of Errors:
@@ -343,8 +343,8 @@ void test_trigonometric() {
     */
 
 #ifdef EXPONENTIAL_INPUT
-    for(int i=-31; i<=31; i++) {
-        int x;
+    for(int32_t i=-31; i<=31; i++) {
+        int32_t x;
         if(i<0) {
             // create negative numbers
             //x = sext((1<<i), i+1); // -2^x (x in 31..1)
@@ -355,7 +355,7 @@ void test_trigonometric() {
             x = 0;
         }
 #else
-    for(unsigned x=0; x <= MAX_Q8_24; x+= X_INCR) {
+    for(uint32_t x=0; x <= MAX_Q8_24; x+= X_INCR) {
 #endif
 
 
@@ -402,7 +402,7 @@ void test_trigonometric() {
 void test_math(void)
 {
 
-    int start_time, end_time;
+    int32_t start_time, end_time;
     timer tmr;
     tmr :> start_time;
     tmr :> end_time;
@@ -421,8 +421,8 @@ void test_math(void)
 }
 
 void divide() {
-    int divisor = 3;
-    int result = 0x7FFFFFFF;;
+    int32_t divisor = 3;
+    int32_t result = 0x7FFFFFFF;;
     while(1) {
         result = lib_dsp_math_divide(result, divisor, 24);
         if(result==0) result = 0x7FFFFFFF;

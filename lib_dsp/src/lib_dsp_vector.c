@@ -12,8 +12,8 @@
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result = lib_dsp_vector_minimum( samples, 256 );
+ *  int32_t samples[256];
+ *  int32_t result = lib_dsp_vector_minimum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -21,14 +21,14 @@
  *  \returns               Array index where first minimum value occurs.
  */
 
-int lib_dsp_vector_minimum
+int32_t lib_dsp_vector_minimum
 (
-    const int* input_vector,
-    int        vector_length
+    const int32_t* input_vector,
+    int32_t        vector_length
 ) {
-    int x1, x0, result_location;
-    int search_location = 0;
-    int min_val = 2147483647;                    // Maximum 32 bit signed integer
+    int32_t x1, x0, result_location;
+    int32_t search_location = 0;
+    int32_t min_val = 2147483647;                    // Maximum 32 bit signed integer
 
     while( vector_length >= 4 )
     {
@@ -110,8 +110,8 @@ int lib_dsp_vector_minimum
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result = lib_dsp_vector_maximum( samples, 256 );
+ *  int32_t samples[256];
+ *  int32_t result = lib_dsp_vector_maximum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -119,14 +119,14 @@ int lib_dsp_vector_minimum
  *  \returns               Array index where first maximum value occurs.
  */
 
-int lib_dsp_vector_maximum
+int32_t lib_dsp_vector_maximum
 (
-    const int* input_vector,
-    int        vector_length
+    const int32_t* input_vector,
+    int32_t        vector_length
 ) {
-    int x1, x0, result_location;
-    int search_location = 0;
-    int max_val = -2147483648;                    // Minimum 32 bit signed integer
+    int32_t x1, x0, result_location;
+    int32_t search_location = 0;
+    int32_t max_val = -2147483648;                    // Minimum 32 bit signed integer
 
     while( vector_length >= 4 )
     {
@@ -213,8 +213,8 @@ int lib_dsp_vector_maximum
  *  Example:
  *
  *  \code 
- *  int samples[256];
- *  int result[256];
+ *  int32_t samples[256];
+ *  int32_t result[256];
  *  lib_dsp_vector_negate( samples, result, 256 );
  *  \endcode 
  * 
@@ -225,11 +225,11 @@ int lib_dsp_vector_maximum
 
 void lib_dsp_vector_negate
 (
-    const int* input_vector_X,
-    int*       result_vector_R,
-    int        vector_length
+    const int32_t* input_vector_X,
+    int32_t*       result_vector_R,
+    int32_t        vector_length
 ) {
-    int x1, x0;
+    int32_t x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -267,8 +267,8 @@ void lib_dsp_vector_negate
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result[256];
+ *  int32_t samples[256];
+ *  int32_t result[256];
  *  lib_dsp_vector_abs( samples, result, 256 );
  *  \endcode 
  * 
@@ -285,11 +285,11 @@ void lib_dsp_vector_negate
 
 void lib_dsp_vector_abs
 (
-    const int* input_vector_X,
-    int*       result_vector_R,
-    int        vector_length
+    const int32_t* input_vector_X,
+    int32_t*       result_vector_R,
+    int32_t        vector_length
 ) {
-    int x1, x0;
+    int32_t x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -330,9 +330,9 @@ void lib_dsp_vector_abs
  *  Example:
  * 
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );  
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );  
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -344,12 +344,12 @@ void lib_dsp_vector_abs
 
 void lib_dsp_vector_adds
 (
-    const int* input_vector_X,
-    int        input_scalar_A,
-    int*       result_vector_R,
-    int        vector_length
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    int32_t*       result_vector_R,
+    int32_t        vector_length
 ) {
-    int x1, x0;
+    int32_t x1, x0;
     while( vector_length >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -388,9 +388,9 @@ void lib_dsp_vector_adds
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );  
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );  
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -403,13 +403,13 @@ void lib_dsp_vector_adds
 
 void lib_dsp_vector_muls
 (
-    const int* input_vector_X,
-    int        input_scalar_A,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0; unsigned al;
+    int32_t ah, x1, x0; uint32_t al;
     
     while( vector_length >= 4 )
     {
@@ -482,9 +482,9 @@ void lib_dsp_vector_muls
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_addv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \code 
  * 
@@ -496,12 +496,12 @@ void lib_dsp_vector_muls
 
 void lib_dsp_vector_addv
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int*       result_vector_R,
-    int        vector_length
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    int32_t*       result_vector_R,
+    int32_t        vector_length
 ) {
-    int x1, x0, y1, y0;
+    int32_t x1, x0, y1, y0;
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -536,9 +536,9 @@ void lib_dsp_vector_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_subv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -550,12 +550,12 @@ void lib_dsp_vector_addv
 
 void lib_dsp_vector_subv
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int*       result_vector_R,
-    int        vector_length
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    int32_t*       result_vector_R,
+    int32_t        vector_length
 ) {
-    int x1, x0, y1, y0;
+    int32_t x1, x0, y1, y0;
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -591,9 +591,9 @@ void lib_dsp_vector_subv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_mulv( input_vector_X, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -606,13 +606,13 @@ void lib_dsp_vector_subv
 
 void lib_dsp_vector_mulv
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0; unsigned al;
+    int32_t ah, x1, x0, y1, y0; uint32_t al;
     
     // Q24 * Q24 = Q48 -> Q24  (24 = 24+24-24)
     // iiiiiiii,iiiiiiii,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff
@@ -698,10 +698,10 @@ void lib_dsp_vector_mulv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_mulv_adds( input_vector_X, input_vector_Y, scalar_value_A, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -715,14 +715,14 @@ void lib_dsp_vector_mulv
 
 void lib_dsp_vector_mulv_adds
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        input_scalar_A,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    int32_t        input_scalar_A,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0; unsigned al;    
+    int32_t ah, x1, x0, y1, y0; uint32_t al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -795,10 +795,10 @@ void lib_dsp_vector_mulv_adds
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int input_vector_Y[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_muls_addv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -812,14 +812,14 @@ void lib_dsp_vector_mulv_adds
 
 void lib_dsp_vector_muls_addv
 (
-    const int* input_vector_X,
-    int        input_scalar_A,
-    const int* input_vector_Y,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    const int32_t* input_vector_Y,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0; unsigned al;    
+    int32_t ah, x1, x0, y1, y0; uint32_t al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -892,10 +892,10 @@ void lib_dsp_vector_muls_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int input_vector_Y[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_muls_subv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -909,14 +909,14 @@ void lib_dsp_vector_muls_addv
 
 void lib_dsp_vector_muls_subv
 (
-    const int* input_vector_X,
-    int        input_scalar_A,
-    const int* input_vector_Y,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    const int32_t* input_vector_Y,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0; unsigned al;    
+    int32_t ah, x1, x0, y1, y0; uint32_t al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -990,10 +990,10 @@ void lib_dsp_vector_muls_subv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_vector_Z[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Z[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_mulv_subv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -1007,14 +1007,14 @@ void lib_dsp_vector_muls_subv
 
 void lib_dsp_vector_mulv_addv
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    const int* input_vector_Z,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    const int32_t* input_vector_Z,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0, z1, z0; unsigned al;    
+    int32_t ah, x1, x0, y1, y0, z1, z0; uint32_t al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -1092,10 +1092,10 @@ void lib_dsp_vector_mulv_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_vector_Z[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Z[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_mulv_subv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -1109,14 +1109,14 @@ void lib_dsp_vector_mulv_addv
 
 void lib_dsp_vector_mulv_subv
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    const int* input_vector_Z,
-    int*       result_vector_R,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    const int32_t* input_vector_Z,
+    int32_t*       result_vector_R,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah, x1, x0, y1, y0, z1, z0; unsigned al;    
+    int32_t ah, x1, x0, y1, y0, z1, z0; uint32_t al;    
     while( vector_length >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));

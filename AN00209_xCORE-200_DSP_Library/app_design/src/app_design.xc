@@ -9,8 +9,8 @@
 // The biquad functions utilize coeffs arrays of length 5 but ...
 // The coeffs below are arraned as N x 6 to keep coeff arrays DWORD aligned.
 
-int coeff[8][6]; // Coefficients for each filter
-int state[8][4]; // State data for each filter
+int32_t coeff[8][6]; // Coefficients for each filter
+int32_t state[8][4]; // State data for each filter
 
 const char* names[] =
 {
@@ -37,17 +37,17 @@ int main( void )
 
 	// Initialize filter state data to zeros
 	
-	for( int ii = 0; ii < 8; ++ii ) {
-		for( int jj = 0; jj < 4; ++jj ) state[ii][jj] = 0;
+	for( int32_t ii = 0; ii < 8; ++ii ) {
+		for( int32_t jj = 0; jj < 4; ++jj ) state[ii][jj] = 0;
 	}
 
 	// Perform 8 passes through filters independently using step function
 
-	for( int ii = 0; ii < 8; ++ii )
+	for( int32_t ii = 0; ii < 8; ++ii )
 	{
 		int sample = Q28( 1.0 );
 		printf( "%s ", names[ii] );
-		for( int jj = 0; jj < 8; ++jj ) {
+		for( int32_t jj = 0; jj < 8; ++jj ) {
 			sample = lib_dsp_filters_biquad( sample, coeff[ii], state[ii], 28 );
 			printf( "%+04.3f ", F28(sample) );
 		}
