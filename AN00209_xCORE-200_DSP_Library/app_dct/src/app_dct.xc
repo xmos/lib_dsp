@@ -5,13 +5,13 @@
 #include <xs1.h>
 #include <lib_dsp_dct.h>
 
-int data[24] = {
+int32_t data[24] = {
     24000, 23000, 22000, 21000, 20000, 19000, 18000, 17000, 16000, 15000,
     14000, 13000, 12000, 11000, 10000,  9000,  8000,  7000,  6000,  5000,
     4000,  3000,  2000,  1000
 };
 
-int correct[24] = {
+int32_t correct[24] = {
     300000, 116633,
     0, 12883,
     0, 4581,
@@ -28,10 +28,10 @@ int correct[24] = {
 
 int main( void )
 {
-    int dcted[24];
+    int32_t dcted[24];
     
     dct24(dcted, data);
-    for(int i = 0; i < 24; i++) {
+    for(int32_t i = 0; i < 24; i++) {
         printf("%5d %6d%s\n", data[i], dcted[i], dcted[i] != correct[i] ? " Wrong":"");
     }
     return 0;

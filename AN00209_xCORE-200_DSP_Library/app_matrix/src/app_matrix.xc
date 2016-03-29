@@ -16,13 +16,13 @@
 #define MATRIX_NUM_COLS   3
 
 // Declare global variables and arrays
-int  Src1[] = { Q24(.11), Q24(.12), Q24(.13),
+int32_t  Src1[] = { Q24(.11), Q24(.12), Q24(.13),
                 Q24(.21), Q24(.22), Q24(.23),
                 Q24(.31), Q24(.32), Q24(.33)};
-int  Src2[] = { Q24(.41), Q24(.42), Q24(.43),
+int32_t  Src2[] = { Q24(.41), Q24(.42), Q24(.43),
                 Q24(.51), Q24(.52), Q24(.53),
                 Q24(.61), Q24(.62), Q24(.63)};
-int           Dst[MATRIX_NUM_ROWS*MATRIX_NUM_COLS];
+int32_t           Dst[MATRIX_NUM_ROWS*MATRIX_NUM_COLS];
 
 int main(void)
 {

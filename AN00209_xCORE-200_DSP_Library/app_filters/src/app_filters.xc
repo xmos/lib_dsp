@@ -19,22 +19,22 @@
 
 #define INTERP_FILTER_LENGTH  160
 
-void print31( int x ) {if(x >=0) printf("+%f ",F31(x)); else printf("%f ",F31(x));}
+void print31( int32_t x ) {if(x >=0) printf("+%f ",F31(x)); else printf("%f ",F31(x));}
 
 // Declare global variables and arrays
-int  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
+int32_t  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
                Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25), Q24(.26), Q24(.27), Q24(.28), Q24(.29), Q24(.30),
                Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35), Q24(.36), Q24(.37), Q24(.38), Q24(.39), Q24(.40),
                Q24(.41), Q24(.42), Q24(.43), Q24(.44), Q24(.45), Q24(.46), Q24(.47), Q24(.48), Q24(.49), Q24(.50),
                Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 
-int           Dst[INTERP_FILTER_LENGTH];
+int32_t           Dst[INTERP_FILTER_LENGTH];
 
-int firCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
+int32_t firCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
                     Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25), Q24(.26), Q24(.27), Q24(.28), Q24(.29), Q24(.30),
                     Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35), Q24(.36), Q24(.37), Q24(.38), Q24(.39), Q24(.40)};
 
-int firCoeffsInt[] =
+int32_t firCoeffsInt[] =
 {
     Q31(+0.0391607),Q31(+0.0783215),Q31(+0.0191607),Q31(+0.01531791),Q31(-0.03098222),
     Q31(+0.0391607),Q31(+0.0783215),Q31(+0.0191607),Q31(+0.01531791),Q31(-0.03098222),
@@ -78,20 +78,20 @@ int firCoeffsInt[] =
     Q31(+0.0391607),Q31(+0.0783215),Q31(+0.0191607),Q31(+0.01531791),Q31(-0.03098222),
 };
 
-int iirCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15),
+int32_t iirCoeffs[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15),
                     Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25),
                     Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35)};
 
 //int filterState[FIR_FILTER_LENGTH];
-int filterState[INTERP_FILTER_LENGTH];
+int32_t filterState[INTERP_FILTER_LENGTH];
 
-int inter_coeff[INTERP_FILTER_LENGTH];
-int decim_coeff[INTERP_FILTER_LENGTH];
-int decim_input[16];
+int32_t inter_coeff[INTERP_FILTER_LENGTH];
+int32_t decim_coeff[INTERP_FILTER_LENGTH];
+int32_t decim_input[16];
 
 int main(void)
 {
-  int i, j, c, r, x, y;
+  int32_t i, j, c, r, x, y;
 
 
                  // Initiaize FIR filter state array
@@ -190,7 +190,7 @@ int main(void)
 
 
   printf ("\nDecimation\n");
-  for( int r = 2; r <= 8; ++r )
+  for( int32_t r = 2; r <= 8; ++r )
   {
     for( i = 0; i < 16; ++i )
       decim_input[i] = Q31(0.1);

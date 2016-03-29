@@ -50,7 +50,7 @@ lib_dsp_fft_complex_short_t;
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function merges two split spectra. It is the exact inverse operation of
  * lib_dsp_fft_split_spectrum.
@@ -58,7 +58,7 @@ void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], unsigned N );
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function copies an array of lib_dsp_fft_complex_short_t elements to an array of an equal
  * number of lib_dsp_fft_complex_t elements.
@@ -67,7 +67,7 @@ void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], unsigned N );
  * \param[in]     s   Array of lib_dsp_fft_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], unsigned N );
+void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], uint32_t N );
 
 /** This function copies an array of lib_dsp_fft_complex_t elements to an array of an equal
  * number of lib_dsp_fft_complex_short_t elements.
@@ -76,7 +76,7 @@ void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_s
  * \param[in]     l   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], unsigned N );
+void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], uint32_t N );
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by
@@ -87,7 +87,7 @@ void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_com
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function computes a forward FFT. The complex input signal is
  * supplied in an array of real and imaginary fixed-point values.
@@ -107,7 +107,7 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], unsigned N );
  */
 void lib_dsp_fft_forward (
     lib_dsp_fft_complex_t pts[],
-    unsigned              N,
+    uint32_t              N,
     const int32_t         sine[] );
 
 /** This function computes an inverse FFT. The complex input array is
@@ -127,7 +127,7 @@ void lib_dsp_fft_forward (
  */
 void lib_dsp_fft_inverse (
     lib_dsp_fft_complex_t pts[],
-    unsigned              N,
+    uint32_t              N,
     const int32_t         sine[] );
 
 #endif

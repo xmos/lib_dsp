@@ -24,9 +24,9 @@
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
  *  \code
- *  int filter_coeff[5] = { Q28(0.5),Q(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
- *  int filter_state[4] = { 0, 0, 0, 0 };
- *  int result = lib_dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
+ *  int32_t filter_coeff[5] = { Q28(0.5),Q(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
+ *  int32_t filter_state[4] = { 0, 0, 0, 0 };
+ *  int32_t result = lib_dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
  *  \endcode
  *
  *  The FIR algorithm involves multiplication between 32-bit filter
@@ -47,16 +47,16 @@
  *  \returns                The resulting filter output sample.
  */
 
-int lib_dsp_filters_fir
+int32_t lib_dsp_filters_fir
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        tap_count,
-    int        q_format
+    int32_t        input_sample,
+    const int32_t* filter_coeffs,
+    int32_t*       state_data,
+    int32_t        tap_count,
+    int32_t        q_format
 ) {
-    int ah = 0, b0, b1, s0 = input_sample, s1, s2, s3;
-    unsigned int al = 1 << (q_format-1);
+    int32_t ah = 0, b0, b1, s0 = input_sample, s1, s2, s3;
+    uint32_t al = 1 << (q_format-1);
     
     while( tap_count >= 20 )
     {
@@ -753,15 +753,15 @@ int lib_dsp_filters_fir
 
 // FIR filter (even coeff array boundary, no state data shifting - for internal use only)
 
-int _lib_dsp_filters_interpolate__fir_even
+int32_t _lib_dsp_filters_interpolate__fir_even
 (
-    const int* coeff,
-    const int* state,
-    int        taps,
-    int        format
+    const int32_t* coeff,
+    const int32_t* state,
+    int32_t        taps,
+    int32_t        format
 ) {
-    int ah = 0, b0, b1, s0, s1;
-    unsigned int al = 1 << (format-1);
+    int32_t ah = 0, b0, b1, s0, s1;
+    uint32_t al = 1 << (format-1);
     
     while( taps >= 8 )
     {
@@ -863,15 +863,15 @@ int _lib_dsp_filters_interpolate__fir_even
 
 // FIR filter (odd coeff array boundary, no state data shifting - for internal use only)
 
-int _lib_dsp_filters_interpolate__fir_odd
+int32_t _lib_dsp_filters_interpolate__fir_odd
 (
-    const int* coeff,
-    const int* state,
-    int        taps,
-    int        format
+    const int32_t* coeff,
+    const int32_t* state,
+    int32_t        taps,
+    int32_t        format
 ) {
-    int ah = 0, b0, b1, s0, s1;
-    unsigned int al = 1 << (format-1);
+    int32_t ah = 0, b0, b1, s0, s1;
+    uint32_t al = 1 << (format-1);
     
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(coeff[0]),"r"(state[0]),"0"(ah),"1"(al));
     --taps;
@@ -1015,17 +1015,17 @@ int _lib_dsp_filters_interpolate__fir_odd
 
 void lib_dsp_filters_interpolate
 (
-    int       input,
-    const int coeff[],
-    int       state[],
-    int       taps,
-    int       L,
-    int       output[],
-    int       q_format
+    int32_t       input,
+    const int32_t coeff[],
+    int32_t       state[],
+    int32_t       taps,
+    int32_t       L,
+    int32_t       output[],
+    int32_t       q_format
 ) {
-    int s0 = input, s1, s2, s3;
-    int odd = 0, length = taps / L, len;
-    int* ss = state;
+    int32_t s0 = input, s1, s2, s3;
+    int32_t odd = 0, length = taps / L, len;
+    int32_t* ss = state;
 
     /*
     L = 5, N = 3
@@ -1108,7 +1108,7 @@ void lib_dsp_filters_interpolate
         case 1: ss[0] = s0; break;
     }
     
-    for( int i = 0; i < L; ++i )
+    for( int32_t i = 0; i < L; ++i )
     {
         if( odd )
             output[i] = _lib_dsp_filters_interpolate__fir_odd( coeff, state, length, q_format );
@@ -1153,18 +1153,18 @@ void lib_dsp_filters_interpolate
  *  \returns               The resulting decimated sample.
  */
 
-int lib_dsp_filters_decimate
+int32_t lib_dsp_filters_decimate
 (
-    int       input_samples[],
-    const int filter_coeffs[],
-    int       state_data[],
-    int       tap_count,
-    int       decim_factor,
-    int       q_format
+    int32_t       input_samples[],
+    const int32_t filter_coeffs[],
+    int32_t       state_data[],
+    int32_t       tap_count,
+    int32_t       decim_factor,
+    int32_t       q_format
 ) {
-    int  output;
-    int* dst = state_data + tap_count - 1;
-    int* src = dst - (decim_factor-1);
+    int32_t  output;
+    int32_t* dst = state_data + tap_count - 1;
+    int32_t* src = dst - (decim_factor-1);
     
     /*
                                     b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 bA bB
@@ -1174,8 +1174,8 @@ int lib_dsp_filters_decimate
     */
 
     output = lib_dsp_filters_fir( input_samples[0], filter_coeffs, state_data, tap_count, q_format );
-    for( int i = 0; i < tap_count - (decim_factor-1); ++i ) *dst-- = *src--;
-    for( int i = 0; i < decim_factor-1; ++i ) state_data[i] = input_samples[i+1];
+    for( int32_t i = 0; i < tap_count - (decim_factor-1); ++i ) *dst-- = *src--;
+    for( int32_t i = 0; i < decim_factor-1; ++i ) state_data[i] = input_samples[i+1];
     return output;    
 }
 
@@ -1195,9 +1195,9 @@ int lib_dsp_filters_decimate
  *  represented in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[5] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int filter_state[4] = { 0, 0, 0, 0 };
- *  int result = lib_dsp_biquad( sample, filter_coeff, filter_state, 28 );
+ *  int32_t filter_coeff[5] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
+ *  int32_t filter_state[4] = { 0, 0, 0, 0 };
+ *  int32_t result = lib_dsp_biquad( sample, filter_coeff, filter_state, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
@@ -1216,14 +1216,14 @@ int lib_dsp_filters_decimate
  *  \returns               The resulting filter output sample.
  */
 
-int lib_dsp_filters_biquad
+int32_t lib_dsp_filters_biquad
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        q_format
+    int32_t        input_sample,
+    const int32_t* filter_coeffs,
+    int32_t*       state_data,
+    int32_t        q_format
 ) {
-    unsigned al; int ah, c1,c2, s1,s2;
+    uint32_t al; int32_t ah, c1,c2, s1,s2;
     asm("ldd %0,%1,%2[0]":"=r"(c2),"=r"(c1):"r"(filter_coeffs));
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input_sample),"r"(c1),"0"(0),"1"(1<<(q_format-1)));
     asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(state_data));
@@ -1257,12 +1257,12 @@ int lib_dsp_filters_biquad
  *  represented in Q28 fixed-point format:
  *   
  *  \code
- *  int filter_coeff[20] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
+ *  int32_t filter_coeff[20] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int filter_state[16] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
- *  int result = lib_dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
+ *  int32_t filter_state[16] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
+ *  int32_t result = lib_dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
@@ -1283,15 +1283,15 @@ int lib_dsp_filters_biquad
  *  \returns               The resulting filter output sample.
  */
 
-int lib_dsp_filters_biquads
+int32_t lib_dsp_filters_biquads
 (
-    int        input_sample,
-    const int* filter_coeffs,
-    int*       state_data,
-    int        num_sections,
-    int        q_format
+    int32_t        input_sample,
+    const int32_t* filter_coeffs,
+    int32_t*       state_data,
+    int32_t        num_sections,
+    int32_t        q_format
 ) {
-    unsigned al; int ah, b0,b1, s1,s2;
+    uint32_t al; int32_t ah, b0,b1, s1,s2;
     for( ;; )
     {
         switch( num_sections )

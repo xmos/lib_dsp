@@ -3,6 +3,7 @@
 #ifndef LIB_DSP_QFORMAT
 #define LIB_DSP_QFORMAT
 
+
 /** These Macros can be used to parameterize the conversion macros.
  * E.g.
  * \code
@@ -48,7 +49,7 @@
 
 // Convert from fixed point to double precision floating point
 // The number indicates the fractional bits or the position of the binary point
-#define F31(x) ((double)(x)/(double)(unsigned)(1<<31)) // needs unsigned cast because bit 31 is 1
+#define F31(x) ((double)(x)/(double)(uint32_t)(1<<31)) // needs uint32_t cast because bit 31 is 1
 #define F30(x) ((double)(x)/(double)(1<<30))
 #define F29(x) ((double)(x)/(double)(1<<29))
 #define F28(x) ((double)(x)/(double)(1<<28))

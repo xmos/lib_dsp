@@ -3,6 +3,8 @@
 #ifndef LIB_DSP_STATISTICS
 #define LIB_DSP_STATISTICS
 
+#include "stdint.h"
+
 /** Vector mean: ``R = (X[0] + X[N-1]) / N``
  * 
  *  This function computes the mean of the values contained within
@@ -17,7 +19,7 @@
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_mean( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -26,11 +28,11 @@
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_mean
+int32_t lib_dsp_vector_mean
 (
-    const int input_vector_X[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector power (sum of squares): ``R = X[0]^2 + X[N-1]^2``
@@ -49,7 +51,7 @@ int lib_dsp_vector_mean
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_power( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -58,11 +60,11 @@ int lib_dsp_vector_mean
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_power
+int32_t lib_dsp_vector_power
 (
-    const int input_vector_X[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector root mean square: ``R = ((X[0]^2 + X[N-1]^2) / N) ^ 0.5)``
@@ -89,7 +91,7 @@ int lib_dsp_vector_power
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_rms( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -98,11 +100,11 @@ int lib_dsp_vector_power
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_rms
+int32_t lib_dsp_vector_rms
 (
-    const int input_vector_X[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector dot product: ``R = X[0] * Y[0] + X[N-1] * Y[N-1]``
@@ -121,7 +123,7 @@ int lib_dsp_vector_rms
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_dotprod( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -131,12 +133,12 @@ int lib_dsp_vector_rms
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_dotprod
+int32_t lib_dsp_vector_dotprod
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 #endif

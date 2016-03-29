@@ -33,10 +33,10 @@
  *  in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[100] = { ... not shown for brevity };
- *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ *  int32_t filter_coeff[100] = { ... not shown for brevity };
+ *  int32_t filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
  *
- *  int output_sample = lib_dsp_adaptive_lms
+ *  int32_t output_sample = lib_dsp_adaptive_lms
  *  (
  *    input_sample, reference_sample, &error_sample,
  *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
@@ -66,18 +66,18 @@
  *  \returns                  The resulting filter output sample.
  */
 
-int lib_dsp_adaptive_lms
+int32_t lib_dsp_adaptive_lms
 (
-    int  source_sample,
-    int  reference_sample,
-    int* error_sample,
-    int* filter_coeffs,
-    int* state_data,
-    int  tap_count,
-    int  step_size,
-    int  q_format
+    int32_t  source_sample,
+    int32_t  reference_sample,
+    int32_t* error_sample,
+    int32_t* filter_coeffs,
+    int32_t* state_data,
+    int32_t  tap_count,
+    int32_t  step_size,
+    int32_t  q_format
 ) {
-    int output_sample, mu_err;
+    int32_t output_sample, mu_err;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
@@ -123,10 +123,10 @@ int lib_dsp_adaptive_lms
  *  in Q28 fixed-point format:
  * 
  *  \code
- *  int filter_coeff[100] = { ... not shown for brevity };
- *  int filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
+ *  int32_t filter_coeff[100] = { ... not shown for brevity };
+ *  int32_t filter_state[100] = { 0, 0, 0, 0, ... not shown for brevity };
  * 
- *  int output_sample = lib_dsp_adaptive_nlms
+ *  int32_t output_sample = lib_dsp_adaptive_nlms
  *  (
  *    input_sample, reference_sample, &error_sample,
  *    filter_coeff_array, filter_state_array, 100, Q28(0.01), 28
@@ -162,18 +162,18 @@ int lib_dsp_adaptive_lms
  *  \returns                  The resulting filter output sample.
  */
 
-int lib_dsp_adaptive_nlms
+int32_t lib_dsp_adaptive_nlms
 (
-    int  source_sample,
-    int  reference_sample,
-    int* error_sample,
-    int* filter_coeffs,
-    int* state_data,
-    int  tap_count,
-    int  step_size,
-    int  q_format
+    int32_t  source_sample,
+    int32_t  reference_sample,
+    int32_t* error_sample,
+    int32_t* filter_coeffs,
+    int32_t* state_data,
+    int32_t  tap_count,
+    int32_t  step_size,
+    int32_t  q_format
 ) {
-    int output_sample, energy, adjustment, ee, qq;
+    int32_t output_sample, energy, adjustment, ee, qq;
     
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
@@ -197,7 +197,7 @@ int lib_dsp_adaptive_nlms
     // Saturate the reciprocal value to max value for the given q_format
     if( energy < (1 << (31-(31-qq)*2)) ) energy = (1 << (31-(31-qq)*2)) + 0;
     //Todo: Investigate why result is different after usign lib_dsp_math_divide instead of lib_dsp_math_reciprocal
-    energy = lib_dsp_math_divide(1, energy, qq ); // reciprocal
+    energy = lib_dsp_math_divide( (1 << qq), energy, qq );
     adjustment = lib_dsp_math_multiply( *error_sample, step_size, q_format );
     adjustment = lib_dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
     

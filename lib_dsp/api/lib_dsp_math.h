@@ -4,20 +4,22 @@
 #define LIB_DSP_MATH
 
 #include "xccompat.h"
+#include "stdint.h"
 
 #define MIN_INT (0x80000000)
 #define MAX_INT (0x7FFFFFFF)
 
 /** Q1.31 fixed point format with 31 fractional bits
- * Explcit type to make it clear which functions use this Q format.
+ * Explcit type to make it clear which functions are fixed to this Q format.
  */
-typedef int q1_31;
-
+typedef int32_t  q1_31;
+typedef uint32_t uq1_31;
 
 /** Q8.24 fixed point format with 24 fractional bits
- * Explcit type to make it clear which functions use this Q format.
+ * Explicit type to make it clear which functions are fixed to this Q format.
  */
-typedef int q8_24;
+typedef int32_t  q8_24;
+typedef uint32_t uq8_24;
 
 // Constants for the Q8.24 format
 
@@ -66,7 +68,7 @@ typedef int q8_24;
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t  result;
  *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
  * 
@@ -76,11 +78,11 @@ typedef int q8_24;
  *  \returns              input1_value * input2_value.
  */
 
-int lib_dsp_math_multiply
+int32_t  lib_dsp_math_multiply
 (
-    int input1_value,
-    int input2_value,
-    int q_format
+    int32_t  input1_value,
+    int32_t  input2_value,
+    int32_t  q_format
 );
 
 /**  Scalar saturated multipliplication
@@ -103,7 +105,7 @@ int lib_dsp_math_multiply
  *  Example:
  *
  *  \code
- *  int result;
+ *  int32_t  result;
  *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
  *
@@ -116,10 +118,11 @@ int lib_dsp_math_multiply
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int lib_dsp_math_multiply_sat(
-        int input1_value,
-        int input2_value,
-        int q_format );
+int32_t  lib_dsp_math_multiply_sat(
+    int32_t  input1_value,
+    int32_t  input2_value,
+    int32_t  q_format 
+);
 
 
 /** Scalar reciprocal
@@ -136,7 +139,7 @@ int lib_dsp_math_multiply_sat(
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t  result;
  *  result = lib_dsp_math_reciprocal( sample, 28 );
  *  \endcode
  * 
@@ -145,38 +148,38 @@ int lib_dsp_math_multiply_sat(
  *  \returns             The reciprocal of the input value.
  */
 
-int lib_dsp_math_divide( int dividend, int divisor, unsigned q_format );
+int32_t  lib_dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_format );
 
 /** Unsigned Division
  *
- *  This function divides two unsigned integer values and produces a result according
+ *  This function divides two uint32_t  integer values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
  *  It was optimised for performance using a dedicated instruction for unsinged long division.
  *
  *  Example:
  *
  *  \code
- *  unsigned quotient;
+ *  uint32_t  quotient;
  *  quotient = lib_dsp_math_divide(divident, divisor, 24);
  *  \endcode
  *
  *  \param  dividend     Value to be divided
  *  \param  divisor      Dividing value
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
+ *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
  *  \returns             Quotient of dividend/divisor
  */
-int lib_dsp_math_divide_unsigned(unsigned dividend, unsigned divisor, unsigned q_format );
+uint32_t lib_dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32_t  q_format );
 
 /** Scalar square root
  * 
- *  This function computes the square root of an unsigned input value
+ *  This function computes the square root of an uint32_t  input value
  *  using the Babylonian method of successive averaging
  *  Error is <= 1 LSB and worst case performance is 96 cycles.
  *
  *  \param  x            Unsigned 32-bit value in Q8.24 format
  *  \returns             Unsigned 32-bit value in Q8.24 format
  */
-unsigned lib_dsp_math_squareroot(unsigned x);
+uint32_t  lib_dsp_math_squareroot(uint32_t  x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
