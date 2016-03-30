@@ -18,7 +18,13 @@ APP_NAME =
 # If the variable XCC_MAP_FLAGS is set it overrides the flags passed to
 # xcc for the final link (mapping) stage.
 
-XCC_FLAGS = -O3 -g -report
+COMMON_FLAGS = -O2 -g -report
+
+XCC_FLAGS_complex_fft = $(COMMON_FLAGS) -DCOMPLEX_FFT -DNUM_CHANS=3
+XCC_FLAGS_tworeals_fft = $(COMMON_FLAGS) -DNUM_CHANS=4
+
+XCC_FLAGS_complex_fft_int16_buf = $(COMMON_FLAGS) -DCOMPLEX_FFT -DINT16_BUFFERS -DNUM_CHANS=6
+XCC_FLAGS_tworeals_fft_int16_buf = $(COMMON_FLAGS) -DINT16_BUFFERS -DNUM_CHANS=8
 
 # The USED_MODULES variable lists other build module used by the application.
 

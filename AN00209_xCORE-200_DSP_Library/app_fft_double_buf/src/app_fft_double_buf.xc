@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <xs1.h>
 #include <lib_dsp.h>
+#include <stdlib.h>
+#include <math.h>
 
 /**
 Example showing FFT processing of a configurable number of input signals received through a double buffer.
@@ -46,39 +48,68 @@ swap function of the interface to synchronise with the do_fft task and swap poin
  */
 
 // Choose Complex or Real Input Data
-#define COMPLEX_FFT
+
+#ifndef NUM_CHANS           
 // Number of channels
-#define NUM_CHANS 6
+#define NUM_CHANS 4
+#endif 
+
+#ifndef N_FFT_POINTS
 // FFT Points
-#define N_FFT_POINTS 4096
+#define N_FFT_POINTS 512
+#endif
 
 /** Activate timing check */
 #define CHECK_TIMING
 
 /****/
 
-#ifdef COMPLEX_FFT
-typedef struct {
-    lib_dsp_fft_complex_short_t sample_blocks[NUM_CHANS][N_FFT_POINTS];
-} multichannel_sample_block_s ;
-
+// Array holding one complex signal or two real signals
+#ifdef INT16_BUFFERS
+#define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_short_t
 #else
-// SHORT_INT_TWOREALS_FFT
+#define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_t
+#endif
+
+#ifdef COMPLEX_FFT
+#define NUM_SIGNAL_ARRAYS NUM_CHANS
+#else
+#define NUM_SIGNAL_ARRAYS NUM_CHANS/2
+#endif
+
 typedef struct {
-    lib_dsp_fft_complex_short_t two_re[N_FFT_POINTS];
-    lib_dsp_fft_complex_short_t two_im[N_FFT_POINTS];
-} two_channel_sample_block_s ;
-typedef struct {
-    two_channel_sample_block_s two_channels[NUM_CHANS/2];
+    SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS][N_FFT_POINTS];
 } multichannel_sample_block_s ;
 
-  #if N_FFT_POINTS*NUM_CHANS > 16384
-  //#error "Max N_FFT_POINTS*NUM_CHANS is 16384 for COMPLEX_FFT"
-  #endif
-#endif
+typedef struct {
+    SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS*2][N_FFT_POINTS/2];
+} half_spectra_s;
 
 #define SAMPLE_FREQ 48000
 #define SAMPLE_PERIOD_CYCLES XS1_TIMER_HZ/SAMPLE_FREQ
+
+void print_signal(SIGNAL_ARRAY_TYPE signal[N_FFT_POINTS]) {
+#ifdef INT16_BUFFERS
+       printf("re,      im         \n");
+       for(int32_t i=0; i<N_FFT_POINTS; i++) {
+           //printf( "0x%x, 0x%x\n", signal[i].re, signal[i].im);
+           printf( "%.5f, %.5f\n", F14(signal[i].re), F14(signal[i].im));
+       }
+
+#else
+       printf("re,      im         \n");
+       for(int32_t i=0; i<N_FFT_POINTS; i++) {
+           printf( "%.8f, %.8f\n", F24(signal[i].re), F24(signal[i].im));
+       }
+#endif  
+}
+
+void print_buffer(multichannel_sample_block_s *buffer) {
+    for(int32_t c=0; c<NUM_SIGNAL_ARRAYS; c++) {
+        print_signal(buffer->data[c]);
+    }
+}
+
 
 /** Data structure to store blocks of samples for multiple digital signals
 */
@@ -101,20 +132,23 @@ interface bufswap_i {
     processing it.
 */
 
+unsafe {
 void do_fft(server interface bufswap_i input,
         multichannel_sample_block_s * initial_buffer)
 {
   multichannel_sample_block_s * movable buffer = initial_buffer;
 
-  timer tmr; unsigned start_time, end_time, overhead_time;
+  timer tmr; uint32_t start_time, end_time, overhead_time;
   tmr :> start_time;
   tmr :> end_time;
   overhead_time = end_time - start_time;
 
-#ifndef COMPLEX_FFT
-  // the two real vectors are in the input buffer!
-  // only the imaginary parts have to be declared locally
-  int imag_result[NUM_CHANS][N_FFT_POINTS];
+#ifdef INT16_BUFFERS
+  printf("%d Point FFT Processing of %d int16_t signals received through a double buffer\n"
+                ,N_FFT_POINTS,NUM_CHANS);
+#else
+  printf("%d Point FFT Processing of %d int32_t signals received through a double buffer\n"
+                ,N_FFT_POINTS,NUM_CHANS);
 #endif
 
   /** The main loop of the filling task waits for a swap transaction with
@@ -134,32 +168,101 @@ void do_fft(server interface bufswap_i input,
         input_buf = move(buffer);
         buffer = move(tmp);
 
-        tmr :> start_time;
-        // process the new buffer "in place"
-#ifdef COMPLEX_FFT
-        for(int i=0; i<NUM_CHANS; i++) {
-           lib_dsp_fft_bit_reverse_short( buffer->sample_blocks[i], N_FFT_POINTS );
-           lib_dsp_fft_forward_complex_short(buffer->sample_blocks[i], N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS) );
-        }
-#else
-        for(int i=0; i<NUM_CHANS/2; i++) {
-           // Process two real channels per call
-           //is executed in lib_dsp_fft_forward_tworeals_short: lib_dsp_fft_bit_reverse_short(two_re, N);
-           //Todo: Remove bit reversing from lib_dsp_fft_forward_tworeals_short for a consistent use model of complex and tworeals
-           lib_dsp_fft_forward_tworeals_short(buffer->two_channels[i].two_re, buffer->two_channels[i].two_im, N_FFT_POINTS, FFT_SINE_SHORT(N_FFT_POINTS) );
-        }
-#endif
-        tmr :> end_time;
+        print_buffer(buffer);
 
-        int cycles_taken = end_time-start_time-overhead_time;
+        tmr :> start_time;
+
+        // Do FFTs
+        for(int32_t a=0; a<NUM_SIGNAL_ARRAYS; a++) {
+            // process the new buffer "in place"
+    #ifdef INT16_BUFFERS
+            lib_dsp_fft_complex_t tmp_buffer[N_FFT_POINTS];
+            lib_dsp_fft_short_to_long(tmp_buffer, buffer->data[a], N_FFT_POINTS); // convert into tmp buffer
+            lib_dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
+            lib_dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+    #ifndef COMPLEX_FFT
+            lib_dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
+            // typecast to individual spectra
+
+    #endif
+            lib_dsp_fft_long_to_short(buffer->data[a], tmp_buffer, N_FFT_POINTS); // convert from tmp buffer
+    ////// 32 bit buffers        
+    #else  
+            lib_dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
+            lib_dsp_fft_forward(buffer->data[a], N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+    #ifndef COMPLEX_FFT
+            lib_dsp_fft_split_spectrum(buffer->data[a], N_FFT_POINTS);
+    #endif
+
+    #endif
+
+        }
+        // Process the frequency domain of all NUM_CHANS channels.
+        // 1. Lowpass
+        // cut off: (8* Fs/N_FFT_POINTS) Hz = (8 * 48000/N_FFT_POINTS) Hz = 384kHz / N_FFT_POINTS
+        // 2. Calculate average per frequency bin into the output signal array.
+
+        // To calculate the average over all channels.
+        // To divide by NUM_CHANS, shift down throughout the loop log2(NUM_CHANS) times to avoid overflow.
+        uint32_t log_num_chan = log2(NUM_CHANS); 
+        uint32_t step = NUM_CHANS/log_num_chan;
+        uint shift_idx = step;
+
+    #ifdef COMPLEX_FFT
+        static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
+
+        for(int32_t c=0; c<NUM_CHANS; c++) {
+          output[0].re += buffer->data[c][0].re;
+          output[0].im += buffer->data[c][0].im;
+
+          for(unsigned i = 1; i < N_FFT_POINTS/2; i++) {
+             if(i>=8) {
+               buffer->data[c][i].re = 0;
+               buffer->data[c][i].im = 0;
+               buffer->data[c][N_FFT_POINTS-i].re = 0;
+               buffer->data[c][N_FFT_POINTS-i].im = 0;
+             }
+             output[i].re += buffer->data[c][i].re;
+             output[i].im += buffer->data[c][i].im;
+             if(c>shift_idx) {output[i].re >>= 1; output[i].im >>= 1;}   
+             uint32_t ri = N_FFT_POINTS-i; // reverse index
+             output[ri].re += buffer->data[c][ri].re;
+             output[ri].im += buffer->data[c][ri].im;
+             if(c>shift_idx) {output[ri].re >>= 1; output[ri].im >>= 1;}   
+          }
+          if(c>shift_idx) {
+            output[0].re >>= 1; output[0].im >>= 1;
+            shift_idx+= step;
+          }  
+        }
+    #else
+        half_spectra_s * frequency = (half_spectra_s *) buffer; // cast buffer type for easier indexing of the half spectra
+        for(int32_t c=0; c<NUM_CHANS; c++) {
+          for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
+             if(i>=8) {
+               frequency->data[c][i].re = 0;
+               frequency->data[c][i].im = 0;
+             }
+             output[i].re += frequency->data[c][i].re;
+             output[i].im += frequency->data[c][i].im;
+             if(c>shift_idx) {output[i].re >>= 1; output[i].im >>= 1;}   
+          }
+          if(c>shift_idx) {
+            shift_idx+= step;
+          }  
+        }
+    #endif
+
+        tmr :> end_time;
+        int32_t cycles_taken = end_time-start_time-overhead_time;
 
 #ifdef CHECK_TIMING
 #ifdef COMPLEX_FFT
         printf("%d Point FFT processing of %d complex sequences 'in place' in double buffer %x took %d cycles\n"
                 ,N_FFT_POINTS,NUM_CHANS,buffer,cycles_taken);
 #else
-        printf("%d Point FFT processing of %d tworeals sequences 'in place' in double buffer %x took %d cycles\n"
-                ,N_FFT_POINTS,NUM_CHANS/2,buffer,cycles_taken);
+        printf("%d Point FFT processing of %d real sequences 'in place' in double buffer %x took %d cycles\n"
+                ,N_FFT_POINTS,NUM_CHANS,buffer,cycles_taken);
 #endif
         if(cycles_taken>SAMPLE_PERIOD_CYCLES*N_FFT_POINTS) {
             printf("Timing Check ERROR: Max allowed cycles at Fs %d Hz is %d\n",SAMPLE_FREQ,SAMPLE_PERIOD_CYCLES*N_FFT_POINTS);
@@ -168,11 +271,32 @@ void do_fft(server interface bufswap_i input,
         }
 #endif
 
+        print_buffer(buffer);
 
+        printf("Processed output signal\n");
+        print_signal(output);
         break;
     }
     // fill the buffer with data
   }
+}
+}
+
+int32_t scaled_sin(q8_24 x) {
+   int32_t y = lib_dsp_math_sin(x);
+#ifdef INT16_BUFFERS
+   y >>= 10; // convert to Q14
+#else
+#endif
+   return y;
+}
+int32_t scaled_cos(q8_24 x) {
+   int32_t y = lib_dsp_math_cos(x);
+#ifdef INT16_BUFFERS
+   y >>= 10; // convert to Q14
+#else
+#endif
+   return y;
 }
 
 /**
@@ -181,14 +305,15 @@ void do_fft(server interface bufswap_i input,
  to that buffer.
 **/
 
-
+#define MAX_SAMPLE_PERIODS 1
   
 void produce_samples(client interface bufswap_i filler,
         multichannel_sample_block_s * initial_buffer) {
   multichannel_sample_block_s * movable buffer = initial_buffer;
   timer tmr;
-  int t;
-  static int counter;
+  int32_t t;
+  static int32_t counter;
+  int32_t done = 0;
 
   tmr :> t;
   /** The main loop of the display task first calls the 'swap' transaction,
@@ -197,31 +322,39 @@ void produce_samples(client interface bufswap_i filler,
       'display' function to do the actual displaying. This function is
       application dependent and not defined here.
    **/
-  while (1) {
+  while(!done) {
     //fill the next buffer
+    for(int32_t a=0; a<NUM_SIGNAL_ARRAYS; a++) {
+      int32_t ppc = N_FFT_POINTS/(1<<a); // points per cycle. divide by power of two to ensure signals fit into the FFT window
+      printf("Points Per Cycle is %d\n", ppc);
 
-    for(int i=0; i<N_FFT_POINTS; i++) {
+      for(int32_t i=0; i<N_FFT_POINTS; i++) {
+        // Equation: x = 2pi * i/ppc = 2pi * ((i%ppc) / ppc))
+        q8_24 factor = ((i%ppc) << 24) / ppc; // factor is always < Q24(1)
+        q8_24 x = lib_dsp_math_multiply(PI2_Q8_24, factor, 24);
+
+        // generate signal
 #ifdef COMPLEX_FFT
-      for(int c=0; c<NUM_CHANS; c++) {
-        buffer->sample_blocks[c][i].re = i; // left channel
-        buffer->sample_blocks[c][i].im = 0;
-        counter++;
-      }
+        buffer->data[a][i].re = scaled_sin(x); 
+        buffer->data[a][i].im = 0;
 #else
-      for(int c=0; c<NUM_CHANS/2; c++) {
-         buffer->two_channels[c].two_re[i].re = i;
-         buffer->two_channels[c].two_re[i].im = i;
-         buffer->two_channels[c].two_im[i].re = 0;
-         buffer->two_channels[c].two_im[i].im = 0;
-         counter++;
-      }
+        buffer->data[a][i].re = scaled_sin(x);
+        buffer->data[a][i].im = scaled_cos(x);
 #endif
+
+      }
+
       // wait until next sample period
       tmr when timerafter(t+SAMPLE_PERIOD_CYCLES) :> t;
     }
 
     // swap buffers
     filler.swap(buffer);
+    counter++;
+
+    if(counter == MAX_SAMPLE_PERIODS) {
+        exit(0);
+    }
 
   }
 }
@@ -232,9 +365,11 @@ void produce_samples(client interface bufswap_i filler,
  the two tasks:
 **/
 
+// make global to enforce 64 bit alignment
+multichannel_sample_block_s buffer0;
+multichannel_sample_block_s buffer1;
+
 int main() {
-  multichannel_sample_block_s buffer0;
-  multichannel_sample_block_s buffer1;
 
   interface bufswap_i bufswap;
   par {
