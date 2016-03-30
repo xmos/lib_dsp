@@ -56,11 +56,12 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 
 #ifndef N_FFT_POINTS
 // FFT Points
-#define N_FFT_POINTS 512
+#define N_FFT_POINTS 256
 #endif
 
 /** Activate timing check */
 #define CHECK_TIMING
+#define PRINT_INPUTS_AND_OUTPUTS 0
 
 /****/
 
@@ -168,7 +169,9 @@ void do_fft(server interface bufswap_i input,
         input_buf = move(buffer);
         buffer = move(tmp);
 
+#if PRINT_INPUTS_AND_OUTPUTS
         print_buffer(buffer);
+#endif
 
         tmr :> start_time;
 
@@ -199,7 +202,8 @@ void do_fft(server interface bufswap_i input,
         }
         // Process the frequency domain of all NUM_CHANS channels.
         // 1. Lowpass
-        // cut off: (8* Fs/N_FFT_POINTS) Hz = (8 * 48000/N_FFT_POINTS) Hz = 384kHz / N_FFT_POINTS
+        // cut off frequency: (N_FFT_POINTS/4 * Fs/N_FFT_POINTS) Hz = (48000/4) Hz = 12 kHz
+        uint32_t cutoff_idx = N_FFT_POINTS/4;
         // 2. Calculate average per frequency bin into the output signal array.
 
         // To calculate the average over all channels.
@@ -216,7 +220,7 @@ void do_fft(server interface bufswap_i input,
           output[0].im += buffer->data[c][0].im;
 
           for(unsigned i = 1; i < N_FFT_POINTS/2; i++) {
-             if(i>=8) {
+             if(i>=cutoff_idx) {
                buffer->data[c][i].re = 0;
                buffer->data[c][i].im = 0;
                buffer->data[c][N_FFT_POINTS-i].re = 0;
@@ -239,7 +243,7 @@ void do_fft(server interface bufswap_i input,
         half_spectra_s * frequency = (half_spectra_s *) buffer; // cast buffer type for easier indexing of the half spectra
         for(int32_t c=0; c<NUM_CHANS; c++) {
           for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
-             if(i>=8) {
+             if(i>=cutoff_idx) {
                frequency->data[c][i].re = 0;
                frequency->data[c][i].im = 0;
              }
@@ -252,6 +256,8 @@ void do_fft(server interface bufswap_i input,
           }  
         }
     #endif
+
+        // Todo: Add iFFT
 
         tmr :> end_time;
         int32_t cycles_taken = end_time-start_time-overhead_time;
@@ -271,10 +277,12 @@ void do_fft(server interface bufswap_i input,
         }
 #endif
 
+#if PRINT_INPUTS_AND_OUTPUTS
         print_buffer(buffer);
-
+#endif
         printf("Processed output signal\n");
         print_signal(output);
+
         break;
     }
     // fill the buffer with data
