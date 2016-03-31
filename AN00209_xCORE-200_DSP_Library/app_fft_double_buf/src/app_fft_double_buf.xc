@@ -54,6 +54,7 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define NUM_CHANS 4
 #endif 
 
+
 #ifndef N_FFT_POINTS
 // FFT Points
 #define N_FFT_POINTS 256
@@ -68,8 +69,10 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 // Array holding one complex signal or two real signals
 #ifdef INT16_BUFFERS
 #define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_short_t
+#define OUTPUT_SUM_TYPE int32_t // double precision variable to avoid overflow in addition
 #else
 #define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_t
+#define OUTPUT_SUM_TYPE int64_t // double precision variable to avoid overflow in addition
 #endif
 
 #ifdef COMPLEX_FFT
@@ -78,13 +81,10 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define NUM_SIGNAL_ARRAYS NUM_CHANS/2
 #endif
 
-typedef struct {
+typedef union {
     SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS][N_FFT_POINTS];
+    SIGNAL_ARRAY_TYPE half_spectra[NUM_SIGNAL_ARRAYS*2][N_FFT_POINTS/2];
 } multichannel_sample_block_s ;
-
-typedef struct {
-    SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS*2][N_FFT_POINTS/2];
-} half_spectra_s;
 
 #define SAMPLE_FREQ 48000
 #define SAMPLE_PERIOD_CYCLES XS1_TIMER_HZ/SAMPLE_FREQ
@@ -212,48 +212,52 @@ void do_fft(server interface bufswap_i input,
         uint32_t step = NUM_CHANS/log_num_chan;
         uint shift_idx = step;
 
-    #ifdef COMPLEX_FFT
         static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
 
-        for(int32_t c=0; c<NUM_CHANS; c++) {
-          output[0].re += buffer->data[c][0].re;
-          output[0].im += buffer->data[c][0].im;
-
-          for(unsigned i = 1; i < N_FFT_POINTS/2; i++) {
-             if(i>=cutoff_idx) {
-               buffer->data[c][i].re = 0;
-               buffer->data[c][i].im = 0;
-               buffer->data[c][N_FFT_POINTS-i].re = 0;
-               buffer->data[c][N_FFT_POINTS-i].im = 0;
-             }
-             output[i].re += buffer->data[c][i].re;
-             output[i].im += buffer->data[c][i].im;
-             if(c>shift_idx) {output[i].re >>= 1; output[i].im >>= 1;}   
-             uint32_t ri = N_FFT_POINTS-i; // reverse index
-             output[ri].re += buffer->data[c][ri].re;
-             output[ri].im += buffer->data[c][ri].im;
-             if(c>shift_idx) {output[ri].re >>= 1; output[ri].im >>= 1;}   
+    #ifdef COMPLEX_FFT
+        for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
+          OUTPUT_SUM_TYPE output_re = 0, output_re_ri = 0;
+          OUTPUT_SUM_TYPE output_im = 0, output_im_ri = 0;
+          uint32_t ri = N_FFT_POINTS-i; // reverse index
+          for(int32_t c=0; c<NUM_CHANS; c++) {
+            if(i>=cutoff_idx) {
+              buffer->data[c][i].re = 0;
+              buffer->data[c][i].im = 0;
+              if(i>0) {
+                buffer->data[c][N_FFT_POINTS-i].re = 0;
+                buffer->data[c][N_FFT_POINTS-i].im = 0;
+              }
+            }
+            output_re += buffer->data[c][i].re;
+            output_im += buffer->data[c][i].im;
+            if(i>0) {
+              output_re_ri += buffer->data[c][ri].re;
+              output_im_ri += buffer->data[c][ri].im;
+            }
           }
-          if(c>shift_idx) {
-            output[0].re >>= 1; output[0].im >>= 1;
-            shift_idx+= step;
-          }  
+
+          output[i].re = (OUTPUT_SUM_TYPE) output_re/NUM_CHANS; // average
+          output[i].im = (OUTPUT_SUM_TYPE) output_im/NUM_CHANS; // average 
+          if(i>0) {
+            output[ri].re = (OUTPUT_SUM_TYPE) output_re_ri/NUM_CHANS; // average
+            output[ri].im = (OUTPUT_SUM_TYPE) output_im_ri/NUM_CHANS; // average 
+          }
         }
     #else
-        half_spectra_s * frequency = (half_spectra_s *) buffer; // cast buffer type for easier indexing of the half spectra
-        for(int32_t c=0; c<NUM_CHANS; c++) {
-          for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
+        //half_spectra_s * frequency = (half_spectra_s *) buffer; // cast buffer type for easier indexing of the half spectra
+        for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
+          OUTPUT_SUM_TYPE output_re = 0;
+          OUTPUT_SUM_TYPE output_im = 0;
+          for(int32_t c=0; c<NUM_CHANS; c++) {
              if(i>=cutoff_idx) {
-               frequency->data[c][i].re = 0;
-               frequency->data[c][i].im = 0;
+               buffer->half_spectra[c][i].re = 0;
+               buffer->half_spectra[c][i].im = 0;
              }
-             output[i].re += frequency->data[c][i].re;
-             output[i].im += frequency->data[c][i].im;
-             if(c>shift_idx) {output[i].re >>= 1; output[i].im >>= 1;}   
+             output_re += buffer->half_spectra[c][i].re;
+             output_im += buffer->half_spectra[c][i].im;
           }
-          if(c>shift_idx) {
-            shift_idx+= step;
-          }  
+          output[i].re = (OUTPUT_SUM_TYPE) output_re/NUM_CHANS; // average
+          output[i].im = (OUTPUT_SUM_TYPE) output_im/NUM_CHANS; // average 
         }
     #endif
 
