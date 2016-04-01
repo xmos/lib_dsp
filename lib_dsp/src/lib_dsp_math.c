@@ -72,6 +72,8 @@ uq8_24 lib_dsp_math_squareroot(uq8_24 x)
     int32_t zeroes;
     unsigned long long approx;
 
+    if(x==0) return 0;
+
     asm("clz %0,%1" : "=r" (zeroes) : "r" (x));
 
     zeroes = zeroes & ~1; // make even
