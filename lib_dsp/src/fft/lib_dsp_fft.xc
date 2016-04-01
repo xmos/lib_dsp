@@ -2,7 +2,7 @@
 #include <xs1.h>
 #include <xclib.h>
 #include <stdint.h>
-#include "lib_dsp_transforms.h"
+#include "lib_dsp_fft.h"
 
 void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N )
 {

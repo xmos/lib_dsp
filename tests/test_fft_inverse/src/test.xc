@@ -4,7 +4,7 @@
 #include <debug_print.h>
 #include <stdlib.h>
 
-#include "lib_dsp_transforms.h"
+#include "lib_dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x){

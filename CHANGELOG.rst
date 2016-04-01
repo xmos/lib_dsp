@@ -5,6 +5,10 @@ xCORE-200 DSP library change log
 -----
 
   * FFT interface update. Consolidated interface and improved testing.
+  * Renamed *_transforms to *_fft to improve naming consistency
+  * Improved performance and accuracy of lib_dsp_math_squareroot. Error is <= 1.
+    Worst case performance is 96 cycles.
+  * int32_t and uint32_t now used more consistently.
 
 1.0.4
 -----

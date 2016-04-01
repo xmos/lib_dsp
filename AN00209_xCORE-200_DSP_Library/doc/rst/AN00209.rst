@@ -14,8 +14,9 @@ The library is split into the following modules :
    * Matrix Math - lib_dsp_matrix.h
    * Statistics - lib_dsp_statistics.h
    * Vectors - lib_dsp_vector.h
+   * FFT and inverse FFT - lib_dsp_fft.h
 
-The library supports variable Q formats from Q16 to Q31, using the
+The library supports variable Q formats from Q8 to Q31, using the
 macros in the following header file : lib_dsp_qformat.h.
 
 Getting Started
@@ -31,24 +32,27 @@ In the Project Explorer view you will see the following applications :
    * Matrix Math - app_matrix
    * Statistics - app_statistics
    * Vectors - app_vector
+   * FFT and inverse FFT - app_fft
+   * FFT Processing of signals received through a double buffer - app_fft_double_buf
 
-To build any of the applications, open src/main.xc by double clicking.
 The applications contain code to generate the simulation data and call all of the functions in each module and print the results in the xTIMEcomposer console.
-All of the test functions are written using Q24 format.
 
 Build the applications
 ......................
 
 To build the application, select ‘Project -> Build Project’ in the menu, or click the ‘Build’ button on the toolbar. The output from the compilation process will be visible on the console.
+Note that some applications offer different configurations. Particular Build Configurations can be selected by clicking the small arrow next to the Build Icon (Hammer). 
 
 Create and launch a run configuration
 .....................................
 
-To view xSCOPE data in real-time you first need to create a run configuration. The xTIMEcomposer allows multiple configurations to exist, thus allowing you to store configurations for running on different targets/with different runtime options and arguments.
+To run or debug the application, you have to initially create a run or debug configuration. The xTIMEcomposer allows multiple configurations to exist, thus allowing you to store configurations for running on different targets/with different runtime options and arguments.
 Right-click on the generated binary in the *Project Explorer* view, and select *Run As -> Run Configurations*.
+To debug, select *Run As -> Debug Configurations*.
+
 In the resulting dialog, double click on *xCORE Application*, then perform the following operations:
 
-   * On the *Main* tab select the desired target, or check the *simulator* option.
+   * On the *Main* tab select the desired Hardware Target, or check the *simulator* option.
    * Select the Run button to launch the application.
 
 The results will be displayed in the xTIMEcomposer *console* tab.
@@ -72,6 +76,8 @@ only necessary to include the following header file::
   #include "lib_dsp.h"
 
 |appendix|
+
+.. _references:
 
 References
 ----------
@@ -148,6 +154,22 @@ Vector Functions
 
 |newpage|
 
+FFT and inverse FFT
+...................
+
+.. literalinclude:: ../../app_fft/src/app_fft.xc
+  :largelisting:
+
+|newpage|
+
+FFT Processing of signals received through a double buffer
+..........................................................
+
+.. literalinclude:: ../../app_fft_double_buf/src/app_fft_double_buf.xc
+  :largelisting:
+
+|newpage|
+
 Correct Results Listings
 ------------------------
 
@@ -200,3 +222,5 @@ Vector Functions
   :largelisting:
 
 |newpage|
+
+

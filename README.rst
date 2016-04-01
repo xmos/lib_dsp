@@ -11,7 +11,7 @@ for use on XMOS xCORE-200 multicore microcontrollers.
 Required tools and libraries
 ............................
 
-* xTIMEcomposer Tools Version 14.0.1 or later
+* xTIMEcomposer Tools Version 14.1.2 or later
 
 Required hardware
 .................

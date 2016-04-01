@@ -40,7 +40,7 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Design      | lib_dsp_design       | Biquad coefficient generation for various filter types        |
   +-------------+----------------------+---------------------------------------------------------------+
-  | FFT         | lib_dsp_fft          | Forward and inverse Fast Fourier Transforms. 16 and 32 bit    |
+  | FFT         | lib_dsp_fft          | Forward and inverse Fast Fourier Transforms.                  |
   +-------------+----------------------+---------------------------------------------------------------+
 
 Fixed-Point Format
@@ -50,7 +50,7 @@ Q Format Introduction
 .....................
 
 The library functions support 32 bit input and output data, with internal 64 bit accumulator.
-The output data can be scaled to any of the supported Q Formats (Q16 through Q31).
+The output data can be scaled to any of the supported Q Formats (Q8 through Q31).
 Further details about Q Format numbers is available here : https://en.wikipedia.org/wiki/Q_(number_format).
 
 The 'q_format' Parameter
@@ -122,16 +122,6 @@ Scalar Math Functions: Multiply
 -------------------------------
 
 .. doxygenfunction:: lib_dsp_math_multiply
-
-Scalar Math Functions: Reciprocal
----------------------------------
-
-.. doxygenfunction:: lib_dsp_math_reciprocal
-
-Scalar Math Functions: Inverse Square Root
-------------------------------------------
-
-.. doxygenfunction:: lib_dsp_math_invsqrroot
 
 Scalar Math Functions: Square Root
 ----------------------------------

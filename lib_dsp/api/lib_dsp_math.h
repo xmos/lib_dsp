@@ -125,34 +125,29 @@ int32_t  lib_dsp_math_multiply_sat(
 );
 
 
-/** Scalar reciprocal
- * 
- *  This function computes the reciprocal of the input value using an iterative
- *  approximation method as follows:
- * 
- *  \code
- *  1) result = 1.0
- *  2) result = result + result * (1 - input * result)
- *  3) Repeat step #2 until desired precision is achieved
- *  \endcode
- * 
+/** Unsigned Division
+ *
+ *  This function divides two signed integer values and produces a result according
+ *  to fixed-point format specified by the ``q_format`` parameter.
+ *  It was optimised for performance using a dedicated instruction for unsinged long division.
+ *
  *  Example:
- * 
+ *
  *  \code
- *  int32_t  result;
- *  result = lib_dsp_math_reciprocal( sample, 28 );
+ *  uint32_t  quotient;
+ *  quotient = lib_dsp_math_divide(divident, divisor, 24);
  *  \endcode
- * 
- *  \param  input_value  Input value for computation.
- *  \param  q_format     Fixed point format (i.e. number of fractional bits).
- *  \returns             The reciprocal of the input value.
+ *
+ *  \param  dividend     Value to be divided
+ *  \param  divisor      Dividing value
+ *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
+ *  \returns             Quotient of dividend/divisor
  */
-
 int32_t  lib_dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_format );
 
 /** Unsigned Division
  *
- *  This function divides two uint32_t  integer values and produces a result according
+ *  This function divides two unsigned integer values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
  *  It was optimised for performance using a dedicated instruction for unsinged long division.
  *
@@ -172,14 +167,14 @@ uint32_t lib_dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, ui
 
 /** Scalar square root
  * 
- *  This function computes the square root of an uint32_t  input value
+ *  This function computes the square root of an unsigned input value
  *  using the Babylonian method of successive averaging
  *  Error is <= 1 LSB and worst case performance is 96 cycles.
  *
  *  \param  x            Unsigned 32-bit value in Q8.24 format
  *  \returns             Unsigned 32-bit value in Q8.24 format
  */
-uint32_t  lib_dsp_math_squareroot(uint32_t  x);
+uq8_24 lib_dsp_math_squareroot(uq8_24 x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
