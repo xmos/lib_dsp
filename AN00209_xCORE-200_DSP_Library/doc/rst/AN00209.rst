@@ -157,6 +157,9 @@ Vector Functions
 FFT and inverse FFT
 ...................
 
+**Note:** The method for processing two real signals with a single complex FFT was improved.
+It now requires only half the memory. See Build Configurations tworeals and tworeals_int16_buf.
+
 .. literalinclude:: ../../app_fft/src/app_fft.xc
   :largelisting:
 

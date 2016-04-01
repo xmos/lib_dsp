@@ -93,9 +93,9 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N );
  * supplied in an array of real and imaginary fixed-point values.
  * The same array is also used to store the output.
  * The magnitude of the FFT output is right shifted log2(N) times which corresponds to
- * division by N as shown in EQUATION 31-5 of http://www.dspguide.com/CH31.PDF
+ * division by N as shown in EQUATION 31-5 of ``http://www.dspguide.com/CH31.PDF``.
  * The number of points must be a power of 2, and the array of sine values should contain a quarter sine-wave.
- * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversal of the data.
+ * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversed indexing of the input data.
  * If required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
@@ -116,7 +116,7 @@ void lib_dsp_fft_forward (
  * Integer overflow can occur with inputs outside of this range.
  * The number of points must be a power of 2, and the
  * array of sine values should contain a quarter sine-wave. Use one of the
- * lib_dsp_sine_N tables. The function does not perform a bit-twiddle -
+ * lib_dsp_sine_N tables. The function does not perform bit reversed indexing of the input data.
  * if required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.

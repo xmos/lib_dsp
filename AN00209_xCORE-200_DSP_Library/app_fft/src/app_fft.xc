@@ -178,7 +178,7 @@ int32_t do_tworeals_fft_and_ifft() {
 
         tmr :> start_time;
 #if INT16_BUFFERS
-        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
+        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
         lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
         lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
@@ -306,7 +306,7 @@ int32_t do_complex_fft_and_ifft() {
         tmr :> start_time;
 
 #if INT16_BUFFERS
-        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
+        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
         // convert into int32_t temporary buffer
         lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
         // 32 bit FFT
