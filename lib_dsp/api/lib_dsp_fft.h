@@ -112,7 +112,9 @@ void lib_dsp_fft_forward (
 
 /** This function computes an inverse FFT. The complex input array is
  * supplied as two arrays of integers, with numbers represented as
- * fixed-point values. The number of points must be a power of 2, and the
+ * fixed-point values. Max input range is -0x3fffffff..0x3fffffff. 
+ * Integer overflow can occur with inputs outside of this range.
+ * The number of points must be a power of 2, and the
  * array of sine values should contain a quarter sine-wave. Use one of the
  * lib_dsp_sine_N tables. The function does not perform a bit-twiddle -
  * if required then lib_dsp_fft_bit_reverse() should be called beforehand.

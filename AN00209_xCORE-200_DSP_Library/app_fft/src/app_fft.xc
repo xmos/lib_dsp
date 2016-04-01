@@ -95,21 +95,21 @@ int main( void )
 };
 
 #if INT16_BUFFERS
-#define RIGHT_SHIFT 16  // shift down 16 to convert from int32_t to int16_t
+#define RIGHT_SHIFT 17  // shift down to Q14. Q15 would cause overflow.
 #else
-#define RIGHT_SHIFT 0
+#define RIGHT_SHIFT 1   // shift down to Q30. Q31 would cause overflow
 #endif
 
 void print_data_array() {
 #if INT16_BUFFERS
     printf("re,      im         \n");
     for(int32_t i=0; i<N_FFT_POINTS; i++) {
-        printf( "%.5f, %.5f\n", F15(data[i].re), F15(data[i].im));
+        printf( "%.5f, %.5f\n", F14(data[i].re), F14(data[i].im));
     }
 #else
     printf("re,           im         \n");
     for(int32_t i=0; i<N_FFT_POINTS; i++) {
-        printf( "%.10f, %.10f\n", F31(data[i].re), F31(data[i].im));
+        printf( "%.10f, %.10f\n", F30(data[i].re), F30(data[i].im));
     }
 #endif
 }
@@ -206,7 +206,7 @@ int32_t do_tworeals_fft_and_ifft() {
         printf( "First half of Complex FFT output spectrum of Real signal 1 (sine):\n");
         printf("re,           im         \n");
         for(int32_t i=0; i<N_FFT_POINTS; i++) {
-            printf( "%.10f, %.10f\n", F31(data[i].re), F31(data[i].im));
+            printf( "%.10f, %.10f\n", F30(data[i].re), F30(data[i].im));
         }
 #endif
 #endif
@@ -307,11 +307,15 @@ int32_t do_complex_fft_and_ifft() {
 
 #if INT16_BUFFERS
         lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        // convert into int32_t temporary buffer
+        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        // 32 bit FFT
         lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        // convert back into int16_t buffer
+        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
 #else
+        // 32 bit FFT
         lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
         lib_dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #endif
@@ -331,11 +335,15 @@ int32_t do_complex_fft_and_ifft() {
 
         tmr :> start_time;
 #if INT16_BUFFERS
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        // convert into int32_t temporary buffer
+        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        // 32 bit iFFT
         lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        // convert back into int16_t buffer
+        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
 #else
+        // 32 bit iFFT
         lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
         lib_dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #endif
