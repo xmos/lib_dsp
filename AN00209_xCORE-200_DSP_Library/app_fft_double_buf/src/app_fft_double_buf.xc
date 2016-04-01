@@ -44,14 +44,11 @@ swap function of the interface to synchronise with the do_fft task and swap poin
                        +------+------+
 **/
 
-/** Global configuration defines for FFT input data, number of channels and FFT points
- */
+/** Global configuration defines **/
 
-// Choose Complex or Real Input Data
-
-#ifndef NUM_CHANS           
-// Number of channels
-#define NUM_CHANS 4
+#ifndef NUM_CHANS    
+// Number of input channels       
+#define NUM_CHANS 4  
 #endif 
 
 
@@ -60,11 +57,16 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define N_FFT_POINTS 256
 #endif
 
-/** Activate timing check */
+#define SAMPLE_FREQ 48000
+#define SAMPLE_PERIOD_CYCLES XS1_TIMER_HZ/SAMPLE_FREQ
+
+// Activate timing check
 #define CHECK_TIMING
 #define PRINT_INPUTS_AND_OUTPUTS 0
 
 /****/
+
+/** Declaration of Data Types and Memory Buffers **/
 
 // Array holding one complex signal or two real signals
 #ifdef INT16_BUFFERS
@@ -81,14 +83,15 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define NUM_SIGNAL_ARRAYS NUM_CHANS/2
 #endif
 
+/** Union to store blocks of samples for multiple digital signals
+*/
 typedef union {
-    SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS][N_FFT_POINTS];
-    SIGNAL_ARRAY_TYPE half_spectra[NUM_SIGNAL_ARRAYS*2][N_FFT_POINTS/2];
+    SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS][N_FFT_POINTS];  // time domain or frequency domain signals
+    SIGNAL_ARRAY_TYPE half_spectra[NUM_SIGNAL_ARRAYS*2][N_FFT_POINTS/2];  // frequency domain half spectra
 } multichannel_sample_block_s ;
+/****/
 
-#define SAMPLE_FREQ 48000
-#define SAMPLE_PERIOD_CYCLES XS1_TIMER_HZ/SAMPLE_FREQ
-
+/** Print Functions **/
 void print_signal(SIGNAL_ARRAY_TYPE signal[N_FFT_POINTS]) {
 #ifdef INT16_BUFFERS
        printf("re,      im         \n");
@@ -110,10 +113,8 @@ void print_buffer(multichannel_sample_block_s *buffer) {
         print_signal(buffer->data[c]);
     }
 }
+/****/
 
-
-/** Data structure to store blocks of samples for multiple digital signals
-*/
 
 /**
  The interface between the two tasks is a single transaction that swaps
@@ -127,13 +128,11 @@ interface bufswap_i {
 };
 
 /**
-    The do_fft task takes as arguments the server end of an interface
-    connection and the initial buffer it is going to process. It is
-    initialized by creating a movable pointer to this buffer and then
-    processing it.
+ The do_fft task takes as arguments the server end of an interface
+ connection and the initial buffer it is going to process. It is
+ initialized by creating a movable pointer to this buffer and then
+ processing it.
 */
-
-unsafe {
 void do_fft(server interface bufswap_i input,
         multichannel_sample_block_s * initial_buffer)
 {
@@ -200,6 +199,7 @@ void do_fft(server interface bufswap_i input,
     #endif
 
         }
+
         // Process the frequency domain of all NUM_CHANS channels.
         // 1. Lowpass
         // cut off frequency: (N_FFT_POINTS/4 * Fs/N_FFT_POINTS) Hz = (48000/4) Hz = 12 kHz
@@ -293,6 +293,7 @@ void do_fft(server interface bufswap_i input,
 }
 }
 
+/** Utility functions for signal generation **/
 int32_t scaled_sin(q8_24 x) {
    int32_t y = lib_dsp_math_sin(x);
 #ifdef INT16_BUFFERS
@@ -309,6 +310,7 @@ int32_t scaled_cos(q8_24 x) {
 #endif
    return y;
 }
+/****/
 
 /**
  The displaying task takes the other end of the interface connection
@@ -340,11 +342,12 @@ void produce_samples(client interface bufswap_i filler,
       printf("Points Per Cycle is %d\n", ppc);
 
       for(int32_t i=0; i<N_FFT_POINTS; i++) {
+        // generate input signals
+
         // Equation: x = 2pi * i/ppc = 2pi * ((i%ppc) / ppc))
         q8_24 factor = ((i%ppc) << 24) / ppc; // factor is always < Q24(1)
         q8_24 x = lib_dsp_math_multiply(PI2_Q8_24, factor, 24);
 
-        // generate signal
 #ifdef COMPLEX_FFT
         buffer->data[a][i].re = scaled_sin(x); 
         buffer->data[a][i].im = 0;
@@ -372,7 +375,7 @@ void produce_samples(client interface bufswap_i filler,
 
 /**
  The application runs both of these tasks in parallel using a 'par'
- statement. The two buffers are declared at this level and passed into
+ statement. The two global buffers are passed into
  the two tasks:
 **/
 
