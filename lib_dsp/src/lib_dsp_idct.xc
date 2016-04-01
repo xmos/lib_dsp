@@ -11,7 +11,7 @@ static inline int32_t mulcos(int32_t x, int32_t cos) {
 }
 
 
-void idct4(int32_t output[4], int32_t input[4]) {
+void lib_dsp_idct4(int32_t output[4], int32_t input[4]) {
     int32_t z = input[0] >> 1;
     int32_t y1 = mulcos(input[1], 1984016189) ;
     int32_t y3 = mulcos(input[3], 1984016189);
@@ -24,7 +24,7 @@ void idct4(int32_t output[4], int32_t input[4]) {
     output[3] = z - y1  + y2 - y3_;
 }
 
-void idct3(int32_t output[3], int32_t input[3]) {
+void lib_dsp_idct3(int32_t output[3], int32_t input[3]) {
     int32_t z = input[0] >> 1;
     int32_t y = mulcos(input[1], 1859775393);
     int32_t x = mulcos(input[2], 1073741824);
@@ -33,14 +33,14 @@ void idct3(int32_t output[3], int32_t input[3]) {
     output[2] = -y + x + z;
 }
 
-void idct2(int32_t output[2], int32_t input[2]) {
+void lib_dsp_idct2(int32_t output[2], int32_t input[2]) {
     int32_t z = input[0] >> 1;
     int32_t s = mulcos(input[1], 1518500250);
     output[0] = z + s;
     output[1] = z - s;
 }
 
-void idct1(int32_t output[1], int32_t input[1]) {
+void lib_dsp_idct1(int32_t output[1], int32_t input[1]) {
     output[0] = input[0];
 }
 

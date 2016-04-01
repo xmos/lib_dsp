@@ -30,7 +30,7 @@ int main( void )
 {
     int32_t dcted[24];
     
-    dct24(dcted, data);
+    lib_dsp_dct24(dcted, data);
     for(int32_t i = 0; i < 24; i++) {
         printf("%5d %6d%s\n", data[i], dcted[i], dcted[i] != correct[i] ? " Wrong":"");
     }

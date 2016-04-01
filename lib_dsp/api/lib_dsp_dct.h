@@ -18,7 +18,7 @@
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct32(int32_t output[32], int32_t input[32]);
+void lib_dsp_dct32(int32_t output[32], int32_t input[32]);
 
 /** This function performs a 24 point DCT
  *
@@ -29,7 +29,7 @@ void dct32(int32_t output[32], int32_t input[32]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct24(int32_t output[24], int32_t input[24]);
+void lib_dsp_dct24(int32_t output[24], int32_t input[24]);
 
 /** This function performs a 16 point DCT
  *
@@ -40,7 +40,7 @@ void dct24(int32_t output[24], int32_t input[24]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct16(int32_t output[16], int32_t input[16]);
+void lib_dsp_dct16(int32_t output[16], int32_t input[16]);
 
 /** This function performs a 12 point DCT
  *
@@ -51,7 +51,7 @@ void dct16(int32_t output[16], int32_t input[16]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct12(int32_t output[12], int32_t input[12]);
+void lib_dsp_dct12(int32_t output[12], int32_t input[12]);
 
 /** This function performs a 8 point DCT
  *
@@ -62,7 +62,7 @@ void dct12(int32_t output[12], int32_t input[12]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct8(int32_t output[8], int32_t input[8]);
+void lib_dsp_dct8(int32_t output[8], int32_t input[8]);
 
 /** This function performs a 6 point DCT
  *
@@ -73,7 +73,7 @@ void dct8(int32_t output[8], int32_t input[8]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct6(int32_t output[6], int32_t input[6]);
+void lib_dsp_dct6(int32_t output[6], int32_t input[6]);
 
 /** This function performs a 4 point DCT
  *
@@ -84,7 +84,7 @@ void dct6(int32_t output[6], int32_t input[6]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct4(int32_t output[4], int32_t input[4]);
+void lib_dsp_dct4(int32_t output[4], int32_t input[4]);
 
 /** This function performs a 3 point DCT
  *
@@ -95,7 +95,7 @@ void dct4(int32_t output[4], int32_t input[4]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct3(int32_t output[3], int32_t input[3]);
+void lib_dsp_dct3(int32_t output[3], int32_t input[3]);
 
 /** This function performs a 2 point DCT
  *
@@ -106,7 +106,7 @@ void dct3(int32_t output[3], int32_t input[3]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct2(int32_t output[2], int32_t input[2]);
+void lib_dsp_dct2(int32_t output[2], int32_t input[2]);
 
 /** This function performs a single point DCT; it copies its input to its
  * output.
@@ -114,7 +114,7 @@ void dct2(int32_t output[2], int32_t input[2]);
  *  \param  input           input values to the DCT
  *  \param  output          DCT values.
  */
-void dct1(int32_t output[1], int32_t input[1]);
+void lib_dsp_dct1(int32_t output[1], int32_t input[1]);
 
 
 /** This function performs a 4 point inverse DCT
@@ -122,28 +122,28 @@ void dct1(int32_t output[1], int32_t input[1]);
  *  \param  input           Basis vector values
  *  \param  output          output signal
  */
-void idct4(int32_t output[4], int32_t input[4]);
+void lib_dsp_idct4(int32_t output[4], int32_t input[4]);
 
 /** This function performs a 3 point inverse DCT
  *
  *  \param  input           Basis vector values
  *  \param  output          output signal
  */
-void idct3(int32_t output[3], int32_t input[3]);
+void lib_dsp_idct3(int32_t output[3], int32_t input[3]);
 
 /** This function performs a 2 point inverse DCT
  *
  *  \param  input           Basis vector values
  *  \param  output          output signal
  */
-void idct2(int32_t output[2], int32_t input[2]);
+void lib_dsp_idct2(int32_t output[2], int32_t input[2]);
 
 /** This function performs a 1 point inverse DCT
  *
  *  \param  input           Basis vector values
  *  \param  output          output signal
  */
-void idct1(int32_t output[1], int32_t input[1]);
+void lib_dsp_idct1(int32_t output[1], int32_t input[1]);
 
 
 #ifdef INCLUDE_REFERENCE_DCT
