@@ -244,7 +244,6 @@ void do_fft(server interface bufswap_i input,
           }
         }
     #else
-        //half_spectra_s * frequency = (half_spectra_s *) buffer; // cast buffer type for easier indexing of the half spectra
         for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {
           OUTPUT_SUM_TYPE output_re = 0;
           OUTPUT_SUM_TYPE output_im = 0;
