@@ -291,7 +291,6 @@ void do_fft(server interface bufswap_i input,
     // fill the buffer with data
   }
 }
-}
 
 /** Utility functions for signal generation **/
 int32_t scaled_sin(q8_24 x) {
