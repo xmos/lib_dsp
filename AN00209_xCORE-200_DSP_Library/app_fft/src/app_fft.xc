@@ -24,14 +24,22 @@
 
 #define INPUT_FREQ N_FFT_POINTS/8
 
-#ifdef COMPLEX_FFT
-int32_t do_complex_fft_and_ifft();
-#else
+#ifndef INT16_BUFFERS
+#define INT16_BUFFERS 0 // disabled by default. int32_t buffers is default
+#endif
+
+#ifndef TWOREALS
+#define TWOREALS 0 // Processing two real signals with a single complex FFT. Disabled by default
+#endif
+
+#if TWOREALS
 int32_t do_tworeals_fft_and_ifft();
+#else
+int32_t do_complex_fft_and_ifft();
 #endif
 
 // Array holding one complex signal or two real signals
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
 lib_dsp_fft_complex_short_t data[N_FFT_POINTS];
 #else
 lib_dsp_fft_complex_t  data[N_FFT_POINTS];
@@ -78,22 +86,22 @@ int32_t cos_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]) {
 int main( void )
 {
 
-#ifdef COMPLEX_FFT
-    do_complex_fft_and_ifft();
-#else
+#if TWOREALS
     do_tworeals_fft_and_ifft();
+#else
+    do_complex_fft_and_ifft();
 #endif
     return 0;
 };
 
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
 #define RIGHT_SHIFT 16  // shift down 16 to convert from int32_t to int16_t
 #else
 #define RIGHT_SHIFT 0
 #endif
 
 void print_data_array() {
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
     printf("re,      im         \n");
     for(int32_t i=0; i<N_FFT_POINTS; i++) {
         printf( "%.5f, %.5f\n", F15(data[i].re), F15(data[i].im));
@@ -106,7 +114,133 @@ void print_data_array() {
 #endif
 }
 
-#ifdef COMPLEX_FFT
+#if TWOREALS
+void generate_tworeals_test_signal(int32_t N, int32_t test) {
+    switch(test) {
+     case 0: {
+         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz cosine, re1: %d Hz cosine\n"
+                 ,test,N,INPUT_FREQ,INPUT_FREQ);
+         for(int32_t i=0; i<N; i++) {
+             data[i].re = COS(i, 8) >> RIGHT_SHIFT;
+             data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+         }
+         break;
+     }
+     case 1: {
+         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, re1: %d Hz sine\n"
+                 ,test,N,INPUT_FREQ,INPUT_FREQ);
+         for(int32_t i=0; i<N; i++) {
+             data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
+             data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+         }
+         break;
+     }
+     case 2: {
+         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, re1: %d Hz cosine\n"
+                 ,test,N,INPUT_FREQ,INPUT_FREQ);
+         for(int32_t i=0; i<N; i++) {
+             data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
+             data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+         }
+         break;
+     }
+     case 3: {
+         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz cosine, re1: %d Hz sine\n"
+                 ,test,N,INPUT_FREQ,INPUT_FREQ);
+         for(int32_t i=0; i<N; i++) {
+             data[i].re = COS(i, 8) >> RIGHT_SHIFT;
+             data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+         }
+         break;
+     }
+     }
+#if PRINT_FFT_INPUT
+    printf("Generated Two Real Input Signals:\n");
+    print_data_array();
+#endif
+}
+
+int32_t do_tworeals_fft_and_ifft() {
+    timer tmr;
+    uint32_t start_time, end_time, overhead_time, cycles_taken;
+    tmr :> start_time;
+    tmr :> end_time;
+    overhead_time = end_time - start_time;
+#if INT16_BUFFERS
+    printf("FFT/iFFT of two real signals of type int16_t\n");
+#else
+    printf("FFT/iFFT of two real signals of type int32_t\n");
+#endif
+    printf("============================================\n");
+
+    for(int32_t test=0; test<4; test++) {
+        generate_tworeals_test_signal(N_FFT_POINTS, test);
+
+        tmr :> start_time;
+#if INT16_BUFFERS
+        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
+        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        lib_dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
+        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+#else
+        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        lib_dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        lib_dsp_fft_split_spectrum(data, N_FFT_POINTS);
+#endif
+        tmr :> end_time;
+        cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for %d point FFT of two purely real signals: %d\n", N_FFT_POINTS, cycles_taken);
+#endif
+
+#if PRINT_FFT_OUTPUT
+        // Print forward complex FFT results
+        //printf( "First half of Complex FFT output spectrum of Real signal 0 (cosine):\n");
+        printf( "FFT output of two half spectra. Second half could be discarded due to symmetry without loosing information\n");
+        printf( "spectrum of first signal in data[0..N/2-1]. spectrum of second signa in data[N/2..N-1]:\n");
+
+        print_data_array();
+#if 0
+        printf( "First half of Complex FFT output spectrum of Real signal 1 (sine):\n");
+        printf("re,           im         \n");
+        for(int32_t i=0; i<N_FFT_POINTS; i++) {
+            printf( "%.10f, %.10f\n", F31(data[i].re), F31(data[i].im));
+        }
+#endif
+#endif
+
+        tmr :> start_time;
+#if INT16_BUFFERS
+        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        lib_dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
+        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+#else
+        lib_dsp_fft_merge_spectra(data, N_FFT_POINTS);
+        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        lib_dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+#endif
+
+        tmr :> end_time;
+        cycles_taken = end_time-start_time-overhead_time;
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for iFFT: %d\n", cycles_taken);
+#endif
+
+#if PRINT_IFFT_OUTPUT
+        printf( "////// Time domain signal after lib_dsp_fft_inverse\n");
+        print_data_array();
+#endif
+        printf("\n" ); // Test delimiter
+    }
+
+    printf( "DONE.\n" );
+    return 0;
+}
+# else  // Complex Signals
 void generate_complex_test_signal(int32_t N, int32_t test) {
     switch(test) {
     case 0: {
@@ -159,7 +293,7 @@ int32_t do_complex_fft_and_ifft() {
     tmr :> end_time;
     overhead_time = end_time - start_time;
 
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
     printf("FFT/iFFT of a complex signal of type int16_t\n");
 #else
     printf("FFT/iFFT of a complex signal of type int32_t\n");
@@ -171,7 +305,7 @@ int32_t do_complex_fft_and_ifft() {
 
         tmr :> start_time;
 
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
         lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
         lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
         lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
@@ -196,7 +330,7 @@ int32_t do_complex_fft_and_ifft() {
 #endif
 
         tmr :> start_time;
-#ifdef INT16_BUFFERS
+#if INT16_BUFFERS
         lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
         lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
@@ -221,132 +355,5 @@ int32_t do_complex_fft_and_ifft() {
     printf( "DONE.\n" );
     return 0;
 
-}
-
-# else
-void generate_tworeals_test_signal(int32_t N, int32_t test) {
-    switch(test) {
-     case 0: {
-         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz cosine, re1: %d Hz cosine\n"
-                 ,test,N,INPUT_FREQ,INPUT_FREQ);
-         for(int32_t i=0; i<N; i++) {
-             data[i].re = COS(i, 8) >> RIGHT_SHIFT;
-             data[i].im = COS(i, 8) >> RIGHT_SHIFT;
-         }
-         break;
-     }
-     case 1: {
-         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, re1: %d Hz sine\n"
-                 ,test,N,INPUT_FREQ,INPUT_FREQ);
-         for(int32_t i=0; i<N; i++) {
-             data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
-             data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
-         }
-         break;
-     }
-     case 2: {
-         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, re1: %d Hz cosine\n"
-                 ,test,N,INPUT_FREQ,INPUT_FREQ);
-         for(int32_t i=0; i<N; i++) {
-             data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
-             data[i].im = COS(i, 8) >> RIGHT_SHIFT;
-         }
-         break;
-     }
-     case 3: {
-         printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz cosine, re1: %d Hz sine\n"
-                 ,test,N,INPUT_FREQ,INPUT_FREQ);
-         for(int32_t i=0; i<N; i++) {
-             data[i].re = COS(i, 8) >> RIGHT_SHIFT;
-             data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
-         }
-         break;
-     }
-     }
-#if PRINT_FFT_INPUT
-    printf("Generated Two Real Input Signals:\n");
-    print_data_array();
-#endif
-}
-
-int32_t do_tworeals_fft_and_ifft() {
-    timer tmr;
-    uint32_t start_time, end_time, overhead_time, cycles_taken;
-    tmr :> start_time;
-    tmr :> end_time;
-    overhead_time = end_time - start_time;
-#ifdef INT16_BUFFERS
-    printf("FFT/iFFT of two real signals of type int16_t\n");
-#else
-    printf("FFT/iFFT of two real signals of type int32_t\n");
-#endif
-    printf("============================================\n");
-
-    for(int32_t test=0; test<4; test++) {
-        generate_tworeals_test_signal(N_FFT_POINTS, test);
-
-        tmr :> start_time;
-#ifdef INT16_BUFFERS
-        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS];
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
-#else
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_split_spectrum(data, N_FFT_POINTS);
-#endif
-        tmr :> end_time;
-        cycles_taken = end_time-start_time-overhead_time;
-#if PRINT_CYCLE_COUNT
-        printf("Cycles taken for %d point FFT of two purely real signals: %d\n", N_FFT_POINTS, cycles_taken);
-#endif
-
-#if PRINT_FFT_OUTPUT
-        // Print forward complex FFT results
-        //printf( "First half of Complex FFT output spectrum of Real signal 0 (cosine):\n");
-        printf( "FFT output of two half spectra. Second half could be discarded due to symmetry without loosing information\n");
-        printf( "spectrum of first signal in data[0..N/2-1]. spectrum of second signa in data[N/2..N-1]:\n");
-
-        print_data_array();
-#if 0
-        printf( "First half of Complex FFT output spectrum of Real signal 1 (sine):\n");
-        printf("re,           im         \n");
-        for(int32_t i=0; i<N_FFT_POINTS; i++) {
-            printf( "%.10f, %.10f\n", F31(data[i].re), F31(data[i].im));
-        }
-#endif
-#endif
-
-        tmr :> start_time;
-#ifdef INT16_BUFFERS
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
-        lib_dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
-#else
-        lib_dsp_fft_merge_spectra(data, N_FFT_POINTS);
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-#endif
-
-        tmr :> end_time;
-        cycles_taken = end_time-start_time-overhead_time;
-#if PRINT_CYCLE_COUNT
-        printf("Cycles taken for iFFT: %d\n", cycles_taken);
-#endif
-
-#if PRINT_IFFT_OUTPUT
-        printf( "////// Time domain signal after lib_dsp_fft_inverse\n");
-        print_data_array();
-#endif
-        printf("\n" ); // Test delimiter
-    }
-
-    printf( "DONE.\n" );
-    return 0;
 }
 #endif
