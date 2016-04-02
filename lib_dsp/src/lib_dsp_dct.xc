@@ -87,12 +87,12 @@ static inline int32_t mulcos(int32_t x, int32_t cos) {
 }
 
 #define DCT(N,M)                                \
-void lib_dsp_dct##N(int32_t output[N], int32_t input[N]) { \
+void lib_dsp_dct_forward##N(int32_t output[N], int32_t input[N]) { \
     int32_t temp[N/2], temp2[N/2]; \
     for(int32_t i = 0; i < N/2; i++) { \
         temp[i] = input[i] + input[N-1-i]; \
     } \
-    lib_dsp_dct##M(temp2, temp); \
+    lib_dsp_dct_forward##M(temp2, temp); \
     for(int32_t i = 0; i < N/2; i++) { \
         output[2*i] = temp2[i]; \
     } \
@@ -100,7 +100,7 @@ void lib_dsp_dct##N(int32_t output[N], int32_t input[N]) { \
         int32_t z = input[i] - input[N-1-i]; \
         temp[i] = mulcos(z, costable##N[i]); \
     } \
-    lib_dsp_dct##M(temp2, temp); \
+    lib_dsp_dct_forward##M(temp2, temp); \
     int32_t last = temp2[0]; \
     output[1] = last; \
     for(int32_t i = 1; i < N/2; i++) { \
@@ -109,7 +109,7 @@ void lib_dsp_dct##N(int32_t output[N], int32_t input[N]) { \
     } \
 }
 
-void lib_dsp_dct4(int32_t output[4], int32_t input[4]) {
+void lib_dsp_dct_forward4(int32_t output[4], int32_t input[4]) {
     int32_t i03 = input[0] + input[3];
     int32_t i12 = input[1] + input[2];
     int32_t i03_ = input[0] - input[3];
@@ -122,19 +122,19 @@ void lib_dsp_dct4(int32_t output[4], int32_t input[4]) {
         mulcos(i12_, -1984016189);
 }
 
-void lib_dsp_dct3(int32_t output[3], int32_t input[3]) {
+void lib_dsp_dct_forward3(int32_t output[3], int32_t input[3]) {
     output[0] = input[0] + input[1] + input[2];
     output[1] = mulcos(input[0] - input[2], 1859775393);
     output[2] = ((input[0]+input[2])>>1) - input[1];
 }
 
-void lib_dsp_dct2(int32_t output[2], int32_t input[2]) {
+void lib_dsp_dct_forward2(int32_t output[2], int32_t input[2]) {
     output[0] = input[0] + input[1];
     int32_t z = input[0] - input[1];
     output[1] = mulcos(z, 1518500250);
 }
 
-void lib_dsp_dct1(int32_t output[1], int32_t input[1]) {
+void lib_dsp_dct_forward1(int32_t output[1], int32_t input[1]) {
     output[0] = input[0];
 }
 
