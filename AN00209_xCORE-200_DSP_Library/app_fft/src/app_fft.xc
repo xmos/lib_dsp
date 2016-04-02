@@ -7,8 +7,8 @@
 #include <lib_dsp.h>
 #include <stdint.h>
 
-#define TRACE_VALUES
-#ifdef TRACE_VALUES
+#define TRACE_VALUES 1
+#if TRACE_VALUES
 #define PRINT_FFT_INPUT 1
 #define PRINT_FFT_OUTPUT 1
 #define PRINT_IFFT_OUTPUT 1

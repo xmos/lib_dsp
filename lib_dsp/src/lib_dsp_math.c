@@ -65,7 +65,6 @@ uint32_t lib_dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor, uint3
 
 #define SQRT_COEFF_A ((12466528)/2) // 7143403
 #define SQRT_COEFF_B (10920575) // 9633812
-//#define NEWTON_RAPHSON
 
 uq8_24 lib_dsp_math_squareroot(uq8_24 x)
 {
@@ -90,15 +89,9 @@ uq8_24 lib_dsp_math_squareroot(uq8_24 x)
 
     // successive approximation
     for(int32_t i = 0; i < 3; i++) {
-#ifdef NEWTON_RAPHSON
-        // corr = (f(xn) - x) / f'(xn) = (xn^2 - x) / 2xn
-        signed long long corr = lib_dsp_math_divide(lib_dsp_math_multiply(approx, approx, 24) - x, approx, 24) >> 1;
-        approx -= corr;
-#else
         // Linear approximation. Babylonian Method: Successive averaging
         // xn+1 = (xn + y/xn) / 2
         approx = (approx + lib_dsp_math_divide_unsigned(x, approx, 24)) >> 1;
-#endif
     }
 
     // Return format is Q8.24

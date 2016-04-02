@@ -13,7 +13,7 @@
 #define CHECK_RESULTS 1
 #define PRINT_ERROR_TOO_BIG 1
 #define EXIT_ON_ERROR_TOO_BIG 0
-//#define TEST_ALL_INPUTS 1
+#define TEST_ALL_INPUTS 0
 #define NO_Q 0
 
 #if TEST_ALL_INPUTS
@@ -21,15 +21,19 @@
 #define PRINT_INPUTS_AND_OUTPUTS 0
 #define RAD_INCR 1
 #define X_INCR 1
+#define EXPONENTIAL_INPUT 0
 #else
 #define PRINT_CYCLE_COUNT 0
 #define PRINT_INPUTS_AND_OUTPUTS 1
 #define RAD_INCR PI2_Q8_24/100
 #define X_INCR MAX_Q8_24/100
+#define EXPONENTIAL_INPUT 1
 #endif
 
 #if PRINT_CYCLE_COUNT
-#define DIVIDE_STRESS
+#define DIVIDE_STRESS 1 // execute divide on other cores to get worst case performance.
+#else
+#define DIVIDE_STRESS 0
 #endif
 
 // errors from -3..+3
@@ -141,19 +145,22 @@ void test_roots() {
 
     uint32_t result, expected;
 
-    for(int32_t i=1; i<=32; i++) { // exponent
+#if EXPONENTIAL_INPUT
+    for(uint32_t i=1; i<=32; i++) { 
         uint32_t x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
-
-        //printf ("x == 0x%x\n", x);
-        //printf("\n");
-
+#else
+    for(uint32_t x=0; x<=MAX_UINT; x+=X_INCR) {
+#endif
         double d_sqrt;
 
         TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
 #endif
+
+#if PRINT_INPUTS_AND_OUTPUTS
         printf ("Square Root (%.8f) : %.8f\n", F24(x), F24(result));
+#endif
 
         TIME_FUNCTION(d_sqrt = sqrt(F24(x)));
 #if PRINT_CYCLE_COUNT
@@ -236,8 +243,6 @@ void test_multipliation_and_division() {
     printf("\n");
 
 }
-
-#define EXPONENTIAL_INPUT
 
 void test_trigonometric() {
     int32_t start_time, end_time;
@@ -342,7 +347,7 @@ void test_trigonometric() {
     * Max absolute error: 1
     */
 
-#ifdef EXPONENTIAL_INPUT
+#if EXPONENTIAL_INPUT
     for(int32_t i=-31; i<=31; i++) {
         int32_t x;
         if(i<0) {
@@ -432,7 +437,7 @@ void divide() {
 int main(void) {
     par {
         test_math();
-#ifdef DIVIDE_STRESS
+#if DIVIDE_STRESS
         divide();
         divide();
         divide();
