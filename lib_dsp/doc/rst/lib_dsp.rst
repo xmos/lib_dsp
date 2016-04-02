@@ -292,6 +292,11 @@ Filter Design Functions: Treble Shelving Filter
 FFT functions
 -------------
 
+**Note:** The method for processing two real signals with a single complex FFT was improved.
+It now requires only half the memory. 
+The function lib_dsp_fft_split_spectrum is used to split the combined N point output of lib_dsp_fft_forward into two half-spectra of size N/2. One for each of the two real input signals.
+lib_dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spectrum that can be processed by lib_dsp_fft_inverse.
+
 .. doxygenfunction:: lib_dsp_fft_split_spectrum
 .. doxygenfunction:: lib_dsp_fft_merge_spectra
 .. doxygenfunction:: lib_dsp_fft_short_to_long
