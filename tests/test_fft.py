@@ -25,7 +25,7 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
 
     seed  = random.randrange(4294967294);
 
-    directory_name = tempfile.mkdtemp(dir='.')
+    directory_name = tempfile.mkdtemp(prefix='temp_fft_dir_', dir='.')
 
     source_directory =  os.path.join(directory_name, 'src')
 
@@ -52,12 +52,17 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
                               tester = tester)
 
 def runtest():
-
+  try:
    for r in range(3, 14):
        do_fft_test(r, "smoke", 'test_fft_forward', "forward_fft")
        do_fft_test(r, "smoke", 'test_fft_inverse', "inverse_fft")
        do_fft_test(r, "smoke", 'test_fft_index_bit_reverse', "index_bit_reversal")
        do_fft_test(r, "smoke", 'test_fft_split_and_merge', "fft_split_and_merge")
        do_fft_test(r, "smoke", 'test_fft_short_long', "short_and_long_conversion ")
-
-
+  except:
+    #clean everything up
+    for file in os.listdir("."):
+      if file.startswith("temp_fft_dir_"):
+        shutil.rmtree(file)
+        
+        
