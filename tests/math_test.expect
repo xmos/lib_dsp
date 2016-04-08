@@ -2,7 +2,7 @@ Test example for Math functions
 ===============================
 Test Multiplication and Division
 --------------------------------
-Note: All calculations are done in Q8.24 format. That gives 7 digits of precion after the decimal point
+Note: All calculations are done in Q8.24 format. That gives 7 digits of precision after the decimal point
 Note: Maximum double representation of Q8.24 format: 127.99999994
 
 Multiplication (11.31370850 x 11.31370850): 127.99999964
