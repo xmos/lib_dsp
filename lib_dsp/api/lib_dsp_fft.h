@@ -36,7 +36,7 @@ lib_dsp_fft_complex_short_t;
 
 /** This function splits the spectrum of the FFT of two real sequences. Takes
  * the result of a double-packed lib_dsp_fft_complex_t array that has undergone
- * and FFT. This function splits the result into two arrays, one for each real
+ * an FFT. This function splits the result into two arrays, one for each real
  * sequence, of length N/2.
  * It is expected that the output will be cast by:
  *   lib_dsp_fft_complex_t (* restrict w)[2] = (lib_dsp_fft_complex_t (*)[2])pts;

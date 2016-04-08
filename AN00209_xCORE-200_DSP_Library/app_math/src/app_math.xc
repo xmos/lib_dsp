@@ -184,7 +184,7 @@ void test_multipliation_and_division() {
 
     printf("Test Multiplication and Division\n");
     printf("--------------------------------\n");
-    printf("Note: All calculations are done in Q8.24 format. That gives 7 digits of precion after the decimal point\n");
+    printf("Note: All calculations are done in Q8.24 format. That gives 7 digits of precision after the decimal point\n");
     printf("Note: Maximum double representation of Q8.24 format: %.8f\n\n", F24(0x7FFFFFFF));
 
     double f0, f1;

@@ -305,7 +305,7 @@ void do_fft(server interface bufswap_i input,
 
 /** Utility functions for signal generation **/
 int32_t scaled_sin(q8_24 x) {
-   int32_t y = lib_dsp_math_sin(x);
+   q8_24 y = lib_dsp_math_sin(x);
 #if INT16_BUFFERS
    y >>= 10; // convert to Q14
 #else
@@ -313,7 +313,7 @@ int32_t scaled_sin(q8_24 x) {
    return y;
 }
 int32_t scaled_cos(q8_24 x) {
-   int32_t y = lib_dsp_math_cos(x);
+   q8_24 y = lib_dsp_math_cos(x);
 #if INT16_BUFFERS
    y >>= 10; // convert to Q14
 #else
