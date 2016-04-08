@@ -2,7 +2,6 @@
 // XMOS DSP Library - Math Functions Test Program
 // Uses Q24 format
 
-// Include files
 #include <stdio.h>
 #include <xs1.h>
 #include <lib_dsp.h>
