@@ -169,29 +169,31 @@ void lib_dsp_matrix_subm
  *  (see behavior for the function ``lib_dsp_math_multiply``).
  * 
  *  Example:
- * 
+ *  MxN * NxP = MxP
  *  \code
- *  int32_t input_matrix_X[8][32];
- *  int32_t input_matrix_Y[8][32];
- *  int32_t result_vector_R[8][32];  
+ *  int32_t input_matrix_X[rows_X][N];
+ *  int32_t input_matrix_Y[columns_Y][N]; // transposed for better memory alighment !!
+ *  int32_t result_matrix_R[rows_x][columns_Y];  
  *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.
  *  \param  input_matrix_Y   Pointer to source data array Y.
  *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
+ *  \param  rows_X           Number of rows in input matrix X
+ *  \param  cols_Y           Number of columns output matrix Y
+ *  \cols_X_rows_Y           Number of columns in input matrix X == rows in output matrix Y
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
-
+// N == columns_X == rows_Y
 void lib_dsp_matrix_mulm
 (
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count,
+    const int32_t rows_X,
+    const int32_t cols_Y,
+    const int32_t cols_X_rows_Y,
     int32_t       q_format
 );
 

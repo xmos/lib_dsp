@@ -32,7 +32,8 @@ void lib_dsp_matrix_negate
     int32_t*       result_matrix_R,
     int32_t        row_count,
     int32_t        column_count
-) {
+)
+{
     lib_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
 
@@ -196,59 +197,62 @@ void lib_dsp_matrix_subm
     );
 }
 
-/** Matrix / matrix multiplication: ``R[i][j] = X[i][j] * Y[i][j]``
- * 
- *  Elements in each of the input matrices are multiplied together using a
- *  32bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``lib_dsp_math_multiply``).
- * 
- *  Example:
- * 
- *  \code
- *  int32_t input_matrix_X[8][32];
- *  int32_t input_matrix_Y[8][32];
- *  int32_t result_vector_R[8][32];  
- *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer to source data array X.
- *  \param  input_matrix_Y   Pointer to source data array Y.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- *  \param  q_format         Fixed point format (i.e. number of fractional bits).
- */
-
-// <FIXME> - assumes 'row_count' == 'column_count'
 // <TODO> - optimize using double-word load/store
 // <TODO> - optimize for 2x2, 3x3 and 4x4 matrices
+// TODO: Improve performance.
+// All figures in ns:
+// Was 620, After fix 710, After optimisation with doing two mac per cycle: 810
+// After switching from O2 to O3: 840ns for the whole function
+// But inner loop is better (improved from 80 to 70)
+// Next loop out is 220 cycles, down from 250.
+// outer loop is 500ns. Up from 420 ns.
 
 void lib_dsp_matrix_mulm
 (
     const int32_t* input_matrix_X,
     const int32_t* input_matrix_Y,
     int32_t*       result_matrix_R,
-    int32_t        row_count,
-    int32_t        column_count,
+    const int32_t        rows_X,
+    const int32_t        cols_Y,
+    const int32_t        cols_X_rows_Y,
     int32_t        q_format
 ) {
     int32_t ah; uint32_t al;
     int32_t x, y;
-    // <TODO>: Optimize
-    for( int32_t r = 0; r < row_count; ++r )
+
+    for( int32_t rx = 0; rx < rows_X; ++rx )
     {
-        ah = 0; al = 1 << (q_format-1);
-        for( int32_t c = 0; c < column_count; ++c )
+#if EXTERNAL_RAM
+        int32_t* X_row_ptr = interface.get_array_ptr();
+#else
+        int32_t* X_row_ptr = &input_matrix_X[rx * cols_X_rows_Y];
+#endif
+
+        // column in X
+        for( int32_t cy = 0; cy < cols_Y; cy++ )
         {
-            for( int32_t i = 0, j = 0; i < row_count && j < column_count; ++i, ++j )
+            // TODO: for large matrixes. provide the following arrays through shared memory
+
+#if EXTERNAL_RAM
+            int32_t* Y_column_ptr = interface.get_array_ptr();
+#else
+            int32_t* Y_column_ptr = &input_matrix_Y[cy * cols_X_rows_Y];
+#endif
+            //
+            int32_t x1, x0;
+            int32_t y1, y0;
+            ah = 0; al = 1 << (q_format-1);
+            for(int32_t i = 0; i < cols_X_rows_Y/2; i++)
             {
-                x = input_matrix_X[r * column_count + i];
-                y = input_matrix_Y[j * column_count + c];
-                asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x),"r"(y),"0"(ah),"1"(al));
+                // load two x and two y
+                asm("ldd %0,%1,%2[%3]":"=r"(x1),"=r"(x0):"r"(X_row_ptr),"r"(i));
+                asm("ldd %0,%1,%2[%3]":"=r"(y1),"=r"(y0):"r"(Y_column_ptr),"r"(i));
+                // mutliply two x and two y
+                asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(ah),"1"(al));
+                asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x1),"r"(y1),"0"(ah),"1"(al));
             }
             asm("lextract %0,%1,%2,%3,32": "=r"(ah):"r"(ah),"r"(al),"r"(q_format));
-            result_matrix_R[r * column_count + c] = ah;
+            result_matrix_R[rx * cols_Y + cy] = ah;
         }
     }
 }
