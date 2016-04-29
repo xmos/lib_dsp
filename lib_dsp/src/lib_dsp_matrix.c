@@ -15,8 +15,8 @@
  *  Example:
  * 
  *  \code
- *  int samples[8][32];
- *  int result[8][32];  
+ *  int32_t samples[8][32];
+ *  int32_t result[8][32];  
  *  lib_dsp_matrix_negate( samples, result, 8, 32 );
  *  \endcode
  * 
@@ -28,10 +28,10 @@
 
 void lib_dsp_matrix_negate
 (
-    const int* input_matrix_X,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count
+    const int32_t* input_matrix_X,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count
 ) {
     lib_dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
@@ -45,9 +45,9 @@ void lib_dsp_matrix_negate
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -60,11 +60,11 @@ void lib_dsp_matrix_negate
 
 void lib_dsp_matrix_adds
 (
-    const int* input_matrix_X,
-    int        scalar_value_A,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count
+    const int32_t* input_matrix_X,
+    int32_t        scalar_value_A,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count
 ) {
     lib_dsp_vector_adds
     (
@@ -85,9 +85,9 @@ void lib_dsp_matrix_adds
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
@@ -101,12 +101,12 @@ void lib_dsp_matrix_adds
 
 void lib_dsp_matrix_muls
 (
-    const int* input_matrix_X,
-    int        scalar_value_A,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    const int32_t* input_matrix_X,
+    int32_t        scalar_value_A,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count,
+    int32_t        q_format
 ) {
     lib_dsp_vector_muls
     (
@@ -127,9 +127,9 @@ void lib_dsp_matrix_muls
  *  Example:
  * 
  *  \code
- *  int input_matrix_X [256];
- *  int input_matrix_Y [256];
- *  int result_matrix_R[256];  
+ *  int32_t input_matrix_X [256];
+ *  int32_t input_matrix_Y [256];
+ *  int32_t result_matrix_R[256];  
  *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -142,11 +142,11 @@ void lib_dsp_matrix_muls
 
 void lib_dsp_matrix_addm
 (
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count
+    const int32_t* input_matrix_X,
+    const int32_t* input_matrix_Y,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count
 ) {
     lib_dsp_vector_addv
     (
@@ -166,9 +166,9 @@ void lib_dsp_matrix_addm
  *  Example:
  * 
  *  \code
- *  int input_matrix_X [256];
- *  int input_matrix_Y [256];
- *  int result_matrix_R[256];  
+ *  int32_t input_matrix_X [256];
+ *  int32_t input_matrix_Y [256];
+ *  int32_t result_matrix_R[256];  
  *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -181,11 +181,11 @@ void lib_dsp_matrix_addm
 
 void lib_dsp_matrix_subm
 (
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count
+    const int32_t* input_matrix_X,
+    const int32_t* input_matrix_Y,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count
 ) {
     lib_dsp_vector_subv
     (
@@ -206,9 +206,9 @@ void lib_dsp_matrix_subm
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_matrix_Y[8][32];
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_matrix_Y[8][32];
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
@@ -226,22 +226,22 @@ void lib_dsp_matrix_subm
 
 void lib_dsp_matrix_mulm
 (
-    const int* input_matrix_X,
-    const int* input_matrix_Y,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    const int32_t* input_matrix_X,
+    const int32_t* input_matrix_Y,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count,
+    int32_t        q_format
 ) {
-    int ah; unsigned al;
-    int x, y;
+    int32_t ah; uint32_t al;
+    int32_t x, y;
     // <TODO>: Optimize
-    for( int r = 0; r < row_count; ++r )
+    for( int32_t r = 0; r < row_count; ++r )
     {
         ah = 0; al = 1 << (q_format-1);
-        for( int c = 0; c < column_count; ++c )
+        for( int32_t c = 0; c < column_count; ++c )
         {
-            for( int i = 0, j = 0; i < row_count && j < column_count; ++i, ++j )
+            for( int32_t i = 0, j = 0; i < row_count && j < column_count; ++i, ++j )
             {
                 x = input_matrix_X[r * column_count + i];
                 y = input_matrix_Y[j * column_count + c];
@@ -264,16 +264,16 @@ void lib_dsp_matrix_mulm
 
 void lib_dsp_matrix_transpose
 (
-    const int* input_matrix_X,
-    int*       result_matrix_R,
-    int        row_count,
-    int        column_count,
-    int        q_format
+    const int32_t* input_matrix_X,
+    int32_t*       result_matrix_R,
+    int32_t        row_count,
+    int32_t        column_count,
+    int32_t        q_format
 ) {
     // <TODO>: Optimize 
-    for( int r = 0; r < row_count; ++r )
+    for( int32_t r = 0; r < row_count; ++r )
     {
-        for( int c = 0; c < column_count; ++c )
+        for( int32_t c = 0; c < column_count; ++c )
         {
             result_matrix_R[c * column_count + r] = input_matrix_X[r * column_count + c];
         }

@@ -5,13 +5,13 @@
 #include "lib_dsp_math.h"
 #include "lib_dsp_statistics.h"
 
-int lib_dsp_vector_abs_sum
+int32_t lib_dsp_vector_abs_sum
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah=0, x1, x0; unsigned al=0;
+    int32_t ah=0, x1, x0; uint32_t al=0;
     
     while( vector_length >= 4 )
     {
@@ -67,7 +67,7 @@ int lib_dsp_vector_abs_sum
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_mean( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -76,14 +76,14 @@ int lib_dsp_vector_abs_sum
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_mean
+int32_t lib_dsp_vector_mean
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format, q_format );
-    int vectort_sum = lib_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
+    int32_t divide_by_N = lib_dsp_math_divide(1, vector_length, q_format );
+    int32_t vectort_sum = lib_dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
     return lib_dsp_math_multiply( divide_by_N, vectort_sum, q_format );
 }
 
@@ -103,7 +103,7 @@ int lib_dsp_vector_mean
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_power( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -112,14 +112,14 @@ int lib_dsp_vector_mean
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_power
+int32_t lib_dsp_vector_power
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int ah=0, x1, x0; unsigned al=0;
-    unsigned int ii = -4, len = vector_length;
+    int32_t ah=0, x1, x0; uint32_t al=0;
+    uint32_t ii = -4, len = vector_length;
     
     while( len > 0 ) {++ii; len /= 2;}
     while( vector_length >= 4 )
@@ -182,7 +182,7 @@ int lib_dsp_vector_power
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_rms( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -191,16 +191,16 @@ int lib_dsp_vector_power
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_rms
+int32_t lib_dsp_vector_rms
 (
-    const int* input_vector_X,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {
-    int divide_by_N = lib_dsp_math_reciprocal( vector_length << q_format,     q_format );
-    int vectort_pwr = lib_dsp_vector_power   ( input_vector_X, vector_length, q_format );
-    int mean_square = lib_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
-    int rt_mean_sqr = lib_dsp_math_squareroot( mean_square,                   q_format );
+    int32_t divide_by_N = lib_dsp_math_divide( 1, vector_length,    q_format ); // reciprocal
+    int32_t vectort_pwr = lib_dsp_vector_power   ( input_vector_X, vector_length, q_format );
+    int32_t mean_square = lib_dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
+    int32_t rt_mean_sqr = lib_dsp_math_squareroot( mean_square); //ou ,                   q_format );
     return rt_mean_sqr;
 }
 
@@ -220,7 +220,7 @@ int lib_dsp_vector_rms
  *  Example:
  * 
  *  \code
- *  int result;
+ *  int32_t result;
  *  result = lib_dsp_vector_dotprod( input_vector, 256, 28 );
  *  \endcode
  * 
@@ -230,15 +230,15 @@ int lib_dsp_vector_rms
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int lib_dsp_vector_dotprod
+int32_t lib_dsp_vector_dotprod
 (
-    const int* input_vector_X,
-    const int* input_vector_Y,
-    int        vector_length,
-    int        q_format
+    const int32_t* input_vector_X,
+    const int32_t* input_vector_Y,
+    int32_t        vector_length,
+    int32_t        q_format
 ) {    
-    int ah = 0, x1, x0, y1, y0;
-    unsigned al = 1 << (q_format-1);
+    int32_t ah = 0, x1, x0, y1, y0;
+    uint32_t al = 1 << (q_format-1);
     
     while( vector_length >= 4 )
     {

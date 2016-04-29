@@ -15,11 +15,11 @@
 
 #define FIR_FILTER_LENGTH     160
 
-void print31( int x ) {if(x >=0) printf("+%f ",F31(x)); else printf("%f ",F31(x));}
+void print31( int32_t x ) {if(x >=0) printf("+%f ",F31(x)); else printf("%f ",F31(x));}
 
 
 // Declare global variables and arrays
-int fir_coeffs[] = // 161 taps
+int32_t fir_coeffs[] = // 161 taps
 {
   Q31(+0.0391607),Q31(+0.0783215),Q31(+0.0191607),Q31(+0.01531791),Q31(-0.03098222),
   Q31(+0.0391607),Q31(+0.0783215),Q31(+0.0191607),Q31(+0.01531791),Q31(-0.03098222),
@@ -64,24 +64,24 @@ int fir_coeffs[] = // 161 taps
 };
 
 
-int fir_state[FIR_FILTER_LENGTH];
+int32_t fir_state[FIR_FILTER_LENGTH];
 
-int lms_coeffs[FIR_FILTER_LENGTH];
-int nlms_coeffs[FIR_FILTER_LENGTH];
+int32_t lms_coeffs[FIR_FILTER_LENGTH];
+int32_t nlms_coeffs[FIR_FILTER_LENGTH];
 
 int main(void)
 {
-  int c;
-  int x;
-  int err;
+  int32_t c;
+  int32_t x;
+  int32_t err;
 
               // Apply LMS Filter
   for( c = 5; c <= 5; c *= 2 )
   {
     printf( "LMS %u\n", c );
-    for( int i = 0; i < FIR_FILTER_LENGTH; ++i ) lms_coeffs[i] = fir_coeffs[i];
-    for( int i = 0; i < FIR_FILTER_LENGTH; ++i ) fir_state[i] = 0;
-    for( int i = 0; i < c+30; ++i )
+    for( int32_t i = 0; i < FIR_FILTER_LENGTH; ++i ) lms_coeffs[i] = fir_coeffs[i];
+    for( int32_t i = 0; i < FIR_FILTER_LENGTH; ++i ) fir_state[i] = 0;
+    for( int32_t i = 0; i < c+30; ++i )
     {
       x = lib_dsp_adaptive_lms( Q31(0.08), Q31(0.10), &err, lms_coeffs, fir_state, c, Q31(0.01), Q_N );
       print31( x ); print31( err ); printf( "\n" );
@@ -92,9 +92,9 @@ int main(void)
   for( c = 5; c <= 5; c *= 2 )
   {
     printf( "\nNormalized LMS %u\n", c );
-    for( int i = 0; i < FIR_FILTER_LENGTH; ++i ) nlms_coeffs[i] = fir_coeffs[i];
-    for( int i = 0; i < FIR_FILTER_LENGTH; ++i ) fir_state[i] = 0;
-    for( int i = 0; i < c+30; ++i )
+    for( int32_t i = 0; i < FIR_FILTER_LENGTH; ++i ) nlms_coeffs[i] = fir_coeffs[i];
+    for( int32_t i = 0; i < FIR_FILTER_LENGTH; ++i ) fir_state[i] = 0;
+    for( int32_t i = 0; i < c+30; ++i )
     {
       x = lib_dsp_adaptive_nlms( Q31(0.08), Q31(0.10), &err, nlms_coeffs, fir_state, c, Q31(0.01), Q_N );
       print31( x ); print31( err ); printf( "\n" );

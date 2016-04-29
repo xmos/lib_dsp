@@ -36,7 +36,7 @@ lib_dsp_fft_complex_short_t;
 
 /** This function splits the spectrum of the FFT of two real sequences. Takes
  * the result of a double-packed lib_dsp_fft_complex_t array that has undergone
- * and FFT. This function splits the result into two arrays, one for each real
+ * an FFT. This function splits the result into two arrays, one for each real
  * sequence, of length N/2.
  * It is expected that the output will be cast by:
  *   lib_dsp_fft_complex_t (* restrict w)[2] = (lib_dsp_fft_complex_t (*)[2])pts;
@@ -50,7 +50,7 @@ lib_dsp_fft_complex_short_t;
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function merges two split spectra. It is the exact inverse operation of
  * lib_dsp_fft_split_spectrum.
@@ -58,7 +58,7 @@ void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], unsigned N );
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function copies an array of lib_dsp_fft_complex_short_t elements to an array of an equal
  * number of lib_dsp_fft_complex_t elements.
@@ -67,7 +67,7 @@ void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], unsigned N );
  * \param[in]     s   Array of lib_dsp_fft_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], unsigned N );
+void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], uint32_t N );
 
 /** This function copies an array of lib_dsp_fft_complex_t elements to an array of an equal
  * number of lib_dsp_fft_complex_short_t elements.
@@ -76,7 +76,7 @@ void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_s
  * \param[in]     l   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], unsigned N );
+void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], uint32_t N );
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves lib_dsp_fft_bit_reverse() followed by
@@ -87,15 +87,15 @@ void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_com
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], unsigned N );
+void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N );
 
 /** This function computes a forward FFT. The complex input signal is
  * supplied in an array of real and imaginary fixed-point values.
  * The same array is also used to store the output.
  * The magnitude of the FFT output is right shifted log2(N) times which corresponds to
- * division by N as shown in EQUATION 31-5 of http://www.dspguide.com/CH31.PDF
+ * division by N as shown in EQUATION 31-5 of ``http://www.dspguide.com/CH31.PDF``.
  * The number of points must be a power of 2, and the array of sine values should contain a quarter sine-wave.
- * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversal of the data.
+ * Use one of the lib_dsp_sine_N tables. The function does not perform bit reversed indexing of the input data.
  * If required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
@@ -107,14 +107,16 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], unsigned N );
  */
 void lib_dsp_fft_forward (
     lib_dsp_fft_complex_t pts[],
-    unsigned              N,
+    uint32_t              N,
     const int32_t         sine[] );
 
 /** This function computes an inverse FFT. The complex input array is
  * supplied as two arrays of integers, with numbers represented as
- * fixed-point values. The number of points must be a power of 2, and the
+ * fixed-point values. Max input range is -0x3fffffff..0x3fffffff. 
+ * Integer overflow can occur with inputs outside of this range.
+ * The number of points must be a power of 2, and the
  * array of sine values should contain a quarter sine-wave. Use one of the
- * lib_dsp_sine_N tables. The function does not perform a bit-twiddle -
+ * lib_dsp_sine_N tables. The function does not perform bit reversed indexing of the input data.
  * if required then lib_dsp_fft_bit_reverse() should be called beforehand.
  *
  * \param[in,out] pts   Array of lib_dsp_fft_complex_t elements.
@@ -127,7 +129,7 @@ void lib_dsp_fft_forward (
  */
 void lib_dsp_fft_inverse (
     lib_dsp_fft_complex_t pts[],
-    unsigned              N,
+    uint32_t              N,
     const int32_t         sine[] );
 
 #endif

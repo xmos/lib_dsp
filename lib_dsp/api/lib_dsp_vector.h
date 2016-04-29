@@ -3,6 +3,8 @@
 #ifndef LIB_DSP_VECTOR
 #define LIB_DSP_VECTOR
 
+#include <stdint.h>
+
 /** Vector Minimum
  * 
  *  Locate the vector's first occurring minimum value, returning the index of
@@ -11,8 +13,8 @@
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result = lib_dsp_vector_minimum( samples, 256 );
+ *  int32_t samples[256];
+ *  int32_t result = lib_dsp_vector_minimum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -20,10 +22,10 @@
  *  \returns               Array index where first minimum value occurs.
  */
 
-int lib_dsp_vector_minimum
+int32_t lib_dsp_vector_minimum
 (
-    const int input_vector[],
-    int       vector_length
+    const int32_t input_vector[],
+    int32_t       vector_length
 );
 
 /** Vector Minimum
@@ -34,8 +36,8 @@ int lib_dsp_vector_minimum
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result = lib_dsp_vector_maximum( samples, 256 );
+ *  int32_t samples[256];
+ *  int32_t result = lib_dsp_vector_maximum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -43,10 +45,10 @@ int lib_dsp_vector_minimum
  *  \returns               Array index where first maximum value occurs.
  */
 
-int lib_dsp_vector_maximum
+int32_t lib_dsp_vector_maximum
 (
-    const int input_vector[],
-    int       vector_length
+    const int32_t input_vector[],
+    int32_t       vector_length
 );
 
 /** Vector negation: ``R[i] = -X[i]``
@@ -62,8 +64,8 @@ int lib_dsp_vector_maximum
  *  Example:
  *
  *  \code 
- *  int samples[256];
- *  int result[256];
+ *  int32_t samples[256];
+ *  int32_t result[256];
  *  lib_dsp_vector_negate( samples, result, 256 );
  *  \endcode 
  * 
@@ -74,9 +76,9 @@ int lib_dsp_vector_maximum
 
 void lib_dsp_vector_negate
 (
-    const int input_vector_X[],
-    int       result_vector_R[],
-    int       vector_length
+    const int32_t input_vector_X[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length
 );
 
 /** Vector absolute value: ``R[i] = |X[i]|``
@@ -87,8 +89,8 @@ void lib_dsp_vector_negate
  *  Example:
  * 
  *  \code 
- *  int samples[256];
- *  int result[256];
+ *  int32_t samples[256];
+ *  int32_t result[256];
  *  lib_dsp_vector_abs( samples, result, 256 );
  *  \endcode 
  * 
@@ -105,9 +107,9 @@ void lib_dsp_vector_negate
 
 void lib_dsp_vector_abs
 (
-    const int input_vector_X[],
-    int       result_vector_R[],
-    int       vector_length
+    const int32_t input_vector_X[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length
 );
 
 /** Vector / scalar addition: ``R[i] = X[i] + A``
@@ -121,9 +123,9 @@ void lib_dsp_vector_abs
  *  Example:
  * 
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );  
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );  
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -135,10 +137,10 @@ void lib_dsp_vector_abs
 
 void lib_dsp_vector_adds
 (
-    const int input_vector_X[],
-    int       input_scalar_A,
-    int       result_vector_R[],
-    int       vector_length
+    const int32_t input_vector_X[],
+    int32_t       input_scalar_A,
+    int32_t       result_vector_R[],
+    int32_t       vector_length
 );
 
 /** Vector / scalar multiplication: ``R[i] = X[i] * A``
@@ -150,9 +152,9 @@ void lib_dsp_vector_adds
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );  
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );  
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -165,11 +167,11 @@ void lib_dsp_vector_adds
 
 void lib_dsp_vector_muls
 (
-    const int input_vector_X[],
-    int       input_scalar_A,
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       input_scalar_A,
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
  
@@ -182,9 +184,9 @@ void lib_dsp_vector_muls
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_addv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -196,10 +198,10 @@ void lib_dsp_vector_muls
 
 void lib_dsp_vector_addv
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    int       result_vector_R[],
-    int       vector_length
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length
 );
 
 /** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
@@ -211,9 +213,9 @@ void lib_dsp_vector_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_subv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -225,10 +227,10 @@ void lib_dsp_vector_addv
 
 void lib_dsp_vector_subv
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    int       result_vector_R[],
-    int       vector_length
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length
 );
 
 /** Vector / vector multiplication: ``R[i] = X[i] * Y[i]``
@@ -241,9 +243,9 @@ void lib_dsp_vector_subv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_mulv( input_vector_X, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -256,11 +258,11 @@ void lib_dsp_vector_subv
 
 void lib_dsp_vector_mulv
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector multiplication and scalar addition: ``R[i] = X[i] * Y[i] + A``
@@ -276,10 +278,10 @@ void lib_dsp_vector_mulv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[256];  
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[256];  
  *  lib_dsp_vector_mulv_adds( input_vector_X, input_vector_Y, scalar_value_A, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -293,12 +295,12 @@ void lib_dsp_vector_mulv
 
 void lib_dsp_vector_mulv_adds
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    int       input_scalar_A,
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    int32_t       input_scalar_A,
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Scalar multiplication and vector addition: ``R[i] = X[i] * A + Y[i]``
@@ -314,10 +316,10 @@ void lib_dsp_vector_mulv_adds
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int input_vector_Y[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_muls_addv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -331,12 +333,12 @@ void lib_dsp_vector_mulv_adds
 
 void lib_dsp_vector_muls_addv
 (
-    const int input_vector_X[],
-    int       input_scalar_A,
-    const int input_vector_Y[],
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       input_scalar_A,
+    const int32_t input_vector_Y[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Scalar multiplication and vector subtraction: ``R[i] = X[i] * A - Y[i]``
@@ -352,10 +354,10 @@ void lib_dsp_vector_muls_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_scalar_A = Q28( 0.333 );
- *  int input_vector_Y[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t input_vector_Y[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_muls_subv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
  * 
@@ -369,12 +371,12 @@ void lib_dsp_vector_muls_addv
 
 void lib_dsp_vector_muls_subv
 (
-    const int input_vector_X[],
-    int       input_scalar_A,
-    const int input_vector_Y[],
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    int32_t       input_scalar_A,
+    const int32_t input_vector_Y[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] + Z[i]``
@@ -391,10 +393,10 @@ void lib_dsp_vector_muls_subv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_vector_Z[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Z[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_mulv_subv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -408,12 +410,12 @@ void lib_dsp_vector_muls_subv
 
 void lib_dsp_vector_mulv_addv
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    const int input_vector_Z[],
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    const int32_t input_vector_Z[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 /** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] - Z[i]``
@@ -430,10 +432,10 @@ void lib_dsp_vector_mulv_addv
  *  Example:
  *
  *  \code 
- *  int input_vector_X[256];
- *  int input_vector_Y[256];
- *  int input_vector_Z[256];
- *  int result_vector_R[256];
+ *  int32_t input_vector_X[256];
+ *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Z[256];
+ *  int32_t result_vector_R[256];
  *  lib_dsp_vector_mulv_subv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256 );
  *  \endcode 
  * 
@@ -447,12 +449,12 @@ void lib_dsp_vector_mulv_addv
 
 void lib_dsp_vector_mulv_subv
 (
-    const int input_vector_X[],
-    const int input_vector_Y[],
-    const int input_vector_Z[],
-    int       result_vector_R[],
-    int       vector_length,
-    int       q_format
+    const int32_t input_vector_X[],
+    const int32_t input_vector_Y[],
+    const int32_t input_vector_Z[],
+    int32_t       result_vector_R[],
+    int32_t       vector_length,
+    int32_t       q_format
 );
 
 #endif

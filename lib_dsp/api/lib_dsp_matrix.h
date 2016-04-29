@@ -3,6 +3,8 @@
 #ifndef LIB_DSP_MATRIX
 #define LIB_DSP_MATRIX
 
+#include "stdint.h"
+
 /** Matrix negation: ``R[i][j] = -X[i][j]``
  * 
  *  Each negated element is computed by twos-compliment negation therefore
@@ -13,8 +15,8 @@
  *  Example:
  * 
  *  \code
- *  int samples[8][32];
- *  int result[8][32];  
+ *  int32_t samples[8][32];
+ *  int32_t result[8][32];  
  *  lib_dsp_matrix_negate( samples, result, 8, 32 );
  *  \endcode
  * 
@@ -26,10 +28,10 @@
 
 void lib_dsp_matrix_negate
 (
-    const int input_matrix_X[],
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count
+    const int32_t input_matrix_X[],
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count
 );
 
 /** Matrix / scalar addition: ``R[i][j] = X[i][j] + A``
@@ -41,9 +43,9 @@ void lib_dsp_matrix_negate
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -56,11 +58,11 @@ void lib_dsp_matrix_negate
 
 void lib_dsp_matrix_adds
 (
-    const int input_matrix_X[],
-    int       input_scalar_A,
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count
+    const int32_t input_matrix_X[],
+    int32_t       input_scalar_A,
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count
 );
 
 /** Matrix / scalar multiplication: ``R[i][j] = X[i][j] * A``
@@ -73,9 +75,9 @@ void lib_dsp_matrix_adds
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_scalar_A = Q28( 0.333 );
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_scalar_A = Q28( 0.333 );
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
@@ -89,12 +91,12 @@ void lib_dsp_matrix_adds
 
 void lib_dsp_matrix_muls
 (
-    const int input_matrix_X[],
-    int       input_scalar_A,
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count,
-    int       q_format
+    const int32_t input_matrix_X[],
+    int32_t       input_scalar_A,
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count,
+    int32_t       q_format
 );
 
 /** Matrix / matrix addition: ``R[i][j] = X[i][j] + Y[i][j]``
@@ -106,9 +108,9 @@ void lib_dsp_matrix_muls
  *  Example:
  * 
  *  \code
- *  int input_matrix_X [256];
- *  int input_matrix_Y [256];
- *  int result_matrix_R[256];  
+ *  int32_t input_matrix_X [256];
+ *  int32_t input_matrix_Y [256];
+ *  int32_t result_matrix_R[256];  
  *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -121,11 +123,11 @@ void lib_dsp_matrix_muls
 
 void lib_dsp_matrix_addm
 (
-    const int input_matrix_X[],
-    const int input_matrix_Y[],
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count
+    const int32_t input_matrix_X[],
+    const int32_t input_matrix_Y[],
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count
 );
 
 /** Matrix / matrix subtraction: ``R[i][j] = X[i][j] - Y[i][j]``
@@ -137,9 +139,9 @@ void lib_dsp_matrix_addm
  *  Example:
  * 
  *  \code
- *  int input_matrix_X [256];
- *  int input_matrix_Y [256];
- *  int result_matrix_R[256];  
+ *  int32_t input_matrix_X [256];
+ *  int32_t input_matrix_Y [256];
+ *  int32_t result_matrix_R[256];  
  *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
@@ -152,11 +154,11 @@ void lib_dsp_matrix_addm
 
 void lib_dsp_matrix_subm
 (
-    const int input_matrix_X[],
-    const int input_matrix_Y[],
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count
+    const int32_t input_matrix_X[],
+    const int32_t input_matrix_Y[],
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count
 );
 
 /** Matrix / matrix multiplication: ``R[i][j] = X[i][j] * Y[i][j]``
@@ -169,9 +171,9 @@ void lib_dsp_matrix_subm
  *  Example:
  * 
  *  \code
- *  int input_matrix_X[8][32];
- *  int input_matrix_Y[8][32];
- *  int result_vector_R[8][32];  
+ *  int32_t input_matrix_X[8][32];
+ *  int32_t input_matrix_Y[8][32];
+ *  int32_t result_vector_R[8][32];  
  *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
@@ -185,12 +187,12 @@ void lib_dsp_matrix_subm
 
 void lib_dsp_matrix_mulm
 (
-    const int input_matrix_X[],
-    const int input_matrix_Y[],
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count,
-    int       q_format
+    const int32_t input_matrix_X[],
+    const int32_t input_matrix_Y[],
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count,
+    int32_t       q_format
 );
 
 /** Matrix transposition
@@ -204,11 +206,11 @@ void lib_dsp_matrix_mulm
 
 void lib_dsp_matrix_transpose
 (
-    const int input_matrix_X[],
-    int       result_matrix_R[],
-    int       row_count,
-    int       column_count,
-    int       q_format
+    const int32_t input_matrix_X[],
+    int32_t       result_matrix_R[],
+    int32_t       row_count,
+    int32_t       column_count,
+    int32_t       q_format
 );
 
 #endif

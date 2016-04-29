@@ -24,7 +24,7 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Category    | Source Files         | Functions                                                     |
   +=============+======================+===============================================================+
-  | Fixed point | lib_dsp_qformat      | Q16 through Q31 formats, fixed and floating point conversions |
+  | Fixed point | lib_dsp_qformat      | Q8 through Q31 formats, fixed and floating point conversions |
   +-------------+----------------------+---------------------------------------------------------------+
   | Filters     | lib_dsp_filters      | FIR, biquad, cascaded biquad, and convolution                 |
   +-------------+----------------------+---------------------------------------------------------------+
@@ -40,7 +40,7 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Design      | lib_dsp_design       | Biquad coefficient generation for various filter types        |
   +-------------+----------------------+---------------------------------------------------------------+
-  | FFT         | lib_dsp_fft          | Forward and inverse Fast Fourier Transforms. 16 and 32 bit    |
+  | FFT         | lib_dsp_fft          | Forward and inverse Fast Fourier Transforms.                  |
   +-------------+----------------------+---------------------------------------------------------------+
 
 Fixed-Point Format
@@ -50,7 +50,7 @@ Q Format Introduction
 .....................
 
 The library functions support 32 bit input and output data, with internal 64 bit accumulator.
-The output data can be scaled to any of the supported Q Formats (Q16 through Q31).
+The output data can be scaled to any of the supported Q Formats (Q8 through Q31).
 Further details about Q Format numbers is available here : https://en.wikipedia.org/wiki/Q_(number_format).
 
 The 'q_format' Parameter
@@ -122,16 +122,6 @@ Scalar Math Functions: Multiply
 -------------------------------
 
 .. doxygenfunction:: lib_dsp_math_multiply
-
-Scalar Math Functions: Reciprocal
----------------------------------
-
-.. doxygenfunction:: lib_dsp_math_reciprocal
-
-Scalar Math Functions: Inverse Square Root
-------------------------------------------
-
-.. doxygenfunction:: lib_dsp_math_invsqrroot
 
 Scalar Math Functions: Square Root
 ----------------------------------
@@ -301,6 +291,11 @@ Filter Design Functions: Treble Shelving Filter
 
 FFT functions
 -------------
+
+**Note:** The method for processing two real signals with a single complex FFT was improved.
+It now requires only half the memory. 
+The function lib_dsp_fft_split_spectrum is used to split the combined N point output of lib_dsp_fft_forward into two half-spectra of size N/2. One for each of the two real input signals.
+lib_dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spectrum that can be processed by lib_dsp_fft_inverse.
 
 .. doxygenfunction:: lib_dsp_fft_split_spectrum
 .. doxygenfunction:: lib_dsp_fft_merge_spectra

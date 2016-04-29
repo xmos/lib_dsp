@@ -2,11 +2,12 @@
 
 #include <platform.h>
 #include <stdio.h>
+#include <lib_dsp_design.h>
 #include <math.h>
 
 static double pi = 3.14159265359;
 
-static int _float2fixed( float x, int q )
+static int32_t _float2fixed( float x, int32_t q )
 {
     if( x < 0 ) return (((double)(1<<q)) * x - 0.5);
     else if( x > 0 ) return (((double)((1<<q)-1)) * x + 0.5);
@@ -22,7 +23,7 @@ static int _float2fixed( float x, int q )
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_notch( 0.25, 0.707, coeffs, 28 );
  *  \endcode
  *
@@ -38,8 +39,8 @@ void lib_dsp_design_biquad_notch
 (
     double frequency,
     double filter_Q,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -70,7 +71,7 @@ void lib_dsp_design_biquad_notch
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_lowpass( 0.25, 0.707, coeffs, 28 );
  *  \endcode
  *
@@ -86,8 +87,8 @@ void lib_dsp_design_biquad_lowpass
 (
     double frequency,
     double filter_Q,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -118,7 +119,7 @@ void lib_dsp_design_biquad_lowpass
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_highpass( 0.25, 0.707, coeffs, 28 );
  *  \endcode
  *
@@ -134,8 +135,8 @@ void lib_dsp_design_biquad_highpass
 (
     double frequency,
     double filter_Q,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -166,7 +167,7 @@ void lib_dsp_design_biquad_highpass
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_allpass( 0.25, 0.707, coeffs, 28 );
  *  \endcode
  *
@@ -182,8 +183,8 @@ void lib_dsp_design_biquad_allpass
 (
     double frequency,
     double filter_Q,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -214,7 +215,7 @@ void lib_dsp_design_biquad_allpass
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_bandpass( 0.20, 0.30, coeffs, 28 );
  *  \endcode
  *
@@ -232,8 +233,8 @@ void lib_dsp_design_biquad_bandpass
 (
     double frequency1,
     double frequency2,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency1;
@@ -265,7 +266,7 @@ void lib_dsp_design_biquad_bandpass
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_notch( 0.25, 0.707, coeffs, 28 );
  *  \endcode
  *
@@ -285,8 +286,8 @@ void lib_dsp_design_biquad_peaking
     double frequency,
     double filter_Q,
     double gain_db,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double A  = sqrt( pow(10,(gain_db/20)) );
@@ -318,7 +319,7 @@ void lib_dsp_design_biquad_peaking
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_lowshelf( 0.25, 0.707, +6.0, coeffs, 28 );
  *  \endcode
  *
@@ -338,8 +339,8 @@ void lib_dsp_design_biquad_lowshelf
     double frequency,
     double filter_Q,
     double shelf_gain_db,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double A  = pow( 10.0, (shelf_gain_db / 40.0) );
@@ -371,7 +372,7 @@ void lib_dsp_design_biquad_lowshelf
  *  Example showing a filter coefficients generation using Q28 fixed-point formatting.
  * 
  *  \code
- *  int coeffs[5];
+ *  int32_t coeffs[5];
  *  lib_dsp_design_biquad_lowshelf( 0.25, 0.707, +6.0, coeffs, 28 );
  *  \endcode
  *
@@ -391,8 +392,8 @@ void lib_dsp_design_biquad_highshelf
     double frequency,
     double filter_Q,
     double shelf_gain_db,
-    int    coefficients[5],
-    int    q_format
+    int32_t    coefficients[5],
+    int32_t    q_format
 ) {
     // Compute common factors
 	double A  = pow( 10.0, (shelf_gain_db / 40.0) );
