@@ -128,6 +128,21 @@ Scalar Math Functions: Square Root
 
 .. doxygenfunction:: lib_dsp_math_squareroot
 
+Scalar Math Functions: Sine
+----------------------------------
+
+.. doxygenfunction:: lib_dsp_math_sin
+
+Scalar Math Functions: Cosine
+----------------------------------
+
+.. doxygenfunction:: lib_dsp_math_cos
+
+Scalar Math Functions: Arctangent
+----------------------------------
+
+.. doxygenfunction:: lib_dsp_math_atan
+
 Vector Math Functions: Minimum Value
 ------------------------------------
 
