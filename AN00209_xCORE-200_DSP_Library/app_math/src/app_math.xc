@@ -36,7 +36,7 @@
 #endif
 
 // errors from -3..+3
-#define ERROR_RANGE 7
+#define ERROR_RANGE 31
 typedef struct {
     int32_t errors[ERROR_RANGE];
     int32_t max_positive_error;
@@ -52,12 +52,15 @@ int32_t report_errors(uint32_t max_abs_error, error_s *e) {
     int32_t half_range = ERROR_RANGE/2;
     for(int32_t i=0; i<ERROR_RANGE; i++) {
         int32_t error = -half_range+i;
-        if(i == 0) {
-           printf("Cases Error <= %d: %d\n",error, e->errors[i]);
-        } else if (i == ERROR_RANGE-1) {
-           printf("Cases Error >= %d: %d\n",error, e->errors[i]);
-        } else {
-           printf("Cases Error == %d: %d\n",error, e->errors[i]);
+        unsigned num_errors = e->errors[i];
+        if(num_errors) {
+            if(i == 0) {
+                printf("Cases Error <= %d: %d\n",error, num_errors);
+            } else if (i == ERROR_RANGE-1) {
+                printf("Cases Error >= %d: %d\n",error, num_errors);
+            } else {
+                printf("Cases Error == %d: %d\n",error, num_errors);
+            }
         }
         if (error > max_abs_error || error < -max_abs_error) {
             result = 0;
@@ -136,13 +139,13 @@ void test_roots() {
     uint32_t cycles_taken; // absolute positive values
     timer tmr;
     error_s err;
+    uint32_t result, expected;
 
     reset_errors(&err);
 
     printf("Test Roots\n");
     printf("----------\n");
 
-    uint32_t result, expected;
 
 #if EXPONENTIAL_INPUT
     for(uint32_t i=1; i<=32; i++) { 
@@ -403,6 +406,132 @@ void test_trigonometric() {
     printf("\n");
 }
 
+
+
+void test_exp_and_log() {
+    int32_t start_time, end_time;
+    uint32_t cycles_taken; // absolute positive values
+    timer tmr;
+    error_s err;
+    uint32_t result, expected;
+    int done=0;
+    int done_after_next_iteration=0;
+
+    reset_errors(&err);
+    printf("Test Exponential and Logarithmic Functions\n");
+    printf("----------------------------\n");
+
+    printf("Test lib_dsp_math_exp\n");
+    int32_t x = INT32_MIN;
+
+    int32_t max_input = Q24(log(127));
+    printf("INT32_MIN 0x%x\n", INT32_MIN);
+
+    while(!done) {
+        double d_exp;
+
+    TIME_FUNCTION(result = lib_dsp_math_exp(x););
+#if PRINT_CYCLE_COUNT
+    printf("Cycles taken for lib_dsp_math_exp function: %d\n", cycles_taken);
+#endif
+
+#if PRINT_INPUTS_AND_OUTPUTS
+        printf ("e ^ %.8f: %.8f\n", F24(x), F24(result));
+#endif
+
+        TIME_FUNCTION(d_exp = exp(F24(x)));
+#if PRINT_CYCLE_COUNT
+    printf("Cycles taken for exp function: %d\n", cycles_taken);
+#endif
+        expected =  Q24(d_exp);
+        check_result(result, expected, 1, &err);
+
+        // update x
+#if EXPONENTIAL_INPUT
+        if(x==-1) {
+            x = 0;   // transition to 0
+        } else if(x==0) {
+            x = 1;   // transition to positive
+        } else if(x<0) {
+            x >>= 1; //shift down towards -1
+        } else {
+            x <<= 1; // shift up towards MAX_INPUT
+        }
+#else
+        x+=X_INCR
+#endif
+        if(done_after_next_iteration) done = 1;
+        if(x >= max_input) {
+            x = max_input;
+            done_after_next_iteration = 1;
+        }
+
+    }
+
+    printf("Error report: lib_dsp_math_exp vs exp:\n");
+    report_errors(1, &err);
+    printf("\n");    
+
+    printf("Test lib_dsp_math_log\n");
+    reset_errors(&err);
+    int32_t worst_cycles=0;
+    int32_t worst_cycles_input;
+
+    /*
+    * Test result in terms of Errors:
+    * num calculations:  1000226; Errors >=1:    44561 ( 4.46%); Errors >=2:     0 ( 0.00%)
+    * Max absolute error: 1
+    */
+
+#if EXPONENTIAL_INPUT
+    // valid inputs:1..MAX_INT32
+    for(uint32_t i=1; i<=31; i++) {
+        uint32_t x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
+#else
+    for(uint32_t x=1; x<=MAX_INT32; x+=X_INCR) {
+#endif
+
+        q8_24 log_natural;
+
+        TIME_FUNCTION(log_natural=lib_dsp_math_log(x));
+
+        if(cycles_taken>worst_cycles) {
+            worst_cycles = cycles_taken;
+            worst_cycles_input = x;
+        }
+#if PRINT_CYCLE_COUNT
+        printf("Cycles taken for lib_dsp_math_log function: %d\n", cycles_taken);
+#endif
+#if PRINT_INPUTS_AND_OUTPUTS
+        printf("log(%.8f) = %.8f\n",F24(x),F24(log_natural));
+#endif
+#if CHECK_RESULTS
+        double d_x = F24(x);
+        double d_log_ref = log(d_x);
+        q8_24 expected = Q24(d_log_ref);
+        check_result(log_natural, expected, 1, &err);
+#endif
+    }
+
+#if CHECK_RESULTS
+    printf("Error report from lib_dsp_math_log:\n");
+    report_errors(1, &err);
+#endif
+
+#if PRINT_CYCLE_COUNT
+    printf("max cyles taken for lib_dsp_math_log function: %d, input value was %.8f\n", worst_cycles, F24(worst_cycles_input));
+    // just to measure cycles
+    double d_x = F24(worst_cycles_input);
+    tmr :> start_time;
+    double d_log = log(d_x);
+    tmr :> end_time;
+    cycles_taken = end_time-start_time-overhead_time;
+    printf("math.h log(%.8f) = %.8f\n",d_x, d_log);
+    printf("Cycles taken for math.h log function: %u\n", cycles_taken);
+#endif    
+
+}
+
 void test_math(void)
 {
 
@@ -415,11 +544,15 @@ void test_math(void)
     printf("Test example for Math functions\n");
     printf("===============================\n");
 
+#if 0
     test_multipliation_and_division();
 
     test_roots();
 
     test_trigonometric();
+#endif
+
+    test_exp_and_log();
 
     exit (0);
 }
