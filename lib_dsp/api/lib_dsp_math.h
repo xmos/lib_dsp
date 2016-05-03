@@ -6,8 +6,6 @@
 #include "xccompat.h"
 #include "stdint.h"
 
-#define MIN_INT (0x80000000)
-#define MAX_INT (0x7FFFFFFF)
 
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions are fixed to this Q format.
@@ -48,6 +46,11 @@ typedef uint32_t uq8_24;
 /** This constant is the q8_24 fixed point representation of 2/PI
  */
 #define ONE_OVER_HALFPI_Q8_24 (10680707)
+
+
+#define HALF_Q8_24   (1<<(24-1))
+
+#define ONE_Q8_24    (1<<24)
 
 
 /**  Scalar multipliplication
@@ -212,6 +215,26 @@ inline q8_24 lib_dsp_math_cos(q8_24 rad) {
  *  \returns arctangent of x in radians between -pi/2 .. +pi/2
  */
 q8_24 lib_dsp_math_atan(q8_24 x);
+
+
+/** This function returns the natural exponent of a fixed point number. The
+ * input number has to be less than 4.8, otherwise the answer cannot be
+ * represented as a fixed point number. For input values larger than 3
+ * there is a relatively large error in the last three bits of the answer.
+ *
+ * \param x input value
+ * \returns e^x
+ **/
+q8_24 lib_dsp_math_exp(q8_24 x);
+
+/** This function returns the natural logarithm (ln) of a fixed point number. The
+ * input number has to be positive.
+ *
+ * \param x input value
+ * \returns ln(x).
+ **/
+q8_24 lib_dsp_math_log(uq8_24 x);
+
 
 
 #endif
