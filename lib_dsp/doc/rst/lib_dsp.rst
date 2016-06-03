@@ -24,7 +24,7 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Category    | Source Files         | Functions                                                     |
   +=============+======================+===============================================================+
-  | Fixed point | lib_dsp_qformat      | Q8 through Q31 formats, fixed and floating point conversions |
+  | Fixed point | lib_dsp_qformat      | Q8 through Q31 formats, fixed and floating point conversions  |
   +-------------+----------------------+---------------------------------------------------------------+
   | Filters     | lib_dsp_filters      | FIR, biquad, cascaded biquad, and convolution                 |
   +-------------+----------------------+---------------------------------------------------------------+
