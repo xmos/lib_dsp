@@ -89,27 +89,40 @@ int32_t inter_coeff[INTERP_FILTER_LENGTH];
 int32_t decim_coeff[INTERP_FILTER_LENGTH];
 int32_t decim_input[16];
 
+int overhead_time;
+
 int main(void)
 {
   int32_t i, j, c, r, x, y;
+  const int print_cycles = 0;
 
-
+  int32_t start_time, end_time, overhead_time, cycles_taken;
+  timer tmr;
+  tmr :> start_time;
+  tmr :> end_time;
+  overhead_time = end_time - start_time;
                  // Initiaize FIR filter state array
   for (i = 0; i < FIR_FILTER_LENGTH; i++)
   {
     filterState[i] = 0;
   }
 
-                // Apply FIR filter and store filtered data
+  // Apply FIR filter and store filtered data
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
-    Dst[i] =
+    TIME_FUNCTION(Dst[i] =
       lib_dsp_filters_fir (Src[i],                 // Input data sample to be filtered
                            firCoeffs,              // Pointer to filter coefficients
                            filterState,            // Pointer to filter state array
                            FIR_FILTER_LENGTH,      // Filter length
                            Q_N);                   // Q Format N
+    );
   }
+
+  if(print_cycles) {
+    printf("cycles taken for executing lib_dsp_filters_fir of length %d: %d\n", FIR_FILTER_LENGTH, cycles_taken);
+  }
+
 
   printf ("FIR Filter Results\n");
   for (i = 0; i < SAMPLE_LENGTH; i++)
@@ -123,14 +136,19 @@ int main(void)
     filterState[i] = 0;
   }
 
-                // Apply IIR filter and store filtered data
+  // Apply IIR filter and store filtered data
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
-    Dst[i] =
+    TIME_FUNCTION(Dst[i] =
       lib_dsp_filters_biquad (Src[i],              // Input data sample to be filtered
                               iirCoeffs,           // Pointer to filter coefficients
                               filterState,         // Pointer to filter state array
                               Q_N);                // Q Format N
+    );
+  }
+
+  if(print_cycles) {
+    printf("cycles taken for executing lib_dsp_filters_biquad: %d\n", cycles_taken);
   }
 
   printf ("\nIIR Biquad Filter Results\n");
@@ -146,15 +164,20 @@ int main(void)
     filterState[i] = 0;
   }
 
-                // Apply IIR filter and store filtered data
+  // Apply IIR filter and store filtered data
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
-    Dst[i] =
+    TIME_FUNCTION(Dst[i] =
       lib_dsp_filters_biquads (Src[i],             // Input data sample to be filtered
                                iirCoeffs,          // Pointer to filter coefficients
                                filterState,        // Pointer to filter state array
                                IIR_CASCADE_DEPTH,  // Number of cascaded sections
                                Q_N);               // Q Format N
+    );
+  }
+
+  if(print_cycles) {
+    printf("cycles taken for executing lib_dsp_filters_biquads (%d cascaded Biquads): %d\n", IIR_CASCADE_DEPTH, cycles_taken);
   }
 
   printf ("\nCascaded IIR Biquad Filter Results\n");
