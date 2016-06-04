@@ -197,16 +197,6 @@ void lib_dsp_matrix_subm
     );
 }
 
-// <TODO> - optimize using double-word load/store
-// <TODO> - optimize for 2x2, 3x3 and 4x4 matrices
-// TODO: Improve performance.
-// All figures in ns:
-// Was 620, After fix 710, After optimisation with doing two mac per cycle: 810
-// After switching from O2 to O3: 840ns for the whole function
-// But inner loop is better (improved from 80 to 70)
-// Next loop out is 220 cycles, down from 250.
-// outer loop is 500ns. Up from 420 ns.
-
 void lib_dsp_matrix_mulm
 (
     const int32_t* input_matrix_X,
@@ -222,8 +212,8 @@ void lib_dsp_matrix_mulm
 
     for( int32_t rx = 0; rx < rows_X; ++rx )
     {
-#if EXTERNAL_RAM
-        int32_t* X_row_ptr = interface.get_array_ptr();
+#if MATRIX_X_IN_EXTERNAL_RAM
+        int32_t* X_row_ptr = interface.get_array_ptr(0, rx); // matrix index and row vector index
 #else
         int32_t* X_row_ptr = &input_matrix_X[rx * cols_X_rows_Y];
 #endif
@@ -233,8 +223,8 @@ void lib_dsp_matrix_mulm
         {
             // TODO: for large matrixes. provide the following arrays through shared memory
 
-#if EXTERNAL_RAM
-            int32_t* Y_column_ptr = interface.get_array_ptr();
+#if MATRIX_Y_IN_EXTERNAL_RAM
+            int32_t* Y_column_ptr = interface.get_array_ptr(1, cy); // matrix index and column vector index
 #else
             int32_t* Y_column_ptr = &input_matrix_Y[cy * cols_X_rows_Y];
 #endif
@@ -242,9 +232,9 @@ void lib_dsp_matrix_mulm
             int32_t x1, x0;
             int32_t y1, y0;
             ah = 0; al = 1 << (q_format-1);
-            for(int32_t i = 0; i < cols_X_rows_Y/2; i++)
+            for(int32_t i = 0; i < (cols_X_rows_Y>>1); i++)
             {
-                // load two x and two y
+                // load two items from row rx in X and two from column cy in Y
                 asm("ldd %0,%1,%2[%3]":"=r"(x1),"=r"(x0):"r"(X_row_ptr),"r"(i));
                 asm("ldd %0,%1,%2[%3]":"=r"(y1),"=r"(y0):"r"(Y_column_ptr),"r"(i));
                 // mutliply two x and two y
