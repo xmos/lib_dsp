@@ -30,7 +30,8 @@ implementation file.
   +-------------+----------------------+---------------------------------------------------------------+
   | Adaptive    | lib_dsp_adaptive     | LMS and NLMS Adaptive filters                                 |
   +-------------+----------------------+---------------------------------------------------------------+
-  | Scalar math | lib_dsp_math         | Multiply, square root, reciprocal, inverse square root        |
+  | Scalar math | lib_dsp_math         | Multiply, divide, square root, exponential, natural logarithm |
+  |             |                      | trigonometric, hyperbolic                                     |
   +-------------+----------------------+---------------------------------------------------------------+
   | Vector math | lib_dsp_vector       | Scalar/vector add/subtract/multiply, dot product              |
   +-------------+----------------------+---------------------------------------------------------------+
@@ -129,12 +130,12 @@ Scalar Math Functions: Square Root
 .. doxygenfunction:: lib_dsp_math_squareroot
 
 Scalar Math Functions: Sine
-----------------------------------
+---------------------------
 
 .. doxygenfunction:: lib_dsp_math_sin
 
 Scalar Math Functions: Cosine
-----------------------------------
+-----------------------------
 
 .. doxygenfunction:: lib_dsp_math_cos
 
@@ -142,6 +143,26 @@ Scalar Math Functions: Arctangent
 ----------------------------------
 
 .. doxygenfunction:: lib_dsp_math_atan
+
+Scalar Math Functions: Exponential
+----------------------------------
+
+.. doxygenfunction:: lib_dsp_math_exp
+
+Scalar Math Functions: Natural Logarithm
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_math_log
+
+Scalar Math Functions: Hyperbolic Sine 
+--------------------------------------
+
+.. doxygenfunction:: lib_dsp_math_sinh
+
+Scalar Math Functions: Hyperbolic Cosine 
+----------------------------------------
+
+.. doxygenfunction:: lib_dsp_math_cosh
 
 Vector Math Functions: Minimum Value
 ------------------------------------
@@ -262,7 +283,6 @@ Statistics Functions: Dot Product
 ---------------------------------
 
 .. doxygenfunction:: lib_dsp_vector_dotprod
-
 
 Filter Design Functions: Notch Filter
 -------------------------------------

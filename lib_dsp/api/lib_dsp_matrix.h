@@ -184,7 +184,7 @@ void lib_dsp_matrix_subm
  *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
  *  \param  rows_X           Number of rows in input matrix X. Must be even.
  *  \param  cols_Y           Number of columns input matrix Y. Must be even.
- *  \cols_X_rows_Y           Number of columns in input matrix X == rows in input matrix Y. Must be even.
+ *  \param  cols_X_rows_Y    Number of columns in input matrix X == rows in input matrix Y. Must be even.
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 // N == columns_X == rows_Y

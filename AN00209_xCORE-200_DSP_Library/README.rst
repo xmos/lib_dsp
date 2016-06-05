@@ -13,7 +13,7 @@ The application note gives an overview of using the xCORE-200 DSP Elements Libra
 Required tools and libraries
 ............................
 
-* xTIMEcomposer Tools - Version 14.1.2 and above
+* xTIMEcomposer Tools - Version 14.2.0 and above
 * XMOS DSP library module - Version 2.0.0 and above
 
 Required hardware
