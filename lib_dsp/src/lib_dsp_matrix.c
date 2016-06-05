@@ -197,25 +197,27 @@ void lib_dsp_matrix_subm
     );
 }
 
+#define MATRIX_X_IN_EXTERNAL_RAM 0
+#define MATRIX_Y_IN_EXTERNAL_RAM 0
+
 void lib_dsp_matrix_mulm
 (
     const int32_t* input_matrix_X,
     const int32_t* input_matrix_Y,
     int32_t*       result_matrix_R,
-    const int32_t        rows_X,
-    const int32_t        cols_Y,
-    const int32_t        cols_X_rows_Y,
+    const int32_t  rows_X,
+    const int32_t  cols_Y,
+    const int32_t  cols_X_rows_Y,
     int32_t        q_format
 ) {
     int32_t ah; uint32_t al;
-    int32_t x, y;
 
     for( int32_t rx = 0; rx < rows_X; ++rx )
     {
 #if MATRIX_X_IN_EXTERNAL_RAM
-        int32_t* X_row_ptr = interface.get_array_ptr(0, rx); // matrix index and row vector index
+        const int32_t* X_row_ptr = interface.get_array_ptr(0, rx); // matrix index and row vector index
 #else
-        int32_t* X_row_ptr = &input_matrix_X[rx * cols_X_rows_Y];
+        const int32_t* X_row_ptr = &input_matrix_X[rx * cols_X_rows_Y];
 #endif
 
         // column in X
@@ -224,9 +226,9 @@ void lib_dsp_matrix_mulm
             // TODO: for large matrixes. provide the following arrays through shared memory
 
 #if MATRIX_Y_IN_EXTERNAL_RAM
-            int32_t* Y_column_ptr = interface.get_array_ptr(1, cy); // matrix index and column vector index
+            const int32_t* Y_column_ptr = interface.get_array_ptr(1, cy); // matrix index and column vector index
 #else
-            int32_t* Y_column_ptr = &input_matrix_Y[cy * cols_X_rows_Y];
+            const int32_t* Y_column_ptr = &input_matrix_Y[cy * cols_X_rows_Y];
 #endif
             //
             int32_t x1, x0;
