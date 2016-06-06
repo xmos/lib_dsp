@@ -3,7 +3,7 @@ xCORE-200 DSP Elements Library
 
 .. appnote:: AN00209
 
-.. version:: 2.0.0
+.. version:: 3.0.0
 
 Summary
 -------
@@ -14,7 +14,7 @@ Required tools and libraries
 ............................
 
 * xTIMEcomposer Tools - Version 14.2.0 and above
-* XMOS DSP library module - Version 2.0.0 and above
+* XMOS DSP library - Version 3.0.0 and above
 
 Required hardware
 .................

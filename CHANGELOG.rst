@@ -1,7 +1,7 @@
 xCORE-200 DSP library change log
 ================================
 
-2.1.0
+3.0.0
 -----
 
   * Added exponential and natural logarithm functions
