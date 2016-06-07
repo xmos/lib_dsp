@@ -213,7 +213,10 @@ void do_fft(server interface bufswap_i input,
 
         // Process the frequency domain of all NUM_CHANS channels.
         // 1. Lowpass
-        // cut off frequency: (N_FFT_POINTS/4 * Fs/N_FFT_POINTS) Hz = (48000/4) Hz = 12 kHz
+        // cutoff frequency = (Fs/N_FFT_POINTS * cutoff_index)
+        // With cutoff_index = N_FFT_POINTS/M:
+        // cutoff frequency = Fs/M
+
         uint32_t cutoff_idx = N_FFT_POINTS/4;
         // 2. Calculate average per frequency bin into the output signal array.
 

@@ -1,6 +1,13 @@
 xCORE-200 DSP library change log
 ================================
 
+3.0.0
+-----
+
+  * Added exponential and natural logarithm functions
+  * Added Hyperbolic sine and cosine
+  * Fixed Matrix Multiplication and improved performance
+
 2.0.0
 -----
 

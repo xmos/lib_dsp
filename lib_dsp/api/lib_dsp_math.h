@@ -6,8 +6,6 @@
 #include "xccompat.h"
 #include "stdint.h"
 
-#define MIN_INT (0x80000000)
-#define MAX_INT (0x7FFFFFFF)
 
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions are fixed to this Q format.
@@ -48,6 +46,11 @@ typedef uint32_t uq8_24;
 /** This constant is the q8_24 fixed point representation of 2/PI
  */
 #define ONE_OVER_HALFPI_Q8_24 (10680707)
+
+
+#define HALF_Q8_24   (1<<(24-1))
+
+#define ONE_Q8_24    (1<<24)
 
 
 /**  Scalar multipliplication
@@ -200,6 +203,8 @@ inline q8_24 lib_dsp_math_cos(q8_24 rad) {
  *  The algorihm was optimised for accuracy (using improved precision and rounding)
  *  and performance (using a dedicated instruction for unsinged long division)
  *  Error compared to atan from math.h is <= 1 LSB. Performance is 84 cycles worst case.
+ *  MIN_INT is an invalid input because the algorithm negates all negative inputs 
+ *  and there is no positive representation of MIN_INT
  *
  *  Example:
  *
@@ -208,10 +213,55 @@ inline q8_24 lib_dsp_math_cos(q8_24 rad) {
  *  q8_24 rad = lib_dsp_math_atan(x);
  *  \endcode
  *
- *  \param x in Q8.24 format.
+ *  \param x input value Q8.24 format.
  *  \returns arctangent of x in radians between -pi/2 .. +pi/2
  */
 q8_24 lib_dsp_math_atan(q8_24 x);
+
+
+/** This function returns the natural exponent of a fixed point number. The
+ * input number has to be less than 4.8, otherwise the answer cannot be
+ * represented as a fixed point number. For input values larger than 3
+ * there is a relatively large error in the last three bits of the answer.
+ *
+ * \param x input value
+ * \returns e^x
+ **/
+q8_24 lib_dsp_math_exp(q8_24 x);
+
+/** This function returns the natural logarithm (ln) of a fixed point number. The
+ * input number has to be positive.
+ *
+ * \param x input value Q8.24 format.
+ * \returns ln(x).
+ **/
+q8_24 lib_dsp_math_log(uq8_24 x);
+
+extern q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine);
+
+/** This function returns the hyperbolic sine (sinh) of a fixed point
+ * number. The input number has to be in the range [-5.5..5.5] in order to
+ * avoid overflow, and for values outside the [-4..4] range there are
+ * errors up to 4 bits in the result.
+ *
+ * \param x input value Q8.24 format.
+ * \returns sinh(x)
+ **/
+inline q8_24 lib_dsp_math_sinh(q8_24 x) {
+    return lib_dsp_math_sinh_(x, 0);
+}
+
+/** This function returns the hyperbolic cosine (cosh) of a fixed point
+ * number. The input number has to be in the range [-5.5..5.5] in order to
+ * avoid overflow, and for values outside the [-4..4] range there are
+ * errors up to 4 bits in the result.
+ *
+ * \param x input value Q8.24 format.
+ * \returns sinh(x)
+ **/
+inline q8_24 lib_dsp_math_cosh(q8_24 x) {
+    return lib_dsp_math_sinh_(x, 1);
+}
 
 
 #endif

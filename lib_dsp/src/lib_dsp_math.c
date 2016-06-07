@@ -149,12 +149,12 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 // Polynomial coefficients
 // coefficients are scaled up for improved rounding
 // they are also changed to positive values to enable using the dedicated instruction fur uint32_t long division:
-#define p0 (126388141)//(-7899259*16)
-#define p1 (13665937) // (-854121*16)
-#define q0 (189582640) // (11848915*16)
-#define q1 (8388608*16)
+#define P0_ATAN (126388141)//(-7899259*16)
+#define P1_ATAN (13665937) // (-854121*16)
+#define Q0_ATAN (189582640) // (11848915*16)
+#define Q1_ATAN (8388608*16)
 
-#define ONEOVERTS3 62613429
+#define ONE_OVER_TS3 62613429
 #define TS3  (4495441*16)  // 2247721 //
 #define A   232471924//(14529495*16)  // was ROOT_3M1
 #define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
@@ -166,7 +166,7 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
     }
     uint32_t XN;
     int32_t d, r;
-    if (f > ONEOVERTS3) {      // F large
+    if (f > ONE_OVER_TS3) {      // F large
         XN = 421657428; // pi/2 in Q4.28 format
         // 1 / f.
         asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (1<<20), "r" (0), "r" (f));
@@ -207,8 +207,8 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
     int32_t g = lib_dsp_math_multiply(f, f, 28);
 
 
-    uint32_t gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(p1, g, 28) + p0, g, 28);   // Positive - p0/p1 positive
-    uint32_t Qg = lib_dsp_math_multiply(q1, g, 28) + q0;              // Positive - q0/q1 positive
+    uint32_t gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(P1_ATAN, g, 28) + P0_ATAN, g, 28);   // Positive - p0/p1 positive
+    uint32_t Qg = lib_dsp_math_multiply(Q1_ATAN, g, 28) + Q0_ATAN;              // Positive - q0/q1 positive
     asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (gPg >> 4), "r" (gPg << 28), "r" (2*Qg));
     int32_t Rg = d;
     int32_t ffR = f + lib_dsp_math_multiply(f, -Rg, 28);
@@ -224,6 +224,203 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
 }
 
 
+int32_t lib_dsp_math_round(int32_t x, int q_format) {
+    // x += 0.5, truncate franctional bits
+    return (x + (1<<(q_format-1))) & ~((1<<q_format) - 1);
+}
+
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite. Can be improved for N>0, in that
+ * the last few bits are always zero and oughtn't be. Seems to
+ * in general have an error in the last three bits that needs addressing
+ ******************************************************************/
+
+#define ONE_OVER_LN2 24204406
+#define EXP_C1  11632640
+
+
+// Changing from Q8.24 format to Q2.30 format improves accuracy from 
+// Q1.31 doesn't make a differency anymore
+#define EXP_C2     -3560
+//#define EXP_C2     -227840  // Q2.30 format! 
+//#define EXP_C2       -455670 // Q1.31 format!
+
+#define P0_EXP   67108864
+#define P1_EXP   1116769
+#define Q0_EXP   (ONE_Q8_24*8)
+#define Q1_EXP   13418331
+
+#define MULT_FUNC 1
+
+/*
+ * This function can be further improved by making EXP_C2 a constant in 3.29 format.
+ * The current function will have an error in the 21st or 22nd bit of the fraction after
+ * a modulo of a large number. However, this would require mulf3_29 functions adding code
+ * size. I think it is better to stick to a slightly less accurate version for now.
+ */
+q8_24 lib_dsp_math_exp(q8_24 x) {
+    //valid range for x is [MIN_INT32..ln(126.9999999)] 
+    //log base conversion rule: log2(x) = ln(x) * 1/ln(2)
+    //Max XN = ln(MAX_INT32)/ln(2) = log2(MAX_INT32) 
+    if(x>81403559) {
+       return INT32_MAX;
+    } else if (x<-279097919) {
+       return 0;
+    }
+
+    q8_24 XN = lib_dsp_math_round(lib_dsp_math_multiply(x,ONE_OVER_LN2,24), 24);
+
+    q8_24 N = XN >> 24; // truncate fractional bits
+
+    // q_format = input1 fraction bit count + input2 fraction bit count - result fraction bit count
+    // q_format = 24 + 31 - 24 = 31
+#if MULT_FUNC
+    q8_24 N_q8_24 = N<<24;
+    q8_24 g = x - lib_dsp_math_multiply(N_q8_24, EXP_C1, 24) - lib_dsp_math_multiply(N_q8_24, EXP_C2, 24);
+#else
+    q8_24 g = x - N*(EXP_C1 + EXP_C2);
+#endif
+
+    // g is in the range [-0.346..0.346] (-ln(2)/2 .. ln(2)/2)
+    // z is in the range [0..0.12] (0.. (ln(2)/2)^2)
+    q8_24 z4 = lib_dsp_math_multiply(g << 2,g ,24);
+
+    // P1_EXP * z = [0..0.0665 * 0.12 = 0.008]
+    // P0_EXP + P1_EXP * z = [4..4.008]
+    // g * (P0_EXP + P1_EXP * z) = -1.389..1.389
+    q8_24 precise = lib_dsp_math_multiply((lib_dsp_math_multiply(P1_EXP, z4, 24) + (P0_EXP << 2)), g << 3, 24);
+    q8_24 gP = (precise + 4) >> 3;
+    q8_24 Q = lib_dsp_math_multiply(Q1_EXP, z4, 24) + (Q0_EXP << 2);
+    // Q1_EXP = 0.8, Q1_EXP*z = [0..0.096], Q0_EXP = 8, Q [8..8.096]
+    
+    q8_24 r = (ONE_Q8_24<<2) + (lib_dsp_math_divide(precise, Q - gP, 24));
+    N -= 2;
+    return N > 0 ? (r<<N)+(1<<(N-1)) : (r+(1<<(-N-1))) >> -N;
+
+#if 0
+    q8_24 z = lib_dsp_math_multiply(g,g,24);
+
+    q8_24 gP = lib_dsp_math_multiply(lib_dsp_math_multiply(P1_EXP, z, 24) + P0_EXP, g, 24);
+
+    q8_24 Q = lib_dsp_math_multiply(Q1_EXP, z, 24) + Q0_EXP;
+    q8_24 r = (ONE_Q8_24<<1) + (lib_dsp_math_divide(gP<<1, (Q - gP)>>1, 24));
+//    N++;
+    N--;
+
+    return N > 0 ? (r<<N)+(1<<(N-1)) : (r+(1<<(-N-1))) >> -N;
+#endif
+    
+}
+
+
+
+// helper functions
+void log2_with_remainder(q8_24 x, int *log2_p2, q8_24 *rem, int q_format) {
+    q8_24 absVal;
+    int zeroes; // approximated log2. log2 of the power of two value closest to x.
+                 // I.e. x with 31-clz(x) lower bits truncated
+
+    if (x < 0) {
+        absVal = -x;
+    } else {
+        absVal = x;
+    }
+    
+    asm("clz %0,%1" : "=r" (zeroes) : "r" (absVal));
+    *log2_p2 = (32 - q_format) - zeroes;
+
+    *rem = *log2_p2 < 0 ? x << (-*log2_p2) : x >> *log2_p2;
+
+}
+
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite. 
+ ******************************************************************/
+
+#define ONE_OVER_LN2 24204406
+
+#define LOG_C0   (HALF_Q8_24 + 3474675)
+#define C     228186
+
+#define A0_LOG    815851
+#define B0_LOG  11699746
+#define B1_LOG  -2097152
+
+#define LOG_C1  11632640
+#define LOG_C2     -3560
+
+q8_24 lib_dsp_math_log(uq8_24 x) {
+    q8_24 f, zden, y, Bw, Aw, rz2, v, qz, rz, z, w;
+    int N;
+    log2_with_remainder(x, &N, &f, 24);
+
+    if (f < LOG_C0) {
+        y = f - HALF_Q8_24;
+        zden = (y >> 1) + HALF_Q8_24;
+        N--;
+    } else {
+        y = f - ONE_Q8_24;
+        zden = (y >> 1) + ONE_Q8_24;
+    }
+    z = lib_dsp_math_divide(y, zden, 24);
+    w = lib_dsp_math_multiply(z, z, 24);
+    Bw = lib_dsp_math_multiply(B1_LOG, w, 24) + B0_LOG;
+    Aw = A0_LOG;
+    rz2 = lib_dsp_math_multiply(w, C + lib_dsp_math_divide(Aw, Bw, 24), 24);
+    v = lib_dsp_math_divide(HALF_Q8_24>>1, zden, 24);
+    qz = v + lib_dsp_math_multiply(rz2, v, 24);
+    rz = lib_dsp_math_multiply(4*y, qz, 24);
+    return (N*LOG_C2+rz)+N*LOG_C1;
+}
+
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite.
+ * Present version has a rather large error (last 5 bits) for large
+ * values. Likely cause is an error in the last 2-3 bits of
+ * the expf8_24 function. Replacing the calls to expf8_24() with a
+ * a call to a perfect exp() drops the error to 1-2 bits.
+ ******************************************************************/
+
+#define LN2  11629080 
+#define YBAR 80530637
+#define P0_SINH    2796214
+#define P1_SINH     139753
+#define P2_SINH       3422
+
+q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine) {
+    q8_24 Y, R, W, Z;
+    int negative = 1;
+
+    if(x<0) {
+        Y = -x;
+    } else {
+        Y = x;
+    }
+    
+    if (!cosine && x < 0) {
+        negative = -1;
+    }
+
+    if(cosine || Y > ONE_Q8_24) {
+        if (Y > YBAR) {
+            W = Y - LN2;
+            Z = lib_dsp_math_exp(W);
+            R = Z + (cosine?1:-1) * lib_dsp_math_divide(ONE_Q8_24/4, Z, 24) ;
+        } else {
+            Z = lib_dsp_math_exp(Y);
+            R = (Z + (cosine?1:-1) * lib_dsp_math_divide(ONE_Q8_24, Z, 24)) >> 1;
+        }
+        R = R * negative;
+    } else {
+        q8_24 g = lib_dsp_math_multiply(x, x, 24);
+        q8_24 gP = lib_dsp_math_multiply(lib_dsp_math_multiply(lib_dsp_math_multiply(P2_SINH, g, 24) + P1_SINH, g, 24) + P0_SINH, g, 24);
+        R = x + lib_dsp_math_multiply(x, gP, 24);
+    }
+    return R;
+}
 
 
 

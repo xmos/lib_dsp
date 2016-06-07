@@ -3,6 +3,7 @@
 // Uses Q24 format
 
 #include <stdio.h>
+#include <print.h>
 #include <xs1.h>
 #include <lib_dsp.h>
 #include <math.h>
@@ -35,44 +36,70 @@
 #define DIVIDE_STRESS 0
 #endif
 
-// errors from -3..+3
-#define ERROR_RANGE 7
+#define STEPS 10
+
+// errors from -15..+15
+#define ERROR_RANGE 31
 typedef struct {
     int32_t errors[ERROR_RANGE];
+    int32_t smaller_than_min_error;
+    int32_t greater_than_max_error;
     int32_t max_positive_error;
     int32_t max_negative_error;
     int32_t num_checked;
 } error_s;
 
+typedef enum {
+  PV_OFF=0,
+  PV_ON=1
+} print_values_t;
+
+typedef enum {
+  PC_OFF=0,
+  PC_ON=1
+} print_cycles_t;
+
+typedef enum {
+  LINEAR=0,
+  EXPONENTIAL=1
+} stimulus_t;
 /*
  * Report Errors within the Error Range. Top and Bottom or range contain saturated values
  */
-int32_t report_errors(uint32_t max_abs_error, error_s *e) {
+int32_t report_errors(int32_t min_error, int32_t max_error, error_s *e) {
     int32_t result = 1; // PASS
     int32_t half_range = ERROR_RANGE/2;
     for(int32_t i=0; i<ERROR_RANGE; i++) {
         int32_t error = -half_range+i;
-        if(i == 0) {
-           printf("Cases Error <= %d: %d\n",error, e->errors[i]);
-        } else if (i == ERROR_RANGE-1) {
-           printf("Cases Error >= %d: %d\n",error, e->errors[i]);
-        } else {
-           printf("Cases Error == %d: %d\n",error, e->errors[i]);
+        unsigned num_errors = e->errors[i];
+
+        if(num_errors) {
+            if (error > max_error || error < min_error) {
+              printf("FAIL:");
+            }
+            printf("Cases Error == %d: %d, percentage: %5.2f%\n",error, num_errors, 100.0*num_errors/e->num_checked);
         }
-        if (error > max_abs_error || error < -max_abs_error) {
-            result = 0;
-        }
+    }
+    if (e->smaller_than_min_error ) {
+        printf("Errors smaller than min_error %d: %d\n",min_error,e->smaller_than_min_error);
+        result = 0;
+    }
+    if (e->greater_than_max_error ) {
+        printf("Errors smaller than min_error %d: %d\n",max_error,e->greater_than_max_error);
+        result = 0;
     }
     printf("Maximum Positive Error: %d\n",e->max_positive_error);
     printf("Maximum Negative Error: %d\n",e->max_negative_error);
     printf("Number of values checked: %d\n", e->num_checked);
-    printf("Percentage of 0 Error: %5.2f%%\n", 100.0*e->errors[half_range]/e->num_checked);
+
     return result;
 }
 void reset_errors(error_s *e) {
     for(int32_t i=0; i<ERROR_RANGE; i++) {
         e->errors[i] = 0;
     }
+    e->smaller_than_min_error = 0;
+    e->greater_than_max_error = 0;
     e->max_positive_error = 0;
     e->max_negative_error = 0;
     e->num_checked = 0;
@@ -87,7 +114,7 @@ void reset_errors(error_s *e) {
  * \returns        true if check passed
 */
 
-int32_t check_result(int32_t result, int32_t expected, uint32_t max_abs_error, error_s *e) {
+int32_t check_result(int32_t result, int32_t expected, int32_t min_error, int32_t max_error, error_s *e) {
     static int32_t half_range = ERROR_RANGE/2;
     uint32_t error_found=0;
 
@@ -97,83 +124,43 @@ int32_t check_result(int32_t result, int32_t expected, uint32_t max_abs_error, e
     if (error < e->max_negative_error) e->max_negative_error = error;
     if (error > e->max_positive_error) e->max_positive_error = error;
 
-    if (error > (int) max_abs_error || error < -((int) max_abs_error)) {
-        error_found=1;
+    if (error > max_error) {
+        e->greater_than_max_error++;
+        printf("ERROR: error %d is greater than max_error %d\n",error, max_error);
+        error_found = 1;
+    } else if(error < min_error) {
+        e->smaller_than_min_error++;
+        printf("ERROR: error %d is smaller than min_error %d\n",error, min_error);
+        error_found = 1;
     }
 
     if (error_found) {
     //if (error > max_error) {
 #if PRINT_ERROR_TOO_BIG
-        printf("ERROR: absolute error > %d is a failure criteria. Error found is %d\n",max_abs_error, error);
         printf("result is 0x%x, Expected is 0x%x\n",result, expected);
         printf("\n");
 #if EXIT_ON_ERROR_TOO_BIG
-        report_errors(max_abs_error, e);
+        report_errors(min_error, max_error, e);
         exit (0);
 #endif
 #endif
     }
-    // saturate Errors
-    if (error < -half_range) error = -half_range;
-    if (error > half_range) error = half_range;
 
-    e->errors[error+half_range]++; // increment the error counter
+    int bin_idx = error+half_range;
+    if(bin_idx>=0 && bin_idx<ERROR_RANGE) {
+       e->errors[bin_idx]++; // increment the error counter
+    }
 
     e->num_checked++;
 
     return error_found;
 }
 
-uint32_t overhead_time;
+int overhead_time;
 
 //Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
 inline int32_t qs(double d, const int32_t q_format) {
-  return (int)((signed long long)((d) * ((unsigned long long)1 << (q_format+20)) + (1<<19)) >> 20);
-}
-
-void test_roots() {
-    int32_t start_time, end_time;
-    uint32_t cycles_taken; // absolute positive values
-    timer tmr;
-    error_s err;
-
-    reset_errors(&err);
-
-    printf("Test Roots\n");
-    printf("----------\n");
-
-    uint32_t result, expected;
-
-#if EXPONENTIAL_INPUT
-    for(uint32_t i=1; i<=32; i++) { 
-        uint32_t x = (unsigned long long) (1<<i)-1; // 2^x - 1 (x in 1..31)
-#else
-    for(uint32_t x=0; x<=MAX_UINT; x+=X_INCR) {
-#endif
-        double d_sqrt;
-
-        TIME_FUNCTION(result = lib_dsp_math_squareroot(x););
-#if PRINT_CYCLE_COUNT
-    printf("Cycles taken for lib_dsp_math_squareroot function: %d\n", cycles_taken);
-#endif
-
-#if PRINT_INPUTS_AND_OUTPUTS
-        printf ("Square Root (%.8f) : %.8f\n", F24(x), F24(result));
-#endif
-
-        TIME_FUNCTION(d_sqrt = sqrt(F24(x)));
-#if PRINT_CYCLE_COUNT
-    printf("Cycles taken for sqrt function: %d\n", cycles_taken);
-#endif
-        expected =  Q24(d_sqrt);
-        check_result(result, expected, 1, &err);
-
-    }
-
-    printf("Error report: lib_dsp_math_squareroot vs sqrt:\n");
-    report_errors(1, &err);
-    printf("\n");
-
+  return (int32_t)((int64_t)((d) * ((uint64_t)1 << (q_format+20)) + (1<<19)) >> 20);
 }
 
 void test_multipliation_and_division() {
@@ -212,195 +199,182 @@ void test_multipliation_and_division() {
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
-    check_result(result, expected, 1, &err);
+    check_result(result, expected, -1, 1, &err);
 
     dividend = -1.123456; divisor = -128;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
-    check_result(result, expected, 1, &err);
+    check_result(result, expected, -1, 1, &err);
 
     dividend = -1.123456; divisor = 127.9999999;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
-    check_result(result, expected, 1, &err);
+    check_result(result, expected, -1, 1, &err);
 
     dividend = 1.123456; divisor = 127.9999999;
     result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
-    check_result(result, expected, 1, &err);
+    check_result(result, expected, -1, 1, &err);
 
     result = lib_dsp_math_divide_unsigned(Q24(dividend), Q24(divisor), q_format);
     printf ("Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
-    check_result(result, expected, 1, &err);
+    check_result(result, expected, -1, 1, &err);
 
     printf("Error report from test_multipliation_and_division:\n");
-    report_errors(1, &err);
+    report_errors(-1, 1, &err);
     printf("\n");
 
 }
 
-void test_trigonometric() {
-    int32_t start_time, end_time;
-    uint32_t cycles_taken; // absolute positive values
-    timer tmr;
 
-    error_s err;
+q8_24 execute(int func, q8_24 x, unsigned &cycles_taken) {
+    int32_t start_time, end_time;
+    timer tmr;
+    // uint32_t cycles_taken; // absolute positive values
+    q8_24 result;
+    // even func index executes the fixed point functions.
+    switch(func) {
+    case  0: {TIME_FUNCTION(result = lib_dsp_math_exp(x)); return result;}
+    case  1: {TIME_FUNCTION(result = Q24(exp(F24(x)))); return result;}
+    case  2: {TIME_FUNCTION(result = lib_dsp_math_log(x)); return result;}
+    case  3: {TIME_FUNCTION(result = Q24(log(F24(x)))); return result;}
+    case  4: {TIME_FUNCTION(result = lib_dsp_math_squareroot(x)); return result;}
+    case  5: {TIME_FUNCTION(result = Q24(sqrt(F24(x)))); return result;}
+    case  6: {TIME_FUNCTION(result = lib_dsp_math_sin(x)); return result;}
+    case  7: {TIME_FUNCTION(result = Q24(sin(F24(x)))); return result;}
+    case  8: {TIME_FUNCTION(result = lib_dsp_math_cos(x)); return result;}
+    case  9: {TIME_FUNCTION(result = Q24(cos(F24(x)))); return result;}
+    case  10: {TIME_FUNCTION(result = lib_dsp_math_atan(x)); return result;}
+    case  11: {TIME_FUNCTION(result = Q24(atan(F24(x)))); return result;}
+    case  12: {TIME_FUNCTION(result = lib_dsp_math_sinh(x)); return result;}
+    case  13: {TIME_FUNCTION(result = Q24(sinh(F24(x)))); return result;}
+    case  14: {TIME_FUNCTION(result = lib_dsp_math_cosh(x)); return result;}
+    case  15: {TIME_FUNCTION(result = Q24(cosh(F24(x)))); return result;}
+
+    }
+    return INT32_MIN;
+}
+
+int test_input_range(int func, char name[], int min, int max, stimulus_t exponential, int minerror, int maxerror, 
+                     int permille, print_cycles_t print_cycles, print_values_t print_values) {
+    int fail = 0;
+    int done=0;
+    int done_after_next_iteration=0;
+    int i=0;
+    unsigned cycles_float, cycles_fixed;
+    unsigned worst_cycles=0;
+
+    int32_t worst_cycles_input;
+    q8_24 perf_ratio; 
+
+    error_s err; 
     reset_errors(&err);
+
+    int64_t x = (int64_t) min;  // use double precision to handle overflow
+
+    printf("- Testing %s\n",name);
+
+    while(!done) {
+        timer t;
+        int z, zc;
+
+        zc = execute(func|1,x, cycles_float);
+        if (zc == INT32_MIN) {
+            printf("%s returned INT32_MIN\n",name);
+        }
+        z = execute(func,x, cycles_fixed);
+        if(print_values) {
+          printf("%s(%.7f) == %.7f\n",name,F24(x), F24(z));
+        }
+
+        check_result(z, zc, minerror, maxerror, &err);
+
+        // Performance
+        if(print_cycles) {
+           perf_ratio = lib_dsp_math_divide(cycles_float, cycles_fixed, 24);
+           printf("Cycles taken to execute %s: %d\n", name, cycles_fixed);
+           printf("%s is %.2f times faster than it's floating point equivalent\n", name, F24(perf_ratio));
+        }
+        if(cycles_fixed>worst_cycles) {
+            worst_cycles = cycles_fixed;
+            worst_cycles_input = x;
+        }
+
+        i++;
+        // update x
+        if(exponential) {
+            if(x==-1) {
+                x = 0;   // transition to 0
+            } else if(x==0) {
+                x = 1;   // transition to positive
+            } else if(x<0) {
+                x >>= 1; //shift down towards -1
+            } else { // positive values
+                x <<= 1; // shift up towards max
+            }
+        } else {
+            x = (int64_t) min + (((unsigned)(max - min))>>STEPS) * i;
+        }
+    
+        // handle done
+        if(done_after_next_iteration) done = 1;
+        if(x >= (int64_t) max) {
+            x = max;
+            done_after_next_iteration = 1;
+        }
+    }
+
+    report_errors(minerror, maxerror, &err);
+    unsigned half_range = ERROR_RANGE/2;
+    // number of errors -1, 0, +1
+    unsigned small_errors = err.errors[half_range-1] + err.errors[half_range] + err.errors[half_range+1];
+    // 
+    unsigned achieved_permille = (1000 * small_errors) / err.num_checked;
+    if(achieved_permille < permille) {
+        printf("FAIL: only ");
+    } 
+    printf("%d per thousand in one bit error\n", achieved_permille);
+    
+    if(print_cycles) {
+        printf("Worst case cycles for executing %s was measured for input %.7f: %d\n", name, F24(worst_cycles_input), worst_cycles);
+    }
+
+    printstr("\n"); // Dilimiter
+
+    return fail;
+}
+
+/*
+ * Test the valid input rn=anges
+ */
+void test_single_input_functions() {
+
+    int fail=0;
+
+    printf("Test Exponential and Logarithmic Functions\n");
+    printf("------------------------------------------\n");
+    fail += test_input_range(0,"lib_dsp_math_exp", INT32_MIN, Q24(log(127)), LINEAR, -26,  5, 987, PC_OFF, PV_OFF);
+    fail += test_input_range(2,"lib_dsp_math_log", 1,         INT32_MAX,     LINEAR, -2,  2, 926, PC_OFF, PV_OFF);
+
+    printf("Test Squareroot\n");
+    printf("---------------\n");
+    fail += test_input_range(4,"lib_dsp_math_squareroot", 0,  INT32_MAX,     EXPONENTIAL, -1,  1, 1000, PC_OFF, PV_OFF);
 
     printf("Test Trigonometric Functions\n");
     printf("----------------------------\n");
+    fail += test_input_range(6,"lib_dsp_math_sin", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PC_OFF, PV_OFF);
+    fail += test_input_range(8,"lib_dsp_math_cos", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PC_OFF, PV_OFF);
+    fail += test_input_range(10,"lib_dsp_math_atan", INT32_MIN+1,       INT32_MAX,     1, -1,  EXPONENTIAL, 1000, PC_OFF, PV_OFF);
+    fail += test_input_range(12,"lib_dsp_math_sinh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 726, PC_OFF, PV_OFF);  // Should aim for -4 4 800
+    fail += test_input_range(14,"lib_dsp_math_cosh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 711, PC_OFF, PV_OFF);  // Should aim for -4 4, 800
 
-    /*
-     * Testing lib_dsp_math_sin
-     */
-    printf ("Sine wave (one cycle from -Pi to +Pi) :\n");
-
-    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
-        q8_24 sine;
-        TIME_FUNCTION(sine = lib_dsp_math_sin(rad));
-
-#if PRINT_INPUTS_AND_OUTPUTS
-        printf("sin(%.8f) = %.8f\n",F24(rad), F24(sine));
-#endif
-
-#if CHECK_RESULTS
-        // check the fixed point result vs the floating point result from math.h
-        double d_rad = F24(rad);
-        double d_sine_ref = sin(d_rad);
-        q8_24 expected = Q24(d_sine_ref);
-        check_result(sine, expected, 1, &err);
-#endif
-
+    if (fail != 0) {
+        printf("Total failures %d\n", fail);
     }
-#if CHECK_RESULTS
-    printf("Error report: lib_dsp_math_sin vs sin:\n");
-    report_errors(1, &err);
-#endif
-
-#if PRINT_CYCLE_COUNT
-    printf("Cycles taken for lib_dsp_math_sin function: %d\n", cycles_taken);
-    // just to measure cycles
-    tmr :> start_time;
-    double sine_float = sin(3.141592653589793/4);
-    tmr :> end_time;
-    cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h sin(%.8f) = %.8f\n",3.141592653589793/4, sine_float);
-    printf("Cycles taken for math.h sine function: %d\n", cycles_taken);
-#endif
-    printf("\n");
-
-    /*
-     * Testing lib_dsp_math_sin
-     */
-    printf("Cosine wave (one cycle from -Pi to +Pi) :\n");
-    reset_errors(&err);
-
-    for(q8_24 rad = -PI_Q8_24; rad <= PI_Q8_24; rad += RAD_INCR) {
-        q8_24 cosine;
-        TIME_FUNCTION(cosine=lib_dsp_math_cos(rad));
-#if PRINT_INPUTS_AND_OUTPUTS
-        printf("cos(%.8f) = %.8f\n",F24(rad), F24(cosine));
-#endif
-#if CHECK_RESULTS
-        // check the fixed point result vs the floating point result from math.h
-        double d_rad = F24(rad);
-        double d_cosine_ref = cos(d_rad);
-        q8_24 expected = Q24(d_cosine_ref);
-        check_result(cosine, expected, 1, &err);
-#endif
-    }
-
-#if CHECK_RESULTS
-    printf("Error report: lib_dsp_math_cos vs cos:\n");
-    report_errors(1, &err);
-#endif
-
-#if PRINT_CYCLE_COUNT
-    printf("Cycles taken for cosine function: %d\n", cycles_taken);
-    // just to measure cycles
-    tmr :> start_time;
-    double cosine_float = cos(3.141592653589793/4);
-    tmr :> end_time;
-    cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h cos(%.8f) = %.8f\n",3.141592653589793/4, cosine_float);
-    printf("Cycles taken for math.h cosine function: %d\n", cycles_taken);
-#endif
-    printf("\n");
-
-    /*
-     * Testing lib_dsp_math_atan
-     */
-    printf("Test lib_dsp_math_atan\n");
-    reset_errors(&err);
-
-    int32_t worst_cycles=0;
-    int32_t worst_cycles_input;
-
-    /*
-    * Test result in terms of Errors:
-    * num calculations:  1000226; Errors >=1:    44561 ( 4.46%); Errors >=2:     0 ( 0.00%)
-    * Max absolute error: 1
-    */
-
-#if EXPONENTIAL_INPUT
-    for(int32_t i=-31; i<=31; i++) {
-        int32_t x;
-        if(i<0) {
-            // create negative numbers
-            //x = sext((1<<i), i+1); // -2^x (x in 31..1)
-            x = -((1<<-i)-1); //-(2^x-1) (x in 31..1)
-        } else if(i>0) {
-            x = (1<<i)-1; // 2^x-1 (x in 1..31)
-        } else {
-            x = 0;
-        }
-#else
-    for(uint32_t x=0; x <= MAX_Q8_24; x+= X_INCR) {
-#endif
-
-
-        q8_24 arctan;
-        TIME_FUNCTION(arctan=lib_dsp_math_atan(x));
-
-        if(cycles_taken>worst_cycles) {
-            worst_cycles = cycles_taken;
-            worst_cycles_input = x;
-        }
-#if PRINT_CYCLE_COUNT
-        printf("Cycles taken for lib_dsp_math_atan function: %d\n", cycles_taken);
-#endif
-#if PRINT_INPUTS_AND_OUTPUTS
-        printf("atan(%.8f) = %.8f\n",F24(x),F24(arctan));
-#endif
-#if CHECK_RESULTS
-        double d_x = F24(x);
-        double d_arctan_ref = atan(d_x);
-        q8_24 expected = Q24(d_arctan_ref);
-        check_result(arctan, expected, 1, &err);
-#endif
-    }
-
-#if CHECK_RESULTS
-    printf("Error report from lib_dsp_math_atan:\n");
-    report_errors(1, &err);
-#endif
-
-#if PRINT_CYCLE_COUNT
-    printf("max cyles taken for lib_dsp_math_atan function: %d, input value was %.8f\n", worst_cycles, F24(worst_cycles_input));
-    // just to measure cycles
-    double d_x = F24(worst_cycles_input);
-    tmr :> start_time;
-    double d_arctan = atan(d_x);
-    tmr :> end_time;
-    cycles_taken = end_time-start_time-overhead_time;
-    printf("math.h atan(%.8f) = %.8f\n",d_x, d_arctan);
-    printf("Cycles taken for math.h atan function: %u\n", cycles_taken);
-#endif
-    printf("\n");
 }
 
 void test_math(void)
@@ -417,9 +391,7 @@ void test_math(void)
 
     test_multipliation_and_division();
 
-    test_roots();
-
-    test_trigonometric();
+    test_single_input_functions();
 
     exit (0);
 }
