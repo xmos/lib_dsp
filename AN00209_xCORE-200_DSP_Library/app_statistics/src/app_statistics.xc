@@ -5,7 +5,7 @@
 // Include files
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 
 // Define constants
 
@@ -29,28 +29,28 @@ int main(void)
   int32_t result;
 
   result =
-    lib_dsp_vector_mean (Src,                       // Input vector
+    dsp_vector_mean (Src,                       // Input vector
                          SAMPLE_LENGTH,             // Vector length
                          Q_N);                      // Q Format N
 
   printf ("Vector Mean = %lf\n", F24 (result));
 
   result =
-    lib_dsp_vector_power (Src,                      // Input vector
+    dsp_vector_power (Src,                      // Input vector
                           SAMPLE_LENGTH,            // Vector length
                           Q_N);                     // Q Format N
 
   printf ("Vector Power (sum of squares) = %lf\n", F24 (result));
 
   result =
-    lib_dsp_vector_rms (Src,                        // Input vector
+    dsp_vector_rms (Src,                        // Input vector
                         SAMPLE_LENGTH,              // Vector length
                         Q_N);                       // Q Format N
 
   printf ("Vector Root Mean Square = %lf\n", F24 (result));
 
   result =
-    lib_dsp_vector_dotprod (Src,                    // Input vector 1
+    dsp_vector_dotprod (Src,                    // Input vector 1
                             Src2,                   // Input vector 2
                             SHORT_SAMPLE_LENGTH,    // Vector length
                             Q_N);                   // Q Format N

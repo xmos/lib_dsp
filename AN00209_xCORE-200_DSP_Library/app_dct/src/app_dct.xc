@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp_dct.h>
+#include <dsp_dct.h>
 
 int32_t data[24] = {
     24000, 23000, 22000, 21000, 20000, 19000, 18000, 17000, 16000, 15000,
@@ -30,7 +30,7 @@ int main( void )
 {
     int32_t dcted[24];
     
-    lib_dsp_dct_forward24(dcted, data);
+    dsp_dct_forward24(dcted, data);
     for(int32_t i = 0; i < 24; i++) {
         printf("%5d %6d%s\n", data[i], dcted[i], dcted[i] != correct[i] ? " Wrong":"");
     }

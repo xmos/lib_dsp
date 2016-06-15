@@ -4,7 +4,7 @@
 #include <debug_print.h>
 #include <stdlib.h>
 
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x){
@@ -14,9 +14,9 @@ int random(unsigned &x){
 
 void test_short_long_conversion(){
     unsigned x=SEED;
-    lib_dsp_fft_complex_t f[FFT_LENGTH];
-    lib_dsp_fft_complex_t g[FFT_LENGTH];
-    lib_dsp_fft_complex_short_t h[FFT_LENGTH];
+    dsp_complex_t f[FFT_LENGTH];
+    dsp_complex_t g[FFT_LENGTH];
+    dsp_complex_short_t h[FFT_LENGTH];
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         f[i].re = random(x);
@@ -27,7 +27,7 @@ void test_short_long_conversion(){
         h[i].im = 0;
     }
 
-    lib_dsp_fft_long_to_short(h, f, FFT_LENGTH);
+    dsp_fft_long_to_short(h, f, FFT_LENGTH);
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         if((f[i].re>>16) != h[i].re){
@@ -46,7 +46,7 @@ void test_short_long_conversion(){
         f[i].im = 0;
     }
 
-    lib_dsp_fft_short_to_long(f, h, FFT_LENGTH);
+    dsp_fft_short_to_long(f, h, FFT_LENGTH);
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         if(f[i].re != (g[i].re&0xffff0000)){

@@ -4,7 +4,7 @@
 #include <debug_print.h>
 #include <stdlib.h>
 
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x){
@@ -13,13 +13,13 @@ int random(unsigned &x){
 }
 
 void test_index_bit_reverse(){
-    lib_dsp_fft_complex_t f[FFT_LENGTH];
+    dsp_complex_t f[FFT_LENGTH];
     for(unsigned i=0;i<FFT_LENGTH;i++){
        f[i].re = i;
        f[i].im = i+FFT_LENGTH;
     }
 
-    lib_dsp_fft_bit_reverse(f, FFT_LENGTH);
+    dsp_fft_bit_reverse(f, FFT_LENGTH);
 
     for(unsigned i=0;i<FFT_LENGTH;i++){
         unsigned j = bitrev(i)>>(clz(FFT_LENGTH)+1);

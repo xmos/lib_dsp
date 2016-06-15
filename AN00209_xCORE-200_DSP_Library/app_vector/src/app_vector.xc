@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 
 #define Q_M               8
 #define Q_N               24
@@ -27,20 +27,20 @@ int main(void)
   int32_t i;
 
   result =
-    lib_dsp_vector_minimum (Src,                    // Input vector
+    dsp_vector_minimum (Src,                    // Input vector
                             SAMPLE_LENGTH);         // Vector length
 
   printf ("Minimum location = %d\n", result);
   printf ("Minimum = %lf\n", F24 (Src[result]));
 
   result =
-    lib_dsp_vector_maximum (Src,                    // Input vector
+    dsp_vector_maximum (Src,                    // Input vector
                             SAMPLE_LENGTH);         // Vector length
 
   printf ("Maximum location = %d\n", result);
   printf ("Maximum = %lf\n", F24 (Src[result]));
 
-  lib_dsp_vector_negate (Src,                       // Input vector
+  dsp_vector_negate (Src,                       // Input vector
                          Dst,                       // Output vector
                          SHORT_SAMPLE_LENGTH);      // Vector length
 
@@ -50,7 +50,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_abs (Src,                          // Input vector
+  dsp_vector_abs (Src,                          // Input vector
                       Dst,                          // Output vector
                       SHORT_SAMPLE_LENGTH);         // Vector length
 
@@ -60,7 +60,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_adds (Src,                         // Input vector
+  dsp_vector_adds (Src,                         // Input vector
                        Q24(2.),                     // Input scalar
                        Dst,                         // Output vector
                        SHORT_SAMPLE_LENGTH);        // Vector length
@@ -71,7 +71,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_muls (Src,                         // Input vector
+  dsp_vector_muls (Src,                         // Input vector
                        Q24(2.),                     // Input scalar
                        Dst,                         // Output vector
                        SHORT_SAMPLE_LENGTH,         // Vector length
@@ -83,7 +83,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_addv (Src,                         // Input vector
+  dsp_vector_addv (Src,                         // Input vector
                        Src2,                        // Input vector 2
                        Dst,                         // Output vector
                        SHORT_SAMPLE_LENGTH);        // Vector length
@@ -94,7 +94,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_subv (Src,                         // Input vector
+  dsp_vector_subv (Src,                         // Input vector
                        Src2,                        // Input vector 2
                        Dst,                         // Output vector
                        SHORT_SAMPLE_LENGTH);        // Vector length
@@ -105,7 +105,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_mulv (Src,                         // Input vector
+  dsp_vector_mulv (Src,                         // Input vector
                        Src2,                        // Input vector 2
                        Dst,                         // Output vector
                        SHORT_SAMPLE_LENGTH,         // Vector length
@@ -117,7 +117,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_mulv_adds (Src,                    // Input vector
+  dsp_vector_mulv_adds (Src,                    // Input vector
                             Src2,                   // Input vector 2
                             Q24(2.),                // Input scalar
                             Dst,                    // Output vector
@@ -130,7 +130,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_muls_addv (Src,                    // Input vector
+  dsp_vector_muls_addv (Src,                    // Input vector
                             Q24(2.),                // Input scalar
                             Src2,                   // Input vector 2
                             Dst,                    // Output vector
@@ -143,7 +143,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_muls_subv (Src,                    // Input vector
+  dsp_vector_muls_subv (Src,                    // Input vector
                             Q24(2.),                // Input scalar
                             Src2,                   // Input vector 2
                             Dst,                    // Output vector
@@ -156,7 +156,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_mulv_addv (Src,                    // Input vector
+  dsp_vector_mulv_addv (Src,                    // Input vector
                             Src2,                   // Input vector 2
                             Src3,                   // Input vector 2
                             Dst,                    // Output vector
@@ -169,7 +169,7 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
-  lib_dsp_vector_mulv_subv (Src,                    // Input vector
+  dsp_vector_mulv_subv (Src,                    // Input vector
                             Src2,                   // Input vector 2
                             Src3,                   // Input vector 2
                             Dst,                    // Output vector

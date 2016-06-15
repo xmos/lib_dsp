@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <print.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -14,21 +14,8 @@
 #define PRINT_ERROR_TOO_BIG 1
 #define EXIT_ON_ERROR_TOO_BIG 0
 #define TEST_ALL_INPUTS 0
-#define NO_Q 0
 
-#if TEST_ALL_INPUTS
 #define PRINT_CYCLE_COUNT 0
-#define PRINT_INPUTS_AND_OUTPUTS 0
-#define RAD_INCR 1
-#define X_INCR 1
-#define EXPONENTIAL_INPUT 0
-#else
-#define PRINT_CYCLE_COUNT 0
-#define PRINT_INPUTS_AND_OUTPUTS 1
-#define RAD_INCR PI2_Q8_24/100
-#define X_INCR MAX_Q8_24/100
-#define EXPONENTIAL_INPUT 1
-#endif
 
 #if PRINT_CYCLE_COUNT
 #define DIVIDE_STRESS 1 // execute divide on other cores to get worst case performance.
@@ -63,6 +50,7 @@ typedef enum {
   LINEAR=0,
   EXPONENTIAL=1
 } stimulus_t;
+
 /*
  * Report Errors within the Error Range. Top and Bottom or range contain saturated values
  */
@@ -158,7 +146,7 @@ int32_t check_result(int32_t result, int32_t expected, int32_t min_error, int32_
 
 int overhead_time;
 
-//Todo: Test if this performs as well as the conversion macros in lib_dsp_qformat.h
+//Todo: Test if this performs as well as the conversion macros in dsp_qformat.h
 inline int32_t qs(double d, const int32_t q_format) {
   return (int32_t)((int64_t)((d) * ((uint64_t)1 << (q_format+20)) + (1<<19)) >> 20);
 }
@@ -178,11 +166,11 @@ void test_multipliation_and_division() {
     f0 = 11.3137085;
     f1 = 11.3137085;
     // Multiply the square root of 128 (maximum double representation of Q8.24)
-    printf ("Multiplication (%.8f x %.8f): %.8f\n\n",f0, f1, F24(lib_dsp_math_multiply(Q24(f0), Q24(f1), q_format)));
+    printf ("Multiplication (%.8f x %.8f): %.8f\n\n",f0, f1, F24(dsp_math_multiply(Q24(f0), Q24(f1), q_format)));
 
-    printf ("Multiplication (11.4 x 11.4). Will overflow!: %.8f\n\n", F24(lib_dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
+    printf ("Multiplication (11.4 x 11.4). Will overflow!: %.8f\n\n", F24(dsp_math_multiply(Q24(11.4), Q24(11.4), q_format)));;
 
-    printf ("Saturated Multiplication (11.4 x 11.4): %.8f\n\n", F24(lib_dsp_math_multiply_sat(Q24(11.4), Q24(11.4), q_format)));;
+    printf ("Saturated Multiplication (11.4 x 11.4): %.8f\n\n", F24(dsp_math_multiply_sat(Q24(11.4), Q24(11.4), q_format)));;
 
     /*
     The result of 0.0005 x 0.0005 is 0.00000025. But this number is not representable as a binary.
@@ -190,36 +178,36 @@ void test_multipliation_and_division() {
     printf rounds this to 0.0000002 because the formatting string to printf specifies 8 digits of precision after the decimal point.
     This is the maximum precision that can be achieved with the 24 fractional bits of the Q8.24 format.
     */
-    printf ("Multiplication of small numbers (0.0005 x 0.0005): %.8f\n\n", F24(lib_dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
+    printf ("Multiplication of small numbers (0.0005 x 0.0005): %.8f\n\n", F24(dsp_math_multiply(Q24(0.0005), Q24(0.0005), q_format)));;
 
 
     double dividend, divisor;
 
     dividend = 1.123456; divisor = -128;
-    result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
+    result = dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
 
     dividend = -1.123456; divisor = -128;
-    result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
+    result = dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
 
     dividend = -1.123456; divisor = 127.9999999;
-    result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
+    result = dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
 
     dividend = 1.123456; divisor = 127.9999999;
-    result = lib_dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
+    result = dsp_math_divide(Q24(dividend), Q24(divisor), q_format);
     printf ("Signed Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
 
-    result = lib_dsp_math_divide_unsigned(Q24(dividend), Q24(divisor), q_format);
+    result = dsp_math_divide_unsigned(Q24(dividend), Q24(divisor), q_format);
     printf ("Division %.8f / %.8f): %.8f\n\n",dividend, divisor, F24(result));
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
@@ -238,21 +226,21 @@ q8_24 execute(int func, q8_24 x, unsigned &cycles_taken) {
     q8_24 result;
     // even func index executes the fixed point functions.
     switch(func) {
-    case  0: {TIME_FUNCTION(result = lib_dsp_math_exp(x)); return result;}
+    case  0: {TIME_FUNCTION(result = dsp_math_exp(x)); return result;}
     case  1: {TIME_FUNCTION(result = Q24(exp(F24(x)))); return result;}
-    case  2: {TIME_FUNCTION(result = lib_dsp_math_log(x)); return result;}
+    case  2: {TIME_FUNCTION(result = dsp_math_log(x)); return result;}
     case  3: {TIME_FUNCTION(result = Q24(log(F24(x)))); return result;}
-    case  4: {TIME_FUNCTION(result = lib_dsp_math_squareroot(x)); return result;}
+    case  4: {TIME_FUNCTION(result = dsp_math_sqrt(x)); return result;}
     case  5: {TIME_FUNCTION(result = Q24(sqrt(F24(x)))); return result;}
-    case  6: {TIME_FUNCTION(result = lib_dsp_math_sin(x)); return result;}
+    case  6: {TIME_FUNCTION(result = dsp_math_sin(x)); return result;}
     case  7: {TIME_FUNCTION(result = Q24(sin(F24(x)))); return result;}
-    case  8: {TIME_FUNCTION(result = lib_dsp_math_cos(x)); return result;}
+    case  8: {TIME_FUNCTION(result = dsp_math_cos(x)); return result;}
     case  9: {TIME_FUNCTION(result = Q24(cos(F24(x)))); return result;}
-    case  10: {TIME_FUNCTION(result = lib_dsp_math_atan(x)); return result;}
+    case  10: {TIME_FUNCTION(result = dsp_math_atan(x)); return result;}
     case  11: {TIME_FUNCTION(result = Q24(atan(F24(x)))); return result;}
-    case  12: {TIME_FUNCTION(result = lib_dsp_math_sinh(x)); return result;}
+    case  12: {TIME_FUNCTION(result = dsp_math_sinh(x)); return result;}
     case  13: {TIME_FUNCTION(result = Q24(sinh(F24(x)))); return result;}
-    case  14: {TIME_FUNCTION(result = lib_dsp_math_cosh(x)); return result;}
+    case  14: {TIME_FUNCTION(result = dsp_math_cosh(x)); return result;}
     case  15: {TIME_FUNCTION(result = Q24(cosh(F24(x)))); return result;}
 
     }
@@ -260,13 +248,13 @@ q8_24 execute(int func, q8_24 x, unsigned &cycles_taken) {
 }
 
 int test_input_range(int func, char name[], int min, int max, stimulus_t exponential, int minerror, int maxerror, 
-                     int permille, print_cycles_t print_cycles, print_values_t print_values) {
+                     int permille, print_values_t print_values) {
     int fail = 0;
     int done=0;
     int done_after_next_iteration=0;
     int i=0;
     unsigned cycles_float, cycles_fixed;
-    unsigned worst_cycles=0;
+    unsigned worst_cycles_fixed=0, worst_cycles_float=0;
 
     int32_t worst_cycles_input;
     q8_24 perf_ratio; 
@@ -294,14 +282,16 @@ int test_input_range(int func, char name[], int min, int max, stimulus_t exponen
         check_result(z, zc, minerror, maxerror, &err);
 
         // Performance
-        if(print_cycles) {
-           perf_ratio = lib_dsp_math_divide(cycles_float, cycles_fixed, 24);
-           printf("Cycles taken to execute %s: %d\n", name, cycles_fixed);
-           printf("%s is %.2f times faster than it's floating point equivalent\n", name, F24(perf_ratio));
-        }
-        if(cycles_fixed>worst_cycles) {
-            worst_cycles = cycles_fixed;
+#if PRINT_EVERY_CYCLE_COUNT 
+        perf_ratio = dsp_math_divide(cycles_float, cycles_fixed, 24);
+        printf("Cycles taken to execute %s: %d\n", name, cycles_fixed);
+        printf("%s is %.2f times faster than it's floating point equivalent\n", name, F24(perf_ratio));
+#endif 
+
+        if(cycles_fixed>worst_cycles_fixed) {
+            worst_cycles_fixed = cycles_fixed;
             worst_cycles_input = x;
+            worst_cycles_float = cycles_float;
         }
 
         i++;
@@ -339,9 +329,11 @@ int test_input_range(int func, char name[], int min, int max, stimulus_t exponen
     } 
     printf("%d per thousand in one bit error\n", achieved_permille);
     
-    if(print_cycles) {
-        printf("Worst case cycles for executing %s was measured for input %.7f: %d\n", name, F24(worst_cycles_input), worst_cycles);
-    }
+#if PRINT_CYCLE_COUNT
+        printf("Worst case cycles for executing %s was measured for input %.7f: %d\n", name, F24(worst_cycles_input), worst_cycles_fixed);
+        perf_ratio = dsp_math_divide(worst_cycles_float, worst_cycles_fixed, 24);
+        printf("%s is %.2f times faster than it's floating point equivalent\n", name, F24(perf_ratio));
+#endif
 
     printstr("\n"); // Dilimiter
 
@@ -357,20 +349,20 @@ void test_single_input_functions() {
 
     printf("Test Exponential and Logarithmic Functions\n");
     printf("------------------------------------------\n");
-    fail += test_input_range(0,"lib_dsp_math_exp", INT32_MIN, Q24(log(127)), LINEAR, -26,  5, 987, PC_OFF, PV_OFF);
-    fail += test_input_range(2,"lib_dsp_math_log", 1,         INT32_MAX,     LINEAR, -2,  2, 926, PC_OFF, PV_OFF);
+    fail += test_input_range(0,"dsp_math_exp", INT32_MIN, Q24(log(127)), LINEAR, -26,  5, 987, PV_OFF);
+    fail += test_input_range(2,"dsp_math_log", 1,         INT32_MAX,     LINEAR, -2,  2, 926, PV_OFF);
 
     printf("Test Squareroot\n");
     printf("---------------\n");
-    fail += test_input_range(4,"lib_dsp_math_squareroot", 0,  INT32_MAX,     EXPONENTIAL, -1,  1, 1000, PC_OFF, PV_OFF);
+    fail += test_input_range(4,"dsp_math_sqrt", 0,  INT32_MAX,     EXPONENTIAL, -1,  1, 1000, PV_OFF);
 
     printf("Test Trigonometric Functions\n");
     printf("----------------------------\n");
-    fail += test_input_range(6,"lib_dsp_math_sin", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PC_OFF, PV_OFF);
-    fail += test_input_range(8,"lib_dsp_math_cos", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PC_OFF, PV_OFF);
-    fail += test_input_range(10,"lib_dsp_math_atan", INT32_MIN+1,       INT32_MAX,     1, -1,  EXPONENTIAL, 1000, PC_OFF, PV_OFF);
-    fail += test_input_range(12,"lib_dsp_math_sinh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 726, PC_OFF, PV_OFF);  // Should aim for -4 4 800
-    fail += test_input_range(14,"lib_dsp_math_cosh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 711, PC_OFF, PV_OFF);  // Should aim for -4 4, 800
+    fail += test_input_range(6,"dsp_math_sin", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PV_OFF);
+    fail += test_input_range(8,"dsp_math_cos", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PV_OFF);
+    fail += test_input_range(10,"dsp_math_atan", INT32_MIN+1,       INT32_MAX,     1, -1,  EXPONENTIAL, 1000, PV_OFF);
+    fail += test_input_range(12,"dsp_math_sinh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 726, PV_OFF);  // Should aim for -4 4 800
+    fail += test_input_range(14,"dsp_math_cosh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 711, PV_OFF);  // Should aim for -4 4, 800
 
     if (fail != 0) {
         printf("Total failures %d\n", fail);
@@ -400,7 +392,7 @@ void divide() {
     int32_t divisor = 3;
     int32_t result = 0x7FFFFFFF;;
     while(1) {
-        result = lib_dsp_math_divide(result, divisor, 24);
+        result = dsp_math_divide(result, divisor, 24);
         if(result==0) result = 0x7FFFFFFF;
     }
 }

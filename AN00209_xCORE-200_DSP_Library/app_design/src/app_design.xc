@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
 #include <stdio.h>
-#include "lib_dsp.h"
+#include "dsp.h"
 
 // Results of biquad coeff generation ara normalized such that a0 == 1.
 // When using lib_dsp biquad functions that data arrays must be DWORD aligned.
@@ -26,14 +26,14 @@ int main( void )
 	// Gain for peaking/lowshelf/highshelf filters is 3.0 dB.
 	// Q format Q28 (4-bit signed integer, 28-bit fraction) is used.
 
-	lib_dsp_design_biquad_notch    ( 0.25, 0.707,      coeff[0], 28 );
-	lib_dsp_design_biquad_lowpass  ( 0.25, 0.707,      coeff[1], 28 );
-	lib_dsp_design_biquad_highpass ( 0.25, 0.707,      coeff[2], 28 );
-	lib_dsp_design_biquad_allpass  ( 0.25, 0.707,      coeff[3], 28 );
-	lib_dsp_design_biquad_bandpass ( 0.24, 0.26,       coeff[4], 28 );
-	lib_dsp_design_biquad_peaking  ( 0.25, 0.707, 3.0, coeff[5], 28 );
-	lib_dsp_design_biquad_lowshelf ( 0.25, 0.707, 3.0, coeff[6], 28 );
-	lib_dsp_design_biquad_highshelf( 0.25, 0.707, 3.0, coeff[7], 28 );
+	dsp_design_biquad_notch    ( 0.25, 0.707,      coeff[0], 28 );
+	dsp_design_biquad_lowpass  ( 0.25, 0.707,      coeff[1], 28 );
+	dsp_design_biquad_highpass ( 0.25, 0.707,      coeff[2], 28 );
+	dsp_design_biquad_allpass  ( 0.25, 0.707,      coeff[3], 28 );
+	dsp_design_biquad_bandpass ( 0.24, 0.26,       coeff[4], 28 );
+	dsp_design_biquad_peaking  ( 0.25, 0.707, 3.0, coeff[5], 28 );
+	dsp_design_biquad_lowshelf ( 0.25, 0.707, 3.0, coeff[6], 28 );
+	dsp_design_biquad_highshelf( 0.25, 0.707, 3.0, coeff[7], 28 );
 
 	// Initialize filter state data to zeros
 	
@@ -48,7 +48,7 @@ int main( void )
 		int sample = Q28( 1.0 );
 		printf( "%s ", names[ii] );
 		for( int32_t jj = 0; jj < 8; ++jj ) {
-			sample = lib_dsp_filters_biquad( sample, coeff[ii], state[ii], 28 );
+			sample = dsp_filters_biquad( sample, coeff[ii], state[ii], 28 );
 			printf( "%+04.3f ", F28(sample) );
 		}
 		printf( "\n" );

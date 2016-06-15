@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 #include "generated.h"
 
 #define PRINT_STATS 0
@@ -24,7 +24,7 @@ void test_forward_speed(){
     unsigned now, then;
     timer t;
 
-    lib_dsp_fft_complex_t f[FFT_LENGTH];
+    dsp_complex_t f[FFT_LENGTH];
     for(unsigned i=0;i<FFT_LENGTH;i++){
         f[i].re = random(x);
         f[i].im = random(x);
@@ -32,7 +32,7 @@ void test_forward_speed(){
 
     t :> then;
     for(unsigned t=0;t<reps;t++)
-        lib_dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
+        dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
     t:> now;
 
     printf("Time for one forward FFT(%d points): %.2f ns\n", FFT_LENGTH, (float)(now - then)*8.0 / (float)reps);
@@ -46,7 +46,7 @@ void test_inverse_speed(){
     unsigned now, then;
     timer t;
 
-    lib_dsp_fft_complex_t f[FFT_LENGTH];
+    dsp_complex_t f[FFT_LENGTH];
     for(unsigned i=0;i<FFT_LENGTH;i++){
         f[i].re = random(x);
         f[i].im = random(x);
@@ -54,7 +54,7 @@ void test_inverse_speed(){
 
     t :> then;
     for(unsigned t=0;t<reps;t++)
-        lib_dsp_fft_inverse(f, FFT_LENGTH, FFT_SINE_LUT);
+        dsp_fft_inverse(f, FFT_LENGTH, FFT_SINE_LUT);
     t:> now;
 
     printf("Time for one inverse FFT(%d points): %.2f ns\n", FFT_LENGTH, (float)(now - then)*8.0 / (float)reps);

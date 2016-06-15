@@ -72,7 +72,7 @@ typedef uint32_t uq8_24;
  * 
  *  \code
  *  int32_t  result;
- *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
+ *  result = dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
  * 
  *  \param  input1_value  Multiply operand #1.
@@ -81,7 +81,7 @@ typedef uint32_t uq8_24;
  *  \returns              input1_value * input2_value.
  */
 
-int32_t  lib_dsp_math_multiply
+int32_t  dsp_math_multiply
 (
     int32_t  input1_value,
     int32_t  input2_value,
@@ -109,7 +109,7 @@ int32_t  lib_dsp_math_multiply
  *
  *  \code
  *  int32_t  result;
- *  result = lib_dsp_math_multiply( Q28(-0.33), sample, 28 );
+ *  result = dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
  *
  *  While saturation is employed after multiplication an overflow condition when preparing the final
@@ -121,7 +121,7 @@ int32_t  lib_dsp_math_multiply
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int32_t  lib_dsp_math_multiply_sat(
+int32_t  dsp_math_multiply_sat(
     int32_t  input1_value,
     int32_t  input2_value,
     int32_t  q_format 
@@ -138,7 +138,7 @@ int32_t  lib_dsp_math_multiply_sat(
  *
  *  \code
  *  uint32_t  quotient;
- *  quotient = lib_dsp_math_divide(divident, divisor, 24);
+ *  quotient = dsp_math_divide(divident, divisor, 24);
  *  \endcode
  *
  *  \param  dividend     Value to be divided
@@ -146,7 +146,7 @@ int32_t  lib_dsp_math_multiply_sat(
  *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
  *  \returns             Quotient of dividend/divisor
  */
-int32_t  lib_dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_format );
+int32_t  dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_format );
 
 /** Unsigned Division
  *
@@ -158,7 +158,7 @@ int32_t  lib_dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_f
  *
  *  \code
  *  uint32_t  quotient;
- *  quotient = lib_dsp_math_divide(divident, divisor, 24);
+ *  quotient = dsp_math_divide(divident, divisor, 24);
  *  \endcode
  *
  *  \param  dividend     Value to be divided
@@ -166,7 +166,7 @@ int32_t  lib_dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_f
  *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
  *  \returns             Quotient of dividend/divisor
  */
-uint32_t lib_dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32_t  q_format );
+uint32_t dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32_t  q_format );
 
 /** Scalar square root
  * 
@@ -177,7 +177,7 @@ uint32_t lib_dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, ui
  *  \param  x            Unsigned 32-bit value in Q8.24 format
  *  \returns             Unsigned 32-bit value in Q8.24 format
  */
-uq8_24 lib_dsp_math_squareroot(uq8_24 x);
+uq8_24 dsp_math_sqrt(uq8_24 x);
 
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
@@ -186,7 +186,7 @@ uq8_24 lib_dsp_math_squareroot(uq8_24 x);
  * \param rad input value in radians
  * \returns sine(rad)
  **/
-q8_24 lib_dsp_math_sin(q8_24 rad);
+q8_24 dsp_math_sin(q8_24 rad);
 
 /** This function returns the cosine of a q8_24 fixed point number in radians. The
  * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
@@ -194,8 +194,8 @@ q8_24 lib_dsp_math_sin(q8_24 rad);
  * \param rad input value in radians
  * \returns cosine(rad)
  **/
-inline q8_24 lib_dsp_math_cos(q8_24 rad) {
-    return lib_dsp_math_sin(rad+PIHALF_Q8_24);
+inline q8_24 dsp_math_cos(q8_24 rad) {
+    return dsp_math_sin(rad+PIHALF_Q8_24);
 }
 
 /** This function returns the arctangent of x.
@@ -210,13 +210,13 @@ inline q8_24 lib_dsp_math_cos(q8_24 rad) {
  *
  *  \code
  *  q8_24 x = Q24(0.005);
- *  q8_24 rad = lib_dsp_math_atan(x);
+ *  q8_24 rad = dsp_math_atan(x);
  *  \endcode
  *
  *  \param x input value Q8.24 format.
  *  \returns arctangent of x in radians between -pi/2 .. +pi/2
  */
-q8_24 lib_dsp_math_atan(q8_24 x);
+q8_24 dsp_math_atan(q8_24 x);
 
 
 /** This function returns the natural exponent of a fixed point number. The
@@ -227,7 +227,7 @@ q8_24 lib_dsp_math_atan(q8_24 x);
  * \param x input value
  * \returns e^x
  **/
-q8_24 lib_dsp_math_exp(q8_24 x);
+q8_24 dsp_math_exp(q8_24 x);
 
 /** This function returns the natural logarithm (ln) of a fixed point number. The
  * input number has to be positive.
@@ -235,9 +235,9 @@ q8_24 lib_dsp_math_exp(q8_24 x);
  * \param x input value Q8.24 format.
  * \returns ln(x).
  **/
-q8_24 lib_dsp_math_log(uq8_24 x);
+q8_24 dsp_math_log(uq8_24 x);
 
-extern q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine);
+extern q8_24 dsp_math_sinh_(q8_24 x, int cosine);
 
 /** This function returns the hyperbolic sine (sinh) of a fixed point
  * number. The input number has to be in the range [-5.5..5.5] in order to
@@ -247,8 +247,8 @@ extern q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine);
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 lib_dsp_math_sinh(q8_24 x) {
-    return lib_dsp_math_sinh_(x, 0);
+inline q8_24 dsp_math_sinh(q8_24 x) {
+    return dsp_math_sinh_(x, 0);
 }
 
 /** This function returns the hyperbolic cosine (cosh) of a fixed point
@@ -259,8 +259,8 @@ inline q8_24 lib_dsp_math_sinh(q8_24 x) {
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 lib_dsp_math_cosh(q8_24 x) {
-    return lib_dsp_math_sinh_(x, 1);
+inline q8_24 dsp_math_cosh(q8_24 x) {
+    return dsp_math_sinh_(x, 1);
 }
 
 

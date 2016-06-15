@@ -5,7 +5,7 @@
 // Include files
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 #include <math.h>
 
 // Define constants
@@ -48,11 +48,11 @@ int main(void)
     q8_24 alpha = Q24(1.5707963268);
     cos(alpha);
     int32_t rotation_matrix[4] = {
-            lib_dsp_math_cos(alpha), -lib_dsp_math_sin(alpha),
-            lib_dsp_math_sin(alpha), lib_dsp_math_cos(alpha),
+            dsp_math_cos(alpha), -dsp_math_sin(alpha),
+            dsp_math_sin(alpha), dsp_math_cos(alpha),
     };
 
-    lib_dsp_matrix_mulm (rotation_matrix,  // 'input_matrix_X':  Pointer to source data array X
+    dsp_matrix_mulm (rotation_matrix,  // 'input_matrix_X':  Pointer to source data array X
             input_vector,                  // 'input_matrix_Y':  Pointer to source data array Y
             rotated_vector,                // 'result_matrix_R': Pointer to the resulting data array
             2,                             // 'rows_X':    Number of rows in X
@@ -64,7 +64,7 @@ int main(void)
     printf ("%.8f\n", F24 (rotated_vector[0]));
     printf ("%.8f\n", F24 (rotated_vector[1]));
                                                   // Matrix negation: R = -X
-  lib_dsp_matrix_negate (Src1,                    // 'input_matrix_X':  Pointer/reference to source data
+  dsp_matrix_negate (Src1,                    // 'input_matrix_X':  Pointer/reference to source data
                          Dst,                     // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                          3,         // 'row_count':       Number of rows in input and output matrices
                          3);        // 'column_count':    Number of columns in input and output matrices
@@ -77,7 +77,7 @@ int main(void)
   printf ("\n");
 
                                                   // Matrix / scalar addition: R = X + a
-  lib_dsp_matrix_adds (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
+  dsp_matrix_adds (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
                        Q24(2.),                   // 'scalar_value_A':  Scalar value to add to each 'input' element
                        Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                        3,           // 'row_count':       Number of rows in input and output matrices
@@ -90,7 +90,7 @@ int main(void)
   printf ("\n");
 
                                                   // Matrix / scalar multiplication: R = X * a
-  lib_dsp_matrix_muls (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
+  dsp_matrix_muls (Src1,                      // 'input_matrix_X':  Pointer/reference to source data
                        Q24(2.),                   // 'scalar_value_A':  Scalar value to multiply each 'input' element by
                        Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                        3,           // 'row_count':       Number of rows in input and output matrices
@@ -104,7 +104,7 @@ int main(void)
   printf ("\n");
 
                                                   // Matrix / matrix addition: R = X + Y
-  lib_dsp_matrix_addm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
+  dsp_matrix_addm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
                        Src2,                      // 'input_matrix_Y':  Pointer to source data array Y
                        Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                        3,           // 'row_count':       Number of rows in input and output matrices
@@ -117,7 +117,7 @@ int main(void)
   printf ("\n");
 
                                                   // Matrix / matrix subtraction: R = X - Y
-  lib_dsp_matrix_subm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
+  dsp_matrix_subm (Src1,                      // 'input_matrix_X':  Pointer to source data array X
                        Src2,                      // 'input_matrix_Y':  Pointer to source data array Y
                        Dst,                       // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                        3,           // 'row_count':       Number of rows in input and output matrices
@@ -132,7 +132,7 @@ int main(void)
                                                   // Matrix / matrix multiplication: R = X * Y
 
                                                   // Matrix transposition
-  lib_dsp_matrix_transpose (Src1,                 // 'input_matrix_X':  Pointer to source data array
+  dsp_matrix_transpose (Src1,                 // 'input_matrix_X':  Pointer to source data array
                             Dst,                  // 'result_matrix_R': Pointer to the resulting 2-dimensional data array
                             3,      // 'row_count':       Number of rows in input and output matrices
                             3,      // 'column_count':    Number of columns in input and output matrices

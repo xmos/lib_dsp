@@ -5,7 +5,7 @@
 // Include files
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 
 // Define constants
 
@@ -111,7 +111,7 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     TIME_FUNCTION(Dst[i] =
-      lib_dsp_filters_fir (Src[i],                 // Input data sample to be filtered
+      dsp_filters_fir (Src[i],                 // Input data sample to be filtered
                            firCoeffs,              // Pointer to filter coefficients
                            filterState,            // Pointer to filter state array
                            FIR_FILTER_LENGTH,      // Filter length
@@ -120,7 +120,7 @@ int main(void)
   }
 
   if(print_cycles) {
-    printf("cycles taken for executing lib_dsp_filters_fir of length %d: %d\n", FIR_FILTER_LENGTH, cycles_taken);
+    printf("cycles taken for executing dsp_filters_fir of length %d: %d\n", FIR_FILTER_LENGTH, cycles_taken);
   }
 
 
@@ -140,7 +140,7 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     TIME_FUNCTION(Dst[i] =
-      lib_dsp_filters_biquad (Src[i],              // Input data sample to be filtered
+      dsp_filters_biquad (Src[i],              // Input data sample to be filtered
                               iirCoeffs,           // Pointer to filter coefficients
                               filterState,         // Pointer to filter state array
                               Q_N);                // Q Format N
@@ -148,7 +148,7 @@ int main(void)
   }
 
   if(print_cycles) {
-    printf("cycles taken for executing lib_dsp_filters_biquad: %d\n", cycles_taken);
+    printf("cycles taken for executing dsp_filters_biquad: %d\n", cycles_taken);
   }
 
   printf ("\nIIR Biquad Filter Results\n");
@@ -168,7 +168,7 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
     TIME_FUNCTION(Dst[i] =
-      lib_dsp_filters_biquads (Src[i],             // Input data sample to be filtered
+      dsp_filters_biquads (Src[i],             // Input data sample to be filtered
                                iirCoeffs,          // Pointer to filter coefficients
                                filterState,        // Pointer to filter state array
                                IIR_CASCADE_DEPTH,  // Number of cascaded sections
@@ -177,7 +177,7 @@ int main(void)
   }
 
   if(print_cycles) {
-    printf("cycles taken for executing lib_dsp_filters_biquads (%d cascaded Biquads): %d\n", IIR_CASCADE_DEPTH, cycles_taken);
+    printf("cycles taken for executing dsp_filters_biquads (%d cascaded Biquads): %d\n", IIR_CASCADE_DEPTH, cycles_taken);
   }
 
   printf ("\nCascaded IIR Biquad Filter Results\n");
@@ -204,7 +204,7 @@ int main(void)
 
     for( i = 0; i < c; ++i )
     {
-      lib_dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
+      dsp_filters_interpolate( Q31(0.1), inter_coeff, filterState, c*r, r, Dst, 31 );
       for( j = 0; j < r; ++j )
         print31( Dst[j] );
       printf( "\n" );
@@ -222,7 +222,7 @@ int main(void)
       filterState[i] = 0;
     for( i = 0; i < 32/r; ++i )
     {
-      x = lib_dsp_filters_decimate( decim_input, firCoeffsInt, filterState, 32, r, 31 );
+      x = dsp_filters_decimate( decim_input, firCoeffsInt, filterState, 32, r, 31 );
       print31( x );
       if( (i&7) == 7 )
         printf( "\n" );

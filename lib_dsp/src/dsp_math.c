@@ -1,11 +1,11 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
 #include <platform.h>
-#include "lib_dsp_qformat.h"
-#include "lib_dsp_math.h"
+#include "dsp_qformat.h"
+#include "dsp_math.h"
 #include "stdio.h"
 
-int32_t lib_dsp_math_multiply( int32_t input1_value, int32_t input2_value, int32_t q_format )
+int32_t dsp_math_multiply( int32_t input1_value, int32_t input2_value, int32_t q_format )
 {
     int32_t ah; uint32_t al;
     int32_t result;
@@ -15,7 +15,7 @@ int32_t lib_dsp_math_multiply( int32_t input1_value, int32_t input2_value, int32
     return result;
 }
 
-int32_t lib_dsp_math_multiply_sat( int32_t input1_value, int32_t input2_value, int32_t q_format )
+int32_t dsp_math_multiply_sat( int32_t input1_value, int32_t input2_value, int32_t q_format )
 {
     int32_t ah; uint32_t al;
     asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input1_value),"r"(input2_value),"0"(0),"1"(1<<(q_format-1)) );
@@ -26,7 +26,7 @@ int32_t lib_dsp_math_multiply_sat( int32_t input1_value, int32_t input2_value, i
 
 #define  ldivu(a,b,c,d,e) asm("ldivu %0,%1,%2,%3,%4" : "=r" (a), "=r" (b): "r" (c), "r" (d), "r" (e))
 
-int32_t lib_dsp_math_divide( int32_t dividend, int32_t divisor, uint32_t q_format )
+int32_t dsp_math_divide( int32_t dividend, int32_t divisor, uint32_t q_format )
 {
     int32_t sgn = 1;
     uint32_t d, d2, r;
@@ -47,7 +47,7 @@ int32_t lib_dsp_math_divide( int32_t dividend, int32_t divisor, uint32_t q_forma
 }
 
 
-uint32_t lib_dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor, uint32_t q_format )
+uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor, uint32_t q_format )
 {
     //h and l hold a 64-bit value
     uint32_t h; uint32_t l;
@@ -66,7 +66,7 @@ uint32_t lib_dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor, uint3
 #define SQRT_COEFF_A ((12466528)/2) // 7143403
 #define SQRT_COEFF_B (10920575) // 9633812
 
-uq8_24 lib_dsp_math_squareroot(uq8_24 x)
+uq8_24 dsp_math_sqrt(uq8_24 x)
 {
     int32_t zeroes;
     unsigned long long approx;
@@ -80,18 +80,18 @@ uq8_24 lib_dsp_math_squareroot(uq8_24 x)
 
     // initial linear approximation of the result.
     if (zeroes >= 0) {
-        approx = (SQRT_COEFF_A >> zeroes) + lib_dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
+        approx = (SQRT_COEFF_A >> zeroes) + dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
     } else {
         // For Q8.24 values > 1 (0x01.000000)
         zeroes = -zeroes;
-        approx = (SQRT_COEFF_A << zeroes) + lib_dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
+        approx = (SQRT_COEFF_A << zeroes) + dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
     }
 
     // successive approximation
     for(int32_t i = 0; i < 3; i++) {
         // Linear approximation. Babylonian Method: Successive averaging
         // xn+1 = (xn + y/xn) / 2
-        approx = (approx + lib_dsp_math_divide_unsigned(x, approx, 24)) >> 1;
+        approx = (approx + dsp_math_divide_unsigned(x, approx, 24)) >> 1;
     }
 
     // Return format is Q8.24
@@ -110,7 +110,7 @@ uq8_24 lib_dsp_math_squareroot(uq8_24 x)
 #define R2   (-212681*2)
 #define R3     (11175)
 
-q8_24 lib_dsp_math_sin(q8_24 rad) {
+q8_24 dsp_math_sin(q8_24 rad) {
     int32_t finalSign;
     int32_t modulo;
     int32_t sqr;
@@ -123,7 +123,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
     }
     // Now rad >= 0.
 
-    modulo = lib_dsp_math_multiply(rad, ONE_OVER_HALFPI_Q8_24, 24) >> 24;
+    modulo = dsp_math_multiply(rad, ONE_OVER_HALFPI_Q8_24, 24) >> 24;
     rad -= (modulo >> 2) * PI2_Q8_24;
     if (modulo & 2) {
         finalSign = -finalSign;
@@ -132,13 +132,13 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
     if (modulo & 1) {
         rad = ((PI2_Q8_24+1)>>1) - rad;
     }
-    sqr = (lib_dsp_math_multiply(rad, rad, 24)+1)>>1;
+    sqr = (dsp_math_multiply(rad, rad, 24)+1)>>1;
     return (rad +
-            ((lib_dsp_math_multiply(
-              lib_dsp_math_multiply(
-                lib_dsp_math_multiply(
-                  lib_dsp_math_multiply(
-                    lib_dsp_math_multiply(R3, sqr, 24) + R2,
+            ((dsp_math_multiply(
+              dsp_math_multiply(
+                dsp_math_multiply(
+                  dsp_math_multiply(
+                    dsp_math_multiply(R3, sqr, 24) + R2,
                     sqr, 24) + R1,
                   sqr, 24) + R0,
                 sqr, 24)
@@ -159,7 +159,7 @@ q8_24 lib_dsp_math_sin(q8_24 rad) {
 #define A   232471924//(14529495*16)  // was ROOT_3M1
 #define B   232471924//(14529495*16)  // 7264748 // was ROOT_3
 
-q8_24 lib_dsp_math_atan(q8_24 f) {
+q8_24 dsp_math_atan(q8_24 f) {
     int32_t negative = f < 0;
     if (negative) {
         f = -f;
@@ -174,8 +174,8 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
     } else if (f > (1<<24)) {  // F less than 3.6 greater than 1
         XN = 281104952; // pi/3 in Q4.28 format
         f = f << 4;
-        uint32_t thed = lib_dsp_math_multiply((1<<27), f, 28);
-        uint32_t then = (1<<27) + lib_dsp_math_multiply(B, f, 28);
+        uint32_t thed = dsp_math_multiply((1<<27), f, 28);
+        uint32_t then = (1<<27) + dsp_math_multiply(B, f, 28);
         if (A >= thed) {
             thed = A-thed;
             asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (thed), "r" (0), "r" (then));
@@ -188,7 +188,7 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
     } else if (f > (TS3 >> 4)) { // F less than 1 > 0.28
         XN = 140552476; // pi/6 in Q4.28 format
         f = f << 4;
-        uint32_t thed = lib_dsp_math_multiply(A, f, 28);
+        uint32_t thed = dsp_math_multiply(A, f, 28);
         uint32_t then = (f>>1) + B;
         if (thed >> 27) {
             thed = thed -(1<<27);
@@ -204,14 +204,14 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
         f = f << 4;
     }
 
-    int32_t g = lib_dsp_math_multiply(f, f, 28);
+    int32_t g = dsp_math_multiply(f, f, 28);
 
 
-    uint32_t gPg = lib_dsp_math_multiply(lib_dsp_math_multiply(P1_ATAN, g, 28) + P0_ATAN, g, 28);   // Positive - p0/p1 positive
-    uint32_t Qg = lib_dsp_math_multiply(Q1_ATAN, g, 28) + Q0_ATAN;              // Positive - q0/q1 positive
+    uint32_t gPg = dsp_math_multiply(dsp_math_multiply(P1_ATAN, g, 28) + P0_ATAN, g, 28);   // Positive - p0/p1 positive
+    uint32_t Qg = dsp_math_multiply(Q1_ATAN, g, 28) + Q0_ATAN;              // Positive - q0/q1 positive
     asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" (gPg >> 4), "r" (gPg << 28), "r" (2*Qg));
     int32_t Rg = d;
-    int32_t ffR = f + lib_dsp_math_multiply(f, -Rg, 28);
+    int32_t ffR = f + dsp_math_multiply(f, -Rg, 28);
     if (XN >> 28) {
         ffR = -ffR;
     }
@@ -224,7 +224,7 @@ q8_24 lib_dsp_math_atan(q8_24 f) {
 }
 
 
-int32_t lib_dsp_math_round(int32_t x, int q_format) {
+int32_t dsp_math_round(int32_t x, int q_format) {
     // x += 0.5, truncate franctional bits
     return (x + (1<<(q_format-1))) & ~((1<<q_format) - 1);
 }
@@ -259,7 +259,7 @@ int32_t lib_dsp_math_round(int32_t x, int q_format) {
  * a modulo of a large number. However, this would require mulf3_29 functions adding code
  * size. I think it is better to stick to a slightly less accurate version for now.
  */
-q8_24 lib_dsp_math_exp(q8_24 x) {
+q8_24 dsp_math_exp(q8_24 x) {
     //valid range for x is [MIN_INT32..ln(126.9999999)] 
     //log base conversion rule: log2(x) = ln(x) * 1/ln(2)
     //Max XN = ln(MAX_INT32)/ln(2) = log2(MAX_INT32) 
@@ -269,7 +269,7 @@ q8_24 lib_dsp_math_exp(q8_24 x) {
        return 0;
     }
 
-    q8_24 XN = lib_dsp_math_round(lib_dsp_math_multiply(x,ONE_OVER_LN2,24), 24);
+    q8_24 XN = dsp_math_round(dsp_math_multiply(x,ONE_OVER_LN2,24), 24);
 
     q8_24 N = XN >> 24; // truncate fractional bits
 
@@ -277,34 +277,34 @@ q8_24 lib_dsp_math_exp(q8_24 x) {
     // q_format = 24 + 31 - 24 = 31
 #if MULT_FUNC
     q8_24 N_q8_24 = N<<24;
-    q8_24 g = x - lib_dsp_math_multiply(N_q8_24, EXP_C1, 24) - lib_dsp_math_multiply(N_q8_24, EXP_C2, 24);
+    q8_24 g = x - dsp_math_multiply(N_q8_24, EXP_C1, 24) - dsp_math_multiply(N_q8_24, EXP_C2, 24);
 #else
     q8_24 g = x - N*(EXP_C1 + EXP_C2);
 #endif
 
     // g is in the range [-0.346..0.346] (-ln(2)/2 .. ln(2)/2)
     // z is in the range [0..0.12] (0.. (ln(2)/2)^2)
-    q8_24 z4 = lib_dsp_math_multiply(g << 2,g ,24);
+    q8_24 z4 = dsp_math_multiply(g << 2,g ,24);
 
     // P1_EXP * z = [0..0.0665 * 0.12 = 0.008]
     // P0_EXP + P1_EXP * z = [4..4.008]
     // g * (P0_EXP + P1_EXP * z) = -1.389..1.389
-    q8_24 precise = lib_dsp_math_multiply((lib_dsp_math_multiply(P1_EXP, z4, 24) + (P0_EXP << 2)), g << 3, 24);
+    q8_24 precise = dsp_math_multiply((dsp_math_multiply(P1_EXP, z4, 24) + (P0_EXP << 2)), g << 3, 24);
     q8_24 gP = (precise + 4) >> 3;
-    q8_24 Q = lib_dsp_math_multiply(Q1_EXP, z4, 24) + (Q0_EXP << 2);
+    q8_24 Q = dsp_math_multiply(Q1_EXP, z4, 24) + (Q0_EXP << 2);
     // Q1_EXP = 0.8, Q1_EXP*z = [0..0.096], Q0_EXP = 8, Q [8..8.096]
     
-    q8_24 r = (ONE_Q8_24<<2) + (lib_dsp_math_divide(precise, Q - gP, 24));
+    q8_24 r = (ONE_Q8_24<<2) + (dsp_math_divide(precise, Q - gP, 24));
     N -= 2;
     return N > 0 ? (r<<N)+(1<<(N-1)) : (r+(1<<(-N-1))) >> -N;
 
 #if 0
-    q8_24 z = lib_dsp_math_multiply(g,g,24);
+    q8_24 z = dsp_math_multiply(g,g,24);
 
-    q8_24 gP = lib_dsp_math_multiply(lib_dsp_math_multiply(P1_EXP, z, 24) + P0_EXP, g, 24);
+    q8_24 gP = dsp_math_multiply(dsp_math_multiply(P1_EXP, z, 24) + P0_EXP, g, 24);
 
-    q8_24 Q = lib_dsp_math_multiply(Q1_EXP, z, 24) + Q0_EXP;
-    q8_24 r = (ONE_Q8_24<<1) + (lib_dsp_math_divide(gP<<1, (Q - gP)>>1, 24));
+    q8_24 Q = dsp_math_multiply(Q1_EXP, z, 24) + Q0_EXP;
+    q8_24 r = (ONE_Q8_24<<1) + (dsp_math_divide(gP<<1, (Q - gP)>>1, 24));
 //    N++;
     N--;
 
@@ -351,7 +351,7 @@ void log2_with_remainder(q8_24 x, int *log2_p2, q8_24 *rem, int q_format) {
 #define LOG_C1  11632640
 #define LOG_C2     -3560
 
-q8_24 lib_dsp_math_log(uq8_24 x) {
+q8_24 dsp_math_log(uq8_24 x) {
     q8_24 f, zden, y, Bw, Aw, rz2, v, qz, rz, z, w;
     int N;
     log2_with_remainder(x, &N, &f, 24);
@@ -364,14 +364,14 @@ q8_24 lib_dsp_math_log(uq8_24 x) {
         y = f - ONE_Q8_24;
         zden = (y >> 1) + ONE_Q8_24;
     }
-    z = lib_dsp_math_divide(y, zden, 24);
-    w = lib_dsp_math_multiply(z, z, 24);
-    Bw = lib_dsp_math_multiply(B1_LOG, w, 24) + B0_LOG;
+    z = dsp_math_divide(y, zden, 24);
+    w = dsp_math_multiply(z, z, 24);
+    Bw = dsp_math_multiply(B1_LOG, w, 24) + B0_LOG;
     Aw = A0_LOG;
-    rz2 = lib_dsp_math_multiply(w, C + lib_dsp_math_divide(Aw, Bw, 24), 24);
-    v = lib_dsp_math_divide(HALF_Q8_24>>1, zden, 24);
-    qz = v + lib_dsp_math_multiply(rz2, v, 24);
-    rz = lib_dsp_math_multiply(4*y, qz, 24);
+    rz2 = dsp_math_multiply(w, C + dsp_math_divide(Aw, Bw, 24), 24);
+    v = dsp_math_divide(HALF_Q8_24>>1, zden, 24);
+    qz = v + dsp_math_multiply(rz2, v, 24);
+    rz = dsp_math_multiply(4*y, qz, 24);
     return (N*LOG_C2+rz)+N*LOG_C1;
 }
 
@@ -390,7 +390,7 @@ q8_24 lib_dsp_math_log(uq8_24 x) {
 #define P1_SINH     139753
 #define P2_SINH       3422
 
-q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine) {
+q8_24 dsp_math_sinh_(q8_24 x, int cosine) {
     q8_24 Y, R, W, Z;
     int negative = 1;
 
@@ -407,17 +407,17 @@ q8_24 lib_dsp_math_sinh_(q8_24 x, int cosine) {
     if(cosine || Y > ONE_Q8_24) {
         if (Y > YBAR) {
             W = Y - LN2;
-            Z = lib_dsp_math_exp(W);
-            R = Z + (cosine?1:-1) * lib_dsp_math_divide(ONE_Q8_24/4, Z, 24) ;
+            Z = dsp_math_exp(W);
+            R = Z + (cosine?1:-1) * dsp_math_divide(ONE_Q8_24/4, Z, 24) ;
         } else {
-            Z = lib_dsp_math_exp(Y);
-            R = (Z + (cosine?1:-1) * lib_dsp_math_divide(ONE_Q8_24, Z, 24)) >> 1;
+            Z = dsp_math_exp(Y);
+            R = (Z + (cosine?1:-1) * dsp_math_divide(ONE_Q8_24, Z, 24)) >> 1;
         }
         R = R * negative;
     } else {
-        q8_24 g = lib_dsp_math_multiply(x, x, 24);
-        q8_24 gP = lib_dsp_math_multiply(lib_dsp_math_multiply(lib_dsp_math_multiply(P2_SINH, g, 24) + P1_SINH, g, 24) + P0_SINH, g, 24);
-        R = x + lib_dsp_math_multiply(x, gP, 24);
+        q8_24 g = dsp_math_multiply(x, x, 24);
+        q8_24 gP = dsp_math_multiply(dsp_math_multiply(dsp_math_multiply(P2_SINH, g, 24) + P1_SINH, g, 24) + P0_SINH, g, 24);
+        R = x + dsp_math_multiply(x, gP, 24);
     }
     return R;
 }

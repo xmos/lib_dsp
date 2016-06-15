@@ -32,7 +32,7 @@ Number of values checked: 5
 
 Test Exponential and Logarithmic Functions
 ------------------------------------------
-- Testing lib_dsp_math_exp
+- Testing dsp_math_exp
 Cases Error == -9: 1, percentage:  0.10
 Cases Error == -6: 1, percentage:  0.10
 Cases Error == -5: 4, percentage:  0.39
@@ -48,7 +48,7 @@ Maximum Negative Error: -26
 Number of values checked: 1026
 987 per thousand in one bit error
 
-- Testing lib_dsp_math_log
+- Testing dsp_math_log
 Cases Error == -2: 74, percentage:  7.21
 Cases Error == -1: 397, percentage: 38.69
 Cases Error == 0: 509, percentage: 49.61
@@ -61,7 +61,7 @@ Number of values checked: 1026
 
 Test Squareroot
 ---------------
-- Testing lib_dsp_math_squareroot
+- Testing dsp_math_sqrt
 Cases Error == -1: 9, percentage: 27.27
 Cases Error == 0: 24, percentage: 72.73
 Maximum Positive Error: 0
@@ -71,7 +71,7 @@ Number of values checked: 33
 
 Test Trigonometric Functions
 ----------------------------
-- Testing lib_dsp_math_sin
+- Testing dsp_math_sin
 Cases Error == -1: 92, percentage:  8.97
 Cases Error == 0: 840, percentage: 81.87
 Cases Error == 1: 94, percentage:  9.16
@@ -80,7 +80,7 @@ Maximum Negative Error: -1
 Number of values checked: 1026
 1000 per thousand in one bit error
 
-- Testing lib_dsp_math_cos
+- Testing dsp_math_cos
 Cases Error == -1: 129, percentage: 12.57
 Cases Error == 0: 612, percentage: 59.65
 Cases Error == 1: 285, percentage: 27.78
@@ -89,14 +89,14 @@ Maximum Negative Error: -1
 Number of values checked: 1026
 1000 per thousand in one bit error
 
-- Testing lib_dsp_math_atan
+- Testing dsp_math_atan
 Cases Error == 0: 65, percentage: 100.00
 Maximum Positive Error: 0
 Maximum Negative Error: 0
 Number of values checked: 65
 1000 per thousand in one bit error
 
-- Testing lib_dsp_math_sinh
+- Testing dsp_math_sinh
 Cases Error == -15: 5, percentage:  0.49
 Cases Error == -14: 2, percentage:  0.20
 Cases Error == -13: 4, percentage:  0.39
@@ -133,7 +133,7 @@ Maximum Negative Error: -27
 Number of values checked: 1025
 726 per thousand in one bit error
 
-- Testing lib_dsp_math_cosh
+- Testing dsp_math_cosh
 Cases Error == -15: 6, percentage:  0.59
 Cases Error == -14: 8, percentage:  0.78
 Cases Error == -13: 8, percentage:  0.78

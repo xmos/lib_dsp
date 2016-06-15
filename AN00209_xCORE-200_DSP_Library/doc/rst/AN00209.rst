@@ -8,16 +8,16 @@ Signal Processing functions.
 
 The library is split into the following modules :
 
-   * Adaptive Filters - lib_dsp_adaptive.h
-   * Filtering - lib_dsp_filters.h
-   * Basic Math - lib_dsp_math.h
-   * Matrix Math - lib_dsp_matrix.h
-   * Statistics - lib_dsp_statistics.h
-   * Vectors - lib_dsp_vector.h
-   * FFT and inverse FFT - lib_dsp_fft.h
+   * Adaptive Filters - dsp_adaptive.h
+   * Filtering - dsp_filters.h
+   * Basic Math - dsp_math.h
+   * Matrix Math - dsp_matrix.h
+   * Statistics - dsp_statistics.h
+   * Vectors - dsp_vector.h
+   * FFT and inverse FFT - dsp_fft.h
 
 The library supports variable Q formats from Q8 to Q31, using the
-macros in the following header file : lib_dsp_qformat.h.
+macros in the following header file : dsp_qformat.h.
 
 Getting Started
 ---------------

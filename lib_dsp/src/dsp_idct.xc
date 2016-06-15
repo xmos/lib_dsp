@@ -1,6 +1,6 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#include "lib_dsp_dct.h"
+#include "dsp_dct.h"
 
 /* This is a very limited inverse DCT implementation.
  */
@@ -11,7 +11,7 @@ static inline int32_t mulcos(int32_t x, int32_t cos) {
 }
 
 
-void lib_dsp_dct_inverse4(int32_t output[4], int32_t input[4]) {
+void dsp_dct_inverse4(int32_t output[4], int32_t input[4]) {
     int32_t z = input[0] >> 1;
     int32_t y1 = mulcos(input[1], 1984016189) ;
     int32_t y3 = mulcos(input[3], 1984016189);
@@ -24,7 +24,7 @@ void lib_dsp_dct_inverse4(int32_t output[4], int32_t input[4]) {
     output[3] = z - y1  + y2 - y3_;
 }
 
-void lib_dsp_dct_inverse3(int32_t output[3], int32_t input[3]) {
+void dsp_dct_inverse3(int32_t output[3], int32_t input[3]) {
     int32_t z = input[0] >> 1;
     int32_t y = mulcos(input[1], 1859775393);
     int32_t x = mulcos(input[2], 1073741824);
@@ -33,14 +33,14 @@ void lib_dsp_dct_inverse3(int32_t output[3], int32_t input[3]) {
     output[2] = -y + x + z;
 }
 
-void lib_dsp_dct_inverse2(int32_t output[2], int32_t input[2]) {
+void dsp_dct_inverse2(int32_t output[2], int32_t input[2]) {
     int32_t z = input[0] >> 1;
     int32_t s = mulcos(input[1], 1518500250);
     output[0] = z + s;
     output[1] = z - s;
 }
 
-void lib_dsp_dct_inverse1(int32_t output[1], int32_t input[1]) {
+void dsp_dct_inverse1(int32_t output[1], int32_t input[1]) {
     output[0] = input[0];
 }
 
