@@ -76,7 +76,7 @@ int32_t dsp_filters_fir
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
  *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulater with the final result shifted to the required
+ *  64-bit accumulator with the final result shifted to the required
  *  fixed-point format. Therefore overflow behavior of the 32-bit multiply
  *  operation and truncation behavior from final shifing of the accumulated
  *  multiplication results must be considered.
@@ -125,7 +125,7 @@ void dsp_filters_interpolate
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
  *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulater with the final result shifted to the required
+ *  64-bit accumulator with the final result shifted to the required
  *  fixed-point format. Therefore overflow behavior of the 32-bit multiply
  *  operation and truncation behavior from final shifing of the accumulated
  *  multiplication results must be considered.
@@ -175,7 +175,7 @@ int32_t dsp_filters_decimate
  *  The IIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
  *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulater with the final result shifted to the required fixed-point
+ *  64-bit accumulator with the final result shifted to the required fixed-point
  *  format. Therefore overflow behavior of the 32-bit multiply operation and
  *  truncation behavior from final shifing of the accumulated multiplication
  *  results must be considered.
@@ -224,7 +224,7 @@ int32_t dsp_filters_biquad
  *  The IIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
  *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulater with the final result shifted to the required fixed-point
+ *  64-bit accumulator with the final result shifted to the required fixed-point
  *  format. Therefore overflow behavior of the 32-bit multiply operation and
  *  truncation behavior from final shifing of the accumulated multiplication
  *  results must be considered.

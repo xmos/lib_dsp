@@ -44,7 +44,7 @@
  *  and 64-bit accumulation as a result of using an FIR as well as coefficient
  *  step size calculations). 
  * 
- *  Multiplication results are accumulated in 64-bit accumulater with the final
+ *  Multiplication results are accumulated in 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow
  *  behavior of the 32-bit multiply operation and truncation behavior from
  *  final shifing of the accumulated multiplication results must be considered
@@ -114,7 +114,7 @@ int32_t dsp_adaptive_lms
  *  and 64-bit accumulation as a result of using an FIR as well as coefficient
  *  step size calculations). 
  * 
- *  Multiplication results are accumulated in 64-bit accumulater with the final
+ *  Multiplication results are accumulated in 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow
  *  behavior of the 32-bit multiply operation and truncation behavior from
  *  final shifing of the accumulated multiplication results must be considered
