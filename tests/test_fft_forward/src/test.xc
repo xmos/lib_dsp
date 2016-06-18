@@ -4,7 +4,7 @@
 #include <debug_print.h>
 #include <stdlib.h>
 
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x){
@@ -21,13 +21,13 @@ void test_forward_fft(){
 
     for(unsigned t=0;t<test_count;t++){
 
-        lib_dsp_fft_complex_t f[FFT_LENGTH];
+        dsp_complex_t f[FFT_LENGTH];
         for(unsigned i=0;i<FFT_LENGTH;i++){
             f[i].re = random(x)>>DATA_SHIFT;
             f[i].im = random(x)>>DATA_SHIFT;
         }
-        lib_dsp_fft_bit_reverse(f, FFT_LENGTH);
-        lib_dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
+        dsp_fft_bit_reverse(f, FFT_LENGTH);
+        dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
 
         for(unsigned i=0;i<FFT_LENGTH;i++){
             int e = f[i].re - output[t][i].re;

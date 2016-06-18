@@ -21,28 +21,28 @@ implementation file.
 .. table:: DSP library organization
     :class: narrow
 
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Category    | Source Files         | Functions                                                     |
-  +=============+======================+===============================================================+
-  | Fixed point | lib_dsp_qformat      | Q8 through Q31 formats, fixed and floating point conversions  |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Filters     | lib_dsp_filters      | FIR, biquad, cascaded biquad, and convolution                 |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Adaptive    | lib_dsp_adaptive     | LMS and NLMS Adaptive filters                                 |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Scalar math | lib_dsp_math         | Multiply, divide, square root, exponential, natural logarithm |
-  |             |                      | trigonometric, hyperbolic                                     |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Vector math | lib_dsp_vector       | Scalar/vector add/subtract/multiply, dot product              |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Matrix math | lib_dsp_matrix       | Scalar/matrix add/subtract/multiply, inverse and transpose    |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Statistics  | lib_dsp_statistics   | Vector mean, sum-of-squares, root-mean-square, variance       |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | Design      | lib_dsp_design       | Biquad coefficient generation for various filter types        |
-  +-------------+----------------------+---------------------------------------------------------------+
-  | FFT         | lib_dsp_fft          | Forward and inverse Fast Fourier Transforms.                  |
-  +-------------+----------------------+---------------------------------------------------------------+
+  +-------------+----------------+---------------------------------------------------------------+
+  | Category    | Source Files   | Functions                                                     |
+  +=============+================+===============================================================+
+  | Fixed point | dsp_qformat    | Q8 through Q31 formats, fixed and floating point conversions  |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Filters     | dsp_filters    | FIR, biquad, cascaded biquad, and convolution                 |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Adaptive    | dsp_adaptive   | LMS and NLMS Adaptive filters                                 |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Scalar math | dsp_math       | Multiply, divide, square root, exponential, natural logarithm |
+  |             |                | trigonometric, hyperbolic                                     |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Vector math | dsp_vector     | Scalar/vector add/subtract/multiply, dot product              |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Matrix math | dsp_matrix     | Scalar/matrix add/subtract/multiply, inverse and transpose    |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Statistics  | dsp_statistics | Vector mean, sum-of-squares, root-mean-square, variance       |
+  +-------------+----------------+---------------------------------------------------------------+
+  | Design      | dsp_design     | Biquad coefficient generation for various filter types        |
+  +-------------+----------------+---------------------------------------------------------------+
+  | FFT         | dsp_fft        | Forward and inverse Fast Fourier Transforms.                  |
+  +-------------+----------------+---------------------------------------------------------------+
 
 Fixed-Point Format
 ------------------
@@ -62,7 +62,7 @@ q_format. This parameter can naively be used to specify the fixed point format f
 operands and results (if applicable) where the formats are the same for all parameters. For
 example::
 
-  result_q28 = lib_dsp_math_multiply( input1_q28, input2_q28, 28 );
+  result_q28 = dsp_math_multiply( input1_q28, input2_q28, 28 );
   
 The 'q_format' parameter, being used after one or more sequences of multiply and/or
 multiply-accumulate, is used to right-shift the 64-bit accumulator before truncating the value
@@ -79,266 +79,266 @@ bit count::
 For example::
 
   // q_format_parameter = 31 = 30 + 29 - 28
-  result_q28 = lib_dsp_math_multiply( input1_q30, input2_q29, 31 );
+  result_q28 = dsp_math_multiply( input1_q30, input2_q29, 31 );
 
   // q_format_parameter = 27 = 28 + 29 - 30
-  result_q30 = lib_dsp_math_multiply( input1_q28, input2_q29, 27 );
+  result_q30 = dsp_math_multiply( input1_q28, input2_q29, 27 );
   
 Filter Functions: Finite Impulse Response (FIR) Filter
 ------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_filters_fir
+.. doxygenfunction:: dsp_filters_fir
 
 Filter Functions: Interpolating FIR Filter
 ------------------------------------------
 
-.. doxygenfunction:: lib_dsp_filters_interpolate
+.. doxygenfunction:: dsp_filters_interpolate
 
 Filter Functions: Decimating FIR Filter
 ---------------------------------------
 
-.. doxygenfunction:: lib_dsp_filters_decimate
+.. doxygenfunction:: dsp_filters_decimate
 
 Filter Functions: Bi-Quadratic (BiQuad) IIR Filter
 --------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_filters_biquad
+.. doxygenfunction:: dsp_filters_biquad
 
 Filter Functions: Cascaded BiQuad Filter
 ----------------------------------------
 
-.. doxygenfunction:: lib_dsp_filters_biquads
+.. doxygenfunction:: dsp_filters_biquads
 
 Adaptive Filter Functions: LMS Adaptive Filter
 ----------------------------------------------
 
-.. doxygenfunction:: lib_dsp_adaptive_lms
+.. doxygenfunction:: dsp_adaptive_lms
 
 Adaptive Filter Functions: Normalized LMS Filter
 ------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_adaptive_nlms
+.. doxygenfunction:: dsp_adaptive_nlms
 
 Scalar Math Functions: Multiply
 -------------------------------
 
-.. doxygenfunction:: lib_dsp_math_multiply
+.. doxygenfunction:: dsp_math_multiply
 
 Scalar Math Functions: Square Root
 ----------------------------------
 
-.. doxygenfunction:: lib_dsp_math_squareroot
+.. doxygenfunction:: dsp_math_sqrt
 
 Scalar Math Functions: Sine
 ---------------------------
 
-.. doxygenfunction:: lib_dsp_math_sin
+.. doxygenfunction:: dsp_math_sin
 
 Scalar Math Functions: Cosine
 -----------------------------
 
-.. doxygenfunction:: lib_dsp_math_cos
+.. doxygenfunction:: dsp_math_cos
 
 Scalar Math Functions: Arctangent
 ----------------------------------
 
-.. doxygenfunction:: lib_dsp_math_atan
+.. doxygenfunction:: dsp_math_atan
 
 Scalar Math Functions: Exponential
 ----------------------------------
 
-.. doxygenfunction:: lib_dsp_math_exp
+.. doxygenfunction:: dsp_math_exp
 
 Scalar Math Functions: Natural Logarithm
 ----------------------------------------
 
-.. doxygenfunction:: lib_dsp_math_log
+.. doxygenfunction:: dsp_math_log
 
 Scalar Math Functions: Hyperbolic Sine 
 --------------------------------------
 
-.. doxygenfunction:: lib_dsp_math_sinh
+.. doxygenfunction:: dsp_math_sinh
 
 Scalar Math Functions: Hyperbolic Cosine 
 ----------------------------------------
 
-.. doxygenfunction:: lib_dsp_math_cosh
+.. doxygenfunction:: dsp_math_cosh
 
 Vector Math Functions: Minimum Value
 ------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_minimum
+.. doxygenfunction:: dsp_vector_minimum
 
 Vector Math Functions: Maximum Value
 ------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_maximum
+.. doxygenfunction:: dsp_vector_maximum
 
 Vector Math Functions: Element Negation
 ---------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_negate
+.. doxygenfunction:: dsp_vector_negate
 
 Vector Math Functions: Element Absolute Value
 ---------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_abs
+.. doxygenfunction:: dsp_vector_abs
 
 Vector Math Functions: Scalar Addition
 --------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_adds
+.. doxygenfunction:: dsp_vector_adds
 
 Vector Math Functions: Scalar Multiplication
 --------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_muls
+.. doxygenfunction:: dsp_vector_muls
 
 Vector Math Functions: Vector Addition
 --------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_addv
+.. doxygenfunction:: dsp_vector_addv
 
 Vector Math Functions: Vector Subtraction
 -----------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_subv
+.. doxygenfunction:: dsp_vector_subv
 
 Vector Math Functions: Vector Multiplication
 --------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_mulv
+.. doxygenfunction:: dsp_vector_mulv
 
 Vector Math Functions: Vector multiplication and scalar addition
 ----------------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_mulv_adds
+.. doxygenfunction:: dsp_vector_mulv_adds
 
 Vector Math Functions: Scalar multiplication and vector addition
 ----------------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_muls_addv
+.. doxygenfunction:: dsp_vector_muls_addv
 
 Vector Math Functions: Scalar multiplication and vector subtraction
 -------------------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_muls_subv
+.. doxygenfunction:: dsp_vector_muls_subv
 
 Vector Math Functions: Vector multiplication and vector addition
 ----------------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_mulv_addv
+.. doxygenfunction:: dsp_vector_mulv_addv
 
 Vector Math Functions: Vector multiplication and vector subtraction
 -------------------------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_mulv_subv
+.. doxygenfunction:: dsp_vector_mulv_subv
 
 Matrix Math Functions: Element Negation
 ---------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_negate
+.. doxygenfunction:: dsp_matrix_negate
 
 Matrix Math Functions: Scalar Addition
 --------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_adds
+.. doxygenfunction:: dsp_matrix_adds
 
 Matrix Math Functions: Scalar Multiplication
 --------------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_muls
+.. doxygenfunction:: dsp_matrix_muls
 
 Matrix Math Functions: Matrix Addition
 --------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_addm
+.. doxygenfunction:: dsp_matrix_addm
 
 Matrix Math Functions: Matrix Subtraction
 -----------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_subm
+.. doxygenfunction:: dsp_matrix_subm
 
 Matrix Math Functions: Matrix Multiplication
 --------------------------------------------
 
-.. doxygenfunction:: lib_dsp_matrix_mulm
+.. doxygenfunction:: dsp_matrix_mulm
   
 Statistics Functions: Vector Mean
 ---------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_mean
+.. doxygenfunction:: dsp_vector_mean
 
 Statistics Functions: Vector Power (Sum-of-Squares)
 ---------------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_power
+.. doxygenfunction:: dsp_vector_power
 
 Statistics Functions: Root Mean Square (RMS)
 --------------------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_rms
+.. doxygenfunction:: dsp_vector_rms
 
 Statistics Functions: Dot Product
 ---------------------------------
 
-.. doxygenfunction:: lib_dsp_vector_dotprod
+.. doxygenfunction:: dsp_vector_dotprod
 
 Filter Design Functions: Notch Filter
 -------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_notch
+.. doxygenfunction:: dsp_design_biquad_notch
 
 Filter Design Functions: Low-pass Filter
 ----------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_lowpass
+.. doxygenfunction:: dsp_design_biquad_lowpass
 
 Filter Design Functions: High-pass Filter
 -----------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_highpass
+.. doxygenfunction:: dsp_design_biquad_highpass
 
 Filter Design Functions: All-pass Filter
 ----------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_allpass
+.. doxygenfunction:: dsp_design_biquad_allpass
 
 Filter Design Functions: Band-pass Filter
 -----------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_bandpass
+.. doxygenfunction:: dsp_design_biquad_bandpass
 
 Filter Design Functions: Peaking Filter
 ---------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_peaking
+.. doxygenfunction:: dsp_design_biquad_peaking
 
 Filter Design Functions: Base Shelving Filter
 ---------------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_lowshelf
+.. doxygenfunction:: dsp_design_biquad_lowshelf
 
 Filter Design Functions: Treble Shelving Filter
 -----------------------------------------------
 
-.. doxygenfunction:: lib_dsp_design_biquad_highshelf
+.. doxygenfunction:: dsp_design_biquad_highshelf
 
 FFT functions
 -------------
 
 **Note:** The method for processing two real signals with a single complex FFT was improved.
 It now requires only half the memory. 
-The function lib_dsp_fft_split_spectrum is used to split the combined N point output of lib_dsp_fft_forward into two half-spectra of size N/2. One for each of the two real input signals.
-lib_dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spectrum that can be processed by lib_dsp_fft_inverse.
+The function dsp_fft_split_spectrum is used to split the combined N point output of dsp_fft_forward into two half-spectra of size N/2. One for each of the two real input signals.
+dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spectrum that can be processed by dsp_fft_inverse.
 
-.. doxygenfunction:: lib_dsp_fft_split_spectrum
-.. doxygenfunction:: lib_dsp_fft_merge_spectra
-.. doxygenfunction:: lib_dsp_fft_short_to_long
-.. doxygenfunction:: lib_dsp_fft_long_to_short
-.. doxygenfunction:: lib_dsp_fft_bit_reverse
-.. doxygenfunction:: lib_dsp_fft_forward
-.. doxygenfunction:: lib_dsp_fft_inverse
+.. doxygenfunction:: dsp_fft_split_spectrum
+.. doxygenfunction:: dsp_fft_merge_spectra
+.. doxygenfunction:: dsp_fft_short_to_long
+.. doxygenfunction:: dsp_fft_long_to_short
+.. doxygenfunction:: dsp_fft_bit_reverse
+.. doxygenfunction:: dsp_fft_forward
+.. doxygenfunction:: dsp_fft_inverse
 
 
 |appendix|

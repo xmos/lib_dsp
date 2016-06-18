@@ -4,10 +4,10 @@
 	.text
 
 #if defined(__XS2A__)
-	.cc_top lib_dsp_fft_split_spectrum_xs2.function
-	.globl	lib_dsp_fft_split_spectrum_xs2
+	.cc_top dsp_fft_split_spectrum_xs2.function
+	.globl	dsp_fft_split_spectrum_xs2
 	.align	4
-	.type	lib_dsp_fft_split_spectrum_xs2,@function
+	.type	dsp_fft_split_spectrum_xs2,@function
 
 #define NSTACKWORDS 4
 #define p  			 	 r0
@@ -20,9 +20,9 @@
 
 #define i   			 r11
 
-// void lib_dsp_fft_split_spectrum_xs2(fft_complex f[], unsigned N)
+// void dsp_fft_split_spectrum_xs2(fft_complex f[], unsigned N)
 
-lib_dsp_fft_split_spectrum_xs2:
+dsp_fft_split_spectrum_xs2:
 .align 8
 .issue_mode dual
 	DUALENTSP_lu6 NSTACKWORDS
@@ -68,17 +68,17 @@ lib_dsp_fft_split_spectrum_xs2:
 	ldd r6, r7, sp[1]
 	retsp NSTACKWORDS
 
-.tmp_lib_dsp_fft_split_spectrum_xs2:
-	.size	lib_dsp_fft_split_spectrum_xs2, .tmp_lib_dsp_fft_split_spectrum_xs2-lib_dsp_fft_split_spectrum_xs2
+.tmp_dsp_fft_split_spectrum_xs2:
+	.size	dsp_fft_split_spectrum_xs2, .tmp_dsp_fft_split_spectrum_xs2-dsp_fft_split_spectrum_xs2
 	.align	4
-	.cc_bottom lib_dsp_fft_split_spectrum_xs2.function
+	.cc_bottom dsp_fft_split_spectrum_xs2.function
 
-	.set	lib_dsp_fft_split_spectrum_xs2.nstackwords,NSTACKWORDS
-	.globl	lib_dsp_fft_split_spectrum_xs2.nstackwords
-	.set	lib_dsp_fft_split_spectrum_xs2.maxcores,1
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxcores
-	.set	lib_dsp_fft_split_spectrum_xs2.maxtimers,0
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxtimers
-	.set	lib_dsp_fft_split_spectrum_xs2.maxchanends,0
-	.globl	lib_dsp_fft_split_spectrum_xs2.maxchanends
+	.set	dsp_fft_split_spectrum_xs2.nstackwords,NSTACKWORDS
+	.globl	dsp_fft_split_spectrum_xs2.nstackwords
+	.set	dsp_fft_split_spectrum_xs2.maxcores,1
+	.globl	dsp_fft_split_spectrum_xs2.maxcores
+	.set	dsp_fft_split_spectrum_xs2.maxtimers,0
+	.globl	dsp_fft_split_spectrum_xs2.maxtimers
+	.set	dsp_fft_split_spectrum_xs2.maxchanends,0
+	.globl	dsp_fft_split_spectrum_xs2.maxchanends
 #endif

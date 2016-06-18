@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <xs1.h>
 #include <xclib.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 #include <stdint.h>
 
 #define TRACE_VALUES 1
@@ -40,9 +40,9 @@ int32_t do_complex_fft_and_ifft();
 
 // Array holding one complex signal or two real signals
 #if INT16_BUFFERS
-lib_dsp_fft_complex_short_t data[N_FFT_POINTS];
+dsp_complex_short_t data[N_FFT_POINTS];
 #else
-lib_dsp_fft_complex_t  data[N_FFT_POINTS];
+dsp_complex_t  data[N_FFT_POINTS];
 #endif
 
 
@@ -51,8 +51,8 @@ lib_dsp_fft_complex_t  data[N_FFT_POINTS];
  **/
 // Macros to ease the use of the sin_N and cos_N functions
 // Note: 31-clz(N) == log2(N) when N is power of two
-#define SIN(M, N) sin_N(M, 31-clz(N), lib_dsp_sine_ ## N)
-#define COS(M, N) cos_N(M, 31-clz(N), lib_dsp_sine_ ## N)
+#define SIN(M, N) sin_N(M, 31-clz(N), dsp_sine_ ## N)
+#define COS(M, N) cos_N(M, 31-clz(N), dsp_sine_ ## N)
 
 int32_t sin_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]);
 int32_t cos_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]);
@@ -178,16 +178,16 @@ int32_t do_tworeals_fft_and_ifft() {
 
         tmr :> start_time;
 #if INT16_BUFFERS
-        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        dsp_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
+        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
+        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
 #else
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_split_spectrum(data, N_FFT_POINTS);
+        dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_split_spectrum(data, N_FFT_POINTS);
 #endif
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
@@ -213,15 +213,15 @@ int32_t do_tworeals_fft_and_ifft() {
 
         tmr :> start_time;
 #if INT16_BUFFERS
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
-        lib_dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
+        dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
 #else
-        lib_dsp_fft_merge_spectra(data, N_FFT_POINTS);
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_merge_spectra(data, N_FFT_POINTS);
+        dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #endif
 
         tmr :> end_time;
@@ -231,7 +231,7 @@ int32_t do_tworeals_fft_and_ifft() {
 #endif
 
 #if PRINT_IFFT_OUTPUT
-        printf( "////// Time domain signal after lib_dsp_fft_inverse\n");
+        printf( "////// Time domain signal after dsp_fft_inverse\n");
         print_data_array();
 #endif
         printf("\n" ); // Test delimiter
@@ -306,18 +306,18 @@ int32_t do_complex_fft_and_ifft() {
         tmr :> start_time;
 
 #if INT16_BUFFERS
-        lib_dsp_fft_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
+        dsp_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
         // convert into int32_t temporary buffer
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
         // 32 bit FFT
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         // convert back into int16_t buffer
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
+        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
 #else
         // 32 bit FFT
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #endif
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
@@ -336,16 +336,16 @@ int32_t do_complex_fft_and_ifft() {
         tmr :> start_time;
 #if INT16_BUFFERS
         // convert into int32_t temporary buffer
-        lib_dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
         // 32 bit iFFT
-        lib_dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
+        dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         // convert back into int16_t buffer
-        lib_dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
+        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
 #else
         // 32 bit iFFT
-        lib_dsp_fft_bit_reverse(data, N_FFT_POINTS);
-        lib_dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+        dsp_fft_bit_reverse(data, N_FFT_POINTS);
+        dsp_fft_inverse(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #endif
         tmr :> end_time;
         cycles_taken = end_time-start_time-overhead_time;
@@ -354,7 +354,7 @@ int32_t do_complex_fft_and_ifft() {
 #endif
 
 #if PRINT_IFFT_OUTPUT
-        printf( "////// Time domain signal after lib_dsp_fft_inverse\n");
+        printf( "////// Time domain signal after dsp_fft_inverse\n");
         print_data_array();
 #endif
         printf("\n" ); // Test delimiter

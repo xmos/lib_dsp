@@ -3,15 +3,15 @@
 #ifndef __dsp_h__
 #define __dsp_h__
 
-#include <lib_dsp_adaptive.h>
-#include <lib_dsp_design.h>
-#include <lib_dsp_filters.h>
-#include <lib_dsp_matrix.h>
-#include <lib_dsp_statistics.h>
-#include <lib_dsp_math.h>
-#include <lib_dsp_qformat.h>
-#include <lib_dsp_vector.h>
-#include <lib_dsp_fft.h>
+#include <dsp_adaptive.h>
+#include <dsp_design.h>
+#include <dsp_filters.h>
+#include <dsp_matrix.h>
+#include <dsp_statistics.h>
+#include <dsp_math.h>
+#include <dsp_qformat.h>
+#include <dsp_vector.h>
+#include <dsp_fft.h>
 
 
 /* Macro to time function calls

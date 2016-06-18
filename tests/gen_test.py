@@ -58,11 +58,11 @@ def generate(storage, length_log2, shift, seed, directory):
   header.write("#define FFT_LENGTH_LOG2 "  + str(length_log2) + "\n")
   header.write("#define FFT_COUNT "  + str(fft_count) + "\n")
   header.write("#define DATA_SHIFT "  + str(shift) + "\n")
-  header.write("#define FFT_SINE_LUT lib_dsp_sine_"  + str(fft_length) + "\n")
+  header.write("#define FFT_SINE_LUT dsp_sine_"  + str(fft_length) + "\n")
   poly = 0xEB31D82E
   data = seed
 
-  header.write( "lib_dsp_fft_complex_t output[" + str(fft_count) + "][" + str(fft_length) + "] = {\n")
+  header.write( "dsp_complex_t output[" + str(fft_count) + "][" + str(fft_length) + "] = {\n")
   for t in range(fft_count):
 
   	fft_input = []

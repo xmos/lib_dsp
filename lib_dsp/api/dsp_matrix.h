@@ -17,7 +17,7 @@
  *  \code
  *  int32_t samples[8][32];
  *  int32_t result[8][32];  
- *  lib_dsp_matrix_negate( samples, result, 8, 32 );
+ *  dsp_matrix_negate( samples, result, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer/reference to source data.
@@ -26,7 +26,7 @@
  *  \param  column_count     Number of columns in input matrix.
  */
 
-void lib_dsp_matrix_negate
+void dsp_matrix_negate
 (
     const int32_t input_matrix_X[],
     int32_t       result_matrix_R[],
@@ -46,7 +46,7 @@ void lib_dsp_matrix_negate
  *  int32_t input_matrix_X[8][32];
  *  int32_t input_scalar_A = Q28( 0.333 );
  *  int32_t result_vector_R[8][32];  
- *  lib_dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
+ *  dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer/reference to source data.
@@ -56,7 +56,7 @@ void lib_dsp_matrix_negate
  *  \param  column_count     Number of columns in input and output matrices.
  */
 
-void lib_dsp_matrix_adds
+void dsp_matrix_adds
 (
     const int32_t input_matrix_X[],
     int32_t       input_scalar_A,
@@ -70,7 +70,7 @@ void lib_dsp_matrix_adds
  *  Each element of the input matrix is multiplied by a scalar value using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point
  *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``lib_dsp_math_multiply``).
+ *  (see behavior for the function ``dsp_math_multiply``).
  * 
  *  Example:
  * 
@@ -78,7 +78,7 @@ void lib_dsp_matrix_adds
  *  int32_t input_matrix_X[8][32];
  *  int32_t input_scalar_A = Q28( 0.333 );
  *  int32_t result_vector_R[8][32];  
- *  lib_dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
+ *  dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer/reference to source data X.
@@ -89,7 +89,7 @@ void lib_dsp_matrix_adds
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 
-void lib_dsp_matrix_muls
+void dsp_matrix_muls
 (
     const int32_t input_matrix_X[],
     int32_t       input_scalar_A,
@@ -111,7 +111,7 @@ void lib_dsp_matrix_muls
  *  int32_t input_matrix_X [256];
  *  int32_t input_matrix_Y [256];
  *  int32_t result_matrix_R[256];  
- *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.
@@ -121,7 +121,7 @@ void lib_dsp_matrix_muls
  *  \param  column_count     Number of columns in input and output matrices.
  */
 
-void lib_dsp_matrix_addm
+void dsp_matrix_addm
 (
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
@@ -142,7 +142,7 @@ void lib_dsp_matrix_addm
  *  int32_t input_matrix_X [256];
  *  int32_t input_matrix_Y [256];
  *  int32_t result_matrix_R[256];  
- *  lib_dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.
@@ -152,7 +152,7 @@ void lib_dsp_matrix_addm
  *  \param  column_count     Number of columns in input and output matrices.
  */
 
-void lib_dsp_matrix_subm
+void dsp_matrix_subm
 (
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
@@ -166,7 +166,7 @@ void lib_dsp_matrix_subm
  *  Elements in each of the input matrices are multiplied together using a
  *  32bit multiply 64-bit accumulate function therefore fixed-point
  *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``lib_dsp_math_multiply``). 
+ *  (see behavior for the function ``dsp_math_multiply``). 
  *  The algorithm is optimised for performance using double word load and store instructions.
  *  As a result the matrices must have an even number of rows and columns.
  * 
@@ -176,7 +176,7 @@ void lib_dsp_matrix_subm
  *  int32_t input_matrix_X[rows_X][N];
  *  int32_t input_matrix_Y[columns_Y][N]; // transposed for better memory alighment !!
  *  int32_t result_matrix_R[rows_x][columns_Y];  
- *  lib_dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
+ *  dsp_matrix_mulm( input_matrix_X, input_matrix_Y, result_matrix_R, 256, 8, 32, 28 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.
@@ -188,7 +188,7 @@ void lib_dsp_matrix_subm
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 // N == columns_X == rows_Y
-void lib_dsp_matrix_mulm
+void dsp_matrix_mulm
 (
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
@@ -208,7 +208,7 @@ void lib_dsp_matrix_mulm
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 
-void lib_dsp_matrix_transpose
+void dsp_matrix_transpose
 (
     const int32_t input_matrix_X[],
     int32_t       result_matrix_R[],

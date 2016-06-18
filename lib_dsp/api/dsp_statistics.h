@@ -20,7 +20,7 @@
  * 
  *  \code
  *  int32_t result;
- *  result = lib_dsp_vector_mean( input_vector, 256, 28 );
+ *  result = dsp_vector_mean( input_vector, 256, 28 );
  *  \endcode
  * 
  *  \param  input_vector_X  Pointer to source data array X.
@@ -28,7 +28,7 @@
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int32_t lib_dsp_vector_mean
+int32_t dsp_vector_mean
 (
     const int32_t input_vector_X[],
     int32_t       vector_length,
@@ -42,7 +42,7 @@ int32_t lib_dsp_vector_mean
  * 
  *  Since each element in the vector is squared the behavior for fixed-point
  *  multiplication should be considered (see behavior for the function
- *  ``lib_dsp_math_multiply``). Due to successive 32-bit additions being
+ *  ``dsp_math_multiply``). Due to successive 32-bit additions being
  *  accumulated using 64-bit arithmetic overflow during the summation process
  *  is unlikely. The final value, being effectively the result of a left-shift
  *  by ``q_format`` bits will potentially overflow the final fixed-point value
@@ -52,7 +52,7 @@ int32_t lib_dsp_vector_mean
  * 
  *  \code
  *  int32_t result;
- *  result = lib_dsp_vector_power( input_vector, 256, 28 );
+ *  result = dsp_vector_power( input_vector, 256, 28 );
  *  \endcode
  * 
  *  \param  input_vector_X  Pointer to source data array X.
@@ -60,7 +60,7 @@ int32_t lib_dsp_vector_mean
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int32_t lib_dsp_vector_power
+int32_t dsp_vector_power
 (
     const int32_t input_vector_X[],
     int32_t       vector_length,
@@ -75,15 +75,15 @@ int32_t lib_dsp_vector_power
  *  \code
  *  result = 0
  *  for i = 0 to N-1: result += input_vector_X[i]
- *  return lib_dsp_math_squareroot( result / vector_length )
+ *  return dsp_math_sqrt( result / vector_length )
  *  \endcode
  * 
  *  Since each element in the vector is squared the behavior for fixed-point
  *  multiplication should be considered (see behavior for the function
- *  ``lib_dsp_math_multiply``). Due to successive 32-bit additions being
+ *  ``dsp_math_multiply``). Due to successive 32-bit additions being
  *  accumulated using 64-bit arithmetic overflow during the summation
  *  process is unlikely. The squareroot of the 'sum-of-squares divided by N
- *  uses the function ``lib_dsp_math_squareroot``; see behavior for that
+ *  uses the function ``dsp_math_sqrt``; see behavior for that
  *  function. The final value, being effectively the result of a left-shift by
  *  ``q_format`` bits will potentially overflow the final fixed-point value
  *  depending on the resulting summed value and the chosen Q-format.
@@ -92,7 +92,7 @@ int32_t lib_dsp_vector_power
  * 
  *  \code
  *  int32_t result;
- *  result = lib_dsp_vector_rms( input_vector, 256, 28 );
+ *  result = dsp_vector_rms( input_vector, 256, 28 );
  *  \endcode
  * 
  *  \param  input_vector_X  Pointer to source data array X.
@@ -100,7 +100,7 @@ int32_t lib_dsp_vector_power
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int32_t lib_dsp_vector_rms
+int32_t dsp_vector_rms
 (
     const int32_t input_vector_X[],
     int32_t       vector_length,
@@ -113,7 +113,7 @@ int32_t lib_dsp_vector_rms
  * 
  *  The elements in the input vectors are multiplied before being summed
  *  therefore fixed-point multiplication behavior must be considered
- *  (see behavior for the function ``lib_dsp_math_multiply``). Due to
+ *  (see behavior for the function ``dsp_math_multiply``). Due to
  *  successive 32-bit additions being accumulated using 64-bit arithmetic
  *  overflow during the summation process is unlikely. The final value, being
  *  effectively the result of a left-shift by ``q_format`` bits will
@@ -124,7 +124,7 @@ int32_t lib_dsp_vector_rms
  * 
  *  \code
  *  int32_t result;
- *  result = lib_dsp_vector_dotprod( input_vector, 256, 28 );
+ *  result = dsp_vector_dotprod( input_vector, 256, 28 );
  *  \endcode
  * 
  *  \param  input_vector_X  Pointer to source data array X.
@@ -133,7 +133,7 @@ int32_t lib_dsp_vector_rms
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-int32_t lib_dsp_vector_dotprod
+int32_t dsp_vector_dotprod
 (
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],

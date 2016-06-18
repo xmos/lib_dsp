@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <xs1.h>
-#include <lib_dsp.h>
+#include <dsp.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -82,10 +82,10 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 
 // Array holding one complex signal or two real signals
 #if INT16_BUFFERS
-#define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_short_t
+#define SIGNAL_ARRAY_TYPE dsp_complex_short_t
 #define OUTPUT_SUM_TYPE int32_t // double precision variable to avoid overflow in addition
 #else
-#define SIGNAL_ARRAY_TYPE lib_dsp_fft_complex_t
+#define SIGNAL_ARRAY_TYPE dsp_complex_t
 #define OUTPUT_SUM_TYPE int64_t // double precision variable to avoid overflow in addition
 #endif
 
@@ -190,21 +190,21 @@ void do_fft(server interface bufswap_i input,
         for(int32_t a=0; a<NUM_SIGNAL_ARRAYS; a++) {
             // process the new buffer "in place"
     #if INT16_BUFFERS
-            lib_dsp_fft_complex_t tmp_buffer[N_FFT_POINTS];
-            lib_dsp_fft_short_to_long(tmp_buffer, buffer->data[a], N_FFT_POINTS); // convert into tmp buffer
-            lib_dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
-            lib_dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+            dsp_complex_t tmp_buffer[N_FFT_POINTS];
+            dsp_fft_short_to_long(tmp_buffer, buffer->data[a], N_FFT_POINTS); // convert into tmp buffer
+            dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
+            dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
     #if TWOREALS
-            lib_dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
+            dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
 
     #endif
-            lib_dsp_fft_long_to_short(buffer->data[a], tmp_buffer, N_FFT_POINTS); // convert from tmp buffer
+            dsp_fft_long_to_short(buffer->data[a], tmp_buffer, N_FFT_POINTS); // convert from tmp buffer
     ////// 32 bit buffers        
     #else  
-            lib_dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
-            lib_dsp_fft_forward(buffer->data[a], N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+            dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
+            dsp_fft_forward(buffer->data[a], N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
     #if TWOREALS
-            lib_dsp_fft_split_spectrum(buffer->data[a], N_FFT_POINTS);
+            dsp_fft_split_spectrum(buffer->data[a], N_FFT_POINTS);
     #endif
 
     #endif
@@ -308,7 +308,7 @@ void do_fft(server interface bufswap_i input,
 
 /** Utility functions for signal generation **/
 int32_t scaled_sin(q8_24 x) {
-   q8_24 y = lib_dsp_math_sin(x);
+   q8_24 y = dsp_math_sin(x);
 #if INT16_BUFFERS
    y >>= 10; // convert to Q14
 #else
@@ -316,7 +316,7 @@ int32_t scaled_sin(q8_24 x) {
    return y;
 }
 int32_t scaled_cos(q8_24 x) {
-   q8_24 y = lib_dsp_math_cos(x);
+   q8_24 y = dsp_math_cos(x);
 #if INT16_BUFFERS
    y >>= 10; // convert to Q14
 #else
@@ -360,7 +360,7 @@ void produce_samples(client interface bufswap_i filler,
 
         // Equation: x = 2pi * i/ppc = 2pi * ((i%ppc) / ppc))
         q8_24 factor = ((i%ppc) << 24) / ppc; // factor is always < Q24(1)
-        q8_24 x = lib_dsp_math_multiply(PI2_Q8_24, factor, 24);
+        q8_24 x = dsp_math_multiply(PI2_Q8_24, factor, 24);
 
 #if TWOREALS
         buffer->data[a][i].re = scaled_sin(x);

@@ -4,7 +4,7 @@
 #include <debug_print.h>
 #include <stdlib.h>
 
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x){
@@ -14,8 +14,8 @@ int random(unsigned &x){
 
 void test_split_and_merge(){
     unsigned x=SEED;
-    lib_dsp_fft_complex_t f[FFT_LENGTH];
-    lib_dsp_fft_complex_t g[FFT_LENGTH];
+    dsp_complex_t f[FFT_LENGTH];
+    dsp_complex_t g[FFT_LENGTH];
     unsigned test_count = 2;
     for(unsigned i=0;i<test_count;i++){
         for(unsigned i=0; i < FFT_LENGTH; i++){
@@ -25,10 +25,10 @@ void test_split_and_merge(){
             g[i].im = f[i].im;
         }
 
-        lib_dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
-        lib_dsp_fft_forward(g, FFT_LENGTH, FFT_SINE_LUT);
+        dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
+        dsp_fft_forward(g, FFT_LENGTH, FFT_SINE_LUT);
 
-        lib_dsp_fft_split_spectrum(f, FFT_LENGTH);
+        dsp_fft_split_spectrum(f, FFT_LENGTH);
 
         for(unsigned i=1;i<FFT_LENGTH/2;i++){
             int e = g[i].re - f[i].re;
@@ -71,8 +71,8 @@ void test_split_and_merge(){
             g[i].im = f[i].im;
         }
 
-        lib_dsp_fft_split_spectrum(f, FFT_LENGTH);
-        lib_dsp_fft_merge_spectra(f, FFT_LENGTH);
+        dsp_fft_split_spectrum(f, FFT_LENGTH);
+        dsp_fft_merge_spectra(f, FFT_LENGTH);
 
         for(unsigned i=0; i < FFT_LENGTH; i++){
             int e = g[i].re - f[i].re;

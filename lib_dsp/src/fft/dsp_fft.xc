@@ -2,9 +2,9 @@
 #include <xs1.h>
 #include <xclib.h>
 #include <stdint.h>
-#include "lib_dsp_fft.h"
+#include "dsp_fft.h"
 
-void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N )
+void dsp_fft_bit_reverse( dsp_complex_t pts[], uint32_t N )
 {
 #if defined(__XS2A__)
     uint32_t shift = clz(N);
@@ -24,8 +24,8 @@ void lib_dsp_fft_bit_reverse( lib_dsp_fft_complex_t pts[], uint32_t N )
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_forward_xs1 (
-    lib_dsp_fft_complex_t pts[],
+void dsp_fft_forward_xs1 (
+    dsp_complex_t pts[],
     uint32_t              N,
     const int32_t         sine[] )
 {
@@ -92,8 +92,8 @@ void lib_dsp_fft_forward_xs1 (
 }
 
 #pragma unsafe arrays
-void lib_dsp_fft_inverse_xs1 (
-    lib_dsp_fft_complex_t pts[],
+void dsp_fft_inverse_xs1 (
+    dsp_complex_t pts[],
     uint32_t              N,
     const int32_t         sine[] )
 {
@@ -153,52 +153,52 @@ void lib_dsp_fft_inverse_xs1 (
 
 #if defined(__XS2A__)
 
-extern void lib_dsp_fft_forward_xs2 (
-        lib_dsp_fft_complex_t pts[],
+extern void dsp_fft_forward_xs2 (
+        dsp_complex_t pts[],
         uint32_t              N,
         const int32_t         sine[]);
 
-extern void lib_dsp_fft_inverse_xs2 (
-        lib_dsp_fft_complex_t pts[],
+extern void dsp_fft_inverse_xs2 (
+        dsp_complex_t pts[],
         uint32_t              N,
         const int32_t         sine[]);
 
-extern void lib_dsp_fft_split_spectrum_xs2( lib_dsp_fft_complex_t pts[], uint32_t N );
+extern void dsp_fft_split_spectrum_xs2( dsp_complex_t pts[], uint32_t N );
 
-extern void lib_dsp_fft_merge_spectra_xs2( lib_dsp_fft_complex_t pts[], uint32_t N );
+extern void dsp_fft_merge_spectra_xs2( dsp_complex_t pts[], uint32_t N );
 
-extern void lib_dsp_fft_short_to_long_xs2( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], uint32_t N );
+extern void dsp_fft_short_to_long_xs2( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
 
-extern void lib_dsp_fft_long_to_short_xs2( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], uint32_t N );
+extern void dsp_fft_long_to_short_xs2( dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
 
 #endif
 
-void lib_dsp_fft_forward (
-    lib_dsp_fft_complex_t pts[],
+void dsp_fft_forward (
+    dsp_complex_t pts[],
     uint32_t              N,
     const int32_t         sine[] ){
 #if defined(__XS2A__)
-    lib_dsp_fft_forward_xs2 (pts, N, sine);
+    dsp_fft_forward_xs2 (pts, N, sine);
 #else
-    lib_dsp_fft_forward_complex_xs1 (pts, N, sine);
+    dsp_fft_forward_complex_xs1 (pts, N, sine);
 #endif
 }
 
-void lib_dsp_fft_inverse (
-    lib_dsp_fft_complex_t pts[],
+void dsp_fft_inverse (
+    dsp_complex_t pts[],
     uint32_t              N,
     const int32_t         sine[] ){
 #if defined(__XS2A__)
-    lib_dsp_fft_inverse_xs2 (pts, N, sine);
+    dsp_fft_inverse_xs2 (pts, N, sine);
 #else
-    lib_dsp_fft_inverse_xs1 (pts, N, sine);
+    dsp_fft_inverse_xs1 (pts, N, sine);
 #endif
 }
 
 
-void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], uint32_t n ){
+void dsp_fft_split_spectrum( dsp_complex_t pts[], uint32_t n ){
 #if defined(__XS2A__)
-    lib_dsp_fft_split_spectrum_xs2(pts, n);
+    dsp_fft_split_spectrum_xs2(pts, n);
 #else
     for(uint32_t i=1;i<n/2;i++){
         int32_t a_re = (pts[i].re + pts[n-i].re)/2;
@@ -221,21 +221,21 @@ void lib_dsp_fft_split_spectrum( lib_dsp_fft_complex_t pts[], uint32_t n ){
 
 
     for(uint32_t i=1;i<n/4;i++){
-        lib_dsp_fft_complex_t a = pts[n/2 + i];
-        lib_dsp_fft_complex_t b = pts[n - i];
+        dsp_complex_t a = pts[n/2 + i];
+        dsp_complex_t b = pts[n - i];
         pts[n/2 + i] = b;
         pts[n - i]  = a;
     }
 #endif
 }
 
-void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], uint32_t n ){
+void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t n ){
 #if defined(__XS2A__)
-    lib_dsp_fft_merge_spectra_xs2(pts, n);
+    dsp_fft_merge_spectra_xs2(pts, n);
 #else
     for(uint32_t i=1;i<n/4;i++){
-        lib_dsp_fft_complex_t a = pts[n/2 + i];
-        lib_dsp_fft_complex_t b = pts[n - i];
+        dsp_complex_t a = pts[n/2 + i];
+        dsp_complex_t b = pts[n - i];
         pts[n/2 + i] = b;
         pts[n - i]  = a;
     }
@@ -259,9 +259,9 @@ void lib_dsp_fft_merge_spectra( lib_dsp_fft_complex_t pts[], uint32_t n ){
 #endif
 }
 
-void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_short_t s[], uint32_t N ){
+void dsp_fft_short_to_long( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N ){
 #if defined(__XS2A__)
-    lib_dsp_fft_short_to_long_xs2(l, s, N);
+    dsp_fft_short_to_long_xs2(l, s, N);
 #else
     for(uint32_t i=0;i<n;i++){
         l[i].re = ((int)s[i].re)<<16;
@@ -270,9 +270,9 @@ void lib_dsp_fft_short_to_long( lib_dsp_fft_complex_t l[], lib_dsp_fft_complex_s
 #endif
 }
 
-void lib_dsp_fft_long_to_short( lib_dsp_fft_complex_short_t s[], lib_dsp_fft_complex_t l[], uint32_t N ){
+void dsp_fft_long_to_short( dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N ){
 #if defined(__XS2A__)
-    lib_dsp_fft_long_to_short_xs2(s, l, N);
+    dsp_fft_long_to_short_xs2(s, l, N);
 #else
     for(uint32_t i=0;i<n;i++){
         s[i].re = l[i].re>>16;

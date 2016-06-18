@@ -4,13 +4,13 @@
 
 	.text
     .issue_mode  dual
-	.globl	lib_dsp_fft_inverse_xs2
+	.globl	dsp_fft_inverse_xs2
 	.align	16
     .skip 0
-	.type	lib_dsp_fft_inverse_xs2,@function
-	.cc_top lib_dsp_fft_inverse_xs2.function,lib_dsp_fft_inverse_xs2
+	.type	dsp_fft_inverse_xs2,@function
+	.cc_top dsp_fft_inverse_xs2.function,dsp_fft_inverse_xs2
 
-lib_dsp_fft_inverse_xs2:
+dsp_fft_inverse_xs2:
 
 	dualentsp 32
     
@@ -205,17 +205,17 @@ kLoop2In:
 	retsp 32
 	
 	// RETURN_REG_HOLDER
-	.cc_bottom lib_dsp_fft_inverse_xs2.function
-	.set	lib_dsp_fft_inverse_xs2.nstackwords,32
-	.globl	lib_dsp_fft_inverse_xs2.nstackwords
-	.set	lib_dsp_fft_inverse_xs2.maxcores,1
-	.globl	lib_dsp_fft_inverse_xs2.maxcores
-	.set	lib_dsp_fft_inverse_xs2.maxtimers,0
-	.globl	lib_dsp_fft_inverse_xs2.maxtimers
-	.set	lib_dsp_fft_inverse_xs2.maxchanends,0
-	.globl	lib_dsp_fft_inverse_xs2.maxchanends
+	.cc_bottom dsp_fft_inverse_xs2.function
+	.set	dsp_fft_inverse_xs2.nstackwords,32
+	.globl	dsp_fft_inverse_xs2.nstackwords
+	.set	dsp_fft_inverse_xs2.maxcores,1
+	.globl	dsp_fft_inverse_xs2.maxcores
+	.set	dsp_fft_inverse_xs2.maxtimers,0
+	.globl	dsp_fft_inverse_xs2.maxtimers
+	.set	dsp_fft_inverse_xs2.maxchanends,0
+	.globl	dsp_fft_inverse_xs2.maxchanends
 .Ltmp0:
-	.size	lib_dsp_fft_inverse_xs2, .Ltmp0-lib_dsp_fft_inverse_xs2
+	.size	dsp_fft_inverse_xs2, .Ltmp0-dsp_fft_inverse_xs2
 
     .issue_mode  single
     
