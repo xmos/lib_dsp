@@ -314,7 +314,7 @@ Filter Design Functions: Peaking Filter
 
 .. doxygenfunction:: dsp_design_biquad_peaking
 
-Filter Design Functions: Base Shelving Filter
+Filter Design Functions: Bass Shelving Filter
 ---------------------------------------------
 
 .. doxygenfunction:: dsp_design_biquad_lowshelf
