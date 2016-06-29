@@ -82,9 +82,8 @@ int32_t dsp_vector_mean
     int32_t        vector_length,
     int32_t        q_format
 ) {
-    int32_t divide_by_N = dsp_math_divide(1, vector_length, q_format );
-    int32_t vectort_sum = dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
-    return dsp_math_multiply( divide_by_N, vectort_sum, q_format );
+    int32_t vector_sum = dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
+    return dsp_math_divide(vector_sum, (vector_length << q_format), q_format );
 }
 
 /** Vector power (sum of squares): ``R = X[0]^2 + X[N-1]^2``
@@ -197,10 +196,9 @@ int32_t dsp_vector_rms
     int32_t        vector_length,
     int32_t        q_format
 ) {
-    int32_t divide_by_N = dsp_math_divide( 1, vector_length,    q_format ); // reciprocal
     int32_t vectort_pwr = dsp_vector_power   ( input_vector_X, vector_length, q_format );
-    int32_t mean_square = dsp_math_multiply  ( divide_by_N, vectort_pwr,      q_format );
-    int32_t rt_mean_sqr = dsp_math_sqrt( mean_square); //ou ,                   q_format );
+    int32_t mean_square = dsp_math_divide  ( vectort_pwr, (vector_length << q_format),      q_format );
+    int32_t rt_mean_sqr = dsp_math_sqrt( mean_square); 
     return rt_mean_sqr;
 }
 
