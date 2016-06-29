@@ -5,7 +5,7 @@
 
 #include "stdint.h"
 
-/** Vector mean: ``R = (X[0] + X[N-1]) / N``
+/** Vector mean: ``R = (X[0] + X[1] + ... + X[N-1]) / N``
  * 
  *  This function computes the mean of the values contained within
  *  the input vector.
@@ -35,7 +35,7 @@ int32_t dsp_vector_mean
     int32_t       q_format
 );
 
-/** Vector power (sum of squares): ``R = X[0]^2 + X[N-1]^2``
+/** Vector power (sum of squares): ``R = X[0]^2 + X[1]^2 + ... + X[N-1]^2``
  * 
  *  This function computes the power (also know as the sum-of-squares) of the
  *  values contained within the input vector.
@@ -67,7 +67,7 @@ int32_t dsp_vector_power
     int32_t       q_format
 );
 
-/** Vector root mean square: ``R = ((X[0]^2 + X[N-1]^2) / N) ^ 0.5)``
+/** Vector root mean square: ``R = ((X[0]^2 + X[1]^2 + ... + X[N-1]^2) / N) ^ 0.5)``
  * 
  *  This function computes the root-mean-square (RMS) of the values contained
  *  within the input vector.
@@ -107,7 +107,7 @@ int32_t dsp_vector_rms
     int32_t       q_format
 );
 
-/** Vector dot product: ``R = X[0] * Y[0] + X[N-1] * Y[N-1]``
+/** Vector dot product: ``R = X[0] * Y[0] + X[1] * Y[1] + ... + X[N-1] * Y[N-1]``
  * 
  *  This function computes the dot-product of two equal length vectors.
  * 
