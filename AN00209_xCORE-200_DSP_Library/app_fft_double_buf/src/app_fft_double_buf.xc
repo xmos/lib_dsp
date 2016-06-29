@@ -75,8 +75,6 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define PRINT_INPUTS_AND_OUTPUTS 0
 #endif
 
-#define FIX
-
 /****/
 
 /** Declaration of Data Types and Memory Buffers **/
@@ -146,7 +144,7 @@ interface bufswap_i {
  initialized by creating a movable pointer to this buffer and then
  processing it.
 */
-#ifdef FIX
+#if !(XCC_VERSION_MAJOR >= 1403)
 static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
 #endif
 
@@ -231,7 +229,7 @@ void do_fft(server interface bufswap_i input,
         uint32_t step = NUM_CHANS/log_num_chan;
         uint shift_idx = step;
 
-#ifndef FIX
+#if (XCC_VERSION_MAJOR >= 1403)
         static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
 #endif
 
