@@ -24,7 +24,7 @@ def main(argv):
       print '                     nuttall'
       print '                     blackman-nuttall'
       print '                     blackman-harris'
-      '8=;nsys.exit(2)
+      sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
          print 'generate_window.py -o <outputfile> -w function -l length'
@@ -93,7 +93,7 @@ def main(argv):
          a2  = 0.14128
          a3  = 0.01168
          val = a0 - a1*math.cos(2*pi*n/(N-1)) + a2*math.cos(4*pi*n/(N-1))- a3*math.cos(6*pi*n/(N-1))
-      f.write('%d,\n' % int(val*0x7ffffff));
+      f.write('%d,\n' % int(val*0x7fffffff));
    f.write( '};\n')
 
    f.close();
