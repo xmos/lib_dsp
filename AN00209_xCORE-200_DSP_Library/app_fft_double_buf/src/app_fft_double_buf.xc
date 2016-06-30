@@ -51,7 +51,6 @@ swap function of the interface to synchronise with the do_fft task and swap poin
 #define NUM_CHANS 4  
 #endif 
 
-
 #ifndef N_FFT_POINTS
 // FFT Points
 #define N_FFT_POINTS 256
@@ -145,6 +144,10 @@ interface bufswap_i {
  initialized by creating a movable pointer to this buffer and then
  processing it.
 */
+#if !(XCC_VERSION_MAJOR >= 1403)
+static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
+#endif
+
 void do_fft(server interface bufswap_i input,
         multichannel_sample_block_s * initial_buffer)
 {
@@ -226,7 +229,9 @@ void do_fft(server interface bufswap_i input,
         uint32_t step = NUM_CHANS/log_num_chan;
         uint shift_idx = step;
 
+#if (XCC_VERSION_MAJOR >= 1403)
         static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
+#endif
 
     #if TWOREALS
         for(unsigned i = 0; i < N_FFT_POINTS/2; i++) {

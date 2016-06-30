@@ -5,26 +5,7 @@
 #include "dsp_vector.h"
 #include "dsp_matrix.h"
 
-/** Matrix negation: ``R[i][j] = -X[i][j]``
- * 
- *  Each negated element is computed by two's-compliment negation therefore
- *  the minimum negative fixed-point value can not be negated to generate it's
- *  corresponding maximum positive fixed-point value. For example: -Q28(-8.0)
- *  will not result in a fixed-point value representing +8.0.
- * 
- *  Example:
- * 
- *  \code
- *  int32_t samples[8][32];
- *  int32_t result[8][32];  
- *  dsp_matrix_negate( samples, result, 8, 32 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer/reference to source data.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input matrix.
- *  \param  column_count     Number of columns in input matrix.
- */
+
 
 void dsp_matrix_negate
 (
@@ -37,27 +18,7 @@ void dsp_matrix_negate
     dsp_vector_negate( input_matrix_X, result_matrix_R, row_count * column_count );
 }
 
-/** Matrix / scalar addition: ``R[i][j] = X[i][j] + A``
- * 
- *  32-bit addition is used to compute the scaler plus matrix element result.
- *  Therefore fixed-point value overflow conditions should be observed.  The
- *  resulting values are not saturated.
- * 
- *  Example:
- * 
- *  \code
- *  int32_t input_matrix_X[8][32];
- *  int32_t input_scalar_A = Q28( 0.333 );
- *  int32_t result_vector_R[8][32];  
- *  dsp_matrix_adds( input_matrix_X, scalar_matrix_A, result_matrix_R, 8, 32 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer/reference to source data.
- *  \param  input_scalar_A   Scalar value to add to each input element.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- */
+
 
 void dsp_matrix_adds
 (
@@ -76,29 +37,7 @@ void dsp_matrix_adds
     );
 }
 
-/** Matrix / scalar multiplication: ``R[i][j] = X[i][j] * A``
- * 
- *  Each element of the input matrix is multiplied by a scalar value using a
- *  32bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``dsp_math_multiply``).
- * 
- *  Example:
- * 
- *  \code
- *  int32_t input_matrix_X[8][32];
- *  int32_t input_scalar_A = Q28( 0.333 );
- *  int32_t result_vector_R[8][32];  
- *  dsp_matrix_muls( input_matrix_X, scalar_value_A, result_matrix_R, 256, 8, 32, 28 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer/reference to source data X.
- *  \param  input_scalar_A   Scalar value to multiply each element by.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- *  \param  q_format         Fixed point format (i.e. number of fractional bits).
- */
+
 
 void dsp_matrix_muls
 (
@@ -119,27 +58,7 @@ void dsp_matrix_muls
     );
 }
 
-/** Matrix / matrix addition: ``R[i][j] = X[i][j] + Y[i][j]``
- * 
- *  32-bit addition is used to compute the result for each element.
- *  Therefore fixed-point value overflow conditions should be observed.
- *  The resulting values are not saturated.
- * 
- *  Example:
- * 
- *  \code
- *  int32_t input_matrix_X [256];
- *  int32_t input_matrix_Y [256];
- *  int32_t result_matrix_R[256];  
- *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer to source data array X.
- *  \param  input_matrix_Y   Pointer to source data array Y.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- */
+
 
 void dsp_matrix_addm
 (
@@ -158,27 +77,7 @@ void dsp_matrix_addm
     );
 }
 
-/** Matrix / matrix subtraction: ``R[i][j] = X[i][j] - Y[i][j]``
- * 
- *  32-bit subtraction is used to compute the result for each element.
- *  Therefore fixed-point value overflow conditions should be observed.
- *  The resulting values are not saturated.
- * 
- *  Example:
- * 
- *  \code
- *  int32_t input_matrix_X [256];
- *  int32_t input_matrix_Y [256];
- *  int32_t result_matrix_R[256];  
- *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
- *  \endcode
- * 
- *  \param  input_matrix_X   Pointer to source data array X.
- *  \param  input_matrix_Y   Pointer to source data array Y.
- *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- */
+
 
 void dsp_matrix_subm
 (
@@ -249,14 +148,7 @@ void dsp_matrix_mulm
     }
 }
 
-/** Matrix transposition
- * 
- *  \param  input_matrix_X   Pointer/reference to source data.
- *  \param  result_matrix_R  Pointer/reference to the resulting data.
- *  \param  row_count        Number of rows in input and output matrices.
- *  \param  column_count     Number of columns in input and output matrices.
- *  \param  q_format         Fixed point format (i.e. number of fractional bits).
- */
+
 
 void dsp_matrix_transpose
 (

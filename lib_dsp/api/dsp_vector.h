@@ -418,7 +418,7 @@ void dsp_vector_mulv_addv
     int32_t       q_format
 );
 
-/** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] - Z[i]``
+/** Vector multiplication and vector subtraction: ``R[i] = X[i] * Y[i] - Z[i]``
  * 
  *  The elements in the input vectors are multiplied before being subtracted
  *  therefore fixed-point multiplication behavior must be considered (see
