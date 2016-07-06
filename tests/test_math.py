@@ -9,4 +9,4 @@ def runtest():
      
     xmostest.run_on_simulator(resources['xsim'],
                               '../AN00209_xCORE-200_DSP_Library/app_math/bin/app_math.xe',
-                              tester=tester)
+                              tester=tester, timeout=1200)
