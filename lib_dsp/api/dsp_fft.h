@@ -67,7 +67,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t N );
  * \param[in]     s   Array of dsp_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_short_to_long( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
+void dsp_fft_short_to_long( dsp_complex_t l[], const dsp_complex_short_t s[], uint32_t N );
 
 /** This function copies an array of dsp_complex_t elements to an array of an equal
  * number of dsp_complex_short_t elements.
@@ -76,7 +76,7 @@ void dsp_fft_short_to_long( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t
  * \param[in]     l   Array of dsp_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_long_to_short( dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
+void dsp_fft_long_to_short( dsp_complex_short_t s[], const dsp_complex_t l[], uint32_t N );
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves dsp_fft_bit_reverse() followed by
