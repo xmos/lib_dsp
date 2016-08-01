@@ -156,10 +156,9 @@ int32_t dsp_filters_decimate
  *  The function operates on a single sample of input and output data (i.e. and
  *  each call to the function processes one sample).
  * 
- *  The IIR filter algorithm is based upon a sequence of multiply-accumulate
- *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
- *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[i]=x[n]*b[0]+x[n-1]*b[1]+x[n-2]*b2+x[n-1]*a[1]+x[n-2]*a[2]``
+ *  The IIR filter algorithm executes a difference equation on current and past input values x 
+ *  and past output values y:
+ *  ``y[i] = x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b2 + y[n-1]*a[1] + y[n-2]*a[2]``
  * 
  *  The filter coefficients are stored in forward order (e.g. ``b0,b1,b2,a1,a2``).
  * 
@@ -201,10 +200,9 @@ int32_t dsp_filters_biquad
  *  The function operates on a single sample of input and output data
  * (i.e. and each call to the function processes one sample).
  * 
- *  The IIR filter algorithm is based upon a sequence of multiply-accumulate
- *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
- *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b[0]+x[n-1]*b[1]+x[n-2]*b2+x[n-1]*a[1]+x[n-2]*a[2]``
+ *  The IIR filter algorithm executes a difference equation on current and past input values x 
+ *  and past output values y:
+ *  ``y[i] = x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b2 + y[n-1]*a[1] + y[n-2]*a[2]``
  * 
  *  The filter coefficients are stored in forward order
  *  (e.g. ``section1:b0,b1,b2,a1,a2,sectionN:b0,b1,b2,a1,a2``).
