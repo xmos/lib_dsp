@@ -43,8 +43,8 @@
  *                          as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data      Pointer to filter state data array of length N.
  *                          Must be initialized at startup to all zeros.
- *  \param  tap_count       Filter tap count (N = ``tap_count`` = filter order + 1).
- *  \param q_format         Fixed point format (i.e. number of fractional bits).
+ *  \param  num_taps        Number of filter taps (N = ``num_taps`` = filter order + 1).
+ *  \param  q_format        Fixed point format (i.e. number of fractional bits).
  *  \returns                The resulting filter output sample.
  */
  
@@ -53,7 +53,7 @@ int32_t dsp_filters_fir
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       tap_count,
+    int32_t       num_taps,
     int32_t       q_format
 );
 
@@ -89,7 +89,7 @@ int32_t dsp_filters_fir
  *                         where M = N-1
  *  \param state_data      Pointer to filter state data array of length N.
  *                         Must be initialized at startup to all zeros.
- *  \param  tap_count      Filter tap count (N = ``tap_count`` = filter order + 1).
+ *  \param num_taps        Number of filter taps (N = ``num_taps`` = filter order + 1).
  *  \param interp_factor   The interpolation factor/index (i.e. the up-sampling ratio).
  *                         The interpolation factor/index can range from 2 to 16.
  *  \param output_samples  The resulting interpolated samples.
@@ -101,7 +101,7 @@ void dsp_filters_interpolate
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       tap_count,
+    int32_t       num_taps,
     int32_t       interp_factor,
     int32_t       output_samples[],
     int32_t       q_format
@@ -135,7 +135,7 @@ void dsp_filters_interpolate
  *                         as ``[b0,b1,b2,bN-1]``.
  *  \param  state_data     Pointer to filter state data array of length N.
  *                         Must be initialized at startup to all zeros.
- *  \param  tap_count      Filter tap count (N = tap_count = filter order + 1).
+ *  \param  num_taps       Number of filter taps (N = num_taps = filter order + 1).
  *  \param  decim_factor   The decimation factor/index (i.e. the down-sampling ratio).
  *  \param  q_format       Fixed point format (i.e. number of fractional bits).
  *  \returns               The resulting decimated sample.
@@ -146,7 +146,7 @@ int32_t dsp_filters_decimate
     int32_t       input_samples[],
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       tap_count,
+    int32_t       num_taps,
     int32_t       decim_factor,
     int32_t       q_format
 );

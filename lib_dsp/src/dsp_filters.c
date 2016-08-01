@@ -14,13 +14,13 @@ int32_t dsp_filters_fir
     int32_t        input_sample,
     const int32_t* filter_coeffs,
     int32_t*       state_data,
-    int32_t        tap_count,
+    int32_t        num_taps,
     int32_t        q_format
 ) {
     int32_t ah = 0, b0, b1, s0 = input_sample, s1, s2, s3;
     uint32_t al = 1 << (q_format-1);
     
-    while( tap_count >= 20 )
+    while( num_taps >= 20 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(b1),"=r"(b0):"r"(filter_coeffs));
         asm("ldd %0,%1,%2[0]":"=r"(s2),"=r"(s1):"r"(state_data));
@@ -82,9 +82,9 @@ int32_t dsp_filters_fir
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b0),"r"(s2),"0"(ah),"1"(al));
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(b1),"r"(s3),"0"(ah),"1"(al));
         
-        tap_count -= 20; filter_coeffs += 20; state_data += 20;
+        num_taps -= 20; filter_coeffs += 20; state_data += 20;
     }
-    switch( tap_count )
+    switch( num_taps )
     {
         case 19:
         
@@ -1051,12 +1051,12 @@ int32_t dsp_filters_decimate
     int32_t       input_samples[],
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       tap_count,
+    int32_t       num_taps,
     int32_t       decim_factor,
     int32_t       q_format
 ) {
     int32_t  output;
-    int32_t* dst = state_data + tap_count - 1;
+    int32_t* dst = state_data + num_taps - 1;
     int32_t* src = dst - (decim_factor-1);
     
     /*
@@ -1066,8 +1066,8 @@ int32_t dsp_filters_decimate
     b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 *  ?  ?  ?  ?  ?  ?  ?  ?  ?  ? x0 x1 -> y0
     */
 
-    output = dsp_filters_fir( input_samples[0], filter_coeffs, state_data, tap_count, q_format );
-    for( int32_t i = 0; i < tap_count - (decim_factor-1); ++i ) *dst-- = *src--;
+    output = dsp_filters_fir( input_samples[0], filter_coeffs, state_data, num_taps, q_format );
+    for( int32_t i = 0; i < num_taps - (decim_factor-1); ++i ) *dst-- = *src--;
     for( int32_t i = 0; i < decim_factor-1; ++i ) state_data[i] = input_samples[i+1];
     return output;    
 }
