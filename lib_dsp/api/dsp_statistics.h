@@ -1,9 +1,39 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_STATISTICS
-#define LIB_DSP_STATISTICS
+#ifndef DSP_STATISTICS_H_
+#define DSP_STATISTICS_H_
 
 #include "stdint.h"
+
+/** Vector absolute sum: ``R = (abs(X[0]) + abs(X[1]) + ... + abs(X[N-1])``
+ * 
+ *  This function computes the absolute sum of all vector elements
+ * 
+ *  Due to successive 32-bit additions being accumulated using 64-bit
+ *  arithmetic overflow during the summation process is unlikely. The final
+ *  value, being effectively the result of a left-shift by ``q_format`` bits
+ *  will potentially overflow the final fixed-point value depending on the
+ *  resulting summed value and the chosen Q-format.
+ * 
+ *  Example:
+ * 
+ *  \code
+ *  int32_t result;
+ *  result = dsp_vector_abs_sum( input_vector, 256, 28 );
+ *  \endcode
+ * 
+ *  \param  input_vector_X  Pointer to source data array X.
+ *  \param  vector_length   Length of the input vector.
+ *  \param  q_format        Fixed point format (i.e. number of fractional bits).
+ */
+
+int32_t dsp_vector_abs_sum
+(
+    const int32_t* input_vector_X,
+    int32_t        vector_length,
+    int32_t        q_format
+);
+
 
 /** Vector mean: ``R = (X[0] + X[1] + ... + X[N-1]) / N``
  * 
