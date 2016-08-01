@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_TRANSFORMS
-#define LIB_DSP_TRANSFORMS
+#ifndef DSP_TRANSFORMS_H_
+#define DSP_TRANSFORMS_H_
 
 #include <stdint.h>
 
@@ -80,8 +80,8 @@ void dsp_fft_long_to_short( dsp_complex_short_t s[], const dsp_complex_t l[], ui
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves dsp_fft_bit_reverse() followed by
- * dsp_fft_forward_complex(), and for an inverse FFT it involves dsp_fft_bit_reverse() followed
- * by dsp_fft_inverse_complex(). In some cases bit reversal can be avoided, for example
+ * dsp_fft_forward(), and for an inverse FFT it involves dsp_fft_bit_reverse() followed
+ * by dsp_fft_inverse(). In some cases bit reversal can be avoided, for example
  * when computing a convolution.
  *
  * \param[in,out] pts   Array of dsp_complex_t elements.

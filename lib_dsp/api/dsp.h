@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef __dsp_h__
-#define __dsp_h__
+#ifndef DSP_H_
+#define DSP_H_
 
 #include <dsp_adaptive.h>
 #include <dsp_design.h>

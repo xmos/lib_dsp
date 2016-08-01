@@ -1,9 +1,11 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_MATRIX
-#define LIB_DSP_MATRIX
+#ifndef DSP_MATRIX_H_
+#define DSP_MATRIX_H_
 
 #include "stdint.h"
+
+
 
 /** Matrix negation: ``R[i][j] = -X[i][j]``
  * 
@@ -22,8 +24,8 @@
  * 
  *  \param  input_matrix_X   Pointer/reference to source data.
  *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  row_count        Number of rows in input matrix.
- *  \param  column_count     Number of columns in input matrix.
+ *  \param  row_count        Number of rows in input and output matrices.
+ *  \param  column_count     Number of columns in input and output matrices.
  */
 
 void dsp_matrix_negate
@@ -108,10 +110,10 @@ void dsp_matrix_muls
  *  Example:
  * 
  *  \code
- *  int32_t input_matrix_X [256];
- *  int32_t input_matrix_Y [256];
+ *  int32_t input_matrix_X [256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_matrix_Y [256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_matrix_R[256];  
- *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  dsp_matrix_addm( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.
@@ -139,8 +141,8 @@ void dsp_matrix_addm
  *  Example:
  * 
  *  \code
- *  int32_t input_matrix_X [256];
- *  int32_t input_matrix_Y [256];
+ *  int32_t input_matrix_X [256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_matrix_Y [256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_matrix_R[256];  
  *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
@@ -182,9 +184,9 @@ void dsp_matrix_subm
  *  \param  input_matrix_X   Pointer to source data array X.
  *  \param  input_matrix_Y   Pointer to source data array Y. 
  *  \param  result_matrix_R  Pointer to the resulting 2-dimensional data array.
- *  \param  rows_X           Number of rows in input matrix X. Must be even.
- *  \param  cols_Y           Number of columns input matrix Y. Must be even.
- *  \param  cols_X_rows_Y    Number of columns in input matrix X == rows in input matrix Y. Must be even.
+ *  \param  rows_X           Number of rows in input matrix X. Must be even or will trap.
+ *  \param  cols_Y           Number of columns input matrix Y. Must be even or will trap.
+ *  \param  cols_X_rows_Y    Number of columns in input matrix X == rows in input matrix Y. Must be even or will trap.
  *  \param  q_format         Fixed point format (i.e. number of fractional bits).
  */
 // N == columns_X == rows_Y

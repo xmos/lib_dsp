@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_MATH
-#define LIB_DSP_MATH
+#ifndef DSP_MATH_H_
+#define DSP_MATH_H_
 
 #include "xccompat.h"
 #include "stdint.h"

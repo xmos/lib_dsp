@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_DCT
-#define LIB_DSP_DCT
+#ifndef DSP_DCT_H_
+#define DSP_DCT_H_
 
 #include "stdint.h"
 

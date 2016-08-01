@@ -1,12 +1,12 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_FILTERS
-#define LIB_DSP_FILTERS
+#ifndef DSP_FILTERS_H_
+#define DSP_FILTERS_H_
 
 #include "stdint.h"
 
-#define LIB_DSP_NUM_COEFFS_PER_BIQUAD  5  // Number of coefficients per biquad
-#define LIB_DSP_NUM_STATES_PER_BIQUAD  4  // Number of state values per biquad
+#define DSP_NUM_COEFFS_PER_BIQUAD 5  // Number of coefficients per biquad
+#define DSP_NUM_STATES_PER_BIQUAD 4  // Number of state values per biquad
 
 /** This function implements a Finite Impulse Response (FIR) filter.
  *  
@@ -25,7 +25,7 @@
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
  *  \code
- *  int32_t filter_coeff[5] = { Q28(0.5),Q(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
+ *  int32_t filter_coeff[5] = { Q28(0.5),Q28(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
  *  int32_t filter_state[4] = { 0, 0, 0, 0 };
  *  int32_t result = dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
  *  \endcode
@@ -39,8 +39,8 @@
  *
  *  \param  input_sample    The new sample to be processed.
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
- *                          as ``[b0,b1,b2,bN-1]``.
- *  \param  state_data      Pointer to filter state data array of length N.
+ *                          as ``[b0,b1,b2,...,bN-1]``.
+ *  \param  state_data      Pointer to filter state data array of length N-1.
  *                          Must be initialized at startup to all zeros.
  *  \param  num_taps        Number of filter taps (N = ``num_taps`` = filter order + 1).
  *  \param  q_format        Fixed point format (i.e. number of fractional bits).
@@ -78,11 +78,11 @@ int32_t dsp_filters_fir
  * 
  *  \param input_sample    The new sample to be processed.
  *  \param filter_coeffs   Pointer to FIR coefficients array arranged as:
- *                         ``hM,h(1L+M),h(2L+M),h((N-1)L+M),``
- *                         ``h1,h(1L+1),h(2L+1),h((N-1)L+1),``
- *                         ``h0,h(1L+0),h(2L+0),h((N-1)L+0),``
+ *                         ``bM,b(1L+M),b(2L+M),b((N-1)L+M),``
+ *                         ``b1,b(1L+1),b(2L+1),b((N-1)L+1),``
+ *                         ``b0,b(1L+0),b(2L+0),b((N-1)L+0),``
  *                         where M = N-1
- *  \param state_data      Pointer to filter state data array of length N.
+ *  \param state_data      Pointer to filter state data array of length N-1.
  *                         Must be initialized at startup to all zeros.
  *  \param num_taps        Number of filter taps (N = ``num_taps`` = filter order + 1).
  *  \param interp_factor   The interpolation factor/index (i.e. the up-sampling ratio).
@@ -123,11 +123,12 @@ void dsp_filters_interpolate
  *  64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
+ *  
  * 
  *  \param  input_samples  The new samples to be decimated.
  *  \param  filter_coeffs  Pointer to FIR coefficients array arranged
- *                         as ``[b0,b1,b2,bN-1]``.
- *  \param  state_data     Pointer to filter state data array of length N.
+ *                         as ``[b0,b1,b2,...,bN-1]``.
+ *  \param  state_data     Pointer to filter state data array of length N-1.
  *                         Must be initialized at startup to all zeros.
  *  \param  num_taps       Number of filter taps (N = num_taps = filter order + 1).
  *  \param  decim_factor   The decimation factor/index (i.e. the down-sampling ratio).
@@ -160,8 +161,8 @@ int32_t dsp_filters_decimate
  *  represented in Q28 fixed-point format:
  * 
  *  \code
- *  int32_t filter_coeff[5] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int32_t filter_state[4] = { 0, 0, 0, 0 };
+ *  int32_t filter_coeff[DSP_NUM_COEFFS_PER_BIQUAD] = { Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
+ *  int32_t filter_state[DSP_NUM_STATES_PER_BIQUAD] = { 0, 0, 0, 0 };
  *  int32_t result = dsp_biquad( sample, filter_coeff, filter_state, 28 );
  *  \endcode
  * 
@@ -171,6 +172,7 @@ int32_t dsp_filters_decimate
  *  64-bit accumulator.
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
+ *
  *
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array arranged as ``[b0,b1,b2,a1,a2]``.
@@ -183,8 +185,8 @@ int32_t dsp_filters_decimate
 int32_t dsp_filters_biquad
 (
     int32_t       input_sample,
-    const int32_t filter_coeffs[LIB_DSP_NUM_COEFFS_PER_BIQUAD],
-    int32_t       state_data   [LIB_DSP_NUM_STATES_PER_BIQUAD],
+    const int32_t filter_coeffs[DSP_NUM_COEFFS_PER_BIQUAD],
+    int32_t       state_data   [DSP_NUM_STATES_PER_BIQUAD],
     int32_t       q_format
 );
 
@@ -204,11 +206,12 @@ int32_t dsp_filters_biquad
  *  represented in Q28 fixed-point format:
  *   
  *  \code
- *  int32_t filter_coeff[20] = { Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
- *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
- *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
- *                           Q28(+0.5), Q(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
- *  int32_t filter_state[16] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
+ *  int32_t filter_coeff[4*DSP_NUM_COEFFS_PER_BIQUAD] = { 
+ *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
+ *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
+ *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
+ *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
+ *  int32_t filter_state[4*DSP_NUM_STATES_PER_BIQUAD] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
  *  int32_t result = dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
  *  \endcode
  * 

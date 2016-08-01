@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_QFORMAT
-#define LIB_DSP_QFORMAT
+#ifndef DSP_QFORMAT_H_
+#define DSP_QFORMAT_H_
 
 
 /** These Macros can be used to parameterize the conversion macros.

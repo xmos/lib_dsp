@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_DESIGN
-#define LIB_DSP_DESIGN
+#ifndef DSP_DESIGN_H_
+#define DSP_DESIGN_H_
 
 #include "stdint.h"
 
@@ -162,7 +162,7 @@ void dsp_design_biquad_bandpass
  * 
  *  \code
  *  int32_t coeffs[5];
- *  dsp_design_biquad_notch( 0.25, 0.707, coeffs, 28 );
+ *  dsp_design_biquad_peaking( 0.25, 0.707, 3.0, coeff[5], 28 );
  *  \endcode
  *
  *  \param  filter_frequency   Filter center frequency normalized to the sampling frequency.
@@ -228,7 +228,7 @@ void dsp_design_biquad_lowshelf
  * 
  *  \code
  *  int32_t coeffs[5];
- *  dsp_design_biquad_lowshelf( 0.25, 0.707, +6.0, coeffs, 28 );
+ *  dsp_design_biquad_highshelf( 0.25, 0.707, +6.0, coeffs, 28 );
  *  \endcode
  *
  *  \param  filter_frequency   Filter frequency (+3db or -3db point) normalized to Fs.

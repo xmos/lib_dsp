@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_VECTOR
-#define LIB_DSP_VECTOR
+#ifndef DSP_VECTOR_H_
+#define DSP_VECTOR_H_
 
 #include <stdint.h>
 
@@ -14,7 +14,7 @@
  * 
  *  \code 
  *  int32_t samples[256];
- *  int32_t result = dsp_vector_minimum( samples, 256 );
+ *  int32_t index = dsp_vector_minimum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -37,7 +37,7 @@ int32_t dsp_vector_minimum
  * 
  *  \code 
  *  int32_t samples[256];
- *  int32_t result = dsp_vector_maximum( samples, 256 );
+ *  int32_t index = dsp_vector_maximum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -53,8 +53,8 @@ int32_t dsp_vector_maximum
 
 /** Vector negation: ``R[i] = -X[i]``
  *
- *  This function computes the negative value for each input element and sets
- *  the corresponding result element to its negative value.
+ *  This function sets each result element to the negative value of the
+ *  corresponding input element.
  *
  *  Each negated element is computed by twos-compliment negation therefore the
  *  minimum negative fixed-point value can not be negated to generate its
@@ -64,7 +64,7 @@ int32_t dsp_vector_maximum
  *  Example:
  *
  *  \code 
- *  int32_t samples[256];
+ *  int32_t samples[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result[256];
  *  dsp_vector_negate( samples, result, 256 );
  *  \endcode 
@@ -83,13 +83,13 @@ void dsp_vector_negate
 
 /** Vector absolute value: ``R[i] = |X[i]|``
  * 
- *  Set each element of the result vector to the absolute value of the
+ *  This function sets each element of the result vector to the absolute value of the
  *  corresponding input vector element.
  *
  *  Example:
  * 
  *  \code 
- *  int32_t samples[256];
+ *  int32_t samples[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result[256];
  *  dsp_vector_abs( samples, result, 256 );
  *  \endcode 
@@ -116,14 +116,14 @@ void dsp_vector_abs
  * 
  *  This function adds a scalar value to each vector element.
  *
- *  32-bit addition is used to compute the scaler plus vector element result.
+ *  32-bit addition is used to compute the scalar plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed.  The
  *  resulting values are not saturated.
  * 
  *  Example:
  * 
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );  
  *  int32_t result_vector_R[256];
  *  dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
@@ -153,10 +153,10 @@ void dsp_vector_adds
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );  
  *  int32_t result_vector_R[256];
- *  dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
+ *  dsp_vector_muls( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
  *  \param  input_vector_X    Pointer/reference to source data array X.
@@ -185,8 +185,8 @@ void dsp_vector_muls
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, -1, -2, -3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_addv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
@@ -214,8 +214,8 @@ void dsp_vector_addv
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, -1, -2, -3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_subv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
@@ -243,8 +243,8 @@ void dsp_vector_subv
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_mulv( input_vector_X, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
@@ -275,8 +275,8 @@ void dsp_vector_mulv
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );
  *  int32_t result_vector_R[256];  
  *  dsp_vector_mulv_adds( input_vector_X, input_vector_Y, scalar_value_A, result_vector_R, 256, 28 );
@@ -313,9 +313,9 @@ void dsp_vector_mulv_adds
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_vector_R[256];
  *  dsp_vector_muls_addv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 

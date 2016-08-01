@@ -17,7 +17,7 @@ int32_t dsp_adaptive_lms
     int32_t* error_sample,
     int32_t* filter_coeffs,
     int32_t* state_data,
-    int32_t  tap_count,
+    int32_t  num_taps,
     int32_t  step_size,
     int32_t  q_format
 ) {
@@ -26,7 +26,7 @@ int32_t dsp_adaptive_lms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = dsp_filters_fir( source_sample, filter_coeffs, state_data, num_taps, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -37,7 +37,7 @@ int32_t dsp_adaptive_lms
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
     mu_err = dsp_math_multiply( *error_sample, step_size, q_format );
-    dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, tap_count, q_format );
+    dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, num_taps, q_format );
         
     return output_sample;
 }
@@ -51,7 +51,7 @@ int32_t dsp_adaptive_nlms
     int32_t* error_sample,
     int32_t* filter_coeffs,
     int32_t* state_data,
-    int32_t  tap_count,
+    int32_t  num_taps,
     int32_t  step_size,
     int32_t  q_format
 ) {
@@ -60,7 +60,7 @@ int32_t dsp_adaptive_nlms
     // Output signal y[n] is computed via standard FIR filter:
     // y[n] = b[0] * x[n] + b[1] * x[n-1] + b[2] * x[n-2] + ...+ b[N-1] * x[n-N+1]
 
-    output_sample = dsp_filters_fir( source_sample, filter_coeffs, state_data, tap_count, q_format );
+    output_sample = dsp_filters_fir( source_sample, filter_coeffs, state_data, num_taps, q_format );
     
     // Error equals difference between reference and filter output:
     // e[n] = d[n] - y[n]
@@ -68,7 +68,7 @@ int32_t dsp_adaptive_nlms
     *error_sample = reference_sample - output_sample;
     
     // Compute the instantaneous enegry: E = x[n]^2 + x[n-1]^2 + ... + x[n-N+1]^2
-    energy = dsp_vector_power( state_data, tap_count, q_format );
+    energy = dsp_vector_power( state_data, num_taps, q_format );
     //printf( "E = %08x %f\n", energy, F31(energy) );
     
     // adjustment = error * mu / energy
@@ -86,7 +86,7 @@ int32_t dsp_adaptive_nlms
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, tap_count, q_format );
+    dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, num_taps, q_format );
         
     return output_sample;
 }
