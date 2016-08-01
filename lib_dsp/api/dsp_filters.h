@@ -14,13 +14,13 @@
  *  each call to the function processes one sample).
  *
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
- *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
+ *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
+ *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
  *
  *  The parameter ``filter_coeffs`` points to a coefficient array of size
  *  N = ``num_taps``. The filter coefficients are stored in forward order
- *  (e.g. ``h[0],h[1],h[N-1]``).
+ *  (e.g. ``b[0],b[1],...,b[N-1]``).
  *
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
@@ -65,13 +65,13 @@ int32_t dsp_filters_fir
  *  and results in ``interp_factor`` output samples).
  * 
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
- *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
+ *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
+ *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``h[0],h[1],h[N-1]``).
+ *  are stored in forward order (e.g. ``b[0],b[1],...,b[N-1]``).
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
@@ -114,13 +114,13 @@ void dsp_filters_interpolate
  *  ``decim_factor`` samples and results in one sample).
  * 
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
- *  (MAC) operations. Each filter coefficient ``h[i]`` is multiplied by a state
+ *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*h[0]+x[n-1]*h[1]+x[n-2]*h[2]+x[n-N+1]*h[N-1]``
+ *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``h[0],h[1],h[N-1]``).
+ *  are stored in forward order (e.g. ``b[0],b[1],...,b[N-1]``).
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
