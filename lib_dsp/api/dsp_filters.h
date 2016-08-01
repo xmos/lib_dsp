@@ -32,11 +32,10 @@
  *
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
- *  coeffient and state data pair. Multiplication results
- *  are accumulated in 64-bit accumulator with the final result shifted
- *  to the required fixed-point format. Therefore overflow behavior of
- *  the 32-bit multiply operation and truncation behavior from final shifing
- *  of the accumulated multiplication results must be considered.
+ *  coeffient and state data pair. 
+ *  Multiplication results are accumulated in a 64-bit accumulator. 
+ *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
+ *  given the fixed-point format and finally shifted right by ``q_format`` bits.
  *
  *  \param  input_sample    The new sample to be processed.
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
@@ -73,13 +72,9 @@ int32_t dsp_filters_fir
  *  The filter coefficients
  *  are stored in forward order (e.g. ``b[0],b[1],...,b[N-1]``).
  * 
- *  The FIR algorithm involves multiplication between 32-bit filter
- *  coefficients and 32-bit state data producing a 64-bit result for each
- *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulator with the final result shifted to the required
- *  fixed-point format. Therefore overflow behavior of the 32-bit multiply
- *  operation and truncation behavior from final shifing of the accumulated
- *  multiplication results must be considered.
+ *  Multiplication results are accumulated in a 64-bit accumulator. 
+ *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
+ *  given the fixed-point format and finally shifted right by ``q_format`` bits.
  * 
  *  \param input_sample    The new sample to be processed.
  *  \param filter_coeffs   Pointer to FIR coefficients array arranged as:
@@ -124,11 +119,10 @@ void dsp_filters_interpolate
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
- *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulator with the final result shifted to the required
- *  fixed-point format. Therefore overflow behavior of the 32-bit multiply
- *  operation and truncation behavior from final shifing of the accumulated
- *  multiplication results must be considered.
+ *  coefficient and state data pair. Multiplication results are accumulated in a
+ *  64-bit accumulator. 
+ *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
+ *  given the fixed-point format and finally shifted right by ``q_format`` bits.
  * 
  *  \param  input_samples  The new samples to be decimated.
  *  \param  filter_coeffs  Pointer to FIR coefficients array arranged
@@ -173,11 +167,10 @@ int32_t dsp_filters_decimate
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
- *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulator with the final result shifted to the required fixed-point
- *  format. Therefore overflow behavior of the 32-bit multiply operation and
- *  truncation behavior from final shifing of the accumulated multiplication
- *  results must be considered.
+ *  coefficient and state data pair. Multiplication results are accumulated in a
+ *  64-bit accumulator.
+ *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
+ *  given the fixed-point format and finally shifted right by ``q_format`` bits.
  *
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array arranged as ``[b0,b1,b2,a1,a2]``.
@@ -221,11 +214,10 @@ int32_t dsp_filters_biquad
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
- *  coefficient and state data pair. Multiplication results are accumulated in
- *  64-bit accumulator with the final result shifted to the required fixed-point
- *  format. Therefore overflow behavior of the 32-bit multiply operation and
- *  truncation behavior from final shifing of the accumulated multiplication
- *  results must be considered.
+ *  coefficient and state data pair. Multiplication results are accumulated in a
+ *  64-bit accumulator.
+ *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
+ *  given the fixed-point format and finally shifted right by ``q_format`` bits.
  * 
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array for all BiQuad sections.
