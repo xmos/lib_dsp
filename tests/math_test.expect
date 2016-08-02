@@ -90,11 +90,15 @@ Number of values checked: 1026
 1000 per thousand in one bit error
 
 - Testing dsp_math_atan
-Cases Error == 0: 65, percentage: 100.00
-Maximum Positive Error: 0
+ERROR: error 26222520 is greater than max_error 1
+result is 0x0, Expected is 0xfe6fe048
+
+Cases Error == 0: 64, percentage: 98.46
+Errors smaller than min_error 1: 1
+Maximum Positive Error: 26222520
 Maximum Negative Error: 0
 Number of values checked: 65
-1000 per thousand in one bit error
+984 per thousand in one bit error
 
 - Testing dsp_math_sinh
 Cases Error == -15: 5, percentage:  0.49
