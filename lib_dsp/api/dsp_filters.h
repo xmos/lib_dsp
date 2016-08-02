@@ -16,11 +16,11 @@
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
+ *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  *
  *  The parameter ``filter_coeffs`` points to a coefficient array of size
  *  N = ``num_taps``. The filter coefficients are stored in forward order
- *  (e.g. ``b[0],b[1],...,b[N-1]``).
+ *  (e.g. ``b0,b1,...,bN-1``).
  *
  *  The following example shows a five-tap (4th order) FIR filter with samples
  *  and coefficients represented in Q28 fixed-point format.
@@ -66,11 +66,11 @@ int32_t dsp_filters_fir
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
+ *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``b[0],b[1],...,b[N-1]``).
+ *  are stored in forward order (e.g. ``b0,b1,...,bN-1``).
  * 
  *  Multiplication results are accumulated in a 64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
@@ -111,11 +111,11 @@ void dsp_filters_interpolate
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
  *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b[2] + ... + x[n-N+1]*b[N-1]``
+ *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
- *  are stored in forward order (e.g. ``b[0],b[1],...,b[N-1]``).
+ *  are stored in forward order (e.g. ``b0,b1,...,bN-1``).
  * 
  *  The FIR algorithm involves multiplication between 32-bit filter
  *  coefficients and 32-bit state data producing a 64-bit result for each
@@ -153,9 +153,9 @@ int32_t dsp_filters_decimate
  * 
  *  The IIR filter algorithm executes a difference equation on current and past input values x 
  *  and past output values y:
- *  ``y[i] = x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b2 + y[n-1]*a[1] + y[n-2]*a[2]``
+ *  ``y[n] = x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + y[n-1]*-a1 + y[n-2]*-a2``
  * 
- *  The filter coefficients are stored in forward order (e.g. ``b0,b1,b2,a1,a2``).
+ *  The filter coefficients are stored in forward order (e.g. ``b0,b1,b2,-a1,-a2``).
  * 
  *  Example showing a single Biquad filter with samples and coefficients
  *  represented in Q28 fixed-point format:
@@ -175,7 +175,7 @@ int32_t dsp_filters_decimate
  *
  *
  *  \param  input_sample   The new sample to be processed.
- *  \param  filter_coeffs  Pointer to biquad coefficients array arranged as ``[b0,b1,b2,a1,a2]``.
+ *  \param  filter_coeffs  Pointer to biquad coefficients array arranged as ``[b0,b1,b2,-a1,-a2]``.
  *  \param  state_data     Pointer to filter state data array (initialized at startup to zeros).
  *                         The length of the state data array is 4.
  *  \param  q_format       Fixed point format (i.e. number of fractional bits).
@@ -197,10 +197,10 @@ int32_t dsp_filters_biquad
  * 
  *  The IIR filter algorithm executes a difference equation on current and past input values x 
  *  and past output values y:
- *  ``y[i] = x[n]*b[0] + x[n-1]*b[1] + x[n-2]*b2 + y[n-1]*a[1] + y[n-2]*a[2]``
+ *  ``y[n] = x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + y[n-1]*-a1 + y[n-2]*-a2``
  * 
  *  The filter coefficients are stored in forward order
- *  (e.g. ``section1:b0,b1,b2,a1,a2,sectionN:b0,b1,b2,a1,a2``).
+ *  (e.g. ``section1:b0,b1,b2,-a1,-a2,sectionN:b0,b1,b2,-a1,-a2``).
  * 
  *  Example showing a 4x cascaded Biquad filter with samples and coefficients
  *  represented in Q28 fixed-point format:
@@ -224,7 +224,7 @@ int32_t dsp_filters_biquad
  * 
  *  \param  input_sample   The new sample to be processed.
  *  \param  filter_coeffs  Pointer to biquad coefficients array for all BiQuad sections.
- *                         Arranged as ``[section1:b0,b1,b2,a1,a2,...sectionN:b0,b1,b2,a1,a2]``.
+ *                         Arranged as ``[section1:b0,b1,b2,-a1,-a2,...sectionN:b0,b1,b2,-a1,-a2]``.
  *  \param  state_data     Pointer to filter state data array (initialized at startup to zeros).
  *                         The length of the state data array is ``num_sections`` * 4.
  *  \param  num_sections   Number of BiQuad sections.
