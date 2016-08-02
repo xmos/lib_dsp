@@ -7,9 +7,10 @@ xCORE-200 DSP library change log
   * Added exponential and natural logarithm functions
   * Added Hyperbolic sine and cosine
   * Fixed Matrix Multiplication and improved performance
-  * Changed API prefix from lib_dsp_ to dsp_.
+  * Changed API prefix from ``lib_dsp_`` to ``dsp_``.
   * Changed lib_dsp_fft_complex_t to dsp_complex_t and
     lib_dsp_fft_complex_short_t to dsp_complex_short_t
+  * Various fixes in API documentation.  
 
 2.0.0
 -----

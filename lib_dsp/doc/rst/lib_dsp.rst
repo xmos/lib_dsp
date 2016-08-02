@@ -52,7 +52,7 @@ Q Format Introduction
 
 The library functions support 32 bit input and output data, with internal 64 bit accumulator.
 The output data can be scaled to any of the supported Q Formats (Q8 through Q31).
-Further details about Q Format numbers is available here : https://en.wikipedia.org/wiki/Q_(number_format).
+Further details about Q Format numbers is available `here <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 
 The 'q_format' Parameter
 ........................
@@ -123,6 +123,11 @@ Scalar Math Functions: Multiply
 -------------------------------
 
 .. doxygenfunction:: dsp_math_multiply
+
+Scalar Math Functions: Multiply Saturated
+-----------------------------------------
+
+.. doxygenfunction:: dsp_math_multiply_sat
 
 Scalar Math Functions: Square Root
 ----------------------------------
@@ -263,6 +268,11 @@ Matrix Math Functions: Matrix Multiplication
 --------------------------------------------
 
 .. doxygenfunction:: dsp_matrix_mulm
+
+Statistics Functions: Vector Absolute Sum
+-----------------------------------------
+
+.. doxygenfunction:: dsp_vector_abs_sum
   
 Statistics Functions: Vector Mean
 ---------------------------------
