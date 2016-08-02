@@ -257,7 +257,6 @@ int test_input_range(int func, char name[], int min, int max, stimulus_t exponen
     unsigned worst_cycles_fixed=0, worst_cycles_float=0;
 
     int32_t worst_cycles_input;
-    q8_24 perf_ratio; 
 
     error_s err; 
     reset_errors(&err);
@@ -360,7 +359,7 @@ void test_single_input_functions() {
     printf("----------------------------\n");
     fail += test_input_range(6,"dsp_math_sin", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PV_OFF);
     fail += test_input_range(8,"dsp_math_cos", -PI_Q8_24, PI_Q8_24,      LINEAR, -1,  1, 1000, PV_OFF);
-    fail += test_input_range(10,"dsp_math_atan", INT32_MIN+1,       INT32_MAX,     1, -1,  EXPONENTIAL, 1000, PV_OFF);
+    fail += test_input_range(10,"dsp_math_atan", INT32_MIN,       INT32_MAX,     1, -1,  EXPONENTIAL, 984, PV_OFF);
     fail += test_input_range(12,"dsp_math_sinh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 726, PV_OFF);  // Should aim for -4 4 800
     fail += test_input_range(14,"dsp_math_cosh", -11*ONE_Q8_24>>1, 11*ONE_Q8_24>>1, LINEAR, -40, 40, 711, PV_OFF);  // Should aim for -4 4, 800
 
