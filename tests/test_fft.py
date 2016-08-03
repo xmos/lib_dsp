@@ -23,7 +23,7 @@ class DeletyComparisonTester(xmostest.ComparisonTester):
 
 def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
 
-    seed  = random.randrange(4294967294);
+    seed  = random.randrange(4294967294)
 
     directory_name = tempfile.mkdtemp(prefix='temp_fft_dir_', dir='.')
 
@@ -53,6 +53,12 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
 
 def runtest():
     try:
+        # Use the current git hash to seed the random number generator,
+        # to avoid the number of test cases for a particular snapshot increasing
+        # each time the view is built in the CI system.
+        stdout, stderr = xmostest.call_get_output(['git', 'rev-parse', 'HEAD'])
+        random.seed(int(stdout[0].strip(), 16)) # Git hash is hexadecimal string
+
         for r in range(3, 14):
             do_fft_test(r, "smoke", 'test_fft_forward', "forward_fft")
             do_fft_test(r, "smoke", 'test_fft_inverse', "inverse_fft")
