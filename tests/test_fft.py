@@ -56,7 +56,9 @@ def runtest():
         # Use the current git hash to seed the random number generator,
         # to avoid the number of test cases for a particular snapshot increasing
         # each time the view is built in the CI system.
-        stdout, stderr = xmostest.call_get_output(['git', 'rev-parse', 'HEAD'])
+        script_location = os.path.dirname(os.path.realpath(__file__))
+        stdout, stderr = xmostest.call_get_output(['git', 'rev-parse', 'HEAD'],
+                                                  cwd=script_location)
         random.seed(int(stdout[0].strip(), 16)) # Git hash is hexadecimal string
 
         for r in range(3, 14):
