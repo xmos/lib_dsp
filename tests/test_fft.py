@@ -18,6 +18,8 @@ class DeletyComparisonTester(xmostest.ComparisonTester):
 
     def run(self, output):
         super(DeletyComparisonTester, self).run(output)
+
+    def __del__(self):
         shutil.rmtree(self.d)
 
 
