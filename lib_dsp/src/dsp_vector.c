@@ -8,13 +8,14 @@
 int32_t dsp_vector_minimum
 (
     const int32_t* input_vector,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0, result_location;
     int32_t search_location = 0;
     int32_t min_val = 2147483647;                    // Maximum 32 bit signed integer
 
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 < min_val )
@@ -38,9 +39,9 @@ int32_t dsp_vector_minimum
           min_val = x1;
           result_location = search_location + 3;
         }
-        vector_length -= 4; input_vector += 4; search_location += 4;
+        vl -= 4; input_vector += 4; search_location += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
@@ -91,13 +92,14 @@ int32_t dsp_vector_minimum
 int32_t dsp_vector_maximum
 (
     const int32_t* input_vector,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0, result_location;
     int32_t search_location = 0;
     int32_t max_val = -2147483648;                    // Minimum 32 bit signed integer
 
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
         if( x0 > max_val )
@@ -121,9 +123,9 @@ int32_t dsp_vector_maximum
           max_val = x1;
           result_location = search_location + 3;
         }
-        vector_length -= 4; input_vector += 4; search_location += 4;
+        vl -= 4; input_vector += 4; search_location += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector));
@@ -175,10 +177,11 @@ void dsp_vector_negate
 (
     const int32_t* input_vector_X,
     int32_t*       result_vector_R,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0;
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x0 = -x0; x1 = -x1;
@@ -186,9 +189,9 @@ void dsp_vector_negate
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x0 = -x0; x1 = -x1;
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -213,10 +216,11 @@ void dsp_vector_abs
 (
     const int32_t* input_vector_X,
     int32_t*       result_vector_R,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0;
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
@@ -224,9 +228,9 @@ void dsp_vector_abs
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -252,10 +256,11 @@ void dsp_vector_adds
     const int32_t* input_vector_X,
     int32_t        input_scalar_A,
     int32_t*       result_vector_R,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0;
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x1 += input_scalar_A; x0 += input_scalar_A;
@@ -263,9 +268,9 @@ void dsp_vector_adds
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         x1 += input_scalar_A; x0 += input_scalar_A;
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -291,12 +296,13 @@ void dsp_vector_muls
     const int32_t* input_vector_X,
     int32_t        input_scalar_A,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
     int32_t ah, x1, x0; uint32_t al;
     
-    while( vector_length >= 4 )
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
@@ -316,9 +322,9 @@ void dsp_vector_muls
         asm("lextract %0,%1,%2,%3,32": "=r"(x1):"r"(ah),"r"(al),"r"(q_format));
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 4; input_vector_X += 4; result_vector_R += 4;
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
-    switch( vector_length )
+    switch( vl )
     {
         case 3:
         
@@ -365,10 +371,12 @@ void dsp_vector_addv
     const int32_t* input_vector_X,
     const int32_t* input_vector_Y,
     int32_t*       result_vector_R,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0, y1, y0;
-    while( vector_length >= 8 )
+
+    int32_t vl = vector_length;  
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -386,10 +394,10 @@ void dsp_vector_addv
         asm("ldd %0,%1,%2[3]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
         x1 += y1; x0 += y0;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
         *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
 }
 
@@ -400,10 +408,11 @@ void dsp_vector_subv
     const int32_t* input_vector_X,
     const int32_t* input_vector_Y,
     int32_t*       result_vector_R,
-    int32_t        vector_length
+    const int32_t  vector_length
 ) {
     int32_t x1, x0, y1, y0;
-    while( vector_length >= 8 )
+    int32_t vl = vector_length;  
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -421,10 +430,10 @@ void dsp_vector_subv
         asm("ldd %0,%1,%2[3]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
         x1 -= y1; x0 -= y0;
         asm("std %0,%1,%2[3]"::"r"(x1),"r"(x0),"r"(result_vector_R));
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
         *result_vector_R++ = *input_vector_X++ - *input_vector_Y++;
 }
 
@@ -435,8 +444,8 @@ void dsp_vector_mulv
     const int32_t* input_vector_X,
     const int32_t* input_vector_Y,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
     int32_t ah, x1, x0, y1, y0; uint32_t al;
     
@@ -455,8 +464,8 @@ void dsp_vector_mulv
     // Q20 * Q24 = Q44 -> Q16  (28 = 
     // iiiiiiii,iiiiiiii,iiiiffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff
     //     iiiiiiii,iiiiiiii,ffffffff,ffffffff
-    
-    while( vector_length >= 8 )
+    int32_t vl = vector_length;      
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -498,10 +507,10 @@ void dsp_vector_mulv
         asm("lextract %0,%1,%2,%3,32": "=r"(x1):"r"(ah),"r"(al),"r"(q_format));
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++;
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(0),"1"(1<<(q_format-1)));
@@ -519,11 +528,12 @@ void dsp_vector_mulv_adds
     const int32_t* input_vector_Y,
     int32_t        input_scalar_A,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
-    int32_t ah, x1, x0, y1, y0; uint32_t al;    
-    while( vector_length >= 8 )
+    int32_t ah, x1, x0, y1, y0; uint32_t al;  
+    int32_t vl = vector_length;    
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -569,10 +579,10 @@ void dsp_vector_mulv_adds
         x0 += input_scalar_A; x1 += input_scalar_A;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++;
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(0),"1"(1<<(q_format-1)));
@@ -590,11 +600,12 @@ void dsp_vector_muls_addv
     int32_t        input_scalar_A,
     const int32_t* input_vector_Y,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
-    int32_t ah, x1, x0, y1, y0; uint32_t al;    
-    while( vector_length >= 8 )
+    int32_t ah, x1, x0, y1, y0; uint32_t al;  
+    int32_t vl = vector_length;        
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -640,10 +651,10 @@ void dsp_vector_muls_addv
         x0 += y0; x1 += y1;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++;
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
@@ -661,11 +672,12 @@ void dsp_vector_muls_subv
     int32_t        input_scalar_A,
     const int32_t* input_vector_Y,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
     int32_t ah, x1, x0, y1, y0; uint32_t al;    
-    while( vector_length >= 8 )
+    int32_t vl = vector_length;  
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -711,10 +723,10 @@ void dsp_vector_muls_subv
         x0 -= y0; x1 -= y1;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8;
+        vl -= 8;
         input_vector_X += 8; input_vector_Y += 8; result_vector_R += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++;
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(0),"1"(1<<(q_format-1)));
@@ -732,11 +744,13 @@ void dsp_vector_mulv_addv
     const int32_t* input_vector_Y,
     const int32_t* input_vector_Z,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
     int32_t ah, x1, x0, y1, y0, z1, z0; uint32_t al;    
-    while( vector_length >= 8 )
+
+    int32_t vl = vector_length;
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -786,10 +800,10 @@ void dsp_vector_mulv_addv
         x0 += z0; x1 += z1;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8; result_vector_R += 8;
+        vl -= 8; result_vector_R += 8;
         input_vector_X += 8; input_vector_Y += 8; input_vector_Z += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++; z0 = *input_vector_Z++;
         //{ah,al} = macs( x0, y0, 0, (1 << (q_format-1)) );
@@ -807,11 +821,13 @@ void dsp_vector_mulv_subv
     const int32_t* input_vector_Y,
     const int32_t* input_vector_Z,
     int32_t*       result_vector_R,
-    int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  vector_length,
+    const int32_t  q_format
 ) {
-    int32_t ah, x1, x0, y1, y0, z1, z0; uint32_t al;    
-    while( vector_length >= 8 )
+    int32_t ah, x1, x0, y1, y0, z1, z0; uint32_t al;  
+
+    int32_t vl = vector_length;  
+    while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
         asm("ldd %0,%1,%2[0]":"=r"(y1),"=r"(y0):"r"(input_vector_Y));
@@ -861,10 +877,10 @@ void dsp_vector_mulv_subv
         x0 -= z0; x1 -= z1;
         asm("std %0,%1,%2[3]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         
-        vector_length -= 8; result_vector_R += 8;
+        vl -= 8; result_vector_R += 8;
         input_vector_X += 8; input_vector_Y += 8; input_vector_Z += 8;
     }
-    while( vector_length-- )
+    while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++; z0 = *input_vector_Z++;
         asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(0),"1"(1<<(q_format-1)));

@@ -36,6 +36,8 @@
  *  Multiplication results are accumulated in a 64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
+ *  The saturation is only done after the last multiplication. 
+ *  To avoid overflow in the intermediate results, the fixed point format must be chosen according to num_taps
  *
  *  \param  input_sample    The new sample to be processed.
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
@@ -52,8 +54,8 @@ int32_t dsp_filters_fir
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       num_taps,
-    int32_t       q_format
+    const int32_t num_taps,
+    const int32_t q_format
 );
 
 /** This function implements an interpolating FIR filter.
@@ -96,10 +98,10 @@ void dsp_filters_interpolate
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       num_taps,
-    int32_t       interp_factor,
+    const int32_t num_taps,
+    const int32_t interp_factor,
     int32_t       output_samples[],
-    int32_t       q_format
+    const int32_t q_format
 );
 
 /** This function implements an decimating FIR filter.
@@ -141,9 +143,9 @@ int32_t dsp_filters_decimate
     int32_t       input_samples[],
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       num_taps,
-    int32_t       decim_factor,
-    int32_t       q_format
+    const int32_t num_taps,
+    const int32_t decim_factor,
+    const int32_t q_format
 );
 
 /** This function implements a second order IIR (direct form I).
@@ -187,7 +189,7 @@ int32_t dsp_filters_biquad
     int32_t       input_sample,
     const int32_t filter_coeffs[DSP_NUM_COEFFS_PER_BIQUAD],
     int32_t       state_data   [DSP_NUM_STATES_PER_BIQUAD],
-    int32_t       q_format
+    const int32_t q_format
 );
 
 /** This function implements a cascaded direct form I BiQuad filter
@@ -237,8 +239,8 @@ int32_t dsp_filters_biquads
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    int32_t       num_sections,
-    int32_t       q_format
+    const int32_t num_sections,
+    const int32_t q_format
 );
 
 #endif

@@ -32,8 +32,8 @@ void dsp_matrix_negate
 (
     const int32_t input_matrix_X[],
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count
+    const int32_t row_count,
+    const int32_t column_count
 );
 
 /** Matrix / scalar addition: ``R[i][j] = X[i][j] + A``
@@ -63,8 +63,8 @@ void dsp_matrix_adds
     const int32_t input_matrix_X[],
     int32_t       input_scalar_A,
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count
+    const int32_t row_count,
+    const int32_t column_count
 );
 
 /** Matrix / scalar multiplication: ``R[i][j] = X[i][j] * A``
@@ -96,9 +96,9 @@ void dsp_matrix_muls
     const int32_t input_matrix_X[],
     int32_t       input_scalar_A,
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count,
-    int32_t       q_format
+    const int32_t row_count,
+    const int32_t column_count,
+    const int32_t q_format
 );
 
 /** Matrix / matrix addition: ``R[i][j] = X[i][j] + Y[i][j]``
@@ -128,8 +128,8 @@ void dsp_matrix_addm
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count
+    const int32_t row_count,
+    const int32_t column_count
 );
 
 /** Matrix / matrix subtraction: ``R[i][j] = X[i][j] - Y[i][j]``
@@ -159,8 +159,8 @@ void dsp_matrix_subm
     const int32_t input_matrix_X[],
     const int32_t input_matrix_Y[],
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count
+    const int32_t row_count,
+    const int32_t column_count
 );
 
 /** Matrix / matrix multiplication: ``R[i][j] = X[i][j] * Y[i][j]``
@@ -198,7 +198,7 @@ void dsp_matrix_mulm
     const int32_t rows_X,
     const int32_t cols_Y,
     const int32_t cols_X_rows_Y,
-    int32_t       q_format
+    const int32_t q_format
 );
 
 /** Matrix transposition
@@ -214,9 +214,9 @@ void dsp_matrix_transpose
 (
     const int32_t input_matrix_X[],
     int32_t       result_matrix_R[],
-    int32_t       row_count,
-    int32_t       column_count,
-    int32_t       q_format
+    const int32_t row_count,
+    const int32_t column_count,
+    const int32_t q_format
 );
 
 #endif

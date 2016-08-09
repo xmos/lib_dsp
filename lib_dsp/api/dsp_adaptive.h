@@ -68,10 +68,10 @@ int32_t dsp_adaptive_lms
     int32_t input_sample,
     int32_t reference_sample,
     int32_t error_sample[],
-    int32_t filter_coeffs[],
+    const int32_t filter_coeffs[],
     int32_t state_data[],
-    int32_t num_taps,
-    int32_t step_size,
+    const int32_t num_taps,
+    const int32_t step_size,
     int32_t q_format
 );
 
@@ -144,10 +144,10 @@ int32_t dsp_adaptive_nlms
     int32_t input_sample,
     int32_t reference_sample,
     int32_t error_sample[],
-    int32_t filter_coeffs[],
+    const int32_t filter_coeffs[],
     int32_t state_data[],
-    int32_t num_taps,
-    int32_t step_size,
+    const int32_t num_taps,
+    const int32_t step_size,
     int32_t q_format
 );
 

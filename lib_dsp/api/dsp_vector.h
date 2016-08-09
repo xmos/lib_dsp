@@ -25,7 +25,7 @@
 int32_t dsp_vector_minimum
 (
     const int32_t input_vector[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector Minimum
@@ -48,7 +48,7 @@ int32_t dsp_vector_minimum
 int32_t dsp_vector_maximum
 (
     const int32_t input_vector[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector negation: ``R[i] = -X[i]``
@@ -78,7 +78,7 @@ void dsp_vector_negate
 (
     const int32_t input_vector_X[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector absolute value: ``R[i] = |X[i]|``
@@ -109,7 +109,7 @@ void dsp_vector_abs
 (
     const int32_t input_vector_X[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / scalar addition: ``R[i] = X[i] + A``
@@ -140,7 +140,7 @@ void dsp_vector_adds
     const int32_t input_vector_X[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / scalar multiplication: ``R[i] = X[i] * A``
@@ -171,8 +171,8 @@ void dsp_vector_muls
     const int32_t input_vector_X[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
  
@@ -202,7 +202,7 @@ void dsp_vector_addv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
@@ -231,7 +231,7 @@ void dsp_vector_subv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / vector multiplication: ``R[i] = X[i] * Y[i]``
@@ -261,8 +261,8 @@ void dsp_vector_mulv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and scalar addition: ``R[i] = X[i] * Y[i] + A``
@@ -296,8 +296,8 @@ void dsp_vector_mulv_adds
     const int32_t input_vector_Y[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Scalar multiplication and vector addition: ``R[i] = X[i] * A + Y[i]``
@@ -334,8 +334,8 @@ void dsp_vector_muls_addv
     int32_t       input_scalar_A,
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Scalar multiplication and vector subtraction: ``R[i] = X[i] * A - Y[i]``
@@ -372,8 +372,8 @@ void dsp_vector_muls_subv
     int32_t       input_scalar_A,
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] + Z[i]``
@@ -407,8 +407,8 @@ void dsp_vector_mulv_addv
     const int32_t input_vector_Y[],
     const int32_t input_vector_Z[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and vector subtraction: ``R[i] = X[i] * Y[i] - Z[i]``
@@ -442,8 +442,8 @@ void dsp_vector_mulv_subv
     const int32_t input_vector_Y[],
     const int32_t input_vector_Z[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 #endif

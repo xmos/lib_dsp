@@ -31,7 +31,7 @@ void dsp_design_biquad_notch
     double filter_frequency,
     double filter_Q,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a low-pass filter.
@@ -60,7 +60,7 @@ void dsp_design_biquad_lowpass
     double filter_frequency,
     double filter_Q,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a high-pass filter.
@@ -89,7 +89,7 @@ void dsp_design_biquad_highpass
     double filter_frequency,
     double filter_Q,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for an all-pass filter.
@@ -118,7 +118,7 @@ void dsp_design_biquad_allpass
     double filter_frequency,
     double filter_Q,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a band-pass filter.
@@ -149,7 +149,7 @@ void dsp_design_biquad_bandpass
     double filter_frequency1,
     double filter_frequency2,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a peaking filter.
@@ -182,7 +182,7 @@ void dsp_design_biquad_peaking
     double filter_Q,
     double peak_qain_db,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a bass shelving filter.
@@ -215,7 +215,7 @@ void dsp_design_biquad_lowshelf
     double filter_Q,
     double shelf_gain_db,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 /** This function generates BiQuad filter coefficients for a treble shelving filter.
@@ -248,7 +248,7 @@ void dsp_design_biquad_highshelf
     double filter_Q,
     double shelf_gain_db,
     int32_t    biquad_coeffs[5],
-    int32_t    q_format
+    const int32_t q_format
 );
 
 #endif

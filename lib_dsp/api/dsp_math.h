@@ -85,7 +85,7 @@ int32_t  dsp_math_multiply
 (
     int32_t  input1_value,
     int32_t  input2_value,
-    int32_t  q_format
+    const int32_t q_format
 );
 
 /**  Scalar saturated multipliplication
@@ -121,7 +121,7 @@ int32_t  dsp_math_multiply
 int32_t  dsp_math_multiply_sat(
     int32_t  input1_value,
     int32_t  input2_value,
-    int32_t  q_format 
+    const int32_t q_format 
 );
 
 

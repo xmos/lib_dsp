@@ -10,7 +10,7 @@ int32_t dsp_vector_abs_sum
 (
     const int32_t* input_vector_X,
     int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  q_format
 ) {
     int32_t ah=0, x1, x0; uint32_t al=0;
     
@@ -58,7 +58,7 @@ int32_t dsp_vector_mean
 (
     const int32_t* input_vector_X,
     int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  q_format
 ) {
     int32_t vector_sum = dsp_vector_abs_sum( input_vector_X, vector_length, q_format );
     return dsp_math_divide(vector_sum, (vector_length << q_format), q_format );
@@ -68,7 +68,7 @@ int32_t dsp_vector_power
 (
     const int32_t* input_vector_X,
     int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  q_format
 ) {
     int32_t ah=0, x1, x0; uint32_t al=0;
     uint32_t ii = -4, len = vector_length;
@@ -115,7 +115,7 @@ int32_t dsp_vector_rms
 (
     const int32_t* input_vector_X,
     int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  q_format
 ) {
     int32_t vectort_pwr = dsp_vector_power   ( input_vector_X, vector_length, q_format );
     int32_t mean_square = dsp_math_divide  ( vectort_pwr, (vector_length << q_format),      q_format );
@@ -129,7 +129,7 @@ int32_t dsp_vector_dotprod
     const int32_t* input_vector_X,
     const int32_t* input_vector_Y,
     int32_t        vector_length,
-    int32_t        q_format
+    const int32_t  q_format
 ) {    
     int32_t ah = 0, x1, x0, y1, y0;
     uint32_t al = 1 << (q_format-1);

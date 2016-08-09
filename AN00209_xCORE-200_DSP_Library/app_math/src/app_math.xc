@@ -152,7 +152,7 @@ inline int32_t qs(double d, const int32_t q_format) {
 }
 
 void test_multipliation_and_division() {
-    int32_t q_format = 24; // location of the decimal point. Gives 8 digits of precision after conversion to floating point.
+    const int32_t q_format = 24; // location of the decimal point. Gives 8 digits of precision after conversion to floating point.
     q8_24 result, expected;
     error_s err;
     reset_errors(&err);

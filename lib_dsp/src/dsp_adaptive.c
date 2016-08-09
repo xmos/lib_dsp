@@ -15,11 +15,11 @@ int32_t dsp_adaptive_lms
     int32_t  source_sample,
     int32_t  reference_sample,
     int32_t* error_sample,
-    int32_t* filter_coeffs,
+    const int32_t* filter_coeffs,
     int32_t* state_data,
-    int32_t  num_taps,
-    int32_t  step_size,
-    int32_t  q_format
+    const int32_t num_taps,
+    const int32_t step_size,
+    const int32_t q_format
 ) {
     int32_t output_sample, mu_err;
     
@@ -37,7 +37,7 @@ int32_t dsp_adaptive_lms
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
     mu_err = dsp_math_multiply( *error_sample, step_size, q_format );
-    dsp_vector_muls_addv( state_data, mu_err, filter_coeffs, filter_coeffs, num_taps, q_format );
+    dsp_vector_muls_addv( state_data, mu_err, (int32_t*) filter_coeffs, (int32_t*) filter_coeffs, num_taps, q_format );
         
     return output_sample;
 }
@@ -49,11 +49,11 @@ int32_t dsp_adaptive_nlms
     int32_t  source_sample,
     int32_t  reference_sample,
     int32_t* error_sample,
-    int32_t* filter_coeffs,
+    const int32_t* filter_coeffs,
     int32_t* state_data,
-    int32_t  num_taps,
-    int32_t  step_size,
-    int32_t  q_format
+    const int32_t num_taps,
+    const int32_t step_size,
+    const int32_t q_format
 ) {
     int32_t output_sample, energy, adjustment, ee, qq;
     
@@ -86,7 +86,7 @@ int32_t dsp_adaptive_nlms
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
     // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
     
-    dsp_vector_muls_addv( state_data, adjustment, filter_coeffs, filter_coeffs, num_taps, q_format );
+    dsp_vector_muls_addv( state_data, adjustment, (int32_t*) filter_coeffs, (int32_t*) filter_coeffs, num_taps, q_format );
         
     return output_sample;
 }
