@@ -8,7 +8,7 @@ TARGET = XCORE-200-EXPLORER
 # the project name
 APP_NAME = app_fft
 
-# The USED_MODULES variable lists other module used by the application.
+# The USED_MODULES variable lists other modules used by the application.
 USED_MODULES = lib_dsp(>=3.0.0)
 
 # The flags passed to xcc when building the application
@@ -16,8 +16,8 @@ USED_MODULES = lib_dsp(>=3.0.0)
 # XCC_XC_FLAGS, XCC_C_FLAGS, XCC_ASM_FLAGS, XCC_CPP_FLAGS
 # If the variable XCC_MAP_FLAGS is set it overrides the flags passed to
 # xcc for the final link (mapping) stage.
-XCC_FLAGS_complex = -O2 -g -report 
-XCC_FLAGS_tworeals = -O2 -g -report -DTWOREALS=1 
+XCC_FLAGS_complex = -O2 -g -report
+XCC_FLAGS_tworeals = -O2 -g -report -DTWOREALS=1
 
 XCC_FLAGS_complex_int16_buf = -O2 -g -report -DINT16_BUFFERS=1
 XCC_FLAGS_tworeals_int16_buf = -O2 -g -report -DTWOREALS=1 -DINT16_BUFFERS=1
