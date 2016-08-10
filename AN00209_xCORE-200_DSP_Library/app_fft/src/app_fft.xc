@@ -179,11 +179,11 @@ int32_t do_tworeals_fft_and_ifft() {
         tmr :> start_time;
 #if INT16_BUFFERS
         dsp_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
-        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        dsp_fft_short_to_long(data, tmp_data, N_FFT_POINTS); // convert into tmp buffer
         dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
-        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        dsp_fft_long_to_short(tmp_data, data, N_FFT_POINTS); // convert from tmp buffer
 #else
         dsp_fft_bit_reverse(data, N_FFT_POINTS);
         dsp_fft_forward(data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
