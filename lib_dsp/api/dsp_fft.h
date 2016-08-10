@@ -50,7 +50,7 @@ dsp_complex_short_t;
  * \param[in,out] pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void dsp_fft_split_spectrum( dsp_complex_t pts[], uint32_t N );
+void dsp_fft_split_spectrum( dsp_complex_t pts[], const uint32_t N );
 
 /** This function merges two split spectra. It is the exact inverse operation of
  * dsp_fft_split_spectrum.
@@ -58,7 +58,7 @@ void dsp_fft_split_spectrum( dsp_complex_t pts[], uint32_t N );
  * \param[in,out] pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t N );
+void dsp_fft_merge_spectra( dsp_complex_t pts[], const uint32_t N );
 
 /** This function copies an array of dsp_complex_short_t elements to an array of an equal
  * number of dsp_complex_t elements.
@@ -67,7 +67,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t N );
  * \param[in]     s   Array of dsp_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
+void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], const uint32_t N );
 
 /** This function copies an array of dsp_complex_t elements to an array of an equal
  * number of dsp_complex_short_t elements.
@@ -76,7 +76,7 @@ void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], ui
  * \param[in]     l   Array of dsp_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
+void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], const uint32_t N );
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves dsp_fft_bit_reverse() followed by
@@ -87,7 +87,7 @@ void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], ui
  * \param[in,out] pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
  */
-void dsp_fft_bit_reverse( dsp_complex_t pts[], uint32_t N );
+void dsp_fft_bit_reverse( dsp_complex_t pts[], const uint32_t N );
 
 /** This function computes a forward FFT. The complex input signal is
  * supplied in an array of real and imaginary fixed-point values.
@@ -107,7 +107,7 @@ void dsp_fft_bit_reverse( dsp_complex_t pts[], uint32_t N );
  */
 void dsp_fft_forward (
     dsp_complex_t pts[],
-    uint32_t              N,
+    const uint32_t        N,
     const int32_t         sine[] );
 
 /** This function computes an inverse FFT. The complex input array is
@@ -129,7 +129,7 @@ void dsp_fft_forward (
  */
 void dsp_fft_inverse (
     dsp_complex_t pts[],
-    uint32_t              N,
+    const uint32_t        N,
     const int32_t         sine[] );
 
 #endif
