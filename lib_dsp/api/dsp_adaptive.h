@@ -1,7 +1,7 @@
 // Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_ADAPTIVE
-#define LIB_DSP_ADAPTIVE
+#ifndef DSP_ADAPTIVE_H_
+#define DSP_ADAPTIVE_H_
 
 #include <stdint.h>
 
@@ -44,7 +44,7 @@
  *  and 64-bit accumulation as a result of using an FIR as well as coefficient
  *  step size calculations). 
  * 
- *  Multiplication results are accumulated in 64-bit accumulator with the final
+ *  Multiplication results are accumulated in a 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow
  *  behavior of the 32-bit multiply operation and truncation behavior from
  *  final shifing of the accumulated multiplication results must be considered
@@ -57,7 +57,7 @@
  *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
  *  \param  state_data        Pointer to FIR filter state data array of length ``N``.
  *                            Must be initialized at startup to all zeros.
- *  \param  tap_count         Filter tap count where ``N`` = ``tap_count`` = filter order + 1.
+ *  \param  num_taps          Filter tap count where ``N`` = ``num_taps`` = filter order + 1.
  *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).
  *  \returns                  The resulting filter output sample.
@@ -68,10 +68,10 @@ int32_t dsp_adaptive_lms
     int32_t input_sample,
     int32_t reference_sample,
     int32_t error_sample[],
-    int32_t filter_coeffs[],
+    const int32_t filter_coeffs[],
     int32_t state_data[],
-    int32_t tap_count,
-    int32_t step_size,
+    const int32_t num_taps,
+    const int32_t step_size,
     int32_t q_format
 );
 
@@ -114,7 +114,7 @@ int32_t dsp_adaptive_lms
  *  and 64-bit accumulation as a result of using an FIR as well as coefficient
  *  step size calculations). 
  * 
- *  Multiplication results are accumulated in 64-bit accumulator with the final
+ *  Multiplication results are accumulated in a 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow
  *  behavior of the 32-bit multiply operation and truncation behavior from
  *  final shifing of the accumulated multiplication results must be considered
@@ -133,7 +133,7 @@ int32_t dsp_adaptive_lms
  *  \param  filter_coeffs     Pointer to FIR coefficients arranged as [b0,b1,b2, ...,bN-1].
  *  \param  state_data        Pointer to FIR filter state data array of length N.
  *                            Must be initialized at startup to all zeros.
- *  \param  tap_count         Filter tap count where N = tap_count = filter order + 1.
+ *  \param  num_taps          Filter tap count where N = num_taps = filter order + 1.
  *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).
  *  \returns                  The resulting filter output sample.
@@ -144,10 +144,10 @@ int32_t dsp_adaptive_nlms
     int32_t input_sample,
     int32_t reference_sample,
     int32_t error_sample[],
-    int32_t filter_coeffs[],
+    const int32_t filter_coeffs[],
     int32_t state_data[],
-    int32_t tap_count,
-    int32_t step_size,
+    const int32_t num_taps,
+    const int32_t step_size,
     int32_t q_format
 );
 

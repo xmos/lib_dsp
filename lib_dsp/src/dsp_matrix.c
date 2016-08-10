@@ -46,7 +46,7 @@ void dsp_matrix_muls
     int32_t*       result_matrix_R,
     int32_t        row_count,
     int32_t        column_count,
-    int32_t        q_format
+    const int32_t q_format
 ) {
     dsp_vector_muls
     (
@@ -107,7 +107,7 @@ void dsp_matrix_mulm
     const int32_t  rows_X,
     const int32_t  cols_Y,
     const int32_t  cols_X_rows_Y,
-    int32_t        q_format
+    const int32_t q_format
 ) {
     int32_t ah; uint32_t al;
 
@@ -156,7 +156,7 @@ void dsp_matrix_transpose
     int32_t*       result_matrix_R,
     int32_t        row_count,
     int32_t        column_count,
-    int32_t        q_format
+    const int32_t q_format
 ) {
     // <TODO>: Optimize 
     for( int32_t r = 0; r < row_count; ++r )

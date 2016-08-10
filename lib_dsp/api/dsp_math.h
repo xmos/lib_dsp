@@ -1,7 +1,7 @@
 // Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_MATH
-#define LIB_DSP_MATH
+#ifndef DSP_MATH_H_
+#define DSP_MATH_H_
 
 #include "xccompat.h"
 #include "stdint.h"
@@ -58,7 +58,7 @@ typedef uint32_t uq8_24;
  *  This function multiplies two scalar values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
  * 
- *  The two operands are multiplied to produce a 64-bit result which is tested for overflow,
+ *  The two operands are multiplied to produce a 64-bit result,
  *  and shifted right by ``q_format`` bits.
  *
  *  Algorithm:
@@ -85,7 +85,7 @@ int32_t  dsp_math_multiply
 (
     int32_t  input1_value,
     int32_t  input2_value,
-    int32_t  q_format
+    const int32_t q_format
 );
 
 /**  Scalar saturated multipliplication
@@ -93,8 +93,8 @@ int32_t  dsp_math_multiply
  *  This function multiplies two scalar values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
  *
- *  The two operands are multiplied to produce a 64-bit result which is tested for overflow,
- *  clamped at the minimum/maximum value given the fixed-point format if overflow occurs,
+ *  The two operands are multiplied to produce a 64-bit result,
+ *  saturated at the minimum/maximum value given the fixed-point format if overflow occurs,
  *  and finally shifted right by ``q_format`` bits.
  *
  *  Algorithm:
@@ -112,9 +112,6 @@ int32_t  dsp_math_multiply
  *  result = dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
  *
- *  While saturation is employed after multiplication an overflow condition when preparing the final
- *  result must still be considered when specifying a Q-format whose fixed-point numerical range do
- *  not accomodate the final result of multiplication and saturation (if applied).
  *
  *  \param  input1_value  Multiply operand #1.
  *  \param  input2_value  Multiply operand #2.
@@ -124,7 +121,7 @@ int32_t  dsp_math_multiply
 int32_t  dsp_math_multiply_sat(
     int32_t  input1_value,
     int32_t  input2_value,
-    int32_t  q_format 
+    const int32_t q_format 
 );
 
 

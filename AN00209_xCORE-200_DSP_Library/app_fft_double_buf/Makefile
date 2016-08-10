@@ -28,7 +28,7 @@ XCC_FLAGS_tworeals_int16_buf = $(COMMON_FLAGS) -DTWOREALS=1 -DINT16_BUFFERS=1 -D
 
 # The USED_MODULES variable lists other build module used by the application.
 
-USED_MODULES = lib_dsp
+USED_MODULES = lib_dsp(>=3.0.0)
 
 #=============================================================================
 # The following part of the Makefile includes the common build infrastructure

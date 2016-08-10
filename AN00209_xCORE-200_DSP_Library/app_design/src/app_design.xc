@@ -10,7 +10,9 @@
 // The coeffs below are arraned as N x 6 to keep coeff arrays DWORD aligned.
 
 int32_t coeff[8][6]; // Coefficients for each filter
-int32_t state[8][4]; // State data for each filter
+//Note: array size of 6 is chosen to enforce 64 bit alignment for ldd and std
+int32_t state[8][4] = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+                       {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}}; // State data for each filter
 
 const char* names[] =
 {
@@ -27,7 +29,7 @@ int main( void )
 	// Q format Q28 (4-bit signed integer, 28-bit fraction) is used.
 
 	dsp_design_biquad_notch    ( 0.25, 0.707,      coeff[0], 28 );
-	dsp_design_biquad_lowpass  ( 0.25, 0.707,      coeff[1], 28 );
+	dsp_design_biquad_lowpass  ( 0.25, 0.9,      coeff[1], 28 );
 	dsp_design_biquad_highpass ( 0.25, 0.707,      coeff[2], 28 );
 	dsp_design_biquad_allpass  ( 0.25, 0.707,      coeff[3], 28 );
 	dsp_design_biquad_bandpass ( 0.24, 0.26,       coeff[4], 28 );
@@ -45,11 +47,16 @@ int main( void )
 
 	for( int32_t ii = 0; ii < 8; ++ii )
 	{
-		int sample = Q28( 1.0 );
-		printf( "%s ", names[ii] );
+		int32_t sample;
+		printf( "Impulse response of %s, ", names[ii] );
 		for( int32_t jj = 0; jj < 8; ++jj ) {
-			sample = dsp_filters_biquad( sample, coeff[ii], state[ii], 28 );
-			printf( "%+04.3f ", F28(sample) );
+			if(jj==0) { // Dirac delta function. 1 at 0, 0 otherwise
+				sample = Q28( 1.0 );
+			} else {
+				sample = 0;
+			}
+			int32_t y = dsp_filters_biquad( sample, coeff[ii], state[ii], 28 );
+			printf( "%+04.8f, ", F28(y) );
 		}
 		printf( "\n" );
 	}

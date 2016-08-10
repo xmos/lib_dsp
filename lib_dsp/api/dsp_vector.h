@@ -1,7 +1,7 @@
 // Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_VECTOR
-#define LIB_DSP_VECTOR
+#ifndef DSP_VECTOR_H_
+#define DSP_VECTOR_H_
 
 #include <stdint.h>
 
@@ -14,7 +14,7 @@
  * 
  *  \code 
  *  int32_t samples[256];
- *  int32_t result = dsp_vector_minimum( samples, 256 );
+ *  int32_t index = dsp_vector_minimum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -25,7 +25,7 @@
 int32_t dsp_vector_minimum
 (
     const int32_t input_vector[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector Minimum
@@ -37,7 +37,7 @@ int32_t dsp_vector_minimum
  * 
  *  \code 
  *  int32_t samples[256];
- *  int32_t result = dsp_vector_maximum( samples, 256 );
+ *  int32_t index = dsp_vector_maximum( samples, 256 );
  *  \endcode 
  * 
  *  \param  input_vector   Pointer to source data array.
@@ -48,13 +48,13 @@ int32_t dsp_vector_minimum
 int32_t dsp_vector_maximum
 (
     const int32_t input_vector[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector negation: ``R[i] = -X[i]``
  *
- *  This function computes the negative value for each input element and sets
- *  the corresponding result element to its negative value.
+ *  This function sets each result element to the negative value of the
+ *  corresponding input element.
  *
  *  Each negated element is computed by twos-compliment negation therefore the
  *  minimum negative fixed-point value can not be negated to generate its
@@ -64,7 +64,7 @@ int32_t dsp_vector_maximum
  *  Example:
  *
  *  \code 
- *  int32_t samples[256];
+ *  int32_t samples[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result[256];
  *  dsp_vector_negate( samples, result, 256 );
  *  \endcode 
@@ -78,18 +78,18 @@ void dsp_vector_negate
 (
     const int32_t input_vector_X[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector absolute value: ``R[i] = |X[i]|``
  * 
- *  Set each element of the result vector to the absolute value of the
+ *  This function sets each element of the result vector to the absolute value of the
  *  corresponding input vector element.
  *
  *  Example:
  * 
  *  \code 
- *  int32_t samples[256];
+ *  int32_t samples[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result[256];
  *  dsp_vector_abs( samples, result, 256 );
  *  \endcode 
@@ -109,21 +109,21 @@ void dsp_vector_abs
 (
     const int32_t input_vector_X[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / scalar addition: ``R[i] = X[i] + A``
  * 
  *  This function adds a scalar value to each vector element.
  *
- *  32-bit addition is used to compute the scaler plus vector element result.
+ *  32-bit addition is used to compute the scalar plus vector element result.
  *  Therefore fixed-point value overflow conditions should be observed.  The
  *  resulting values are not saturated.
  * 
  *  Example:
  * 
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );  
  *  int32_t result_vector_R[256];
  *  dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
@@ -140,22 +140,23 @@ void dsp_vector_adds
     const int32_t input_vector_X[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / scalar multiplication: ``R[i] = X[i] * A``
  *
- *  32-bit addition is used to compute the scaler plus vector element result.
- *  Therefore fixed-point value overflow conditions should be observed. The
- *  resulting values are not saturated.
+ *  The elements in vector X are multiplied with the scalar A and stored in result vector R.
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
  * 
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );  
  *  int32_t result_vector_R[256];
- *  dsp_vector_adds( input_vector_X, scalar_value_A, result_vector_R, 256 );
+ *  dsp_vector_muls( input_vector_X, scalar_value_A, result_vector_R, 256 );
  *  \endcode 
  * 
  *  \param  input_vector_X    Pointer/reference to source data array X.
@@ -170,22 +171,22 @@ void dsp_vector_muls
     const int32_t input_vector_X[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
  
 /** Vector / vector addition: ``R[i] = X[i] + Y[i]``
  * 
- *  32-bit addition is used to compute the scaler plus vector element result.
- *  Therefore fixed-point value overflow conditions should be observed. The
- *  resulting values are not saturated.
+ *  32 bit addition is used to add Vector X to Vector Y. 
+ *  The results are stored in result vector R.
+ *  They are not saturated so overflow may occur.
  *
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, -1, -2, -3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_addv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
@@ -201,20 +202,20 @@ void dsp_vector_addv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
  * 
- *  32-bit subtraction is used to compute the scaler plus vector element result.
- *  Therefore fixed-point value overflow conditions should be observed. The
- *  resulting values are not saturated.
+ *  32 bit subtraction is used to subtract Vector Y from Vector X. 
+ *  The results are stored in result vector R.
+ *  They are not saturated so overflow may occur.
  * 
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, -1, -2, -3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_subv( input_vector_X, input_vector_Y, result_vector_R, 256 );
  *  \endcode 
@@ -230,21 +231,20 @@ void dsp_vector_subv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length
+    const int32_t vector_length
 );
 
 /** Vector / vector multiplication: ``R[i] = X[i] * Y[i]``
  * 
- *  Elements in each of the input vectors are multiplied together using a
- *  32-bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be
- *  considered (see behavior for the function ``dsp_math_multiply``).
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
  * 
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_vector_R[256];  
  *  dsp_vector_mulv( input_vector_X, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
@@ -261,25 +261,22 @@ void dsp_vector_mulv
     const int32_t input_vector_X[],
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and scalar addition: ``R[i] = X[i] * Y[i] + A``
  * 
- *  Elements in each of the input vectors are multiplied together using a
- *  32-bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be
- *  considered (see behavior for the function ``dsp_math_multiply``).
- *  32-bit addition is used to compute the vector element plus scalar value
- *  result. Therefore fixed-point value overflow conditions should be observed. 
- *  The resulting values are not saturated.
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ *  Then the scalar is added. Overflow may occur after the addition.
  * 
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );
  *  int32_t result_vector_R[256];  
  *  dsp_vector_mulv_adds( input_vector_X, input_vector_Y, scalar_value_A, result_vector_R, 256, 28 );
@@ -299,26 +296,26 @@ void dsp_vector_mulv_adds
     const int32_t input_vector_Y[],
     int32_t       input_scalar_A,
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Scalar multiplication and vector addition: ``R[i] = X[i] * A + Y[i]``
  * 
- *  Each element in the input vectors is multiplied by a scalar using a
- *  32bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``dsp_math_multiply``). 32-bit addition is
- *  used to compute the vector element minus vector element result. Therefore
- *  fixed-point value overflow conditions should be observed.  The resulting
- *  values are not saturated.
+ *  The elements in vector X are multiplied with the scalar A 
+ *  and then added to the corresponding element in Y.
+ * 
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ *  Overflow may occur after the addition Y[i].
  * 
  *  Example:
  *
  *  \code 
- *  int32_t input_vector_X[256];
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );
- *  int32_t input_vector_Y[256];
+ *  int32_t input_vector_Y[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_vector_R[256];
  *  dsp_vector_muls_addv( input_vector_X, input_scalar_A, input_vector_Y, result_vector_R, 256, 28 );
  *  \endcode 
@@ -337,19 +334,19 @@ void dsp_vector_muls_addv
     int32_t       input_scalar_A,
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Scalar multiplication and vector subtraction: ``R[i] = X[i] * A - Y[i]``
  * 
- *  Each element in the input vectors is multiplied by a scalar using a
- *  32bit multiply 64-bit accumulate function therefore fixed-point
- *  multiplication and q-format adjustment overflow behavior must be considered
- *  (see behavior for the function ``dsp_math_multiply``). 32-bit subtraction
- *  is used to compute the vector element minus vector element result. Therefore
- *  fixed-point value overflow conditions should be observed.  The resulting
- *  values are not saturated.
+ *  The elements in vector X are multiplied with the scalar A.
+ *  The corresponding element in Y is subtracted from that.
+ * 
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ *  Overflow may occur after the subtraction of Y[i].
  * 
  *  Example:
  *
@@ -375,20 +372,16 @@ void dsp_vector_muls_subv
     int32_t       input_scalar_A,
     const int32_t input_vector_Y[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] + Z[i]``
  * 
- *  The elements in the input vectors are multiplied before being summed
- *  therefore fixed-point multiplication behavior must be considered (see
- *  behavior for the function ``dsp_math_multiply``). Due to successive
- *  32-bit additions being accumulated using 64-bit arithmetic overflow during
- *  the summation process is unlikely. The final value, being effectively the
- *  result of a left-shift by ``q_format`` bits will potentially overflow the
- *  final fixed-point value depending on the resulting summed value and the
- *  chosen Q-format.
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ *  Overflow may occur after the addition of Z[i].
  * 
  *  Example:
  *
@@ -414,20 +407,16 @@ void dsp_vector_mulv_addv
     const int32_t input_vector_Y[],
     const int32_t input_vector_Z[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 /** Vector multiplication and vector subtraction: ``R[i] = X[i] * Y[i] - Z[i]``
  * 
- *  The elements in the input vectors are multiplied before being subtracted
- *  therefore fixed-point multiplication behavior must be considered (see
- *  behavior for the function ``dsp_math_multiply``). Due to successive
- *  32-bit subtractions being accumulated using 64-bit arithmetic overflow during
- *  the summation process is unlikely. The final value, being effectively the
- *  result of a left-shift by ``q_format`` bits will potentially overflow the
- *  final fixed-point value depending on the resulting summed value and the
- *  chosen Q-format.
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ *  Overflow may occur after the subtraction of Z[i].
  * 
  *  Example:
  *
@@ -453,8 +442,8 @@ void dsp_vector_mulv_subv
     const int32_t input_vector_Y[],
     const int32_t input_vector_Z[],
     int32_t       result_vector_R[],
-    int32_t       vector_length,
-    int32_t       q_format
+    const int32_t vector_length,
+    const int32_t q_format
 );
 
 #endif

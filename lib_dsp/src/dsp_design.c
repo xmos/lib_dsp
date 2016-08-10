@@ -21,7 +21,7 @@ void dsp_design_biquad_notch
     double frequency,
     double filter_Q,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -50,7 +50,7 @@ void dsp_design_biquad_lowpass
     double frequency,
     double filter_Q,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -79,7 +79,7 @@ void dsp_design_biquad_highpass
     double frequency,
     double filter_Q,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -108,7 +108,7 @@ void dsp_design_biquad_allpass
     double frequency,
     double filter_Q,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency;
@@ -137,7 +137,7 @@ void dsp_design_biquad_bandpass
     double frequency1,
     double frequency2,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double w0    = 2.0 * pi * frequency1;
@@ -168,7 +168,7 @@ void dsp_design_biquad_peaking
     double filter_Q,
     double gain_db,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double A  = sqrt( pow(10,(gain_db/20)) );
@@ -199,7 +199,7 @@ void dsp_design_biquad_lowshelf
     double filter_Q,
     double shelf_gain_db,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double A  = pow( 10.0, (shelf_gain_db / 40.0) );
@@ -230,7 +230,7 @@ void dsp_design_biquad_highshelf
     double filter_Q,
     double shelf_gain_db,
     int32_t    coefficients[5],
-    int32_t    q_format
+    const int32_t q_format
 ) {
     // Compute common factors
 	double A  = pow( 10.0, (shelf_gain_db / 40.0) );

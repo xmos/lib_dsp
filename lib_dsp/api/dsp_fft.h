@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef LIB_DSP_TRANSFORMS
-#define LIB_DSP_TRANSFORMS
+#ifndef DSP_TRANSFORMS_H_
+#define DSP_TRANSFORMS_H_
 
 #include <stdint.h>
 
@@ -67,7 +67,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t N );
  * \param[in]     s   Array of dsp_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_short_to_long( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
+void dsp_fft_short_to_long( dsp_complex_t l[], const dsp_complex_short_t s[], uint32_t N );
 
 /** This function copies an array of dsp_complex_t elements to an array of an equal
  * number of dsp_complex_short_t elements.
@@ -76,12 +76,12 @@ void dsp_fft_short_to_long( dsp_complex_t l[], dsp_complex_short_t s[], uint32_t
  * \param[in]     l   Array of dsp_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_long_to_short( dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
+void dsp_fft_long_to_short( dsp_complex_short_t s[], const dsp_complex_t l[], uint32_t N );
 
 /** This function preforms index bit reversing on the the arrays around prior to computing an FFT. A
  * calling sequence for a forward FFT involves dsp_fft_bit_reverse() followed by
- * dsp_fft_forward_complex(), and for an inverse FFT it involves dsp_fft_bit_reverse() followed
- * by dsp_fft_inverse_complex(). In some cases bit reversal can be avoided, for example
+ * dsp_fft_forward(), and for an inverse FFT it involves dsp_fft_bit_reverse() followed
+ * by dsp_fft_inverse(). In some cases bit reversal can be avoided, for example
  * when computing a convolution.
  *
  * \param[in,out] pts   Array of dsp_complex_t elements.
