@@ -213,11 +213,11 @@ int32_t do_tworeals_fft_and_ifft() {
 
         tmr :> start_time;
 #if INT16_BUFFERS
-        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); // convert into tmp buffer
+        dsp_fft_short_to_long(data, tmp_data, N_FFT_POINTS); // convert into tmp buffer
         dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
         dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); // convert from tmp buffer
+        dsp_fft_long_to_short(tmp_data, data, N_FFT_POINTS); // convert from tmp buffer
 #else
         dsp_fft_merge_spectra(data, N_FFT_POINTS);
         dsp_fft_bit_reverse(data, N_FFT_POINTS);
@@ -308,12 +308,12 @@ int32_t do_complex_fft_and_ifft() {
 #if INT16_BUFFERS
         dsp_complex_t tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
         // convert into int32_t temporary buffer
-        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        dsp_fft_short_to_long(data, tmp_data, N_FFT_POINTS); 
         // 32 bit FFT
         dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         // convert back into int16_t buffer
-        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
+        dsp_fft_long_to_short(tmp_data, data, N_FFT_POINTS); 
 #else
         // 32 bit FFT
         dsp_fft_bit_reverse(data, N_FFT_POINTS);
@@ -336,12 +336,12 @@ int32_t do_complex_fft_and_ifft() {
         tmr :> start_time;
 #if INT16_BUFFERS
         // convert into int32_t temporary buffer
-        dsp_fft_short_to_long(tmp_data, data, N_FFT_POINTS); 
+        dsp_fft_short_to_long(data, tmp_data, N_FFT_POINTS); 
         // 32 bit iFFT
         dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
         dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
         // convert back into int16_t buffer
-        dsp_fft_long_to_short(data, tmp_data, N_FFT_POINTS); 
+        dsp_fft_long_to_short(tmp_data, data, N_FFT_POINTS); 
 #else
         // 32 bit iFFT
         dsp_fft_bit_reverse(data, N_FFT_POINTS);

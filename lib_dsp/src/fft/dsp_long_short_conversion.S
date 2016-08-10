@@ -12,7 +12,7 @@
 #define NSTACKWORDS 4
 
 #define SHIFT 16
-//void dsp_fft_short_to_long_xs2( dsp_fft_complex_t l[], dsp_fft_complex_short_t s[], unsigned N );
+//void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
 
 dsp_fft_short_to_long_xs2:
 .align 4
@@ -23,9 +23,9 @@ dsp_fft_short_to_long_xs2:
 
 .align 8
 loop2:
-	ldw r4, r1[r2]
+	ldw r4, r0[r2]
 	{andnot r4, r11; shl r3, r4, 16}
-	std r4, r3, r0[r2]
+	std r4, r3, r1[r2]
 	{bt r2, loop2; sub r2, r2, 1}
 
 	ldd r5, r4, sp[0]
@@ -51,7 +51,7 @@ loop2:
 	.align	4
 	.type	dsp_fft_long_to_short_xs2,@function
 
-//void dsp_fft_long_to_short_xs2( dsp_fft_complex_short_t s[], dsp_fft_complex_t l[], unsigned N );
+//void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
 
 dsp_fft_long_to_short_xs2:
 .align 8
@@ -60,9 +60,9 @@ dsp_fft_long_to_short_xs2:
 	{ldc r3, 16;sub r2, r2, 1}
 	std r5, r4, sp[0]
 	loop:
-	ldd r5, r4, r1[r2]
+	ldd r5, r4, r0[r2]
 	{linsert r5, r4, r4, r3, 32};
-	stw r5, r0[r2]
+	stw r5, r1[r2]
 	{bt r2, loop; sub r2, r2, 1;}
 	ldd r5, r4, sp[0]
 	retsp 2
