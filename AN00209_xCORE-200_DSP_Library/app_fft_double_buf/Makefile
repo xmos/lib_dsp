@@ -8,7 +8,10 @@ TARGET = xk-audio-216-mc
 # not include the .xe postfix. If left blank the name will default to
 # the project name
 
-APP_NAME = 
+APP_NAME = app_fft_double_buf
+
+# The USED_MODULES variable lists other build module used by the application.
+USED_MODULES = lib_dsp(>=3.0.0)
 
 # The flags passed to xcc when building the application
 # You can also set the following to override flags for a particular language:
@@ -25,10 +28,6 @@ XCC_FLAGS_tworeals = $(COMMON_FLAGS) -DTWOREALS=1 -DNUM_CHANS=4
 
 XCC_FLAGS_complex_int16_buf = $(COMMON_FLAGS) -DINT16_BUFFERS=1 -DNUM_CHANS=6
 XCC_FLAGS_tworeals_int16_buf = $(COMMON_FLAGS) -DTWOREALS=1 -DINT16_BUFFERS=1 -DNUM_CHANS=8
-
-# The USED_MODULES variable lists other build module used by the application.
-
-USED_MODULES = lib_dsp(>=3.0.0)
 
 #=============================================================================
 # The following part of the Makefile includes the common build infrastructure

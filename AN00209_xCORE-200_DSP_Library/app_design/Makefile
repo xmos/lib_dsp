@@ -8,7 +8,7 @@ TARGET = XCORE-200-EXPLORER
 # the project name
 APP_NAME = app_design
 
-# The USED_MODULES variable lists other module used by the application.
+# The USED_MODULES variable lists other modules used by the application.
 USED_MODULES = lib_dsp(>=3.0.0)
 
 # The flags passed to xcc when building the application
