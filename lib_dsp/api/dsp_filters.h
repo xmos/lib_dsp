@@ -36,8 +36,9 @@
  *  Multiplication results are accumulated in a 64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
- *  The saturation is only done after the last multiplication. 
- *  To avoid overflow in the intermediate results, the fixed point format must be chosen according to num_taps
+ *  The saturation is only done after the last multiplication.
+ *  To avoid 64-bit overflow in the intermediate results, the fixed point format must be chosen 
+ *  according to num_taps.
  *
  *  \param  input_sample    The new sample to be processed.
  *  \param  filter_coeffs   Pointer to FIR coefficients array arranged
@@ -77,6 +78,9 @@ int32_t dsp_filters_fir
  *  Multiplication results are accumulated in a 64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
+ *  The saturation is only done after the last multiplication.
+ *  To avoid 64-bit overflow in the intermediate results, the fixed point format must be chosen 
+ *  according to num_taps.
  * 
  *  \param input_sample    The new sample to be processed.
  *  \param filter_coeffs   Pointer to FIR coefficients array arranged as:
@@ -125,6 +129,9 @@ void dsp_filters_interpolate
  *  64-bit accumulator. 
  *  If overflow occurs in the final 64-bit result, it is saturated at the minimum/maximum value 
  *  given the fixed-point format and finally shifted right by ``q_format`` bits.
+ *  The saturation is only done after the last multiplication.
+ *  To avoid 64-bit overflow in the intermediate results, the fixed point format must be chosen 
+ *  according to num_taps.
  *  
  * 
  *  \param  input_samples  The new samples to be decimated.
