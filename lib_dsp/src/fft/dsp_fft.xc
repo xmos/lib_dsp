@@ -167,9 +167,9 @@ extern void dsp_fft_split_spectrum_xs2( dsp_complex_t pts[], uint32_t N );
 
 extern void dsp_fft_merge_spectra_xs2( dsp_complex_t pts[], uint32_t N );
 
-extern void dsp_fft_short_to_long_xs2( dsp_complex_t l[], const dsp_complex_short_t s[], uint32_t N );
+extern void dsp_fft_short_to_long_xs2( const dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
 
-extern void dsp_fft_long_to_short_xs2( dsp_complex_short_t s[], const dsp_complex_t l[], uint32_t N );
+extern void dsp_fft_long_to_short_xs2( const dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
 
 #endif
 
@@ -259,9 +259,9 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], uint32_t n ){
 #endif
 }
 
-void dsp_fft_short_to_long( dsp_complex_t l[], const dsp_complex_short_t s[], uint32_t N ){
+void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N ) {
 #if defined(__XS2A__)
-    dsp_fft_short_to_long_xs2(l, s, N);
+    dsp_fft_short_to_long_xs2(s, l, N);
 #else
     for(uint32_t i=0;i<n;i++){
         l[i].re = ((int)s[i].re)<<16;
@@ -270,9 +270,9 @@ void dsp_fft_short_to_long( dsp_complex_t l[], const dsp_complex_short_t s[], ui
 #endif
 }
 
-void dsp_fft_long_to_short( dsp_complex_short_t s[], const dsp_complex_t l[], uint32_t N ){
+void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N ) {
 #if defined(__XS2A__)
-    dsp_fft_long_to_short_xs2(s, l, N);
+    dsp_fft_long_to_short_xs2(l, s, N);
 #else
     for(uint32_t i=0;i<n;i++){
         s[i].re = l[i].re>>16;

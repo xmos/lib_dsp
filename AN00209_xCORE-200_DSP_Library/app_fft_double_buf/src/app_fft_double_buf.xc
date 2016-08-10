@@ -194,14 +194,14 @@ void do_fft(server interface bufswap_i input,
             // process the new buffer "in place"
     #if INT16_BUFFERS
             dsp_complex_t tmp_buffer[N_FFT_POINTS];
-            dsp_fft_short_to_long(tmp_buffer, buffer->data[a], N_FFT_POINTS); // convert into tmp buffer
+            dsp_fft_short_to_long(buffer->data[a], tmp_buffer, N_FFT_POINTS); // convert into tmp buffer
             dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
             dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
     #if TWOREALS
             dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
 
     #endif
-            dsp_fft_long_to_short(buffer->data[a], tmp_buffer, N_FFT_POINTS); // convert from tmp buffer
+            dsp_fft_long_to_short(tmp_buffer, buffer->data[a], N_FFT_POINTS); // convert from tmp buffer
     ////// 32 bit buffers        
     #else  
             dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
