@@ -20,8 +20,6 @@
 #include <time.h>
 #include <math.h>
 
-#include "IntArithmetic.h"
-
 // FIROS3 includes
 #include "dsp_os3.h"
 
