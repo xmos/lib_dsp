@@ -12,6 +12,7 @@
 #include <dsp_qformat.h>
 #include <dsp_vector.h>
 #include <dsp_fft.h>
+#include <dsp_ds3.h>
 
 
 /* Macro to time function calls
