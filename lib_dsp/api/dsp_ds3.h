@@ -12,13 +12,11 @@
     // General defines
     // ---------------
     // Filter related
-    //#define       FIRDS3_N_COEFS                          126                     // Number of coefficients must be a multiple of 6
-    //#define       FIRDS3_COEFS_FILE                       "FilterData/firds3_126.dat"
-
     #define     FIRDS3_N_COEFS                          144                     // Number of coefficients must be a multiple of 6
+    // Filters with "_b_" in their filenames in FIRDS3.h have higher attenuation at Nyquist (> 60dB compared with 20dB ) but with an earlier cutoff.
     #define     FIRDS3_COEFS_FILE                       "FilterData/firds3_b_144.dat"
+    //#define     FIRDS3_COEFS_FILE                       "FilterData/firds3_144.dat"
 
-        // Filters with "_b_" in their filenames in FIRDS3.h have higher attenuation at Nyquist (> 60dB) but with an earlier cutoff.
     // ===========================================================================
     //
     // TypeDefs

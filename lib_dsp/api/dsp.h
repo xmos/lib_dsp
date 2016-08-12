@@ -13,7 +13,7 @@
 #include <dsp_vector.h>
 #include <dsp_fft.h>
 #include <dsp_ds3.h>
-
+#include <dsp_os3.h>
 
 /* Macro to time function calls
  * After execution of this line the value in cycle_taken is valid.

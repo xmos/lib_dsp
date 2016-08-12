@@ -1,12 +1,10 @@
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
 // ===========================================================================
 // ===========================================================================
 //	
 // File: FIRDS3.c
 //
 // FIRDS3 functions implementation file 
-//
-// Target:	MS Windows
-// Version: 1.0
 //
 // ===========================================================================
 // ===========================================================================
@@ -22,8 +20,6 @@
 #include <time.h>
 #include <math.h>
 
-// Integer arithmetic include
-#include "IntArithmetic.h"
 // FIRDS3 includes
 #include "dsp_ds3.h"
 #include "fir_inner_loop_asm.h"
