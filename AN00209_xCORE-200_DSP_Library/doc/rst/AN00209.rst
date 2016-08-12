@@ -266,7 +266,7 @@ Oversample by 3 Functions
 .........................
 
 .. caution::
-Please see file ``os3_test.expect`` for golden expected test output.
+  Ommitted for brevity. Please see file ``os3_test.expect`` for golden expected test output.
 
 |newpage|
 
