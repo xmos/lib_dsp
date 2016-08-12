@@ -80,58 +80,50 @@
 #endif
 
         
-        // ===========================================================================
-        //
-        // Function prototypes
-        //
-        // ===========================================================================
-
-        // ==================================================================== //
-        // Function:        FIROS3_init                                         //
-        // Arguments:       FIROS3Ctrl_t    *psFIRDS2Ctrl: Ctrl strct.          //
-        // Return values:   FIROS3_NO_ERROR on success                          //
-        //                  FIROS3_ERROR on failure                             //
-        // Description:     Inits the FIROS3                                    //
-        // ==================================================================== //
+/** This function initialises the oversample by 3 function for a given instance
+ *
+ *
+ *  \param      *psFIROS3Ctrl   OS3 control structure of type FIROS3Ctrl_t
+ *  \returns    Error code of type FIRDS3ReturnCodes_t
+ */
 #ifdef __XC__        
         FIROS3ReturnCodes_t             FIROS3_init(FIROS3Ctrl_t* unsafe psFIROS3Ctrl);
 #else
         FIROS3ReturnCodes_t             FIROS3_init(FIROS3Ctrl_t* psFIROS3Ctrl);
 #endif  
 
-        // ==================================================================== //
-        // Function:        FIROS3_sync                                         //
-        // Arguments:       FIROS3Ctrl_t    *psFIRDS2Ctrl: Ctrl strct.          //
-        // Return values:   FIROS3_NO_ERROR on success                          //
-        //                  FIROS3_ERROR on failure                             //
-        // Description:     Syncs the FIROS3                                    //
-        // ==================================================================== //
+/** This function clears the oversample by 3 delay line for a given instance
+ *
+ *
+ *  \param      *psFIROS3Ctrl   OS3 control structure of type FIROS3Ctrl_t
+ *  \returns    Error code of type FIRDS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIROS3ReturnCodes_t             FIROS3_sync(FIROS3Ctrl_t* unsafe psFIROS3Ctrl);
 #else
         FIROS3ReturnCodes_t             FIROS3_sync(FIROS3Ctrl_t* psFIROS3Ctrl);
 #endif
 
-        // ==================================================================== //
-        // Function:        FIROS3_input                                        //
-        // Arguments:       FIROS3Ctrl_t    *psFIROS3Ctrl: Ctrl strct.          //
-        // Return values:   FIROS3_NO_ERROR on success                          //
-        //                  FIROS3_ERROR on failure                             //
-        // Description:     Writes new input sample to FIROS3 delay line        //
-        // ==================================================================== //
+/** This function pushes a single input sample into the filter
+ *  It should be called three times for each FIROS3_proc call
+ *
+ *
+ *  \param      *psFIROS3Ctrl   OS3 control structure of type FIROS3Ctrl_t
+ *  \returns    Error code of type FIROS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIROS3ReturnCodes_t             FIROS3_input(FIROS3Ctrl_t* unsafe psFIROS3Ctrl);
 #else
         FIROS3ReturnCodes_t             FIROS3_input(FIROS3Ctrl_t* psFIROS3Ctrl);
 #endif
 
-        // ==================================================================== //
-        // Function:        FIROS3_proc                                         //
-        // Arguments:       FIROS3Ctrl_t    *psFIROS3Ctrl: Ctrl strct.          //
-        // Return values:   FIROS3_NO_ERROR on success                          //
-        //                  FIROS3_ERROR on failure                             //
-        // Description:     Processes the FIROS3                                //
-        // ==================================================================== //
+/** This function performs the oversampling by 3 and outputs one sample
+ *  The input and output buffers are pointed to by members of the psFIROS3Ctrl structure
+ *
+ *
+ *  \param      *psFIROS3Ctrl   OS3 control structure of type FIROS3Ctrl_t
+ *  \returns    Error code of type FIROS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIROS3ReturnCodes_t             FIROS3_proc(FIROS3Ctrl_t* unsafe psFIROS3Ctrl);    
 #else

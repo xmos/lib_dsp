@@ -70,44 +70,35 @@
         } FIRDS3Ctrl_t;
 #endif
 
-        
-        // ===========================================================================
-        //
-        // Function prototypes
-        //
-        // ===========================================================================
-
-        // ==================================================================== //
-        // Function:        FIRDS3_init                                         //
-        // Arguments:       FIRDS3Ctrl_t    *psFIRDS2Ctrl: Ctrl strct.          //
-        // Return values:   FIRDS3_NO_ERROR on success                          //
-        //                  FIRDS3_ERROR on failure                             //
-        // Description:     Inits the FIRDS3                                    //
-        // ==================================================================== //
+/** This function initialises the decimate by 3 function for a given instance
+ *
+ *
+ *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
+ *  \returns    Error code of type FIRDS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIRDS3ReturnCodes_t             FIRDS3_init(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
 #else
         FIRDS3ReturnCodes_t             FIRDS3_init(FIRDS3Ctrl_t* psFIRDS3Ctrl);
 #endif
-        // ==================================================================== //
-        // Function:        FIRDS3_sync                                         //
-        // Arguments:       FIRDS3Ctrl_t    *psFIRDS2Ctrl: Ctrl strct.          //
-        // Return values:   FIRDS3_NO_ERROR on success                          //
-        //                  FIRDS3_ERROR on failure                             //
-        // Description:     Syncs the FIRDS3                                    //
-        // ==================================================================== //
+/** This function clears the decimate by 3 delay line for a given instance
+ *
+ *
+ *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
+ *  \returns    Error code of type FIRDS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIRDS3ReturnCodes_t             FIRDS3_sync(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
 #else
         FIRDS3ReturnCodes_t             FIRDS3_sync(FIRDS3Ctrl_t* psFIRDS3Ctrl);
 #endif
-        // ==================================================================== //
-        // Function:        FIRDS3_proc                                         //
-        // Arguments:       FIRDS3Ctrl_t    *psFIRDS3Ctrl: Ctrl strct.          //
-        // Return values:   FIRDS3_NO_ERROR on success                          //
-        //                  FIRDS3_ERROR on failure                             //
-        // Description:     Processes the FIRDS3                                //
-        // ==================================================================== //
+/** This function performs the decimation on three input samples and outputs on sample
+ *  The input and output buffers are pointed to by members of the psFIRDS3Ctrl structure
+ *
+ *
+ *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
+ *  \returns    Error code of type FIRDS3ReturnCodes_t
+ */
 #ifdef __XC__
         FIRDS3ReturnCodes_t             FIRDS3_proc(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
 #else
