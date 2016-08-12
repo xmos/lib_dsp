@@ -22,6 +22,7 @@
 
 // FIROS3 includes
 #include "dsp_os3.h"
+#include "fir_inner_loop_asm.h"
 
 // ===========================================================================
 //
@@ -151,9 +152,7 @@ FIROS3ReturnCodes_t				FIROS3_proc(FIROS3Ctrl_t* psFIROS3Ctrl)
 	int*			piData;
 	int*			piCoefs;
 	int				iData;
-	int				iCoef0, iCoef1;
 	__int64_t		i64Acc;
-	unsigned		ui;
 	
 	// Clear accumulator and set data/coefs access pointers
 	piData					= psFIROS3Ctrl->piDelayI;

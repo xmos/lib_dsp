@@ -125,10 +125,8 @@ FIRDS3ReturnCodes_t				FIRDS3_proc(FIRDS3Ctrl_t* psFIRDS3Ctrl)
 {
 	int*			piData;
 	int*			piCoefs;
-	int				iData0, iData1;
-	int				iCoef0, iCoef1;
+	int				iData0;
 	__int64_t			i64Acc;
-	unsigned		ui;
 
 	// Get three new data samples to delay line (double write for circular buffer simulation)
 	iData0					= *psFIRDS3Ctrl->piIn;
