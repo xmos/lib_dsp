@@ -38,6 +38,7 @@ int main(void)
             // ------------
             // Set delay line base to ctrl structure
 			sFIROS3Ctrl[i].piDelayB		= (int*)iFIROS3Delay[i];
+
             // Init instance
             if(FIROS3_init(&sFIROS3Ctrl[i]) != FIRDS3_NO_ERROR)
             {
@@ -76,7 +77,7 @@ int main(void)
                     }
                 }
 
-                //Always output a sample
+                // Call sample rate conversion. Always output a sample on each loop
                 if(FIROS3_proc(&sFIROS3Ctrl[i]) != FIRDS3_NO_ERROR)
                 {
                     printf("Error on os3 process\n");

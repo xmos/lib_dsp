@@ -63,13 +63,15 @@ int main(void)
                 // Set input and output data pointers for the DS3
                 sFIRDS3Ctrl[i].piIn            = (int *)input_data[i];
                 sFIRDS3Ctrl[i].piOut           = (int *)&output_data[i];
+
+                // Do the sample rate conversion on three input samples
                 if(FIRDS3_proc(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
                 {
                     printf("Error on ds3 process\n");
                     return_code = -3;
                 }
                 //for(int j=0; j<3; j++) printf("in = %d\n", *(input_data[i] + j));
-                input_data[i] += 3;
+                input_data[i] += 3; // Move input pointer on by 3
                 printf("%d\n", output_data[i]);
             }
         }
