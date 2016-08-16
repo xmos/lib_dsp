@@ -381,6 +381,16 @@ The DS3 processing takes up to 402 core cycles to compute a sample which transla
 
 Both downsample and oversample functions return ``ERROR`` or  ``NOERROR`` status codes as defined in return codes enums listed below.
 
+The down sampling functions return the following error codes ::
+
+  FIRDS3_NO_ERROR
+  FIRDS3_ERROR
+
+The up sampling functions return the following error codes ::
+
+  FIROS3_NO_ERROR
+  FIROS3_ERROR
+
 For details on synchronous audio sample rate conversion by factors of two, or asynchronous audio sample rate conversion please see the XMOS Sample Rate Conversion Library [#]_.
 
 .. [#] http://www.xmos.com/published/lib_src-userguide
