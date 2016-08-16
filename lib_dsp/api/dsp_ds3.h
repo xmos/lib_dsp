@@ -26,8 +26,10 @@
     // To avoid C type definitions when including this file from assembler
     #ifndef INCLUDE_FROM_ASM
 
-        // FIRDS3 Return Codes
-        // -------------------
+/** Downsample by 3 return codes
+ *
+ * This type describes the possible error status states from calls to the ds3 API.
+ */
         typedef enum _FIRDS3ReturnCodes                                 
         {
             FIRDS3_NO_ERROR                         = 0,

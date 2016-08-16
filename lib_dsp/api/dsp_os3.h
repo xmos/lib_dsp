@@ -33,8 +33,10 @@
     // To avoid C type definitions when including this file from assembler
     #ifndef INCLUDE_FROM_ASM
 
-        // FIROS3 Return Codes
-        // -------------------
+/** Oversample by 3 return codes
+ *
+ * This type describes the possible error status states from calls to the os3 API.
+ */
         typedef enum _FIROS3ReturnCodes                                 
         {
             FIROS3_NO_ERROR                         = 0,

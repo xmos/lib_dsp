@@ -358,7 +358,7 @@ dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spec
 Audio Sample Rate Conversion
 ----------------------------
 
-The DSP library includes down-sample (decimate) and up-sample (interpolate) by factor of three functions called DS3 and OS3. In each case, the DSP processing is carried out each time a single output sample is required. In the case of the decimator, three input samples passed to filter with a resulting one sample output on calling the processing function. The interpolator produces an output sample each time the processing function is called but will require a single sample to be pushed into the filter every third cycle. All samples use Q31 format (left justified signed 32b integer).
+The DSP library includes downsample (decimate) and oversample (upsample or interpolate) by factor of three functions called DS3 and OS3. In each case, the DSP processing is carried out each time a single output sample is required. In the case of the decimator, three input samples passed to filter with a resulting one sample output on calling the processing function. The interpolator produces an output sample each time the processing function is called but will require a single sample to be pushed into the filter every third cycle. All samples use Q31 format (left justified signed 32b integer).
 
 Both sample rate converters are based on a 144 tap FIR filter with two sets of coefficients available, depending on application requirements:
 
@@ -379,6 +379,8 @@ The OS3 processing takes up to 157 core cycles to compute a sample which transla
 
 The DS3 processing takes up to 402 core cycles to compute a sample which translates to 4.02us at 100MHz or 6.432us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core. 
 
+Both downsample and oversample functions return ``ERROR`` or  ``NOERROR`` status codes as defined in return codes enums listed below.
+
 For details on synchronous audio sample rate conversion by factors of two, or asynchronous audio sample rate conversion please see the XMOS Sample Rate Conversion Library [#]_.
 
 .. [#] http://www.xmos.com/published/lib_src-userguide
@@ -386,6 +388,8 @@ For details on synchronous audio sample rate conversion by factors of two, or as
 
 DS3 Function API
 ................
+
+.. doxygentypedef:: FIRDS3ReturnCodes_t
 
 .. doxygenfunction:: FIRDS3_init
 
@@ -395,6 +399,8 @@ DS3 Function API
 
 OS3 Function API
 ................
+
+.. doxygentypedef:: FIROS3ReturnCodes_t
 
 .. doxygenfunction:: FIROS3_init
 

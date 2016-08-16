@@ -19,7 +19,7 @@ const int32_t im4k5k_m6dB_48[1024] = {0, 1190523165, 1967042101, 2065749272, 146
 int main(void)
 {
     unsafe{
-        int return_code = 0;
+        FIRDS3ReturnCodes_t return_code = FIRDS3_NO_ERROR;
 
         // Input data for both channels
         const int32_t * unsafe input_data[NUM_CHANNELS] = {s1k_0db_48, im4k5k_m6dB_48};
@@ -46,7 +46,7 @@ int main(void)
             if(FIRDS3_init(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
             {
                 printf("Error on init\n");
-                return_code = -1;
+                return_code = FIRDS3_ERROR;
             }
 
             // Sync (i.e. clear data)
@@ -54,7 +54,8 @@ int main(void)
             if(FIRDS3_sync(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
             {
                 printf("Error on sync\n");
-                return_code = -2;            }
+                return_code = FIRDS3_ERROR;            
+            }
 
         }
 
@@ -68,13 +69,13 @@ int main(void)
                 if(FIRDS3_proc(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
                 {
                     printf("Error on ds3 process\n");
-                    return_code = -3;
+                    return_code = FIRDS3_ERROR;
                 }
                 //for(int j=0; j<3; j++) printf("in = %d\n", *(input_data[i] + j));
                 input_data[i] += 3; // Move input pointer on by 3
                 printf("%d\n", output_data[i]);
             }
         }
-        return return_code;
+        return (int)return_code;
     }
 }

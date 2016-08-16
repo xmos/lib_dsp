@@ -19,7 +19,7 @@ const int32_t im4k5k_m6dB_16[1024] = {0, 1751257718, -1832991325, 348346744, 107
 int main(void)
 {
     unsafe{
-        int return_code = 0;
+        FIROS3ReturnCodes_t return_code = FIROS3_NO_ERROR;
 
         // Input data for both channels
         const int32_t * unsafe input_data[NUM_CHANNELS] = {s1k_0db_16, im4k5k_m6dB_16};
@@ -40,10 +40,10 @@ int main(void)
 			sFIROS3Ctrl[i].piDelayB		= (int*)iFIROS3Delay[i];
 
             // Init instance
-            if(FIROS3_init(&sFIROS3Ctrl[i]) != FIRDS3_NO_ERROR)
+            if(FIROS3_init(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
             {
                 printf("Error on init\n");
-                return_code = -1;
+                return_code = FIROS3_ERROR;
             }
 
             // Sync (i.e. clear data)
@@ -51,7 +51,7 @@ int main(void)
             if(FIROS3_sync(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
             {
                 printf("Error on sync\n");
-                return_code = -2;            
+                return_code = FIROS3_ERROR;            
             }
 
         }
@@ -73,12 +73,12 @@ int main(void)
             		if(FIROS3_input(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
                 	{
                     	printf("Error on os3 input\n");
-                    	return_code = -3;
+                    	return_code = FIROS3_ERROR;
                     }
                 }
 
                 // Call sample rate conversion. Always output a sample on each loop
-                if(FIROS3_proc(&sFIROS3Ctrl[i]) != FIRDS3_NO_ERROR)
+                if(FIROS3_proc(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
                 {
                     printf("Error on os3 process\n");
                     return_code = -4;
@@ -86,6 +86,6 @@ int main(void)
                 printf("%d\n", sFIROS3Ctrl[i].iOut);
             }
         }
-        return return_code;
+        return (int)return_code;
     }
 }
