@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016, XMOS Ltd, All rights reserved
 
 #ifndef DSP_H_
 #define DSP_H_
@@ -12,7 +12,8 @@
 #include <dsp_qformat.h>
 #include <dsp_vector.h>
 #include <dsp_fft.h>
-
+#include <dsp_ds3.h>
+#include <dsp_os3.h>
 
 /* Macro to time function calls
  * After execution of this line the value in cycle_taken is valid.

@@ -15,9 +15,13 @@ The library is split into the following modules :
    * Statistics - dsp_statistics.h
    * Vectors - dsp_vector.h
    * FFT and inverse FFT - dsp_fft.h
+   * Downsample by 3 - dsp_ds3.h
+   * Oversample by 3 - dsp_os3.h
 
 The library supports variable Q formats from Q8 to Q31, using the
 macros in the following header file : dsp_qformat.h.
+
+The Downsample and Oversample functions are fixed Q31 format.
 
 Getting Started
 ---------------
@@ -34,6 +38,8 @@ In the Project Explorer view you will see the following applications :
    * Vectors - app_vector
    * FFT and inverse FFT - app_fft
    * FFT Processing of signals received through a double buffer - app_fft_double_buf
+   * Downsample by 3 - app_ds3
+   * Oversample by 3 - app_os3
 
 The applications contain code to generate the simulation data and call all of the functions in each module and print the results in the xTIMEcomposer console.
 
@@ -95,6 +101,10 @@ References
   * XMOS DSP Library
 
     http://www.xmos.com/support/libraries/lib_dsp
+
+  * XMOS Sample Rate Conversion Library
+
+    https://www.xmos.com/published/lib_src-userguide
 
   * xCORE-200: The XMOS XS2 Architecture (ISA)
   
@@ -173,6 +183,24 @@ FFT Processing of signals received through a double buffer
 
 |newpage|
 
+
+Downsample by 3 Function
+........................
+
+.. literalinclude:: ../../app_ds3/src/app_ds3.xc
+  :largelisting:
+
+|newpage|
+
+Oversample by 3 Function
+........................
+
+.. literalinclude:: ../../app_os3/src/app_os3.xc
+  :largelisting:
+
+|newpage|
+
+
 Correct Results Listings
 ------------------------
 
@@ -226,4 +254,19 @@ Vector Functions
 
 |newpage|
 
+Downsample by 3 Functions
+.........................
+
+.. caution::
+  Ommitted for brevity. Please see file ``os3_test.expect`` for golden expected test output.
+
+|newpage|
+
+Oversample by 3 Functions
+.........................
+
+.. caution::
+  Ommitted for brevity. Please see file ``os3_test.expect`` for golden expected test output.
+
+|newpage|
 
