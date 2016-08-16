@@ -5,6 +5,10 @@
 
 #include <stdint.h>
 
+#ifdef __XC__
+extern "C" {
+#endif
+
 /** This function implements a least-mean-squares adaptive FIR filter.
  *
  *  LMS filters are a class of adaptive filters that adjust filter coefficients
@@ -67,7 +71,7 @@ int32_t dsp_adaptive_lms
 (
     int32_t input_sample,
     int32_t reference_sample,
-    int32_t error_sample[],
+    int32_t *error_sample,
     const int32_t filter_coeffs[],
     int32_t state_data[],
     const int32_t num_taps,
@@ -143,12 +147,16 @@ int32_t dsp_adaptive_nlms
 (
     int32_t input_sample,
     int32_t reference_sample,
-    int32_t error_sample[],
+    int32_t *error_sample,
     const int32_t filter_coeffs[],
     int32_t state_data[],
     const int32_t num_taps,
     const int32_t step_size,
     int32_t q_format
 );
+
+#ifdef __XC__
+}
+#endif
 
 #endif
