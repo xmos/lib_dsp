@@ -244,6 +244,11 @@ Vector Math Functions: Vector multiplication and vector subtraction
 
 .. doxygenfunction:: dsp_vector_mulv_subv
 
+Vector Math Functions: Complex vector multiplication
+----------------------------------------------------
+
+.. doxygenfunction:: dsp_vector_mulv_complex
+
 Matrix Math Functions: Element Negation
 ---------------------------------------
 
