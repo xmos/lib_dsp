@@ -463,7 +463,7 @@ void dsp_vector_mulv_subv
  *  int32_t input_vector_Y_im[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_vector_R_re[256];  
  *  int32_t result_vector_R_im[256];  
- *  dsp_vector_mulv( input_vector_X_re, input_vector_X_im, input_vector_Y_re, input_vector_Y_im, result_vector_R_re, result_vector_R_im, 256, 28 );
+ *  dsp_vector_mulv_complex( input_vector_X_re, input_vector_X_im, input_vector_Y_re, input_vector_Y_im, result_vector_R_re, result_vector_R_im, 256, 28 );
  *  \endcode 
  * 
  *  \param  input_vector_X_re   Pointer to real source data array X.
