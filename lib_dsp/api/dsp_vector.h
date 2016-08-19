@@ -446,4 +446,44 @@ void dsp_vector_mulv_subv
     const int32_t q_format
 );
 
+/** Complex vector / vector multiplication: ``R[i] = X[i] * Y[i]``
+ * 
+ *  Vectors X[i] and Y[i] are complex, with separate arrays for the real and imaginary components.
+ * 
+ *  Each multiplication produces a 64-bit result. 
+ *  If overflow occurs it is saturated at the minimum/maximum value given the fixed-point format
+ *  and finally shifted right by ``q_format`` bits.
+ * 
+ *  Example:
+ *
+ *  \code 
+ *  int32_t input_vector_X_re[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_X_im[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y_re[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y_im[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t result_vector_R_re[256];  
+ *  int32_t result_vector_R_im[256];  
+ *  dsp_vector_mulv( input_vector_X_re, input_vector_X_im, input_vector_Y_re, input_vector_Y_im, result_vector_R_re, result_vector_R_im, 256, 28 );
+ *  \endcode 
+ * 
+ *  \param  input_vector_X_re   Pointer to real source data array X.
+ *  \param  input_vector_X_im   Pointer to imaginary source data array X.
+ *  \param  input_vector_Y_re   Pointer to real source data array Y.
+ *  \param  input_vector_Y_im   Pointer to imaginary source data array Y.
+ *  \param  result_vector_R_re  Pointer to the resulting real data array.
+ *  \param  result_vector_R_im  Pointer to the resulting imaginary data array.
+ *  \param  vector_length       Length of the input and output vectors.
+ *  \param  q_format            Fixed point format (i.e. number of fractional bits).
+ */
+
+void dsp_vector_mulv_complex (const int32_t input_vector_X_re[],
+    const int32_t input_vector_X_im[],
+    const int32_t input_vector_Y_re[],
+    const int32_t input_vector_Y_im[],
+    int32_t       result_vector_R_re[],
+    int32_t       result_vector_R_im[],
+    const int32_t vector_length,
+    const int32_t q_format
+);
+
 #endif

@@ -35,7 +35,7 @@ In the Project Explorer view you will see the following applications :
    * Basic Math - app_math
    * Matrix Math - app_matrix
    * Statistics - app_statistics
-   * Vectors - app_vector
+   * Vectors (Real and Complex) - app_vector
    * FFT and inverse FFT - app_fft
    * FFT Processing of signals received through a double buffer - app_fft_double_buf
    * Downsample by 3 - app_ds3
