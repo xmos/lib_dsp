@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 #include <stdint.h>
 
 const int32_t dsp_sine_8[3] = {

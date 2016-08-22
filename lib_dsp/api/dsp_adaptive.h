@@ -1,9 +1,13 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
 #ifndef DSP_ADAPTIVE_H_
 #define DSP_ADAPTIVE_H_
 
 #include <stdint.h>
+
+#ifdef __XC__
+extern "C" {
+#endif
 
 /** This function implements a least-mean-squares adaptive FIR filter.
  *
@@ -58,7 +62,7 @@
  *  \param  state_data        Pointer to FIR filter state data array of length ``N``.
  *                            Must be initialized at startup to all zeros.
  *  \param  num_taps          Filter tap count where ``N`` = ``num_taps`` = filter order + 1.
- *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
+ *  \param  mu                Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).
  *  \returns                  The resulting filter output sample.
  */
@@ -67,11 +71,11 @@ int32_t dsp_adaptive_lms
 (
     int32_t input_sample,
     int32_t reference_sample,
-    int32_t error_sample[],
+    int32_t *error_sample,
     const int32_t filter_coeffs[],
     int32_t state_data[],
     const int32_t num_taps,
-    const int32_t step_size,
+    const int32_t mu,
     int32_t q_format
 );
 
@@ -134,7 +138,7 @@ int32_t dsp_adaptive_lms
  *  \param  state_data        Pointer to FIR filter state data array of length N.
  *                            Must be initialized at startup to all zeros.
  *  \param  num_taps          Filter tap count where N = num_taps = filter order + 1.
- *  \param  step_size         Coefficient adjustment step size, controls rate of convergence.
+ *  \param  mu                Coefficient adjustment step size, controls rate of convergence.
  *  \param  q_format          Fixed point format (i.e. number of fractional bits).
  *  \returns                  The resulting filter output sample.
  */
@@ -143,12 +147,16 @@ int32_t dsp_adaptive_nlms
 (
     int32_t input_sample,
     int32_t reference_sample,
-    int32_t error_sample[],
+    int32_t *error_sample,
     const int32_t filter_coeffs[],
     int32_t state_data[],
     const int32_t num_taps,
-    const int32_t step_size,
+    const int32_t mu,
     int32_t q_format
 );
+
+#ifdef __XC__
+}
+#endif
 
 #endif

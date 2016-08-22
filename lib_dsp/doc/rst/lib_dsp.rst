@@ -19,7 +19,6 @@ The API and implementation for each category are provided by a single 'C' header
 implementation file.
 
 .. table:: DSP library organization
-    :class: narrow
 
   +-------------+----------------+---------------------------------------------------------------+
   | Category    | Source Files   | Functions                                                     |
@@ -43,6 +42,10 @@ implementation file.
   +-------------+----------------+---------------------------------------------------------------+
   | FFT         | dsp_fft        | Forward and inverse Fast Fourier Transforms.                  |
   +-------------+----------------+---------------------------------------------------------------+
+  | Sample Rate | dsp_ds3,       | Downsample by factor of 3 (e.g. 48KHz to 16KHz Audio SRC).    |
+  | Conversion  | dsp_os3        | Oversample by factor of 3 (e.g. 16KHz to 48KHz Audio SRC).    |
+  +-------------+----------------+---------------------------------------------------------------+
+
 
 Fixed-Point Format
 ------------------
@@ -51,7 +54,9 @@ Q Format Introduction
 .....................
 
 The library functions support 32 bit input and output data, with internal 64 bit accumulator.
-The output data can be scaled to any of the supported Q Formats (Q8 through Q31).
+The output data can be scaled to any of the supported Q Formats (Q8 through Q31), for all functions except for
+sample rate conversion, which uses a fixed Q31 format.
+
 Further details about Q Format numbers is available `here <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
 
 The 'q_format' Parameter
@@ -239,6 +244,11 @@ Vector Math Functions: Vector multiplication and vector subtraction
 
 .. doxygenfunction:: dsp_vector_mulv_subv
 
+Vector Math Functions: Complex vector multiplication
+----------------------------------------------------
+
+.. doxygenfunction:: dsp_vector_mulv_complex
+
 Matrix Math Functions: Element Negation
 ---------------------------------------
 
@@ -350,6 +360,70 @@ dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spec
 .. doxygenfunction:: dsp_fft_forward
 .. doxygenfunction:: dsp_fft_inverse
 
+Audio Sample Rate Conversion
+----------------------------
+
+The DSP library includes downsample (decimate) and oversample (upsample or interpolate) by factor of three functions called DS3 and OS3. In each case, the DSP processing is carried out each time a single output sample is required. In the case of the decimator, three input samples passed to filter with a resulting one sample output on calling the processing function. The interpolator produces an output sample each time the processing function is called but will require a single sample to be pushed into the filter every third cycle. All samples use Q31 format (left justified signed 32b integer).
+
+Both sample rate converters are based on a 144 tap FIR filter with two sets of coefficients available, depending on application requirements:
+
+ * firos3_b_144.dat / firds3_b_144.dat - These filters have 20dB of attenuation at the nyquist frequency and a higher cutoff frequency
+ * firos3_144.dat / firds3_144.dat - These filters have 60dB of attenuation at the nyquist frequency but trade this off with a lower cutoff frequency
+
+The filter coefficients may be selected by adjusting the line::
+
+  #define   FIROS3_COEFS_FILE
+
+and::
+
+  #define   FIRDS3_COEFS_FILE
+
+in the files ``dsp_os3.h`` and ``dsp_ds3.h`` respectively.
+
+The OS3 processing takes up to 157 core cycles to compute a sample which translates to 1.57us at 100MHz or 2.512us at 62.5MHz core speed. This permits up to 8 channels of 16KHz -> 48KHz sample rate conversion in a single 62.5MHz core.
+
+The DS3 processing takes up to 402 core cycles to compute a sample which translates to 4.02us at 100MHz or 6.432us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core. 
+
+Both downsample and oversample functions return ``ERROR`` or  ``NOERROR`` status codes as defined in return codes enums listed below.
+
+The down sampling functions return the following error codes ::
+
+  FIRDS3_NO_ERROR
+  FIRDS3_ERROR
+
+The up sampling functions return the following error codes ::
+
+  FIROS3_NO_ERROR
+  FIROS3_ERROR
+
+For details on synchronous audio sample rate conversion by factors of two, or asynchronous audio sample rate conversion please see the XMOS Sample Rate Conversion Library [#]_.
+
+.. [#] http://www.xmos.com/published/lib_src-userguide
+
+
+DS3 Function API
+................
+
+.. doxygentypedef:: FIRDS3ReturnCodes_t
+
+.. doxygenfunction:: FIRDS3_init
+
+.. doxygenfunction:: FIRDS3_sync
+
+.. doxygenfunction:: FIRDS3_proc
+
+OS3 Function API
+................
+
+.. doxygentypedef:: FIROS3ReturnCodes_t
+
+.. doxygenfunction:: FIROS3_init
+
+.. doxygenfunction:: FIROS3_sync
+
+.. doxygenfunction:: FIROS3_input
+
+.. doxygenfunction:: FIRDS3_proc
 
 |appendix|
 

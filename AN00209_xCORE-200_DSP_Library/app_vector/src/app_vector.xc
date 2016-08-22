@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Vector Functions Test Program
 // Uses Q24 format
 
@@ -6,20 +6,31 @@
 #include <xs1.h>
 #include <dsp.h>
 
-#define Q_M               8
-#define Q_N               24
+#define Q_M                   8
+#define Q_N                   24
 
 #define SAMPLE_LENGTH         50
 #define SHORT_SAMPLE_LENGTH   5
 
+#define COMPLEX_VECTOR_LENGTH 12
+
+
 int32_t  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q24(.17), Q24(.18), Q24(.19), Q24(.20),
-               Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25), Q24(.26), Q24(.27), Q24(.28), Q24(.29), Q24(.30),
-               Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35), Q24(.36), Q24(.37), Q24(.38), Q24(.39), Q24(.40),
-               Q24(.41), Q24(.42), Q24(.43), Q24(.44), Q24(.45), Q24(.46), Q24(.47), Q24(.48), Q24(.49), Q24(.50),
-               Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
+                   Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25), Q24(.26), Q24(.27), Q24(.28), Q24(.29), Q24(.30),
+                   Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35), Q24(.36), Q24(.37), Q24(.38), Q24(.39), Q24(.40),
+                   Q24(.41), Q24(.42), Q24(.43), Q24(.44), Q24(.45), Q24(.46), Q24(.47), Q24(.48), Q24(.49), Q24(.50),
+                   Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 int32_t  Src2[] = { Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 int32_t  Src3[] = { Q24(.61), Q24(.62), Q24(.63), Q24(.64), Q24(.65), Q24(.66), Q24(.67), Q24(.68), Q24(.69), Q24(.70)};
-int32_t           Dst[SAMPLE_LENGTH];
+int32_t  Dst[SAMPLE_LENGTH];
+
+int32_t A_real[] = {Q24(1.), Q24(2.), Q24(3.), Q24(4.), Q24(3.), Q24(4.), Q24(1.), Q24(2.), Q24(1.), Q24(3.), Q24(5.), Q24(7.)};
+int32_t A_imag[] = {Q24(5.), Q24(6.), Q24(7.), Q24(8.), Q24(7.), Q24(8.), Q24(5.), Q24(6.), Q24(2.), Q24(4.), Q24(6.), Q24(8.)};
+int32_t B_real[] = {Q24(3.), Q24(4.), Q24(5.), Q24(6.), Q24(7.), Q24(1.), Q24(3.), Q24(7.), Q24(5.), Q24(6.), Q24(5.), Q24(6.)};
+int32_t B_imag[] = {Q24(5.), Q24(6.), Q24(7.), Q24(8.), Q24(9.), Q24(3.), Q24(5.), Q24(9.), Q24(7.), Q24(8.), Q24(7.), Q24(8.)};
+int32_t C_real[COMPLEX_VECTOR_LENGTH];
+int32_t C_imag[COMPLEX_VECTOR_LENGTH];
+
 
 int main(void)
 {
@@ -181,6 +192,20 @@ int main(void)
   {
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
+
+
+  dsp_vector_mulv_complex (A_real, A_imag, B_real, B_imag, C_real, C_imag, COMPLEX_VECTOR_LENGTH, Q_N);
+
+  printf ("Complex vector / Vector multiplication Result\n");
+  printf ("C_real = ");
+  for (int i = 0; i < COMPLEX_VECTOR_LENGTH; i++)
+    printf ("%lf, ", F24 (C_real[i]));
+  printf ("\n");
+  printf ("C_imag = ");
+  for (int i = 0; i < COMPLEX_VECTOR_LENGTH; i++)
+    printf ("%lf, ", F24 (C_imag[i]));
+  printf ("\n");
+
 
   return (0);
 }

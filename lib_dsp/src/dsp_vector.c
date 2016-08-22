@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
 #include <platform.h>
 #include "dsp_qformat.h"
@@ -889,3 +889,209 @@ void dsp_vector_mulv_subv
         *result_vector_R++ = x0 - z0;
     }
 }
+
+
+void dsp_vector_mulv_complex
+(
+    const int32_t* input_vector_X_re,
+    const int32_t* input_vector_X_im,
+    const int32_t* input_vector_Y_re,
+    const int32_t* input_vector_Y_im,
+    int32_t*       result_vector_R_re,
+    int32_t*       result_vector_R_im,
+    const int32_t  vector_length,
+    const int32_t  q_format
+) {
+    int32_t   x0_re0, x0_im0, y0_re0, y0_im0, z0_00, z0_10;
+    int32_t   x0_re1, x0_im1, y0_re1, y0_im1, z0_01, z0_11;
+    int32_t   ah;
+    uint32_t  al;
+    int32_t   zero = 0;
+
+    int32_t   vl = vector_length;
+
+    while( vl >= 8 )
+    {
+// First stage
+
+        asm ("ldd %0, %1, %2[0]" : "=r"(x0_re1), "=r"(x0_re0) : "r"(input_vector_X_re));
+        asm ("ldd %0, %1, %2[0]" : "=r"(x0_im1), "=r"(x0_im0) : "r"(input_vector_X_im));
+
+        asm ("ldd %0, %1, %2[0]" : "=r"(y0_re1), "=r"(y0_re0) : "r"(input_vector_Y_re));
+        asm ("ldd %0, %1, %2[0]" : "=r"(y0_im1), "=r"(y0_im0) : "r"(input_vector_Y_im));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_re0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_00) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_00) : "r"(z0_00), "r"(z0_10));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im0), "r"(y0_re0), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_re1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_01) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_01) : "r"(z0_01), "r"(z0_11));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im1), "r"(y0_re1), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm("std %0,%1,%2[0]"::"r"(z0_01), "r"(z0_00), "r"(result_vector_R_re));
+        asm("std %0,%1,%2[0]"::"r"(z0_11), "r"(z0_10), "r"(result_vector_R_im));
+
+// Second stage
+
+        asm ("ldd %0, %1, %2[1]" : "=r"(x0_re1), "=r"(x0_re0) : "r"(input_vector_X_re));
+        asm ("ldd %0, %1, %2[1]" : "=r"(x0_im1), "=r"(x0_im0) : "r"(input_vector_X_im));
+
+        asm ("ldd %0, %1, %2[1]" : "=r"(y0_re1), "=r"(y0_re0) : "r"(input_vector_Y_re));
+        asm ("ldd %0, %1, %2[1]" : "=r"(y0_im1), "=r"(y0_im0) : "r"(input_vector_Y_im));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_re0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_00) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_00) : "r"(z0_00), "r"(z0_10));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im0), "r"(y0_re0), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_re1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_01) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_01) : "r"(z0_01), "r"(z0_11));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im1), "r"(y0_re1), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm("std %0,%1,%2[1]"::"r"(z0_01), "r"(z0_00), "r"(result_vector_R_re));
+        asm("std %0,%1,%2[1]"::"r"(z0_11), "r"(z0_10), "r"(result_vector_R_im));
+
+// Third stage
+
+        asm ("ldd %0, %1, %2[2]" : "=r"(x0_re1), "=r"(x0_re0) : "r"(input_vector_X_re));
+        asm ("ldd %0, %1, %2[2]" : "=r"(x0_im1), "=r"(x0_im0) : "r"(input_vector_X_im));
+
+        asm ("ldd %0, %1, %2[2]" : "=r"(y0_re1), "=r"(y0_re0) : "r"(input_vector_Y_re));
+        asm ("ldd %0, %1, %2[2]" : "=r"(y0_im1), "=r"(y0_im0) : "r"(input_vector_Y_im));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_re0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_00) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_00) : "r"(z0_00), "r"(z0_10));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im0), "r"(y0_re0), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_re1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_01) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_01) : "r"(z0_01), "r"(z0_11));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im1), "r"(y0_re1), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm("std %0,%1,%2[2]"::"r"(z0_01), "r"(z0_00), "r"(result_vector_R_re));
+        asm("std %0,%1,%2[2]"::"r"(z0_11), "r"(z0_10), "r"(result_vector_R_im));
+
+// Fourth stage
+
+        asm ("ldd %0, %1, %2[3]" : "=r"(x0_re1), "=r"(x0_re0) : "r"(input_vector_X_re));
+        asm ("ldd %0, %1, %2[3]" : "=r"(x0_im1), "=r"(x0_im0) : "r"(input_vector_X_im));
+
+        asm ("ldd %0, %1, %2[3]" : "=r"(y0_re1), "=r"(y0_re0) : "r"(input_vector_Y_re));
+        asm ("ldd %0, %1, %2[3]" : "=r"(y0_im1), "=r"(y0_im0) : "r"(input_vector_Y_im));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_re0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_00) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_00) : "r"(z0_00), "r"(z0_10));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im0), "r"(y0_re0), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_re1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_01) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_01) : "r"(z0_01), "r"(z0_11));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re1), "r"(y0_im1), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im1), "r"(y0_re1), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_11) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm("std %0,%1,%2[3]"::"r"(z0_01), "r"(z0_00), "r"(result_vector_R_re));
+        asm("std %0,%1,%2[3]"::"r"(z0_11), "r"(z0_10), "r"(result_vector_R_im));
+
+
+        vl -= 8;
+        input_vector_X_re += 8; input_vector_Y_re += 8; result_vector_R_re += 8;
+        input_vector_X_im += 8; input_vector_Y_im += 8; result_vector_R_im += 8;
+    }
+
+    while( vl-- )
+    {
+        x0_re0 = *input_vector_X_re++; x0_im0 = *input_vector_X_im++;
+        y0_re0 = *input_vector_Y_re++; y0_im0 = *input_vector_Y_im++;
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_re0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_00) : "r"(ah), "r"(al), "r"(q_format));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_im0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+        asm ("sub %0, %1, %2" : "=r" (z0_00) : "r"(z0_00), "r"(z0_10));
+
+        asm ("lmul %0, %1, %2, %3, %4, %5" : "=r" (ah), "=r" (al) : "r"(x0_re0), "r"(y0_im0), "r"(zero), "r"(zero));
+        asm ("maccs %0, %1, %2, %3" : "=r"(ah), "=r"(al) : "r"(x0_im0), "r"(y0_re0), "0"(ah), "1"(al));
+
+        asm ("lsats %0, %1, %2" : "=r"(ah), "=r"(al) : "r"(q_format), "0"(ah), "1"(al));
+        asm ("lextract %0, %1, %2, %3, 32" : "=r"(z0_10) : "r"(ah), "r"(al), "r"(q_format));
+
+        *result_vector_R_re = z0_00;
+        *result_vector_R_im = z0_10;
+        result_vector_R_re++;
+        result_vector_R_im++;
+    }
+}
+

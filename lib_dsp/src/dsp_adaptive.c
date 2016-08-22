@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 
 #include <platform.h>
 #include "dsp_qformat.h"
@@ -18,7 +18,7 @@ int32_t dsp_adaptive_lms
     const int32_t* filter_coeffs,
     int32_t* state_data,
     const int32_t num_taps,
-    const int32_t step_size,
+    const int32_t mu,
     const int32_t q_format
 ) {
     int32_t output_sample, mu_err;
@@ -34,9 +34,9 @@ int32_t dsp_adaptive_lms
     *error_sample = reference_sample - output_sample;
     
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
-    // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
+    // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * mu
     
-    mu_err = dsp_math_multiply( *error_sample, step_size, q_format );
+    mu_err = dsp_math_multiply( *error_sample, mu, q_format );
     dsp_vector_muls_addv( state_data, mu_err, (int32_t*) filter_coeffs, (int32_t*) filter_coeffs, num_taps, q_format );
         
     return output_sample;
@@ -52,7 +52,7 @@ int32_t dsp_adaptive_nlms
     const int32_t* filter_coeffs,
     int32_t* state_data,
     const int32_t num_taps,
-    const int32_t step_size,
+    const int32_t mu,
     const int32_t q_format
 ) {
     int32_t output_sample, energy, adjustment, ee, qq;
@@ -80,11 +80,11 @@ int32_t dsp_adaptive_nlms
     if( energy < (1 << (31-(31-qq)*2)) ) energy = (1 << (31-(31-qq)*2)) + 0;
 
     energy = dsp_math_divide( (1 << qq), energy, qq );
-    adjustment = dsp_math_multiply( *error_sample, step_size, q_format );
+    adjustment = dsp_math_multiply( *error_sample, mu, q_format );
     adjustment = dsp_math_multiply( energy, adjustment, qq + q_format - q_format );
     
     // FIR filter coefficients b[k] are updated on a sample-by-sample basis:
-    // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * step_size
+    // b[k] = b[k] + mu_err * x[n-k] --- where mu_err = e[n] * mu
     
     dsp_vector_muls_addv( state_data, adjustment, (int32_t*) filter_coeffs, (int32_t*) filter_coeffs, num_taps, q_format );
         
