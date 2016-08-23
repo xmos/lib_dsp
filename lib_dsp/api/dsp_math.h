@@ -109,7 +109,7 @@ int32_t  dsp_math_multiply
  *
  *  \code
  *  int32_t  result;
- *  result = dsp_math_multiply( Q28(-0.33), sample, 28 );
+ *  result = dsp_math_multiply_sat( Q28(-0.33), sample, 28 );
  *  \endcode
  *
  *
