@@ -144,7 +144,7 @@ void dsp_matrix_addm
  *  int32_t input_matrix_X [256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_matrix_Y [256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t result_matrix_R[256];  
- *  dsp_matrix_addv( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
+ *  dsp_matrix_subm( input_matrix_X, input_matrix_Y, result_matrix_R, 8, 32 );
  *  \endcode
  * 
  *  \param  input_matrix_X   Pointer to source data array X.

@@ -27,7 +27,7 @@
  *  \code
  *  int32_t filter_coeff[5] = { Q28(0.5),Q28(-0.5),Q28(0.0),Q28(-0.5),Q28(0.5) };
  *  int32_t filter_state[4] = { 0, 0, 0, 0 };
- *  int32_t result = dsp_fir( sample, filter_coeff, filter_state, 5, 28 );
+ *  int32_t result = dsp_filters_fir( sample, filter_coeff, filter_state, 5, 28 );
  *  \endcode
  *
  *  The FIR algorithm involves multiplication between 32-bit filter
@@ -172,7 +172,7 @@ int32_t dsp_filters_decimate
  *  \code
  *  int32_t filter_coeff[DSP_NUM_COEFFS_PER_BIQUAD] = { Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
  *  int32_t filter_state[DSP_NUM_STATES_PER_BIQUAD] = { 0, 0, 0, 0 };
- *  int32_t result = dsp_biquad( sample, filter_coeff, filter_state, 28 );
+ *  int32_t result = dsp_filters_biquad( sample, filter_coeff, filter_state, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter
@@ -221,7 +221,7 @@ int32_t dsp_filters_biquad
  *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1),
  *                           Q28(+0.5), Q28(-0.1), Q28(-0.5), Q28(-0.1), Q28(0.1) };
  *  int32_t filter_state[4*DSP_NUM_STATES_PER_BIQUAD] = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
- *  int32_t result = dsp_cascaded_biquad( sample, filter_coeff, filter_state, 4, 28 );
+ *  int32_t result = dsp_filters_biquads( sample, filter_coeff, filter_state, 4, 28 );
  *  \endcode
  * 
  *  The IIR algorithm involves multiplication between 32-bit filter

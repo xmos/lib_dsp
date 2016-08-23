@@ -1,111 +1,92 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#ifndef _FIRDS3_H_
-#define _FIRDS3_H_
+#ifndef _DPS_DS3_H_
+#define _DPS_DS3_H_
 
-    // ===========================================================================
-    //
-    // Defines
-    //
-    // ===========================================================================
-    
-    // General defines
-    // ---------------
-    // Filter related
-    #define     FIRDS3_N_COEFS                          144                     // Number of coefficients must be a multiple of 6
-    // Filters with "_b_" in their filenames in FIRDS3.h have higher attenuation at Nyquist (> 60dB compared with 20dB ) but with an earlier cutoff.
-    #define     FIRDS3_COEFS_FILE                       "FilterData/firds3_b_144.dat"
-    //#define     FIRDS3_COEFS_FILE                       "FilterData/firds3_144.dat"
+#ifdef __XC__
+extern "C" {
+#endif
 
-    // ===========================================================================
-    //
-    // TypeDefs
-    //
-    // ===========================================================================
+// ===========================================================================
+//
+// Defines
+//
+// ===========================================================================
 
-    // To avoid C type definitions when including this file from assembler
-    #ifndef INCLUDE_FROM_ASM
+// General defines
+// ---------------
+// Filter related
+#define     DSP_DS3_N_COEFS                          144                     // Number of coefficients must be a multiple of 6
+// Filters with "_b_" in their filenames in FIRDS3.h have higher attenuation at Nyquist (> 60dB compared with 20dB ) but with an earlier cutoff.
+#define     DSP_DS3_COEFS_FILE                       "FilterData/firds3_b_144.dat"
+//#define     DSP_DS3_COEFS_FILE                       "FilterData/firds3_144.dat"
+
+// ===========================================================================
+//
+// TypeDefs
+//
+// ===========================================================================
+
+// To avoid C type definitions when including this file from assembler
+#ifndef INCLUDE_FROM_ASM
 
 /** Downsample by 3 return codes
  *
  * This type describes the possible error status states from calls to the ds3 API.
  */
-        typedef enum _FIRDS3ReturnCodes                                 
-        {
-            FIRDS3_NO_ERROR                         = 0,
-            FIRDS3_ERROR                            = 1
-        } FIRDS3ReturnCodes_t;
+typedef enum dsp_ds3_return_code_t
+{
+    DSP_DS3_NO_ERROR                         = 0,
+    DSP_DS3_ERROR                            = 1
+} dsp_ds3_return_code_t;
 
-        // FIRDS3 Ctrl
-        // -----------
-#ifdef __XC__
-        typedef struct _FIRDS3Ctrl                                      
-        {
-            int*unsafe                                  piIn;           // Pointer to input data (3 samples)
-            int*unsafe                                      piOut;          // Pointer to output data (1 sample)
+// FIRDS3 Ctrl
+// -----------
+typedef struct dsp_ds3_ctrl_t
+{
+    int*                                    in_data;          // Pointer to input data (3 samples)
+    int*                                    out_data;         // Pointer to output data (1 sample)
 
-            int*unsafe                                      piDelayB;       // Pointer to delay line base
-            unsigned int                            uiDelayL;       // Total length of delay line
-            int*unsafe                                      piDelayI;       // Pointer to current position in delay line
-            int*unsafe                                      piDelayW;       // Delay buffer wrap around address (for circular buffer simulation)
-            unsigned int                            uiDelayO;       // Delay line offset for second write (for circular buffer simulation)
+    int*                                    delay_base;       // Pointer to delay line base
+    unsigned int                            delay_len;        // Total length of delay line
+    int*                                    delay_pos;        // Pointer to current position in delay line
+    int*                                    delay_wrap;       // Delay buffer wrap around address (for circular buffer simulation)
+    unsigned int                            delay_offset;     // Delay line offset for second write (for circular buffer simulation)
 
-            unsigned int                            uiNLoops;       // Number of inner loop iterations
-            unsigned int                            uiNCoefs;       // Number of coefficients
-            int*unsafe                                      piCoefs;        // Pointer to coefficients
-        } FIRDS3Ctrl_t;
-#else
-        typedef struct _FIRDS3Ctrl
-        {
-            int*                                    piIn;           // Pointer to input data (3 samples)
-            int*                                    piOut;          // Pointer to output data (1 sample)
-
-            int*                                    piDelayB;       // Pointer to delay line base
-            unsigned int                            uiDelayL;       // Total length of delay line
-            int*                                    piDelayI;       // Pointer to current position in delay line
-            int*                                    piDelayW;       // Delay buffer wrap around address (for circular buffer simulation)
-            unsigned int                            uiDelayO;       // Delay line offset for second write (for circular buffer simulation)
-
-            unsigned int                            uiNLoops;       // Number of inner loop iterations
-            unsigned int                            uiNCoefs;       // Number of coefficients
-            int*                                    piCoefs;        // Pointer to coefficients
-        } FIRDS3Ctrl_t;
-#endif
+    unsigned int                            inner_loops;      // Number of inner loop iterations
+    unsigned int                            num_coeffs;       // Number of coefficients
+    int*                                    coeffs;           // Pointer to coefficients
+} dsp_ds3_ctrl_t;
 
 /** This function initialises the decimate by 3 function for a given instance
  *
  *
- *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
- *  \returns    Error code of type FIRDS3ReturnCodes_t
+ *  \param      dsp_ds3_ctrl   DS3 control structure
+ *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
  */
-#ifdef __XC__
-        FIRDS3ReturnCodes_t             FIRDS3_init(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
-#else
-        FIRDS3ReturnCodes_t             FIRDS3_init(FIRDS3Ctrl_t* psFIRDS3Ctrl);
-#endif
+dsp_ds3_return_code_t dsp_ds3_init(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
+
 /** This function clears the decimate by 3 delay line for a given instance
  *
  *
- *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
- *  \returns    Error code of type FIRDS3ReturnCodes_t
+ *  \param      dsp_ds3_ctrl   DS3 control structure
+ *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
  */
-#ifdef __XC__
-        FIRDS3ReturnCodes_t             FIRDS3_sync(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
-#else
-        FIRDS3ReturnCodes_t             FIRDS3_sync(FIRDS3Ctrl_t* psFIRDS3Ctrl);
-#endif
-/** This function performs the decimation on three input samples and outputs on sample
- *  The input and output buffers are pointed to by members of the psFIRDS3Ctrl structure
- *
- *
- *  \param      *psFIRDS3Ctrl   DS3 control structure of type FIRDS3Ctrl_t
- *  \returns    Error code of type FIRDS3ReturnCodes_t
- */
-#ifdef __XC__
-        FIRDS3ReturnCodes_t             FIRDS3_proc(FIRDS3Ctrl_t* unsafe psFIRDS3Ctrl);
-#else
-        FIRDS3ReturnCodes_t             FIRDS3_proc(FIRDS3Ctrl_t* psFIRDS3Ctrl);
-#endif
-    #endif // nINCLUDE_FROM_ASM
+dsp_ds3_return_code_t dsp_ds3_sync(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
 
-#endif // _FIRDS3_H_
+/** This function performs the decimation on three input samples and outputs on sample
+ *  The input and output buffers are pointed to by members of the dsp_ds3_ctrl structure
+ *
+ *
+ *  \param      dsp_ds3_ctrl   DS3 control structure
+ *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
+ */
+dsp_ds3_return_code_t dsp_ds3_proc(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
+
+#endif // INCLUDE_FROM_ASM
+
+#ifdef __XC__
+}
+#endif
+
+#endif // _DPS_DS3_H_
