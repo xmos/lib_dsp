@@ -390,7 +390,7 @@ void dsp_vector_muls_subv
  *  int32_t input_vector_Y[256];
  *  int32_t input_vector_Z[256];
  *  int32_t result_vector_R[256];
- *  dsp_vector_mulv_subv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256, 28 );
+ *  dsp_vector_mulv_addv( input_vector_X, input_vector_Y, input_vector_Z, result_vector_R, 256, 28 );
  *  \endcode 
  * 
  *  \param  input_vector_X    Pointer to source data array X.

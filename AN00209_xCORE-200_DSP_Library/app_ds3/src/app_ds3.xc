@@ -18,58 +18,55 @@ const int32_t im4k5k_m6dB_48[1024] = {0, 1190523165, 1967042101, 2065749272, 146
 
 int main(void)
 {
-    unsafe{
-        FIRDS3ReturnCodes_t return_code = FIRDS3_NO_ERROR;
+    unsafe {
+        dsp_ds3_return_code_t return_code = DSP_DS3_NO_ERROR;
 
         // Input data for both channels
         const int32_t * unsafe input_data[NUM_CHANNELS] = {s1k_0db_48, im4k5k_m6dB_48};
-        
+
         // Output samples
         int32_t output_data[NUM_CHANNELS];
 
         // DS3 instances variables
         // -----------------------
         // State and Control structures (one for each channel)
-        int                 iFIRDS3Delay[NUM_CHANNELS][FIRDS3_N_COEFS<<1];
-        FIRDS3Ctrl_t        sFIRDS3Ctrl[NUM_CHANNELS];
+        int                 dsp_ds3_delay[NUM_CHANNELS][DSP_DS3_N_COEFS<<1];
+        dsp_ds3_ctrl_t      dsp_ds3_ctrl[NUM_CHANNELS];
 
         //Init DS3
-        for (int i=0; i<NUM_CHANNELS; i++){
+        for (int i=0; i<NUM_CHANNELS; i++) {
 
             printf("Init ds3 channel %d\n", i);
             // Process init
             // ------------
             // Set delay line base to ctrl structure
-            sFIRDS3Ctrl[i].piDelayB        = iFIRDS3Delay[i];
+            dsp_ds3_ctrl[i].delay_base = dsp_ds3_delay[i];
 
             // Init instance
-            if(FIRDS3_init(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
-            {
+            if (dsp_ds3_init(&dsp_ds3_ctrl[i]) != DSP_DS3_NO_ERROR) {
                 printf("Error on init\n");
-                return_code = FIRDS3_ERROR;
+                return_code = DSP_DS3_ERROR;
             }
 
             // Sync (i.e. clear data)
             // ----
-            if(FIRDS3_sync(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
-            {
+            if (dsp_ds3_sync(&dsp_ds3_ctrl[i]) != DSP_DS3_NO_ERROR) {
                 printf("Error on sync\n");
-                return_code = FIRDS3_ERROR;            
+                return_code = DSP_DS3_ERROR;
             }
 
         }
 
-        for (int s=0; s<NUM_OUTPUT_SAMPLES; s++){
-            for (int i=0; i<NUM_CHANNELS; i++){
+        for (int s=0; s<NUM_OUTPUT_SAMPLES; s++) {
+            for (int i=0; i<NUM_CHANNELS; i++) {
                 // Set input and output data pointers for the DS3
-                sFIRDS3Ctrl[i].piIn            = (int *)input_data[i];
-                sFIRDS3Ctrl[i].piOut           = (int *)&output_data[i];
+                dsp_ds3_ctrl[i].in_data            = (int *)input_data[i];
+                dsp_ds3_ctrl[i].out_data           = (int *)&output_data[i];
 
                 // Do the sample rate conversion on three input samples
-                if(FIRDS3_proc(&sFIRDS3Ctrl[i]) != FIRDS3_NO_ERROR)
-                {
+                if (dsp_ds3_proc(&dsp_ds3_ctrl[i]) != DSP_DS3_NO_ERROR) {
                     printf("Error on ds3 process\n");
-                    return_code = FIRDS3_ERROR;
+                    return_code = DSP_DS3_ERROR;
                 }
                 //for(int j=0; j<3; j++) printf("in = %d\n", *(input_data[i] + j));
                 input_data[i] += 3; // Move input pointer on by 3

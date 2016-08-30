@@ -18,8 +18,8 @@ const int32_t im4k5k_m6dB_16[1024] = {0, 1751257718, -1832991325, 348346744, 107
 
 int main(void)
 {
-    unsafe{
-        FIROS3ReturnCodes_t return_code = FIROS3_NO_ERROR;
+    unsafe {
+        dsp_os3_return_code_t return_code = DSP_OS3_NO_ERROR;
 
         // Input data for both channels
         const int32_t * unsafe input_data[NUM_CHANNELS] = {s1k_0db_16, im4k5k_m6dB_16};
@@ -27,63 +27,58 @@ int main(void)
         // OS3 instances variables
         // -----------------------
         // State and Control structures (one per channel)
-		int32_t			iFIROS3Delay[NUM_CHANNELS][(FIROS3_N_COEFS/FIROS3_N_PHASES)<<1];		// Delay line length is 1/3rd of number of coefs as over-sampler by 3 (and double for circular buffer simulation)
-		FIROS3Ctrl_t	sFIROS3Ctrl[NUM_CHANNELS];
+        int32_t           dsp_os3_delay[NUM_CHANNELS][(DSP_OS3_N_COEFS/DSP_OS3_N_PHASES)<<1];        // Delay line length is 1/3rd of number of coefs as over-sampler by 3 (and double for circular buffer simulation)
+        dsp_os3_ctrl_t    dsp_os3_ctrl[NUM_CHANNELS];
 
         //Init OS3
-        for (int i=0; i<NUM_CHANNELS; i++){
+        for (int i=0; i<NUM_CHANNELS; i++) {
 
             printf("Init os3 channel %d\n", i);
             // Process init
             // ------------
             // Set delay line base to ctrl structure
-			sFIROS3Ctrl[i].piDelayB		= (int*)iFIROS3Delay[i];
+            dsp_os3_ctrl[i].delay_base        = (int*)dsp_os3_delay[i];
 
             // Init instance
-            if(FIROS3_init(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
-            {
+            if (dsp_os3_init(&dsp_os3_ctrl[i]) != DSP_OS3_NO_ERROR) {
                 printf("Error on init\n");
-                return_code = FIROS3_ERROR;
+                return_code = DSP_OS3_ERROR;
             }
 
             // Sync (i.e. clear data)
             // ----
-            if(FIROS3_sync(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
-            {
+            if (dsp_os3_sync(&dsp_os3_ctrl[i]) != DSP_OS3_NO_ERROR) {
                 printf("Error on sync\n");
-                return_code = FIROS3_ERROR;            
+                return_code = DSP_OS3_ERROR;
             }
 
         }
 
-        for (int s=0; s<NUM_OUTPUT_SAMPLES; s++){
-            for (int i=0; i<NUM_CHANNELS; i++){
-				// Run through output samples, we read 1 input sample every 3 output samples
-				// This is given when the iPhase member of the FIROS control structure reaches '0'
+        for (int s=0; s<NUM_OUTPUT_SAMPLES; s++) {
+            for (int i=0; i<NUM_CHANNELS; i++) {
+                // Run through output samples, we read 1 input sample every 3 output samples
+                // This is given when the phase member of the control structure reaches '0'
 
-				// Check if a new input sample is needed
-				// If it is needed read it into the control structure and call function to write to delay line
-				// If we have reached end of file, signal it.
-            	if(sFIROS3Ctrl[i].iPhase == 0)
-            	{
-            		sFIROS3Ctrl[i].iIn = *input_data[i];
-            		//printf("in = %d\n", (int32_t) *input_data[i]);
-            		input_data[i]++;
+                // Check if a new input sample is needed
+                // If it is needed read it into the control structure and call function to write to delay line
+                // If we have reached end of file, signal it.
+                if (dsp_os3_ctrl[i].phase == 0) {
+                    dsp_os3_ctrl[i].in_data = *input_data[i];
+                    //printf("in = %d\n", (int32_t) *input_data[i]);
+                    input_data[i]++;
 
-            		if(FIROS3_input(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
-                	{
-                    	printf("Error on os3 input\n");
-                    	return_code = FIROS3_ERROR;
+                    if (dsp_os3_input(&dsp_os3_ctrl[i]) != DSP_OS3_NO_ERROR) {
+                        printf("Error on os3 input\n");
+                        return_code = DSP_OS3_ERROR;
                     }
                 }
 
                 // Call sample rate conversion. Always output a sample on each loop
-                if(FIROS3_proc(&sFIROS3Ctrl[i]) != FIROS3_NO_ERROR)
-                {
+                if (dsp_os3_proc(&dsp_os3_ctrl[i]) != DSP_OS3_NO_ERROR) {
                     printf("Error on os3 process\n");
                     return_code = -4;
                 }
-                printf("%d\n", sFIROS3Ctrl[i].iOut);
+                printf("%d\n", dsp_os3_ctrl[i].out_data);
             }
         }
         return (int)return_code;
