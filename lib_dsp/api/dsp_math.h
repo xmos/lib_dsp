@@ -125,7 +125,7 @@ int32_t  dsp_math_multiply_sat(
 );
 
 
-/** Unsigned Division
+/** Signed Division
  *
  *  This function divides two signed integer values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
@@ -168,7 +168,7 @@ uint32_t dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32
 /** Scalar square root
  * 
  *  This function computes the square root of an unsigned input value
- *  using the Babylonian method of successive averaging
+ *  using the Babylonian method of successive averaging.
  *  Error is <= 1 LSB and worst case performance is 96 cycles.
  *
  *  \param  x            Unsigned 32-bit value in Q8.24 format

@@ -36,8 +36,8 @@ extern "C" {
  */
 typedef enum dsp_ds3_return_code_t
 {
-    DSP_DS3_NO_ERROR                         = 0,
-    DSP_DS3_ERROR                            = 1
+    DSP_DS3_NO_ERROR = 0,
+    DSP_DS3_ERROR    = 1
 } dsp_ds3_return_code_t;
 
 // FIRDS3 Ctrl
