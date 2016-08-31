@@ -216,16 +216,16 @@ inline q8_24 dsp_math_cos(q8_24 rad) {
 q8_24 dsp_math_atan(q8_24 x);
 
 #if defined(__XS2A__)
-/** Function that computes a fast fixed point atan2 and hypot. The input
+/** Function that computes a fast fixed point atan2 and hypothenuse. The input
  * comprises an array of two integers (notionally a complex number with the
  * real value stored in the first index, and the imaginary value stored in
  * the second index). The output overwrites the input, and comprises a
- * hypothenusa (stored in the first index) and an angle (stored in the
+ * hypothenuse (stored in the first index) and an angle (stored in the
  * second index).
  *
  * The input values are signed fixed point integers [-0x7FFF FFFF..0x7FFF
  * FFFF] with the fixed point in an arbitrary location, the output
- * hypothenusa is an unsigned fixed point integer with the fixed point in
+ * hypothenuse is an unsigned fixed point integer with the fixed point in
  * the same location. The output angle is a value in the range [-0x4000
  * 0000.. 0x4000 0000] representing the angle; 0 indicates a positive real
  * part and a zero imaginary part, with angles increasing anti clockwise.
@@ -234,17 +234,18 @@ q8_24 dsp_math_atan(q8_24 x);
  * The function allows for a trade-off to be made between accuracy and speed.
  *
  * The precision parameter should be set to 9 * N to request (24-N) bits
- * accuracy in the hypothenusa and (26-N) bits accuracy in the angle.
- * Hence, the value 0 requests a 24-bit accuracte hypothenusa and a 26-bit
- * accurate angle, where as 9*23 = 207 requests a 1-bit accurate
- * hypothenusa and a 3-bit accurate angle. N must be between 0 and 23
+ * accuracy in the hypothenuse and (26-N) bits accuracy in the angle.
+ * Hence, the value 0 requests a 24-bit accurate hypothenuse and a 26-bit
+ * accurate angle, whereas 9*23 = 207 requests a 1-bit accurate
+ * hypothenuse and a 3-bit accurate angle. N must be between 0 and 23
  * inclusive.
  *
  * Execution time is 31 + 5 N thread cycles; at most 151 thread cycles for
  * 24 bit, at its fastest it will take 36 thread cycles for 1-bit
- * precision.
+ * precision. Note that for high precision, atan() with a division may be
+ * faster, but that will not compute the hypotenusa.
  *
- * atan2(0,0) returns a 0 hypothenusa and an arbitrary angle
+ * atan2(0,0) returns a 0 hypothenuse and an arbitrary angle
  *
  * Example:
  *
@@ -253,13 +254,13 @@ q8_24 dsp_math_atan(q8_24 x);
  *  dsp_math_atan2_hypot(z, 0);
  *  \endcode
  *
- * results in 1414 (unsigned int stored in z[0]), and x0fff ffe1 (signed
+ * results in 1414 (unsigned int stored in z[0]), and 0x0fff ffe1 (signed
  * int, stored in z[1]). The former is 1000*sqrt(2), the latter is a 45
  * degree angle represented by 0x1000 0000 calculated to a precision of 26
  * bits
  *
  * \param  z        array of two signed integers providing real (x) and
- *                  imaginary (y) inputs, and unsigned hypothenusa and
+ *                  imaginary (y) inputs, and unsigned hypothenuse and
  *                  signed angle outputs
  * \param precision integer that sets the precision; set to 0 for maximum
  *                  precision; and to 9*N for reduced precision, 0 <= N <= 23.
