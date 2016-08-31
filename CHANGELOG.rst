@@ -10,7 +10,10 @@ xCORE-200 DSP library change log
   * Changed API prefix from ``lib_dsp_`` to ``dsp_``.
   * Changed lib_dsp_fft_complex_t to dsp_complex_t and
     lib_dsp_fft_complex_short_t to dsp_complex_short_t
-  * Various fixes in API documentation.
+  * Various fixes in API documentation
+  * Added complex vector multiplication
+  * Added synchronous sample rate conversion (downsample or upsample by factor
+    3)
 
 2.0.0
 -----
