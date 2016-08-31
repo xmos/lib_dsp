@@ -134,6 +134,16 @@ Scalar Math Functions: Multiply Saturated
 
 .. doxygenfunction:: dsp_math_multiply_sat
 
+Scalar Math Functions: Signed Division
+--------------------------------------
+
+.. doxygenfunction:: dsp_math_divide
+
+Scalar Math Functions: Unsigned Division
+----------------------------------------
+
+.. doxygenfunction:: dsp_math_divide_unsigned
+
 Scalar Math Functions: Square Root
 ----------------------------------
 
