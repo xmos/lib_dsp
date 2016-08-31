@@ -15,8 +15,8 @@
  *
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
- *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
+ *  variable which equals a previous input sample, or
+ *  ``y[n] = x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  *
  *  The parameter ``filter_coeffs`` points to a coefficient array of size
  *  N = ``num_taps``. The filter coefficients are stored in forward order
@@ -68,8 +68,8 @@ int32_t dsp_filters_fir
  * 
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
- *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
+ *  variable which equals a previous input sample, or
+ *  ``y[n] = x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
@@ -116,8 +116,8 @@ void dsp_filters_interpolate
  * 
  *  The FIR filter algorithm is based upon a sequence of multiply-accumulate
  *  (MAC) operations. Each filter coefficient ``b[i]`` is multiplied by a state
- *  variable which equals a previous input sample ``x[i]``, or
- *  ``y[n]=x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
+ *  variable which equals a previous input sample, or
+ *  ``y[n] = x[n]*b0 + x[n-1]*b1 + x[n-2]*b2 + ... + x[n-N+1]*bN-1``
  * 
  *  ``filter_coeffs`` points to a coefficient array of size N = ``num_taps``.
  *  The filter coefficients
@@ -155,7 +155,7 @@ int32_t dsp_filters_decimate
     const int32_t q_format
 );
 
-/** This function implements a second order IIR (direct form I).
+/** This function implements a second order IIR filter (direct form I).
  *
  *  The function operates on a single sample of input and output data (i.e. and
  *  each call to the function processes one sample).

@@ -5,7 +5,6 @@
 *.vcd
 *.xi
 *.i
-*.a
 **/_build/
 **/run_*.log
 **/pdf/*

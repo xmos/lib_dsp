@@ -45,8 +45,8 @@ extern "C" {
  *  \endcode
  * 
  *  The LMS filter algorithm involves multiplication between two 32-bit values
- *  and 64-bit accumulation as a result of using an FIR as well as coefficient
- *  step size calculations). 
+ *  and 64-bit accumulation as a result of using a FIR filter as well as coefficient
+ *  step size calculations. 
  * 
  *  Multiplication results are accumulated in a 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow
@@ -115,8 +115,8 @@ int32_t dsp_adaptive_lms
  *  \endcode
  * 
  *  The LMS filter algorithm involves multiplication between two 32-bit values
- *  and 64-bit accumulation as a result of using an FIR as well as coefficient
- *  step size calculations). 
+ *  and 64-bit accumulation as a result of using a FIR filter as well as coefficient
+ *  step size calculations. 
  * 
  *  Multiplication results are accumulated in a 64-bit accumulator with the final
  *  result shifted to the required fixed-point format. Therefore overflow

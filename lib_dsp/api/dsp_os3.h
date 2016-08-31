@@ -39,10 +39,10 @@ extern "C" {
  *
  * This type describes the possible error status states from calls to the os3 API.
  */
-typedef enum dsp_os3_return_code_t
+typedef enum dsp_os3_return_code_t 
 {
-    DSP_OS3_NO_ERROR                         = 0,
-    DSP_OS3_ERROR                            = 1
+    DSP_OS3_NO_ERROR = 0,
+    DSP_OS3_ERROR    = 1
 } dsp_os3_return_code_t;
 
 // FIROS3 Ctrl
