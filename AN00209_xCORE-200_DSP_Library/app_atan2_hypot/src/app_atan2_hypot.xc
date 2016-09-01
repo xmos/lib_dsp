@@ -42,6 +42,9 @@ void atan2_test(void) {
     single_atan2_test(0x7FFFFFFF,-0x7FFFFFFF, SQRT2(0x7FFFFFFF), 0x30000000, 0, 25);
     single_atan2_test(-0x7FFFFFFF,0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x10000000, 0, 25);
     single_atan2_test(-0x7FFFFFFF,-0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x30000000, 0, 25);
+    for(int i = 0; i < 23; i++) {
+        single_atan2_test(1200000000, 1600000000, 2000000000, 0x0d1bfaf9, i, 24-i);
+    }
     for(int i = 0; i < PI2_Q8_24; i += PI2_Q8_24/391) {
         int angle = (((long long) i) << 31) / PI2_Q8_24;
         if (angle >= (1 << 30)) {

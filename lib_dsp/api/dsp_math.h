@@ -233,12 +233,10 @@ q8_24 dsp_math_atan(q8_24 x);
  *
  * The function allows for a trade-off to be made between accuracy and speed.
  *
- * The precision parameter should be set to 9 * N to request (24-N) bits
- * accuracy in the hypothenuse and (26-N) bits accuracy in the angle.
- * Hence, the value 0 requests a 24-bit accurate hypothenuse and a 26-bit
- * accurate angle, whereas 9*23 = 207 requests a 1-bit accurate
- * hypothenuse and a 3-bit accurate angle. N must be between 0 and 23
- * inclusive.
+ * The precision parameter should be set to (24-N) to request N bits
+ * accuracy in the hypothenuse and angle. Hence, the value 0 requests a
+ * 24-bit accurate hypothenuse/angle, whereas 23 requests a 1-bit accurate
+ * hypothenuse/angle. precision must be between 0 and 23 inclusive.
  *
  * Execution time is 31 + 5 N thread cycles; at most 151 thread cycles for
  * 24 bit, at its fastest it will take 36 thread cycles for 1-bit
@@ -263,7 +261,7 @@ q8_24 dsp_math_atan(q8_24 x);
  *                  imaginary (y) inputs, and unsigned hypothenuse and
  *                  signed angle outputs
  * \param precision integer that sets the precision; set to 0 for maximum
- *                  precision; and to 9*N for reduced precision, 0 <= N <= 23.
+ *                  precision; and to 23 for no precision; 0 <= precision <= 23.
  */
 extern void dsp_math_atan2_hypot(int z[2], unsigned int precision);
 #endif

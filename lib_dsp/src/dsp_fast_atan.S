@@ -71,17 +71,18 @@ dsp_math_atan2_hypot:
 	ldaw g, cp[cordic_angles]
 	ldd y, x, p[0]
 
-	{; mkmsk j, 32}
+	{shl shift_distance, s, 3  ; mkmsk j, 32}
 	{ldw b, g[j]               ; clz t, x }
-	{bf t, x_neg               ;         }
+	{bf t, x_neg               ; add s, s, shift_distance }
     {bu x_complete             ; ldc b, 0}
 x_neg:   
 	{neg x, x                  ; neg y, y}
+    
 x_complete:
-#if 1
     {clz  t, x                 ; clz shift_distance, y}
     {bt shift_distance, y_pos  ; add shift_distance, y, 0 }
     {neg shift_distance, y     ; neg b, b }
+    
 y_pos:
     {clz shift_distance, shift_distance; eq j, t, 1}
     {bt j, shift_back          ; lss j, shift_distance, t}
@@ -98,9 +99,8 @@ shift_back:
     {ashr y, y, 1}
     {shr x, x, 1                ; mkmsk shift_distance, 32}
     {mkmsk j, 32                ;}
+    
 shift_done:
-                   
-#endif
     {bru s; clz t, y}
     
     ITER(0)
