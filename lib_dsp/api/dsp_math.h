@@ -155,7 +155,7 @@ int32_t  dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_forma
  *
  *  \code
  *  uint32_t  quotient;
- *  quotient = dsp_math_divide(divident, divisor, 24);
+ *  quotient = dsp_math_divide_unsigned(divident, divisor, 24);
  *  \endcode
  *
  *  \param  dividend     Value to be divided
