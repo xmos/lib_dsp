@@ -38,7 +38,7 @@ dsp_fft_inverse_xs2:
 
     ldc r11, 2
     stw r11, sp[14]            // step
-outerLoop:
+.Ltmp_outerLoop:
     ldw r11, sp[14]
     shl r10, r11, 3
     stw r10, sp[9]             // step * 8
@@ -54,7 +54,7 @@ outerLoop:
     add r10, r11, r10          // step4 + (step2&1)
     stw r10, sp[11]
     ldc r9, 0
-kLoop1:
+.Ltmp_kLoop1:
     stw r9, sp[10]             // k
     ldw r10, sp[15]            // shift
     { shl r7, r9, r10  ;   ldw r6, sp[18] }// sine
@@ -73,7 +73,7 @@ kLoop1:
 
 #define HIRES 0
 
-innerLoop1:
+.Ltmp_innerLoop1:
 
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
@@ -109,21 +109,21 @@ innerLoop1:
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	lsu r8, r4, r6    
 
-	{bf r8, innerLoop1 ;ldc r3, 31}
+	{bf r8, .Ltmp_innerLoop1 ;ldc r3, 31}
 
     ldw r9, sp[10]             // k
     add r9, r9, 1
 	ldw r10, sp[11]
     lsu r10, r9, r10
-	bt r10, kLoop1
+	bt r10, .Ltmp_kLoop1
 
 // Second inner loop
 
 	ldw r10, sp[12]             // step4
     {ldw r11, sp[13]             ;    ldc r9, 1}
-    {and r7, r11, r9             ;   bu  kLoop2In}
+    {and r7, r11, r9             ;   bu  .Ltmp_kLoop2In}
     nop
-kLoop2:
+.Ltmp_kLoop2:
     { ldw r10, sp[15]  ; add r11, r7, 0}           // shift
     { shl r9, r11, r10 ;     ldw r7, sp[18]   }         // sine         // k << shift
 
@@ -141,7 +141,7 @@ kLoop2:
 
 	{ldc r8, 0                   ;    ldw r11, sp[9]}
  	{ldc r3, 31; nop}
-innerLoop2:
+.Ltmp_innerLoop2:
 
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
 	ldd r10, r7, sp[10]              //  0x800000000 x 2
@@ -178,13 +178,13 @@ innerLoop2:
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	{lsu r8, r4, r6         ;    ldw r7, sp[10]}             // k
 
-	{bf r8, innerLoop2; ldc r3, 31}
+	{bf r8, .Ltmp_innerLoop2; ldc r3, 31}
 
     {add r7, r7, 1              ;	ldw r10, sp[12]}             // step4
 
-kLoop2In:   
+.Ltmp_kLoop2In:   
     {lsu r10, r7, r10            ;    stw r7, sp[10]}             // k
-	bt r10, kLoop2
+	bt r10, .Ltmp_kLoop2
 
 	ldd r10, r11, sp[7]
 	{sub r10, r10, 1; shl r11, r11, 1}
@@ -193,7 +193,7 @@ kLoop2In:
     ldw r10, sp[17]
     add r10, r10, 1
     lsu r10, r10, r11
-    bf  r10, outerLoop
+    bf  r10, .Ltmp_outerLoop
     
 	ldw r10, sp[19]
 	ldw r9, sp[22]

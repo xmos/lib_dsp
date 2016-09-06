@@ -22,11 +22,11 @@ dsp_fft_short_to_long_xs2:
 	std r5, r4, sp[0]
 
 .align 8
-loop2:
 	ldw r4, r0[r2]
+.Ltmp_loop2:
 	{andnot r4, r11; shl r3, r4, 16}
 	std r4, r3, r1[r2]
-	{bt r2, loop2; sub r2, r2, 1}
+	{bt r2, .Ltmp_loop2; sub r2, r2, 1}
 
 	ldd r5, r4, sp[0]
 	retsp 2
