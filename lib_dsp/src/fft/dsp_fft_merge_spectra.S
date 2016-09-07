@@ -34,14 +34,14 @@ dsp_fft_merge_spectra_xs2:
 	//reverse the second half
 	{shr i, j, 1; mov r8, j}
 	{add i, i, 1; sub j, j, 1}
-second_half_reorder_loop:
+.Ltmp_second_half_reorder_loop:
 	ldd re0, im0, p[i]
 	ldd re1, im1, p[j]
 	std re1, im1, p[i]
 	std re0, im0, p[j]
 	{add i, i, 1; sub j, j, 1}
 	{eq im0,  i, j;nop}
-	{bf im0, second_half_reorder_loop;nop}
+	{bf im0, .Ltmp_second_half_reorder_loop; nop}
 
 	//fix the middle
 	ldw im0, p[1]
@@ -51,7 +51,7 @@ second_half_reorder_loop:
 
 	//merge the spectrum
 	{ldc i, 1; sub j, r8, 1}
-reorder_loop:
+.Ltmp_reorder_loop:
 	ldd im0, re0, p[i]
 	ldd im1, re1, p[j]
 	{sub re0, re0, im1; add im1, im1, re0}
@@ -61,7 +61,7 @@ reorder_loop:
 	std re1, im1, p[j]
 	{add i, i, 1; sub j, j, 1}
 	{eq im0,  i, j;nop}
-	{bf im0, reorder_loop;nop}
+	{bf im0, .Ltmp_reorder_loop; nop}
 
 	ldd r5, r4, sp[0]
 	ldd r6, r7, sp[1]

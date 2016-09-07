@@ -32,7 +32,7 @@ dsp_fft_split_spectrum_xs2:
 	mov r6, j
 	{ldc i, 1; sub j, j, 1}
 
-	reorder_loop:
+.Ltmp_reorder_loop:
 	ldd im0, re0, p[i]
 	ldd im1, re1, p[j]
 	ashr im0, im0, 1
@@ -45,8 +45,8 @@ dsp_fft_split_spectrum_xs2:
 	std im1, re0, p[i]
 	std re1, im0, p[j]
 	{add i, i, 1; sub j, j, 1}
-	{eq im0,  i, j;nop}
-	{bf im0, reorder_loop;nop}
+	{eq im0,  i, j; nop}
+	{bf im0, .Ltmp_reorder_loop; nop}
 
 	{shr j, r6, 1} // j = N/2
 	ldd re1, re0, p[0]
@@ -55,14 +55,14 @@ dsp_fft_split_spectrum_xs2:
 	std im1, re1, p[j]
 	{add i, j, 1; sub j, r6, 1}	//i = N/2+1, j= N-1
 
-	second_reorder_loop:
+.Ltmp_second_reorder_loop:
 	ldd im0, re0, p[i]
 	ldd im1, re1, p[j]
 	std im1, re1, p[i]
 	std im0, re0, p[j]
 	{add i, i, 1; sub j, j, 1}
-	{eq im0,  i, j;nop}
-	{bf im0, second_reorder_loop;nop}
+	{eq im0,  i, j; nop}
+	{bf im0, .Ltmp_second_reorder_loop; nop}
 
 	ldd r5, r4, sp[0]
 	ldd r6, r7, sp[1]
