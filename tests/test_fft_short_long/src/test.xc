@@ -50,11 +50,11 @@ void test_short_long_conversion(){
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         if(f[i].re != (g[i].re&0xffff0000)){
-            debug_printf("Error in long to short(real)\n");
+            debug_printf("Error in short to long(real)\n");
             _Exit(1);
         }
         if(f[i].im != (g[i].im&0xffff0000)){
-            debug_printf("Error in long to short(imaginary)\n");
+            debug_printf("Error in short to long(imaginary)\n");
             _Exit(1);
         }
     }
