@@ -223,6 +223,129 @@ q8_24 dsp_math_atan(q8_24 f) {
 
 }
 
+/******************************************************************
+ * Derived from "Software Manual for the Elementary
+ * Functions" by Cody and Waite, fixed point asin/acos chapter.
+ ******************************************************************/
+
+#define P1_ASC   (22369561)    // (1398098)
+#define P2_ASC   (-12081364)   // (-755085)
+#define Q0_ASC   (1 << 27)     // (1 << 23)
+#define Q1_ASC   (-132896472)  // (-8306030)
+#define Q2_ASC   (23951925)   // (1496995)
+
+q8_24 dsp_math_asin(q8_24 sin) {
+    int32_t finalSign;
+    int32_t sqr;
+    int32_t result;
+
+    if (sin < 0) {
+        sin = -sin;
+        finalSign = -1;
+    } else /* sin >= 0 */ {
+        finalSign = 1;
+    }
+    // Now sin >= 0.
+
+    if (sin < (1 << 12)) {
+        result = sin;
+    } else {
+        if (sin < HALF_Q8_24) {
+            sqr = dsp_math_multiply(sin, sin, 24);
+            int32_t gPg =
+                dsp_math_multiply(
+                    dsp_math_multiply(P2_ASC, sqr, 24) + P1_ASC,
+                    sqr, 24);
+            int32_t Qg =
+                dsp_math_multiply(
+                    dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC,
+                    sqr, 24) + Q0_ASC;
+            unsigned long long z = gPg * (unsigned long long) sin;
+            int d, r;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" ((int)(z >> 32)), "r" ((int)(z & 0xFFFFFFFF)), "r" (Qg));
+            result = sin + d;
+        } else {
+            sqr = 2*(ONE_Q8_24 - sin);
+            sin = dsp_math_sqrt(sqr);
+            int32_t gPg =
+                dsp_math_multiply(
+                    dsp_math_multiply(P2_ASC, sqr, 26) + P1_ASC,
+                    sqr, 26);
+            int32_t Qg =
+                dsp_math_multiply(
+                    dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC,
+                    sqr, 26) + Q0_ASC;
+            unsigned long long z = gPg * (unsigned long long) sin;
+            int d, r;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" ((int)(z >> 32)), "r" ((int)(z & 0xFFFFFFFF)), "r" (Qg));
+            result = PIHALF_Q8_24-(sin + d);
+        }
+    }
+    return finalSign * result;
+}
+
+q8_24 dsp_math_acos(q8_24 cos) {
+    int32_t inputNegative;
+    int32_t sqr;
+    int32_t result;
+    int32_t ai;
+
+    if (cos < 0) {
+        cos = -cos;
+        inputNegative = 1;
+    } else /* cos >= 0 */ {
+        inputNegative = 0;
+    }
+    // Now cos >= 0.
+
+    if (cos < (1 << 12)) {
+        ai = PIHALF_Q8_24;
+        result = cos;
+    } else {
+        if (cos < HALF_Q8_24) {
+            ai = PIHALF_Q8_24;
+            sqr = dsp_math_multiply(cos, cos, 24);
+            int32_t gPg =
+                dsp_math_multiply(
+                    dsp_math_multiply(P2_ASC, sqr, 24) + P1_ASC,
+                    sqr, 24);
+            int32_t Qg =
+                dsp_math_multiply(
+                    dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC,
+                    sqr, 24) + Q0_ASC;
+        
+            unsigned long long z = gPg * (unsigned long long) cos;
+            int d, r;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" ((int)(z >> 32)), "r" ((int)(z & 0xFFFFFFFF)), "r" (Qg));
+        
+            result = cos + d;
+        } else {
+            ai = inputNegative ? PI_Q8_24 : 0;
+            sqr = (ONE_Q8_24 - cos) << 1;
+            cos = dsp_math_sqrt(sqr);
+            int32_t gPg =
+                dsp_math_multiply(
+                    dsp_math_multiply(P2_ASC, sqr, 26) + P1_ASC,
+                    sqr, 26);
+            int32_t Qg =
+                dsp_math_multiply(
+                    dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC,
+                    sqr, 26) + Q0_ASC;
+        
+            unsigned long long z = gPg * (unsigned long long) cos;
+            int d, r;
+            asm("ldivu %0,%1,%2,%3,%4\n" : "=r"(d), "=r" (r) : "r" ((int)(z >> 32)), "r" ((int)(z & 0xFFFFFFFF)), "r" (Qg));
+            
+            result = -(cos + d);
+        }
+    }
+    if (inputNegative) {
+        return ai + result;
+    } else {
+        return ai - result;
+    }
+}
+
 
 int32_t dsp_math_round(int32_t x, int q_format) {
     // x += 0.5, truncate franctional bits

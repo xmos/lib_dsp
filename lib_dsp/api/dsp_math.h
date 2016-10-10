@@ -267,6 +267,22 @@ extern void dsp_math_atan2_hypot(int z[2], unsigned int precision);
 #endif
 
 
+/** This function returns the arcsine of a q8_24 fixed point number in radians. The
+ * input number has to be in the range -1..1
+ *
+ * \param sin input value
+ * \returns arcsine(rad) in radians
+ **/
+q8_24 dsp_math_asin(q8_24 sin);
+
+/** This function returns the arccosine of a q8_24 fixed point number in radians. The
+ * input number has to be in the range -1..1
+ *
+ * \param cos input value
+ * \returns arccosine(rad) in radians
+ **/
+q8_24 dsp_math_acos(q8_24 cos);
+
 
 /** This function returns the natural exponent of a fixed point number. The
  * input number has to be less than 4.8, otherwise the answer cannot be
