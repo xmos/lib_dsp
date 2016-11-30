@@ -34,11 +34,9 @@ fir_inner_loop_asm:
 	std r8, r9, sp[2]
 
 	//push return value pointers onto stack. Frees up r2
-	//Divide counter by 8
-	{stw iDataRet_p, sp[6]; shr counter, counter, 3}
-
+	stw iDataRet_p, sp[6]
 	//Constant for adding onto stuff. Gets updated later
-	ldc step, 0x40
+	ldc step, 0x60
 
 	//Initilise MACC regsiters to zero
 	{ldc Acc0_h, 0; ldc Acc0_l, 0}
@@ -85,6 +83,26 @@ main_loop:
 
 	ldd iData0, iData1, piData_p[7]
 	ldd iCoef0, iCoef1, piCoefs_p[7]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iData0, iData1, piData_p[8]
+	ldd iCoef0, iCoef1, piCoefs_p[8]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iData0, iData1, piData_p[9]
+	ldd iCoef0, iCoef1, piCoefs_p[9]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iData0, iData1, piData_p[10]
+	ldd iCoef0, iCoef1, piCoefs_p[10]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iData0, iData1, piData_p[11]
+	ldd iCoef0, iCoef1, piCoefs_p[11]
 	maccs Acc0_h, Acc0_l, iData0, iCoef0
 	maccs Acc0_h, Acc0_l, iData1, iCoef1
 
@@ -158,20 +176,21 @@ fir_inner_loop_asm_odd:
 	std r8, r9, sp[2]
 
 	//push return value pointers onto stack. Frees up r2
-	//Divide counter by 8
-	{stw iDataRet_p, sp[6]; shr counter, counter, 3}
+	stw iDataRet_p, sp[6]
 
 	//Initilise MACC regsiters to zero
 	{ldc Acc0_h, 0; ldc Acc0_l, 0}
 
+	ldc step, 0x60
 	bf counter, done
 main_loop_odd:
 
-	{sub counter, counter, 1; ldc step, 0x38}
+	{sub counter, counter, 1; sub step, step, 8}							//Sub gets loaded with 0x60 at end of loop
+																														//We actually want 0x58 so this is good
 
 	//Constant for adding onto stuff. Gets updated later
 
-	{ldw iData0, piData_p[0]; add piData_p, piData_p, 4}				//Now 64b aligned
+	{ldw iData0, piData_p[0]; add piData_p, piData_p, 4}			//Now 64b aligned
 
 	ldd iCoef1, iCoef0, piCoefs_p[0]
 	maccs Acc0_h, Acc0_l, iData0, iCoef0
@@ -210,14 +229,34 @@ main_loop_odd:
 
 	ldd iCoef1, iCoef0, piCoefs_p[7]
 	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	ldd iData0, iData1, piData_p[7]
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iCoef1, iCoef0, piCoefs_p[8]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	ldd iData0, iData1, piData_p[8]
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iCoef1, iCoef0, piCoefs_p[9]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	ldd iData0, iData1, piData_p[9]
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iCoef1, iCoef0, piCoefs_p[10]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
+	ldd iData0, iData1, piData_p[10]
+	maccs Acc0_h, Acc0_l, iData1, iCoef1
+
+	ldd iCoef1, iCoef0, piCoefs_p[11]
+	maccs Acc0_h, Acc0_l, iData0, iCoef0
 
 	add piData_p, piData_p, step
 
-	{ldw iData1, piData_p[0]; add piData_p, piData_p, 4} //0x4 + 0x38 + 0x4 = 0x40)
+	{ldw iData1, piData_p[0]; add piData_p, piData_p, 4} //0x4 + 0x58 + 0x4 = 0x60)
 	maccs Acc0_h, Acc0_l, iData1, iCoef1
-	//Increment pointers and branch if still running
 
-	ldc step, 0x40
+	//Increment pointers and branch if still running
+	ldc step, 0x60
 	{bt counter, main_loop_odd; add piCoefs_p, piCoefs_p, step}
 
 done_odd:
@@ -234,7 +273,7 @@ done_odd:
 	ldd r6, r7, sp[1]
 	ldd r8, r9, sp[2]
   retsp stack_size
-
+  
 .atmp_odd:
 	.size	fir_inner_loop_asm_odd, .atmp-fir_inner_loop_asm_odd
 	.align	8
