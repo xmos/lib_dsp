@@ -6,6 +6,7 @@
  *      Author: Ed
  */
 
+#define N_LOOPS_PER_ASM		12
 
 #ifndef fir_inner_loop_ASM_H_
 #define fir_inner_loop_ASM_H_

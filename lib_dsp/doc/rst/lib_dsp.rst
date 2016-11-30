@@ -390,9 +390,9 @@ and::
 
 in the files ``dsp_os3.h`` (API for oversampling) and ``dsp_ds3.h`` (API for downsampling) respectively.
 
-The OS3 processing takes up to 157 core cycles to compute a sample which translates to 1.57us at 100MHz or 2.512us at 62.5MHz core speed. This permits up to 8 channels of 16KHz -> 48KHz sample rate conversion in a single 62.5MHz core.
+The OS3 processing takes up to 153 core cycles to compute a sample which translates to 1.53us at 100MHz or 2.448us at 62.5MHz core speed. This permits up to 8 channels of 16KHz -> 48KHz sample rate conversion in a single 62.5MHz core.
 
-The DS3 processing takes up to 402 core cycles to compute a sample which translates to 4.02us at 100MHz or 6.432us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core. 
+The DS3 processing takes up to 389 core cycles to compute a sample which translates to 3.89us at 100MHz or 6.224us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core. 
 
 Both downsample and oversample functions return ``ERROR`` or  ``NOERROR`` status codes as defined in return codes enums listed below.
 
