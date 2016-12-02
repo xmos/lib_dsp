@@ -71,7 +71,8 @@ typedef struct dsp_os3_ctrl_t
  *  \param      dsp_os3_ctrl   OS3 control structure
  *  \returns    DSP_OS3_NO_ERROR on success, DSP_OS3_ERROR on failure
  */
-dsp_os3_return_code_t             dsp_os3_init(dsp_os3_ctrl_t* dsp_os3_ctrl);
+dsp_os3_return_code_t             dsp_os3_init(dsp_os3_ctrl_t* dsp_os3_ctrl)
+    __attribute__((deprecated("Please use 'src_os3_init' in lib_src instead")));
 
 /** This function clears the oversample by 3 delay line for a given instance
  *
@@ -79,7 +80,8 @@ dsp_os3_return_code_t             dsp_os3_init(dsp_os3_ctrl_t* dsp_os3_ctrl);
  *  \param      dsp_os3_ctrl   OS3 control structure
  *  \returns    DSP_OS3_NO_ERROR on success, DSP_OS3_ERROR on failure
  */
-dsp_os3_return_code_t             dsp_os3_sync(dsp_os3_ctrl_t* dsp_os3_ctrl);
+dsp_os3_return_code_t             dsp_os3_sync(dsp_os3_ctrl_t* dsp_os3_ctrl)
+    __attribute__((deprecated("Please use 'src_os3_sync' in lib_src instead")));
 
 /** This function pushes a single input sample into the filter
  *  It should be called three times for each FIROS3_proc call
@@ -88,7 +90,8 @@ dsp_os3_return_code_t             dsp_os3_sync(dsp_os3_ctrl_t* dsp_os3_ctrl);
  *  \param      dsp_os3_ctrl   OS3 control structure
  *  \returns    DSP_OS3_NO_ERROR on success, DSP_OS3_ERROR on failure
  */
-dsp_os3_return_code_t             dsp_os3_input(dsp_os3_ctrl_t* dsp_os3_ctrl);
+dsp_os3_return_code_t             dsp_os3_input(dsp_os3_ctrl_t* dsp_os3_ctrl)
+    __attribute__((deprecated("Please use 'src_os3_input' in lib_src instead")));
 
 /** This function performs the oversampling by 3 and outputs one sample
  *  The input and output buffers are pointed to by members of the dsp_os3_ctrl structure
@@ -97,7 +100,8 @@ dsp_os3_return_code_t             dsp_os3_input(dsp_os3_ctrl_t* dsp_os3_ctrl);
  *  \param      dsp_os3_ctrl   OS3 control structure
  *  \returns    DSP_OS3_NO_ERROR on success, DSP_OS3_ERROR on failure
  */
-dsp_os3_return_code_t             dsp_os3_proc(dsp_os3_ctrl_t* dsp_os3_ctrl);
+dsp_os3_return_code_t             dsp_os3_proc(dsp_os3_ctrl_t* dsp_os3_ctrl)
+    __attribute__((deprecated("Please use 'src_os3_proc' in lib_src instead")));
 
 #endif // INCLUDE_FROM_ASM
 

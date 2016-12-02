@@ -1,6 +1,12 @@
 xCORE-200 DSP library change log
 ================================
 
+3.1.0
+-----
+
+  * Deprecated synchronous sample rate conversion functions - now maintained in
+    lib_src
+
 3.0.0
 -----
 
