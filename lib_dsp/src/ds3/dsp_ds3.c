@@ -71,7 +71,7 @@ dsp_ds3_return_code_t dsp_ds3_init(dsp_ds3_ctrl_t* dsp_ds3_ctrl)
     dsp_ds3_ctrl->delay_len       = DSP_DS3_N_COEFS<<1;                                    // Double length for circular buffer simulation
     dsp_ds3_ctrl->delay_wrap      = dsp_ds3_ctrl->delay_base + DSP_DS3_N_COEFS;
     dsp_ds3_ctrl->delay_offset    = DSP_DS3_N_COEFS;
-    dsp_ds3_ctrl->inner_loops     = (DSP_DS3_N_COEFS>>1) / N_LOOPS_PER_ASM;                // Right shift to 2 x 32bits read for coefs per inner loop
+    dsp_ds3_ctrl->inner_loops     = DSP_DS3_N_COEFS>>1;                                    // Due to 2 x 32bits read for coefs per inner loop
     dsp_ds3_ctrl->num_coeffs      = DSP_DS3_N_COEFS;
     dsp_ds3_ctrl->coeffs          = dsp_ds3_coeffs;
 
