@@ -26,7 +26,8 @@ static void single_atan2_test(int y, int x, unsigned hypot, int angle, int preci
     }
     if (anglediff > anglelimit) {
         printf("%08x %08x Angle %08x expected %08x\n", y, x, z[1], angle);
-        printf("atan2_hypot: Angle diff %u limit is %d\n", anglediff, anglelimit);
+        
+        printf("atan2_angle: Angle diff %u limit is %d\n", anglediff, anglelimit);
         atan2_fails++;
     }
     atan2_tests++;
