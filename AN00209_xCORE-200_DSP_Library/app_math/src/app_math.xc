@@ -388,14 +388,26 @@ static void single_atan2_test(int y, int x, unsigned hypot, int angle, int preci
     }
     if (anglediff > anglelimit) {
         printf("%08x %08x Angle %08x expected %08x\n", y, x, z[1], angle);
-        printf("atan2_hypot: Angle diff %u limit is %d\n", anglediff, anglelimit);
+        
+        printf("atan2_angle: Angle diff %u limit is %d\n", anglediff, anglelimit);
         atan2_fails++;
     }
     atan2_tests++;
+    printf("atan2 test %d\n", atan2_tests);
+
+}
+
+
+static const unsigned random_poly = 0xEDB88320; 
+static unsigned random_val = 0x12345678; //seed
+int get_random_number(void)
+{
+  crc32(random_val, -1, random_poly);
+  return (int)random_val;
 }
 
 #define SQRT2(X) ((unsigned)(1.414213562*(X)))
-static void atan2_test(void) {
+void atan2_test(void) {
     single_atan2_test(1000,1000, SQRT2(1000), 0x10000000, 0, 25);
     single_atan2_test(0xFFFFFF,0xFFFFFF, SQRT2(0xFFFFFF), 0x10000000, 0, 25);
     single_atan2_test(0xFFFFFFF,0xFFFFFFF, SQRT2(0xFFFFFFF), 0x10000000, 0, 25);
@@ -407,6 +419,7 @@ static void atan2_test(void) {
     for(int i = 0; i < 23; i++) {
         single_atan2_test(1200000000, 1600000000, 2000000000, 0x0d1bfaf9, i, 24-i);
     }
+    
     for(int i = 0; i < PI2_Q8_24; i += PI2_Q8_24/391) {
         int angle = (((long long) i) << 31) / PI2_Q8_24;
         if (angle >= (1 << 30)) {
@@ -417,7 +430,18 @@ static void atan2_test(void) {
         single_atan2_test(s*127, c*127, 127<<24, angle, 0, 24);
         single_atan2_test(s/13, c/13, (1<<24)/13, angle, 0, 22);
     }
-    printf("Atan2: %d out of %d passes\n\n", atan2_tests-atan2_fails, atan2_tests);
+    
+    for(int i = 0; i < 100; i += 1){
+        int x = get_random_number();    //Returns random number from INT_MIN to INT_MAX
+        int y = get_random_number();
+        if (x < -0x7FFFFFFF) x = -0x7FFFFFFF;   //Clip as arctan2 cannot take INT_MIN
+        if (y < -0x7FFFFFFF) y = -0x7FFFFFFF;
+
+        int hypot = (int)( sqrt( (double)x * (double)x + (double)y * (double)y ) );
+        int angle = (int)( (atan2((double)y, (double)x)) * (0x40000000 / 3.1415926536f) );
+        single_atan2_test(y, x, hypot, angle, 0, 24); //We cannot quite reach 25b on random points so set limit to 24b
+    } 
+    printf("Atan2: %d out of %d passes\n", atan2_tests-atan2_fails, atan2_tests);
 }
 
 void test_math(void)
