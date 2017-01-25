@@ -393,8 +393,6 @@ static void single_atan2_test(int y, int x, unsigned hypot, int angle, int preci
         atan2_fails++;
     }
     atan2_tests++;
-    printf("atan2 test %d\n", atan2_tests);
-
 }
 
 
