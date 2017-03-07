@@ -21,7 +21,7 @@ dsp_fft_forward_xs2:
     
     { ldc r6, 1                 ;  ldc r5, 31 }
     { mkmsk r4, r5              ;  shl r5, r6, r5 }
-	std r4, r4, sp[10]              //  0x800000000 x 2
+	std r4, r4, sp[2]              //  0x800000000 x 2
 
 	{ stw r0, sp[16]            ;  ldc r10, 29 } // pts
 	{ stw r1, sp[17]            ;  clz r11, r1 }// N
@@ -91,7 +91,7 @@ dsp_fft_forward_xs2:
 .Ltmp_innerLoop1:
 #if HIRES
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
+	ldd r10, r7, sp[2]              //  0x800000000 x 2
 	maccs r8, r7, r5, r1             // rRe x tRe2
 	maccs r8, r7, r2, r0             // rIM x tIm2
 	                                 // r8: sRE2
@@ -103,7 +103,7 @@ dsp_fft_forward_xs2:
 	maccs r8, r7, r6, r10
 	maccs r8, r7, r6, r10
 
-	ldd r6, r10, sp[10]              //  0x800000000 x 2
+	ldd r6, r10, sp[2]              //  0x800000000 x 2
 	{ ldc r7, 0            ; neg r5, r5}
 	maccs r7, r10, r5, r0            // rIM x -tRE2
 	maccs r7, r10, r2, r1            // rRE x tIM2
@@ -119,7 +119,7 @@ dsp_fft_forward_xs2:
 	ashr r6, r6, 1                   // tRE
 	ashr r3, r3, 1                   // tIM
 	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
+	ldd r10, r7, sp[2]              //  0x800000000 x 2
 	maccs r8, r7, r5, r1             // rRe x tRe2
 	maccs r8, r7, r2, r0             // rIM x tIm2
 	                                 // r8: sRE2
@@ -151,7 +151,7 @@ dsp_fft_forward_xs2:
 .Ltmp_innerloop2:
 #if HIRES
 	ldd r2, r5, r4[r7]               // r5: tRE2, r2: tIM2
-	ldd r10, r9, sp[10]              //  0x800000000 x 2
+	ldd r10, r9, sp[2]              //  0x800000000 x 2
 	maccs r8, r9, r5, r1             // rRe x tRe2
 	maccs r8, r9, r2, r0             // rIM x tIm2
 	                                 // r8: sRE2
@@ -163,7 +163,7 @@ dsp_fft_forward_xs2:
 	maccs r8, r9, r6, r10
 	maccs r8, r9, r6, r10
 
-	ldd r6, r10, sp[10]              //  0x800000000 x 2
+	ldd r6, r10, sp[2]              //  0x800000000 x 2
 	{ ldc r9, 0            ; neg r5, r5}
 	maccs r9, r10, r5, r0            // rIM x -tRE2
 	maccs r9, r10, r2, r1            // rRE x tIM2
@@ -180,7 +180,7 @@ dsp_fft_forward_xs2:
 	ashr r3, r3, 1                  // tIM
 	ldd r2, r5, r4[r7]              // r5: tRE2, r2: tIM2
 
-	ldd r10, r9, sp[10]              //  0x800000000 x 2
+	ldd r10, r9, sp[2]              //  0x800000000 x 2
 
 	maccs r8, r9, r5, r1            // rRe x tRe2
 	maccs r8, r9, r2, r0            // rIM x tIm2
