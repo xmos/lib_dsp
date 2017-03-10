@@ -105,7 +105,7 @@ void dsp_fft_inverse_xs1 (
         for(k = 0; k < step4 + (step2&1); k++) {
             int32_t rRe = sine[(N>>2)-(k<<shift)];
             int32_t rIm = sine[k<<shift];
-            for(int32_t block = k; block < k+N; block+=step) {
+            for(unsigned block = k; block < k+N; block+=step) {
                 int32_t tRe = pts[block].re;
                 int32_t tIm = pts[block].im;
                 int32_t tRe2 = pts[block + step2].re;
@@ -128,7 +128,7 @@ void dsp_fft_inverse_xs1 (
         for(k=(step2 & 1); k < step2-step4; k++) {
             int32_t rRe = -sine[k<<shift];
             int32_t rIm = sine[(N>>2)-(k<<shift)];
-            for(int32_t block = k+step4; block < k+step4+N; block+=step) {
+            for(unsigned block = k+step4; block < k+step4+N; block+=step) {
                 int32_t tRe = pts[block].re;
                 int32_t tIm = pts[block].im;
                 int32_t tRe2 = pts[block + step2].re;

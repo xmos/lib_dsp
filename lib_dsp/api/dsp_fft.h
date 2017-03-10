@@ -16,6 +16,7 @@ extern const int32_t dsp_sine_1024[];
 extern const int32_t dsp_sine_2048[];
 extern const int32_t dsp_sine_4096[];
 extern const int32_t dsp_sine_8192[];
+extern const int32_t dsp_sine_16384[];
 
 #define FFT_SINE0(N) dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
