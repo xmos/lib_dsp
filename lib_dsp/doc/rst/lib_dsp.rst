@@ -373,6 +373,13 @@ dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spec
 Audio Sample Rate Conversion
 ----------------------------
 
+.. warning::
+
+    The synchronous sample rate conversion functions in lib_dsp are now
+    deprecated, and will be removed in a future release. Please use lib_src for
+    all sample rate conversion functionality (synchronous and asynchronous),
+    where it is now maintained.
+
 The DSP library includes synchronous sample rate conversion functions to downsample (decimate) and oversample (upsample or interpolate) by a factor of three. In each case, the DSP processing is carried out each time a single output sample is required. In the case of the decimator, three input samples passed to filter with a resulting one sample output on calling the processing function. The interpolator produces an output sample each time the processing function is called but will require a single sample to be pushed into the filter every third cycle. All samples use Q31 format (left justified signed 32b integer).
 
 Both sample rate converters are based on a 144 tap FIR filter with two sets of coefficients available, depending on application requirements:
