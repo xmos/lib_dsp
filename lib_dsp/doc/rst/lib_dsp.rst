@@ -68,7 +68,7 @@ operands and results (if applicable) where the formats are the same for all para
 example::
 
   result_q28 = dsp_math_multiply( input1_q28, input2_q28, 28 );
-  
+
 The 'q_format' parameter, being used after one or more sequences of multiply and/or
 multiply-accumulate, is used to right-shift the 64-bit accumulator before truncating the value
 back to a 32-bit integer (i.e. the 32-bit fixed-point result).  Therefore the 'q_format'
@@ -80,7 +80,7 @@ bit count is equal to the sum of the two input fraction bit counts minus the des
 bit count::
 
   q_format = input1 fraction bit count +  input2 fraction bit count - result fraction bit count
-  
+
 For example::
 
   // q_format_parameter = 31 = 30 + 29 - 28
@@ -88,7 +88,7 @@ For example::
 
   // q_format_parameter = 27 = 28 + 29 - 30
   result_q30 = dsp_math_multiply( input1_q28, input2_q29, 27 );
-  
+
 Filter Functions: Finite Impulse Response (FIR) Filter
 ------------------------------------------------------
 
@@ -174,12 +174,12 @@ Scalar Math Functions: Natural Logarithm
 
 .. doxygenfunction:: dsp_math_log
 
-Scalar Math Functions: Hyperbolic Sine 
+Scalar Math Functions: Hyperbolic Sine
 --------------------------------------
 
 .. doxygenfunction:: dsp_math_sinh
 
-Scalar Math Functions: Hyperbolic Cosine 
+Scalar Math Functions: Hyperbolic Cosine
 ----------------------------------------
 
 .. doxygenfunction:: dsp_math_cosh
@@ -293,7 +293,7 @@ Statistics Functions: Vector Absolute Sum
 -----------------------------------------
 
 .. doxygenfunction:: dsp_vector_abs_sum
-  
+
 Statistics Functions: Vector Mean
 ---------------------------------
 
@@ -358,7 +358,7 @@ FFT functions
 -------------
 
 **Note:** The method for processing two real signals with a single complex FFT was improved.
-It now requires only half the memory. 
+It now requires only half the memory.
 The function dsp_fft_split_spectrum is used to split the combined N point output of dsp_fft_forward into two half-spectra of size N/2. One for each of the two real input signals.
 dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spectrum that can be processed by dsp_fft_inverse.
 
@@ -399,7 +399,7 @@ in the files ``dsp_os3.h`` (API for oversampling) and ``dsp_ds3.h`` (API for dow
 
 The OS3 processing takes up to 153 core cycles to compute a sample which translates to 1.53us at 100MHz or 2.448us at 62.5MHz core speed. This permits up to 8 channels of 16KHz -> 48KHz sample rate conversion in a single 62.5MHz core.
 
-The DS3 processing takes up to 389 core cycles to compute a sample which translates to 3.89us at 100MHz or 6.224us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core. 
+The DS3 processing takes up to 389 core cycles to compute a sample which translates to 3.89us at 100MHz or 6.224us at 62.5MHz core speed. This permits up to 9 channels of 48KHz -> 16KHz sample rate conversion in a single 62.5MHz core.
 
 Both downsample and oversample functions return ``ERROR`` or  ``NOERROR`` status codes as defined in return codes enums listed below.
 
