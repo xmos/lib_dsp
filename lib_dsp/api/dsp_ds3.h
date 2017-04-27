@@ -64,7 +64,8 @@ typedef struct dsp_ds3_ctrl_t
  *  \param      dsp_ds3_ctrl   DS3 control structure
  *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
  */
-dsp_ds3_return_code_t dsp_ds3_init(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
+dsp_ds3_return_code_t dsp_ds3_init(dsp_ds3_ctrl_t* dsp_ds3_ctrl)
+    __attribute__((deprecated("Please use 'src_ds3_init' in lib_src instead")));
 
 /** This function clears the decimate by 3 delay line for a given instance
  *
@@ -72,7 +73,8 @@ dsp_ds3_return_code_t dsp_ds3_init(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
  *  \param      dsp_ds3_ctrl   DS3 control structure
  *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
  */
-dsp_ds3_return_code_t dsp_ds3_sync(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
+dsp_ds3_return_code_t dsp_ds3_sync(dsp_ds3_ctrl_t* dsp_ds3_ctrl)
+    __attribute__((deprecated("Please use 'src_ds3_sync' in lib_src instead")));
 
 /** This function performs the decimation on three input samples and outputs on sample
  *  The input and output buffers are pointed to by members of the dsp_ds3_ctrl structure
@@ -81,7 +83,8 @@ dsp_ds3_return_code_t dsp_ds3_sync(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
  *  \param      dsp_ds3_ctrl   DS3 control structure
  *  \returns    DSP_DS3_NO_ERROR on success, DSP_DS3_ERROR on failure
  */
-dsp_ds3_return_code_t dsp_ds3_proc(dsp_ds3_ctrl_t* dsp_ds3_ctrl);
+dsp_ds3_return_code_t dsp_ds3_proc(dsp_ds3_ctrl_t* dsp_ds3_ctrl)
+    __attribute__((deprecated("Please use 'src_ds3_proc' in lib_src instead")));
 
 #endif // INCLUDE_FROM_ASM
 
