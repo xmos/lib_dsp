@@ -6,6 +6,11 @@ xCORE-200 DSP library change log
 
   * Deprecated synchronous sample rate conversion functions - now maintained in
     lib_src
+  * Added functions to compute a fast fixed point atan2 and hypotenuse
+  * Added Q8 versions of the arc sine and arc cosine functions
+  * Added 16384 point sine table
+  * Improved performance of the forwards FFT function, with small reduction in
+    memory footprint
 
 3.0.0
 -----
