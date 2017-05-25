@@ -1,9 +1,10 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
 
 #ifndef DSP_TRANSFORMS_H_
 #define DSP_TRANSFORMS_H_
 
 #include <stdint.h>
+#include <dsp_complex.h>
 
 extern const int32_t dsp_sine_4[];
 extern const int32_t dsp_sine_8[];
@@ -21,20 +22,6 @@ extern const int32_t dsp_sine_16384[];
 
 #define FFT_SINE0(N) dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
-
-typedef struct
-{
-    int32_t re;
-    int32_t im;
-}
-dsp_complex_t;
-
-typedef struct
-{
-    int16_t re;
-    int16_t im;
-}
-dsp_complex_short_t;
 
 /** This function splits the spectrum of the FFT of two real sequences. Takes
  * the result of a double-packed dsp_complex_t array that has undergone

@@ -4,13 +4,13 @@
 
 	.text
     .issue_mode  dual
-	.globl	dsp_fft_forward_xs2
+	.globl	dsp_fft_zero_reverse_forward
 	.align	16
     .skip 12
-	.type	dsp_fft_forward_xs2,@function
-	.cc_top dsp_fft_forward_xs2.function,dsp_fft_forward_xs2
+	.type	dsp_fft_zero_reverse_forward,@function
+	.cc_top dsp_fft_zero_reverse_forward.function,dsp_fft_zero_reverse_forward
 	
-dsp_fft_forward_xs2:
+dsp_fft_zero_reverse_forward:
 
 	dualentsp 32
     
@@ -32,35 +32,78 @@ dsp_fft_forward_xs2:
 	{ nop           ;    stw r11, sp[14] }           // step
 
 
-// First iteration
+// First odd iteration
+
+    { ldw r9, sp[17]            ; ldc r7, 1 }
+    { clz r9, r9                ; shr r0, r9, 1  }
+    { add r9, r9, 1             ; ldw r4, sp[16]  }
+
+/*
+    1 -> 8  (ZERO->1)  OP  (NOT-ODD)
+    3 ->12  (ZERO->3) OP  (NOT-ODD)
+    5 ->10  (ZERO->5) OP  (NOT-ODD)
+    7 ->14  (ZERO->7) OP  (NOT-ODD)
+    */
     
-    { ldw r11, sp[17]     ;  ldc r8, 0     }        // N
-    { sub r11, r11, 2     ;  ldc r7, 1     }        // k + N - step: BLOCK.
-                 // N>>2 - k<<shift
-    { shl r3, r11, 3     ;  ldw r11, sp[16]  }          //  rRe
-
-    { add r4, r11, r3     ; ldc r11, 16  }          // & pts[block]
-
-.Ltmp_first_level:
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
+.Ltmp_first_level_odd:
+ 	ldd r3, r6, r4[r7]                // r6: tRE,  r3: tIM
+    { shl r8, r7, r9                  ;     add  r7, r7, 2 }
+    { bitrev r8, r8                   ; 	lsu r10, r7, r0 }   
 	ashr r6, r6, 1                   // tRE
 	ashr r3, r3, 1                   // tIM
-	ldd r2, r5, r4[1]               // r5: tRE2, r2: tIM2
-    ashr r8, r5, 1
-    ashr r7, r2, 1
-	{add  r6, r6, r8       ; sub r8, r6, r8}
-	{add  r3, r3, r7       ; sub r7, r3, r7}
-	std  r3, r6, r4[0]
-	std  r7, r8, r4[1]
+	std  r3, r6, r4[r8]
+    add  r8, r8, 1
+	std  r3, r6, r4[r8]
 
-	{ldw r6, sp[16]        ; sub r4, r4, r11}
-	lsu r8, r4, r6    
-
-	bf r8, .Ltmp_first_level
+	bt r10, .Ltmp_first_level_odd
 
 
+// First even iteration
+    
+    { ldc r7, 0           ;  nop     }        // N
 
+/*
+    0 -> 0  NOT     OP  (NOT-EQUAL)
+    2 -> 4  (4->2)  OP  OP
+    4 -> 2  DONE        (NOT-TWICE - BIGGER)
+    6 -> 6  NOT     OP  (NOT-EQUAL)
+    */
+    
+.Ltmp_first_level_even:
+ 	ldd r3, r6, r4[r7]                // r6: tRE,  r3: tIM
+    shl r8, r7, r9
+    bitrev r8, r8
+    { lsu r11, r8, r7            ;  eq  r10, r7, r8}
+    { bf  r11, .even_BOTH        ; add  r7, r7, 2 }
+    { bf  r10, .even_NOP          ; lsu r1, r7, r0 }
+    
+.even_OP:
+	ashr r6, r6, 1                   // tRE
+	ashr r3, r3, 1                   // tIM
+	std  r3, r6, r4[r8]
+    add  r8, r8, 1
+	std  r3, r6, r4[r8]
+    
+	bu  .Ltmp_first_level_even
+    
+.even_BOTH:
+ 	ldd r10, r11, r4[r8]             // r6: tRE,  r3: tIM
+	ashr r6, r6, 1                   // tRE
+	ashr r3, r3, 1                   // tIM
+	std  r3, r6, r4[r8]
+    { add  r8, r8, 1              ;    sub r7, r7, 2 }
+	std  r3, r6, r4[r8]
+	ashr r11, r11, 1                   // tRE
+	ashr r10, r10, 1                   // tIM
+	std  r10, r11, r4[r7]
+    add  r7, r7, 1
+	std  r10, r11, r4[r7]
+    
+	{ bu .Ltmp_first_level_even ;     add r7, r7, 1} 
+    
+.even_NOP:
 
+	bt r1, .Ltmp_first_level_even
     
 .Ltmp_outerLoop:
     { ldw r11, sp[14]             ;    ldc r9, 0 }
@@ -220,17 +263,17 @@ dsp_fft_forward_xs2:
 	retsp 32
 	
 	// RETURN_REG_HOLDER
-	.cc_bottom dsp_fft_forward_xs2.function
-	.set	dsp_fft_forward_xs2.nstackwords,32
-	.globl	dsp_fft_forward_xs2.nstackwords
-	.set	dsp_fft_forward_xs2.maxcores,1
-	.globl	dsp_fft_forward_xs2.maxcores
-	.set	dsp_fft_forward_xs2.maxtimers,0
-	.globl	dsp_fft_forward_xs2.maxtimers
-	.set	dsp_fft_forward_xs2.maxchanends,0
-	.globl	dsp_fft_forward_xs2.maxchanends
+	.cc_bottom dsp_fft_zero_reverse_forward.function
+	.set	dsp_fft_zero_reverse_forward.nstackwords,32
+	.globl	dsp_fft_zero_reverse_forward.nstackwords
+	.set	dsp_fft_zero_reverse_forward.maxcores,1
+	.globl	dsp_fft_zero_reverse_forward.maxcores
+	.set	dsp_fft_zero_reverse_forward.maxtimers,0
+	.globl	dsp_fft_zero_reverse_forward.maxtimers
+	.set	dsp_fft_zero_reverse_forward.maxchanends,0
+	.globl	dsp_fft_zero_reverse_forward.maxchanends
 .Ltmp0:
-	.size	dsp_fft_forward_xs2, .Ltmp0-dsp_fft_forward_xs2
+	.size	dsp_fft_zero_reverse_forward, .Ltmp0-dsp_fft_zero_reverse_forward
 
     .issue_mode  single
     
