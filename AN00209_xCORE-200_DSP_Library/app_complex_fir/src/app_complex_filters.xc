@@ -27,11 +27,17 @@ int main(void) {
 tmr :> t0;
     dsp_complex_t x = dsp_complex_fir(data, fir, 4, 0, 24);
 tmr :> t1;
-    printf("%d\n", t1-t0);
+//    printf("%d\n", t1-t0);
     dsp_complex_t sum = {0,0};
     for(int i = 0; i < 4; i++) {
         sum = dsp_complex_add(sum, dsp_complex_mul(data[i], fir[i], 24));
     }
     printf("%d, %d    %d,%d\n", x.re, x.im, sum.re, sum.im);
+    if (x.re == sum.re && x.im == sum.im) {
+        printf("PASS\n");
+    } else {
+        printf("FAIL\n");
+    }
+            
     return 0;
 }
