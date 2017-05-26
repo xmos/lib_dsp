@@ -113,7 +113,6 @@ dsp_fft_inverse_xs2:
 #else
  	ldd r6, r3, r4[0]                // r6: tRE,  r3: tIM
 	ldd r5, r2, r4[r9]               // r5: tRE2, r2: tIM2
-    { shl r5, r5, 1                  ; shl r2, r2, 1 }
 	ldd r10, r7, sp[2]              //  0x800000000 x 2
 	maccs r8, r7, r5, r1             // rRe x tRe2
 	maccs r8, r7, r2, r0             // rIM x tIm2
@@ -122,6 +121,7 @@ dsp_fft_inverse_xs2:
 	maccs r7, r10, r5, r0            // rIM x -tRE2
 	maccs r7, r10, r2, r1            // rRE x tIM2
                                      // r7: sIM2    
+    { shl r8, r8, 1                  ; shl r7, r7, 1 }
 	{add  r6, r6, r8       ; sub r8, r6, r8}
 	{add  r3, r3, r7       ; sub r7, r3, r7}
 	std  r6, r3, r4[0]
@@ -174,7 +174,6 @@ dsp_fft_inverse_xs2:
 //ashr r6, r6, 1                  // tRE
 //ashr r3, r3, 1                  // tIM
 	ldd r5, r2, r4[r7]              // r5: tRE2, r2: tIM2
-    { shl r5, r5, 1                  ; shl r2, r2, 1 }
     
 	ldd r10, r9, sp[2]              //  0x800000000 x 2
 
@@ -186,6 +185,7 @@ dsp_fft_inverse_xs2:
 	maccs r9, r10, r5, r0            // rIM x -tRE2
 	maccs r9, r10, r2, r1            // rRE x tIM2
                                     // r9: sIM2
+    { shl r8, r8, 1                  ; shl r9, r9, 1 }
 	{add  r6, r6, r8           ; sub r8, r6, r8}
 	{add  r3, r3, r9           ; sub r9, r3, r9}
 	std  r6, r3, r4[0]

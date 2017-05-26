@@ -30,7 +30,7 @@ tmr:>r0;
     dsp_fft_inverse_xs2(g, FFT_LENGTH, FFT_SI);
     dsp_fft_zero_reverse_forward(g, FFT_LENGTH, FFT_SI);
 tmr:>r1;
-    printf("%d ticks for integrated\n", r1-r0);
+//    printf("%d ticks for integrated\n", r1-r0);
 }
 
 void gc2(    dsp_complex_t g[FFT_LENGTH]) {
@@ -46,7 +46,7 @@ tmr:>r0;
     dsp_fft_bit_reverse(g, FFT_LENGTH);
     dsp_fft_forward(g, FFT_LENGTH, FFT_SI);
 tmr:>r1;
-    printf("%d ticks for separate\n", r1-r0);
+//    printf("%d ticks for separate\n", r1-r0);
 }
 
 dsp_complex_t f[FFT_LENGTH], g[FFT_LENGTH];
