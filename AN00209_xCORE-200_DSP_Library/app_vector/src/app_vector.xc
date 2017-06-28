@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Vector Functions Test Program
 // Uses Q24 format
 
@@ -39,21 +39,21 @@ int main(void)
 
   result =
     dsp_vector_minimum (Src,                    // Input vector
-                            SAMPLE_LENGTH);         // Vector length
+                        SAMPLE_LENGTH);         // Vector length
 
   printf ("Minimum location = %d\n", result);
   printf ("Minimum = %lf\n", F24 (Src[result]));
 
   result =
     dsp_vector_maximum (Src,                    // Input vector
-                            SAMPLE_LENGTH);         // Vector length
+                        SAMPLE_LENGTH);         // Vector length
 
   printf ("Maximum location = %d\n", result);
   printf ("Maximum = %lf\n", F24 (Src[result]));
 
   dsp_vector_negate (Src,                       // Input vector
-                         Dst,                       // Output vector
-                         SHORT_SAMPLE_LENGTH);      // Vector length
+                     Dst,                       // Output vector
+                     SHORT_SAMPLE_LENGTH);      // Vector length
 
   printf ("Vector Negate Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -62,8 +62,8 @@ int main(void)
   }
 
   dsp_vector_abs (Src,                          // Input vector
-                      Dst,                          // Output vector
-                      SHORT_SAMPLE_LENGTH);         // Vector length
+                  Dst,                          // Output vector
+                  SHORT_SAMPLE_LENGTH);         // Vector length
 
   printf ("Vector Absolute Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -72,9 +72,9 @@ int main(void)
   }
 
   dsp_vector_adds (Src,                         // Input vector
-                       Q24(2.),                     // Input scalar
-                       Dst,                         // Output vector
-                       SHORT_SAMPLE_LENGTH);        // Vector length
+                   Q24(2.),                     // Input scalar
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH);        // Vector length
 
   printf ("Vector / scalar addition Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -83,10 +83,10 @@ int main(void)
   }
 
   dsp_vector_muls (Src,                         // Input vector
-                       Q24(2.),                     // Input scalar
-                       Dst,                         // Output vector
-                       SHORT_SAMPLE_LENGTH,         // Vector length
-                       Q_N);                        // Q Format N
+                   Q24(2.),                     // Input scalar
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH,         // Vector length
+                   Q_N);                        // Q Format N
 
   printf ("Vector / scalar multiplication Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -95,9 +95,9 @@ int main(void)
   }
 
   dsp_vector_addv (Src,                         // Input vector
-                       Src2,                        // Input vector 2
-                       Dst,                         // Output vector
-                       SHORT_SAMPLE_LENGTH);        // Vector length
+                   Src2,                        // Input vector 2
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH);        // Vector length
 
   printf ("Vector / vector addition Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -106,9 +106,9 @@ int main(void)
   }
 
   dsp_vector_subv (Src,                         // Input vector
-                       Src2,                        // Input vector 2
-                       Dst,                         // Output vector
-                       SHORT_SAMPLE_LENGTH);        // Vector length
+                   Src2,                        // Input vector 2
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH);        // Vector length
 
   printf ("Vector / vector subtraction Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -117,10 +117,10 @@ int main(void)
   }
 
   dsp_vector_mulv (Src,                         // Input vector
-                       Src2,                        // Input vector 2
-                       Dst,                         // Output vector
-                       SHORT_SAMPLE_LENGTH,         // Vector length
-                       Q_N);                        // Q Format N
+                   Src2,                        // Input vector 2
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH,         // Vector length
+                   Q_N);                        // Q Format N
 
   printf ("Vector / vector multiplication Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -129,11 +129,11 @@ int main(void)
   }
 
   dsp_vector_mulv_adds (Src,                    // Input vector
-                            Src2,                   // Input vector 2
-                            Q24(2.),                // Input scalar
-                            Dst,                    // Output vector
-                            SHORT_SAMPLE_LENGTH,    // Vector length
-                            Q_N);                   // Q Format N
+                        Src2,                   // Input vector 2
+                        Q24(2.),                // Input scalar
+                        Dst,                    // Output vector
+                        SHORT_SAMPLE_LENGTH,    // Vector length
+                        Q_N);                   // Q Format N
 
   printf ("Vector multiplication and scalar addition Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -142,11 +142,11 @@ int main(void)
   }
 
   dsp_vector_muls_addv (Src,                    // Input vector
-                            Q24(2.),                // Input scalar
-                            Src2,                   // Input vector 2
-                            Dst,                    // Output vector
-                            SHORT_SAMPLE_LENGTH,    // Vector length
-                            Q_N);                   // Q Format N
+                        Q24(2.),                // Input scalar
+                        Src2,                   // Input vector 2
+                        Dst,                    // Output vector
+                        SHORT_SAMPLE_LENGTH,    // Vector length
+                        Q_N);                   // Q Format N
 
   printf ("Vector / Scalar multiplication and vector addition Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -155,11 +155,11 @@ int main(void)
   }
 
   dsp_vector_muls_subv (Src,                    // Input vector
-                            Q24(2.),                // Input scalar
-                            Src2,                   // Input vector 2
-                            Dst,                    // Output vector
-                            SHORT_SAMPLE_LENGTH,    // Vector length
-                            Q_N);                   // Q Format N
+                        Q24(2.),                // Input scalar
+                        Src2,                   // Input vector 2
+                        Dst,                    // Output vector
+                        SHORT_SAMPLE_LENGTH,    // Vector length
+                        Q_N);                   // Q Format N
 
   printf ("Vector / Scalar multiplication and vector subtraction Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -168,11 +168,11 @@ int main(void)
   }
 
   dsp_vector_mulv_addv (Src,                    // Input vector
-                            Src2,                   // Input vector 2
-                            Src3,                   // Input vector 2
-                            Dst,                    // Output vector
-                            SHORT_SAMPLE_LENGTH,    // Vector length
-                            Q_N);                   // Q Format N
+                        Src2,                   // Input vector 2
+                        Src3,                   // Input vector 3
+                        Dst,                    // Output vector
+                        SHORT_SAMPLE_LENGTH,    // Vector length
+                        Q_N);                   // Q Format N
 
   printf ("Vector / Vector multiplication and vector addition Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
@@ -181,11 +181,11 @@ int main(void)
   }
 
   dsp_vector_mulv_subv (Src,                    // Input vector
-                            Src2,                   // Input vector 2
-                            Src3,                   // Input vector 2
-                            Dst,                    // Output vector
-                            SHORT_SAMPLE_LENGTH,    // Vector length
-                            Q_N);                   // Q Format N
+                        Src2,                   // Input vector 2
+                        Src3,                   // Input vector 3
+                        Dst,                    // Output vector
+                        SHORT_SAMPLE_LENGTH,    // Vector length
+                        Q_N);                   // Q Format N
 
   printf ("Vector / Vector multiplication and vector subtraction Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)

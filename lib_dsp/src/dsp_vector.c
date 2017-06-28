@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
 
 #include <platform.h>
 #include "dsp_qformat.h"
@@ -806,7 +806,7 @@ void dsp_vector_mulv_addv
     while( vl-- )
     {
         x0 = *input_vector_X++; y0 = *input_vector_Y++; z0 = *input_vector_Z++;
-        //{ah,al} = macs( x0, y0, 0, (1 << (q_format-1)) );
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(x0),"r"(y0),"0"(0),"1"(1<<(q_format-1)));
         asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
         asm("lextract %0,%1,%2,%3,32":"=r"(x0):"r"(ah),"r"(al),"r"(q_format));
         *result_vector_R++ = x0 + z0;
