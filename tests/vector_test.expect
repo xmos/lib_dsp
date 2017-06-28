@@ -63,11 +63,11 @@ Dst[2] = -0.461100
 Dst[3] = -0.464400
 Dst[4] = -0.467500
 Vector / Vector multiplication and vector addition Result
-Dst[0] = 0.610370
-Dst[1] = 0.620370
-Dst[2] = 0.630370
-Dst[3] = 0.640370
-Dst[4] = 0.650370
+Dst[0] = 0.666100
+Dst[1] = 0.682400
+Dst[2] = 0.698900
+Dst[3] = 0.715600
+Dst[4] = 0.732500
 Vector / Vector multiplication and vector subtraction Result
 Dst[0] = -0.553900
 Dst[1] = -0.557600
