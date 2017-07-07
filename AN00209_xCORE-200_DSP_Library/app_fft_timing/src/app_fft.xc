@@ -13,7 +13,7 @@
         dsp_fft_forward(data, N, FFT_SINE(N)); \
         tmr :> t1 ;\
         t1 -= t0;\
-        printf("%4d %12d %4d %5d %10.2f\n", N, t1, t1*10/625, t1/N, t1 / (float) N / (31-clz(N)) );
+        printf("%4d %12d %5d %5d %10.2f\n", N, t1, t1*10/625, t1/N, t1 / (float) N / (31-clz(N)) );
 
 #define ONI(N) \
         tmr :> t0 ;\
@@ -21,7 +21,7 @@
         dsp_fft_inverse(data, N, FFT_SINE(N)); \
         tmr :> t1 ;\
         t1 -= t0;\
-        printf("%4d %12d %4d %5d %10.2f\n", N, t1, t1*10/625, t1/N, t1 / (float) N / (31-clz(N)) );
+        printf("%4d %12d %5d %5d %10.2f\n", N, t1, t1*10/625, t1/N, t1 / (float) N / (31-clz(N)) );
 
 extern int dsp_fft_bit_reverse_xs2(dsp_complex_t a[], unsigned N);
 
@@ -32,7 +32,7 @@ int main(void) {
     timer tmr;
     int t0, t1;
     printf("Forward FFT instruction count and timings @ 62.5 MIPS, includes bit-reverse operation\n");
-    printf("   N instructions   us ins/N  ins/NlogN\n");
+    printf("   N instructions    us ins/N  ins/NlogN\n");
     ONE(8);
     ONE(16);
     ONE(32);
@@ -45,7 +45,7 @@ int main(void) {
     ONE(4096);
     ONE(8192);
     printf("\nInverse FFT instruction count and timings @ 62.5 MIPS, includes bit-reverse operation\n");
-    printf("   N instructions   us ins/N  ins/NlogN\n");
+    printf("   N instructions    us ins/N  ins/NlogN\n");
     ONI(8);
     ONI(16);
     ONI(32);
