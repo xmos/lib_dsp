@@ -33,6 +33,7 @@ int main(void) {
     int t0, t1;
     printf("Forward FFT instruction count and timings @ 62.5 MIPS, includes bit-reverse operation\n");
     printf("   N instructions    us ins/N  ins/NlogN\n");
+    ONE(4);
     ONE(8);
     ONE(16);
     ONE(32);
@@ -46,6 +47,7 @@ int main(void) {
     ONE(8192);
     printf("\nInverse FFT instruction count and timings @ 62.5 MIPS, includes bit-reverse operation\n");
     printf("   N instructions    us ins/N  ins/NlogN\n");
+    ONI(4);
     ONI(8);
     ONI(16);
     ONI(32);
@@ -57,4 +59,5 @@ int main(void) {
     ONI(2048);
     ONI(4096);
     ONI(8192);
+    return 0;
 }

@@ -15,7 +15,8 @@ dsp_fft_bit_reverse:
 	{ dualentsp NSTACKWORDS ; clz r2, r1}
     std r6, r7, sp[1]
     std r4, r5, sp[0]
-    { add r2, r2, 1             ; nop }
+    { add r2, r2, 1             ; shr r1, r1, 1 }
+    { shl r1, r1, 1             ; nop }
 
 loop:   
     { bitrev r3, r1               ; shl r11, r1, r2 }
