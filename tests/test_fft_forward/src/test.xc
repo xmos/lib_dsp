@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
-#include <debug_print.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "dsp_fft.h"
@@ -33,7 +33,7 @@ void test_forward_fft(){
             int e = f[i].re - output[t][i].re;
             if (e<0) e=-e;
             if(e > FFT_LENGTH * 4){
-                debug_printf("Error: error in forward FFT (real)\n");
+                printf("Error: error in forward FFT (real)\n");
                 _Exit(1);
             }
             average_error += e;
@@ -42,7 +42,7 @@ void test_forward_fft(){
             e = f[i].im - output[t][i].im;
             if (e<0) e=-e;
             if(e > FFT_LENGTH * 4){
-                debug_printf("Error: error in forward FFT (imaginary)\n");
+                printf("Error: error in forward FFT (imaginary)\n");
                 _Exit(1);
             }
             average_error += e;
@@ -50,7 +50,7 @@ void test_forward_fft(){
                 max_error = e;
         }
     }
-    debug_printf("Forward FFT: Pass.\n");
+    printf("Forward FFT: Pass.\n");
 }
 
 unsafe int main(){

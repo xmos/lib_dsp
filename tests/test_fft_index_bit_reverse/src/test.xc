@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
-#include <debug_print.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "dsp_fft.h"
@@ -24,15 +24,15 @@ void test_index_bit_reverse(){
     for(unsigned i=0;i<FFT_LENGTH;i++){
         unsigned j = bitrev(i)>>(clz(FFT_LENGTH)+1);
        if(f[i].re !=  j){
-           debug_printf("Error: error in bit reverse (real)\n");
+           printf("Error: error in bit reverse (real)\n");
            _Exit(1);
        }
        if(f[i].im !=  j+FFT_LENGTH){
-           debug_printf("Error: error in bit reverse (imaginary)\n");
+           printf("Error: error in bit reverse (imaginary)\n");
            _Exit(1);
        }
     }
-    debug_printf("Bit reverse: Pass.\n");
+    printf("Bit reverse: Pass.\n");
 }
 
 unsafe int main(){
