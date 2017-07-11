@@ -35,10 +35,10 @@ uint32_t dsp_bfp_cls(dsp_complex_t pts[], const uint32_t N);
  * Requires at most 6 x N instructions.
  *
  * \param[in,out] pts       Array of dsp_complex_t elements.
- * \param[in]     shift     Number of places to shift left by.
  * \param[in]     N         Number of points. Must be a power of two.
+ * \param[in]     shift     Number of places to shift left by.
  */
-void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t shift, const uint32_t N );
+void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
 
 /** This function shifts an array of complex numbers to adjust the headroom,
  * whilst simultaneously shuffling the array around in preparation for an FFT.
@@ -49,7 +49,7 @@ void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t shift, const uint32_t N );
  * \param[in]     N         Number of points. Must be a power of two.
  * \param[in]     shift     Number of places to shift left by.
  */
-void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const uint32_t shift );
+void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
 
 #endif
 

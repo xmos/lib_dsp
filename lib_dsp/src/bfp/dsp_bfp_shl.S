@@ -11,23 +11,23 @@
 	.cc_top dsp_bfp_shl.function,dsp_bfp_shl
 
 dsp_bfp_shl:
-    { dualentsp 0                 ; clz r11, r1     } // r1 < 0 indicates SHR
-    { bf r11, .Lshr               ; sub r2, r2, 1   } // Start on N-1
+    { dualentsp 0                 ; clz r11, r2     } // r2 < 0 indicates SHR
+    { bf r11, .Lshr               ; sub r1, r1, 1   } // Start on N-1
 .Lloopl:
-    ldd r3, r11, r0[r2]                               // pick re/im from vector
-    { shl r3, r3, r1              ; shl r11, r11, r1} // Shift up re and im
-    std r3, r11, r0[r2]                               // store re/im back
-    { bt r2, .Lloopl              ; sub r2, r2, 1 } 
+    ldd r3, r11, r0[r1]                               // pick re/im from vector
+    { shl r3, r3, r2              ; shl r11, r11, r2} // Shift up re and im
+    std r3, r11, r0[r1]                               // store re/im back
+    { bt r1, .Lloopl              ; sub r1, r1, 1 } 
         
     retsp 0
 .Lshr:
-    neg r1, r1
+    neg r2, r2
 .Lloopr:
-    ldd r3, r11, r0[r2]                               // pick re/im from vector
-    ashr r3, r3, r1
-    ashr r11, r11, r1                                 // Shift down re and im
-    std r3, r11, r0[r2]                               // store re/im back
-    { bt r2, .Lloopr              ; sub r2, r2, 1 } 
+    ldd r3, r11, r0[r1]                               // pick re/im from vector
+    ashr r3, r3, r2
+    ashr r11, r11, r2                                 // Shift down re and im
+    std r3, r11, r0[r1]                               // store re/im back
+    { bt r1, .Lloopr              ; sub r1, r1, 1 } 
         
     retsp 0
     
