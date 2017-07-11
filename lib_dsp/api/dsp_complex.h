@@ -77,27 +77,55 @@ dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
  * The representation of one vector has to be specified, the result will use
  * the fixed point representation of the other number.
  *
+ *   a = a * b
+ *
  * \param[in,out] a   first complex vector, also output
  * \param[in]     b   second complex vector
- * \param[in]     L   Length of the vectors
+ * \param[in]     N   Length of the vectors
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
 void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
-                            uint32_t L, uint32_t N);
+                            uint32_t N, uint32_t Q);
 
 /** Function that computes the value-by-value product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
  * representation of one vector has to be specified, the result will use
- * the fixed point representation of the other number.
+ * the fixed point representation of the other number::
+ *
+ *   a = a * conj(b)
  *
  * \param[in,out] a   first complex vector, also output
  * \param[in]     b   second complex vector
- * \param[in]     L   Length of the vectors
+ * \param[in]     N   Length of the vectors
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
 void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
-                                      uint32_t L, uint32_t N);
+                                      uint32_t N, uint32_t Q);
+
+/** Function that computes the value-by-value sum of two complex vectors::
+ *
+ *   a = a + b
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ */
+void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[],
+                            uint32_t N);
+
+/** Function that computes the value-by-value sum of two complex vector, scaling * one vector by a fixed number of bit positions::
+ *
+ *   a = a + (b << shift)
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ * \param[in]     shift Number of bits to shift b left by prior to adding.
+ *                      negative values indicate right shift.
+ */
+void dsp_complex_add_vector_shl(dsp_complex_t a[], dsp_complex_t b[],
+                                uint32_t N, int32_t shift);
 
 #endif

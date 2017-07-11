@@ -51,6 +51,7 @@ void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
  */
 void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
 
+
 #endif
 
 #endif
