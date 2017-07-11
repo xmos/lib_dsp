@@ -1,5 +1,7 @@
 Test example for Math functions
 ===============================
+Logistics max error: 0.006573 (fast) 1 (good)
+Logistics test passed
 Test Multiplication and Division
 --------------------------------
 Note: All calculations are done in Q8.24 format. That gives 7 digits of precision after the decimal point

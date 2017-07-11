@@ -328,5 +328,22 @@ inline q8_24 dsp_math_cosh(q8_24 x) {
     return dsp_math_sinh_(x, 1);
 }
 
+/** This function computes the logistics function, 1/(1+exp(-x)). The
+ * input number has to be in q8_24 format, the output is a number between 0
+ * and 1 in 18_24 format.
+ *
+ * \param x input value Q8.24 format.
+ * \returns approximaton to 1/(1+exp(x))
+ **/
+extern q8_24 dsp_math_logistics(q8_24 x);
+
+/** This function approximates the logistics function, 1/(1+exp(-x)). The
+ * input number has to be in q8_24 format, the output is a number between 0
+ * and 1 in 18_24 format with an error of no more than 1%.
+ *
+ * \param x input value Q8.24 format.
+ * \returns approximaton to 1/(1+exp(x))
+ **/
+extern q8_24 dsp_math_logistics_fast(q8_24 x);
 
 #endif
