@@ -26,19 +26,30 @@ uint32_t dsp_bfp_cls(dsp_complex_t pts[], const uint32_t N);
  * It shifts left if the shift argument is positive, or right if the shift
  * argument is negative. Hence, a sequence::
  *
- * Requires at most 6 x N instructions.
- *
  *   unsigned ls = dsp_bfp_cls(x,N)
  *   dsp_bfp_shl(x, ls-1, N)
  *
  * will result in one leading sign bit; minimising headroom and maximising
  * dynamic range.
  *
+ * Requires at most 6 x N instructions.
+ *
  * \param[in,out] pts       Array of dsp_complex_t elements.
  * \param[in]     shift     Number of places to shift left by.
  * \param[in]     N         Number of points. Must be a power of two.
  */
 void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t shift, const uint32_t N );
+
+/** This function shifts an array of complex numbers to adjust the headroom,
+ * whilst simultaneously shuffling the array around in preparation for an FFT.
+ * It shifts left if the shift argument is positive, or right if the shift
+ * argument is negative.
+ *
+ * \param[in,out] pts       Array of dsp_complex_t elements.
+ * \param[in]     N         Number of points. Must be a power of two.
+ * \param[in]     shift     Number of places to shift left by.
+ */
+void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const uint32_t shift );
 
 #endif
 

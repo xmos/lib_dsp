@@ -12,13 +12,12 @@
 
 dsp_bfp_shl:
     { dualentsp 0                 ; clz r11, r1     } // r1 < 0 indicates SHR
-    { bf r11, .Lshr               ; sub r0, r0, 8   } // r0[r1] now last element
+    { bf r11, .Lshr               ; sub r2, r2, 1   } // Start on N-1
 .Lloopl:
     ldd r3, r11, r0[r2]                               // pick re/im from vector
     { shl r3, r3, r1              ; shl r11, r11, r1} // Shift up re and im
     std r3, r11, r0[r2]                               // store re/im back
-    { nop                         ; sub r2, r2, 1 } 
-    { nop                         ; bt r2, .Lloopl }
+    { bt r2, .Lloopl              ; sub r2, r2, 1 } 
         
     retsp 0
 .Lshr:
@@ -28,12 +27,10 @@ dsp_bfp_shl:
     ashr r3, r3, r1
     ashr r11, r11, r1                                 // Shift down re and im
     std r3, r11, r0[r2]                               // store re/im back
-    { nop                         ; sub r2, r2, 1 } 
-    { nop                         ; bt r2, .Lloopr }
+    { bt r2, .Lloopr              ; sub r2, r2, 1 } 
         
     retsp 0
     
-	
 	// RETURN_REG_HOLDER
 	.cc_bottom dsp_bfp_shl.function
 	.set	dsp_bfp_shl.nstackwords, 0
