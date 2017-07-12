@@ -56,7 +56,7 @@ dsp_complex_t dsp_complex_mul(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
  * 
  * \returns       product - it may overflow.
  */
-dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32_t N);
+dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
 
 /** Function that computes the inner product of two complex vectors. The
  * representation of one vector has to be specified, the result will use
@@ -64,18 +64,18 @@ dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32
  *
  * \param[in] a   first complex vector
  * \param[in] b   second complex vector
- * \param[in] L   Length of the vectors
+ * \param[in] N   Length of the vectors
  * \param[in] offset  starting point to use in vector a
  * \param[in] Q   Number of bits behind the binary point in one of the vectors
  * 
  * \returns       inner product - it may overflow.
  */
 dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
-                              uint32_t L, uint32_t offset, uint32_t Q);
+                              uint32_t N, uint32_t offset, uint32_t Q);
 
-/** Function that computes the value-by-value product of two complex vectors.
- * The representation of one vector has to be specified, the result will use
- * the fixed point representation of the other number.
+/** Function that computes the element-by-element product of two complex
+ * vectors. The representation of one vector has to be specified, the
+ * result will use the fixed point representation of the other number.
  *
  *   a = a * b
  *
@@ -88,7 +88,7 @@ dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
                             uint32_t N, uint32_t Q);
 
-/** Function that computes the value-by-value product of two complex
+/** Function that computes the element-by-element product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
  * representation of one vector has to be specified, the result will use
  * the fixed point representation of the other number::
@@ -104,7 +104,7 @@ void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
                                       uint32_t N, uint32_t Q);
 
-/** Function that computes the value-by-value sum of two complex vectors::
+/** Function that computes the element-by-element sum of two complex vectors::
  *
  *   a = a + b
  *
@@ -115,7 +115,8 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[],
                             uint32_t N);
 
-/** Function that computes the value-by-value sum of two complex vector, scaling * one vector by a fixed number of bit positions::
+/** Function that computes the element-by-element sum of two complex vectors,
+ * scaling one vector by a fixed number of bit positions::
  *
  *   a = a + (b << shift)
  *
