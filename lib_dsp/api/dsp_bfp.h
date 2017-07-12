@@ -1,7 +1,7 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
 
-#ifndef DSP_TRANSFORMS_H_
-#define DSP_TRANSFORMS_H_
+#ifndef DSP_BFP_H_
+#define DSP_BFP_H_
 
 #include <stdint.h>
 #include <dsp_complex.h>
@@ -13,7 +13,7 @@
  * using dsp_bfp_shl to increase the headroom or to reduce the headroom (in
  * order to increase dynamic range).
  *
- * Requires at most 9 x N instructions.
+ * Requires at most 7 x N instructions.
  *
  * \param[in]     pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points.

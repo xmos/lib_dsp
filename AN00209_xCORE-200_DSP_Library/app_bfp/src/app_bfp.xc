@@ -2,6 +2,7 @@
 // XMOS DSP Library - DCT Functions test program
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <xs1.h>
 #include <xclib.h>
 #include <dsp_bfp.h>
@@ -14,9 +15,39 @@ int br(int i, int N) {
     return bitrev(i << (clz(N)+1));
 }
 
+
+unsigned max(unsigned a, unsigned b) {
+    return a > b ? a : b;
+}
+
 int main(void) {
+    int errors = 0;
+    for(int N = 2; N <= 32; N++) {
+        int maxv = 0;
+        for(int i = 0; i < N; i++) {
+            inp[i].re = (1 << i) - ((i >> 3) & 1);
+            inp[i].im = -(1 << i) + 3 - ((i >> 3) & 1);
+            if (i == 32) {
+                inp[i].re = 0x80000000;
+            }
+            outp[i] = inp[i];
+            unsigned ar = abs(inp[i].re);
+            unsigned ai = abs(inp[i].im);
+            maxv = max(max(ar, maxv), ai);
+        }
+        if (dsp_bfp_cls(inp, N) != clz(maxv)) {
+            errors++;
+            printf("Error: cls is %d not %d\n", dsp_bfp_cls(inp, N), clz(maxv));
+        }
+    }
+    if (errors == 0) {
+        printf("dsp_bfp_clz() passed\n");
+    } else {
+        printf("dsp_bfp_clz() FAIL with %d errors\n", errors);
+    }
+    
     for(int N = 2; N <= MAXN; N*=2) {
-        int errors = 0;
+        errors = 0;
         for(int i = 0; i < N; i++) {
             inp[i].re = 1000 * i - 10000;
             inp[i].im = 1500 * i - 10000;
