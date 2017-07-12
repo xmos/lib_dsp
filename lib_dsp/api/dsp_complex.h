@@ -129,4 +129,18 @@ void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_add_vector_shl(dsp_complex_t a[], dsp_complex_t b[],
                                 uint32_t N, int32_t shift);
 
+/** Function that computes the element-by-element sum of two complex vectors,
+ * scaling one vector by a fixed number of bit positions::
+ *
+ *   a = a + ((b * scalar) >> 24)
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ * \param[in]     scalar Number to multiply b with, in q8_24 notation.
+ *                       Use 0x01000000 to mimic dsp_complex_add_vector().
+ */
+void dsp_complex_add_vector_scale(dsp_complex_t a[], dsp_complex_t b[],
+                                  uint32_t N, int32_t scalar);
+
 #endif

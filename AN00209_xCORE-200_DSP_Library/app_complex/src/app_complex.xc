@@ -90,6 +90,25 @@ int main(void) {
                 printf("vector_add_shr: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
             }
         }
+
+        int mults[4] = {0x00100000, -0x00100000, 0x00465132, -0x0231AAA};
+        for(int j = 0; j < 4; j++) {
+            long long mult = mults[j];
+            for(int i = 0; i < N; i++) {
+                dsp_complex_t z;
+                z.re = (fir[i].re * mult) >> 24;
+                z.im = (fir[i].im * mult) >> 24;
+                d[i] = dsp_complex_add(data[i], z);
+            }
+            dsp_complex_add_vector_scale(data, fir, N, mult);
+            for(int i = 0; i < N; i++) {
+                if (d[i].re != data[i].re || d[i].im != data[i].im) {
+                    errors++;
+                    printf("vector_add_scale: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+                }
+            }
+        }
+
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);
         } else {

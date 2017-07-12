@@ -38,7 +38,56 @@ dsp_complex_add_vector:
 	.size	dsp_complex_add_vector, .Ltmp0-dsp_complex_add_vector
 
 #undef NSTACKWORDS
+#define NSTACKWORDS 8
+
+	.text
+    .issue_mode  dual
+    .align 4
+	.globl	dsp_complex_add_vector_scale
+	.type	dsp_complex_add_vector_scale,@function
+	.cc_top dsp_complex_add_vector_scale.function,dsp_complex_add_vector_scale
+	
+dsp_complex_add_vector_scale:
+	{ dualentsp NSTACKWORDS       ; sub r2, r2, 1 }
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+    std r8, r9, sp[2]
+    { stw r10, sp[6]              ; ldc r10, 24 }
+.Lloop3:
+    ldd r4, r5, r0[r2]
+    ldd r8, r11, r1[r2]
+    ashr r6, r4, 8
+    { shl r7, r4, 24              ; shl r9, r5, 24 }
+    maccs r6, r7, r3, r8
+    lextract r4, r6, r7, r10, 32
+    ashr r6, r5, 8
+    maccs r6, r9, r3, r11
+    lextract r5, r6, r9, r10, 32
+    std r4, r5, r0[r2]
+    { sub r2, r2, 1               ; bt r2, .Lloop3 }
+    
+    ldw r10, sp[6]
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    ldd r8, r9, sp[2]
+	retsp NSTACKWORDS
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom dsp_complex_add_vector_scale.function
+	.set	dsp_complex_add_vector_scale.nstackwords,NSTACKWORDS
+	.globl	dsp_complex_add_vector_scale.nstackwords
+	.set	dsp_complex_add_vector_scale.maxcores,1
+	.globl	dsp_complex_add_vector_scale.maxcores
+	.set	dsp_complex_add_vector_scale.maxtimers,0
+	.globl	dsp_complex_add_vector_scale.maxtimers
+	.set	dsp_complex_add_vector_scale.maxchanends,0
+	.globl	dsp_complex_add_vector_scale.maxchanends
+.Ltmp3:
+	.size	dsp_complex_add_vector_scale, .Ltmp3-dsp_complex_add_vector_scale
+
+#undef NSTACKWORDS
 #define NSTACKWORDS 4
+
 
     .align 4
 	.globl	dsp_complex_add_vector_shl
