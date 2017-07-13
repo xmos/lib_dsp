@@ -7,6 +7,15 @@ xCORE-200 DSP library change log
   * Removed synchronous sample rate conversion functions - now maintained in
     lib_src
   * Fixed bug in dsp_vector_mulv_addv()
+  * Improved FFT performance
+    * Faster bit reverse and inverse FFT
+    * Added real FFT
+    * Added FFT with top half blanked
+  * Logistics functions
+  * Block floating point functions
+  * Complex arithmetic
+    * Complex FIR
+    * Complex vector arithmetic, with optional scaling
 
 3.1.0
 -----
