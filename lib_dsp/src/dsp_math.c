@@ -545,5 +545,17 @@ q8_24 dsp_math_sinh_(q8_24 x, int cosine) {
     return R;
 }
 
-
-
+/** Logistics function; note that in fixed point the negative part will
+ * natively run into bad rounding errors.
+ */
+q8_24 dsp_math_logistics(q8_24 x) {
+    int negative = x < 0;
+    if (!negative) {
+        x = -x;
+    }
+    q8_24 val = dsp_math_divide(ONE_Q8_24, dsp_math_exp(x) + ONE_Q8_24, 24);
+    if (negative) {
+        return ONE_Q8_24 - val;
+    }
+    return val;
+}

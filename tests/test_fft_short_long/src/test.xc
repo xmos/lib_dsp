@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
-#include <debug_print.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "dsp_fft.h"
@@ -31,15 +31,15 @@ void test_short_long_conversion(){
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         if((f[i].re>>16) != h[i].re){
-            debug_printf("Error in long to short(real)\n");
+            printf("Error in long to short(real)\n");
             _Exit(1);
         }
         if((f[i].im>>16) != h[i].im){
-            debug_printf("Error in long to short(imaginary)\n");
+            printf("Error in long to short(imaginary)\n");
             _Exit(1);
         }
     }
-    debug_printf("Long to short conversion: Pass.\n");
+    printf("Long to short conversion: Pass.\n");
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         f[i].re = 0;
@@ -50,16 +50,16 @@ void test_short_long_conversion(){
 
     for(unsigned i=0; i < FFT_LENGTH; i++){
         if(f[i].re != (g[i].re&0xffff0000)){
-            debug_printf("Error in short to long(real)\n");
+            printf("Error in short to long(real)\n");
             _Exit(1);
         }
         if(f[i].im != (g[i].im&0xffff0000)){
-            debug_printf("Error in short to long(imaginary)\n");
+            printf("Error in short to long(imaginary)\n");
             _Exit(1);
         }
     }
 
-    debug_printf("Short to long conversion: Pass.\n");
+    printf("Short to long conversion: Pass.\n");
 }
 
 unsafe int main(){

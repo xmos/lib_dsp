@@ -4,24 +4,27 @@
 #include <stdint.h>
 #include "dsp_fft.h"
 
+#ifndef __XS2A__
 void dsp_fft_bit_reverse( dsp_complex_t pts[], const uint32_t N )
 {
-#if defined(__XS2A__)
+#warning "Bit reverse code in dsp_fft_bit_reverse not verified for XS1"
     uint32_t shift = clz(N);
     for(uint32_t i = 1; i < N-1; i++) {
         uint32_t rev = bitrev(i) >> (shift + 1);
         if (rev > i) {
-            uint32_t im1, re1, im2, re2;
-            asm("ldd %0,%1,%2[%3]" : "=r"(im1), "=r" (re1): "r"(pts), "r" (i));
-            asm("ldd %0,%1,%2[%3]" : "=r"(im2), "=r" (re2): "r"(pts), "r" (rev));
-            asm("std %0,%1,%2[%3]" :: "r"(im1), "r" (re1), "r"(pts), "r" (rev));
-            asm("std %0,%1,%2[%3]" :: "r"(im2), "r" (re2), "r"(pts), "r" (i));
+            int32_t im1, re1, im2, re2;
+            im1 = pst[i].im;
+            re1 = pst[i].re;
+            im2 = pst[rev].im;
+            re2 = pst[rev].re;
+            pts[i].re = re2;
+            pts[i].im = im2;
+            pts[rev].re = re1;
+            pts[rev].im = im1;
         }
     }
-#else
-    //TODO
-#endif
 }
+#endif
 
 #pragma unsafe arrays
 void dsp_fft_forward_xs1 (

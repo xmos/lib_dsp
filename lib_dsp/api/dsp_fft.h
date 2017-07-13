@@ -4,7 +4,9 @@
 #define DSP_TRANSFORMS_H_
 
 #include <stdint.h>
+#include <dsp_complex.h>
 
+extern const int32_t dsp_sine_4[];
 extern const int32_t dsp_sine_8[];
 extern const int32_t dsp_sine_16[];
 extern const int32_t dsp_sine_32[];
@@ -20,20 +22,6 @@ extern const int32_t dsp_sine_16384[];
 
 #define FFT_SINE0(N) dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
-
-typedef struct
-{
-    int32_t re;
-    int32_t im;
-}
-dsp_complex_t;
-
-typedef struct
-{
-    int16_t re;
-    int16_t im;
-}
-dsp_complex_short_t;
 
 /** This function splits the spectrum of the FFT of two real sequences. Takes
  * the result of a double-packed dsp_complex_t array that has undergone
@@ -132,6 +120,64 @@ void dsp_fft_inverse (
     dsp_complex_t pts[],
     const uint32_t        N,
     const int32_t         sine[] );
+
+/** This function computes a forward FFT of a real signal.
+ *
+ * The FFT is computed in place. On input, the array must contain N real
+ * inputs (one int32_t each). On output, the array contains N/2 complex
+ * outputs (two int32_t each). On output, bin K of the frequency spectrum
+ * in locations 2*K and 2*K+1 (containing the real and imaginary parts
+ * respectively), with the exception of bins 0 and N/2; the real part of
+ * the DC term is stored in element 0, and the real part of the Nyquist
+ * term is stored in element 1. The imaginary parts of both DC and Nyquist
+ * terms are zero due to the input data being real.
+ *
+ * The array is not large enough to hold the complete spectrum, and only
+ * the first half of the spectrum is written into it. Bins 1..N/2-1 are in
+ * array elements 2..N-1. Bins N/2+1 ... N-1 (the cosine terms) can be
+ * computed afterwards by conjugating terms N/2-1 ... 1; this symmetry is
+ * due to the input being real.
+ *
+ * One way to use the data is to recast the array to an array of
+ * dsp_complex_t afterwards.
+ *
+ * The array must be double word aligned.
+ *
+ * dsp_fft_bit_reverse() is integrated into this function and must not be 
+ * called separately.
+ *
+ * Note that unlike the other FFT functions, two copies of the SIN array
+ * must be supplied. The sin array that corresponds to N/2 and the array
+ * that corresponds to N. hence, for N is 1024, the input should be 1024
+ * integers, and sine should be dsp_sine_512, and ds_sine_1024.
+ *
+ * Performance considerations.
+ *
+ * This function is faster than computing a complex FFT of length N (about
+ * 1.8x faster), but slower than computing two real FFTs at once using
+ * dsp_fft_split_spectrum(). This function adds an overhead of N/2 bytes
+ * for the extra sine-table. Hence, it is useful if the FFT of just a
+ * single array is required.
+ *
+ * \param[in,out] pts   Array of N integers (in) array of N/2 dsp_complex_t
+ *                      elements (out)
+ * \param[in]     N     Number of points. Must be a power of two.
+ * \param[in]     sine  Array of N/8+1 sine values, each represented as a 
+ *                      sign bit and a 31 bit fraction. 1.0 is represented
+ *                      by 0x7fffffff.
+ *                      Arrays are provided in dsp_tables.c.
+ *                      For example, for a 1024 point FFT use dsp_sine_512.
+ * \param[in]     sin2  Array of N/4+1 sine values, represented as above.
+ *                      For example, for a 1024 point FFT use dsp_sine_1024.
+ *
+ * \returns    the real part of the nyquist term. The imaginary part is zero.
+ */
+void dsp_fft_bit_reverse_and_forward_real (
+    int32_t pts[],
+    const uint32_t        N,
+    const int32_t         sine[],
+    const int32_t         sin2[]
+    );
 
 #endif
 

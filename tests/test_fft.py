@@ -63,6 +63,7 @@ def runtest():
                                                   cwd=script_location)
         random.seed(int(stdout[0].strip(), 16)) # Git hash is hexadecimal string
 
+        do_fft_test(5, "smoke", 'test_fft_inverse_blank_forward', "fft_inverse_blank_forward_fft")
         for r in range(3, 14):
             do_fft_test(r, "smoke", 'test_fft_forward', "forward_fft")
             do_fft_test(r, "smoke", 'test_fft_inverse', "inverse_fft")

@@ -1,6 +1,10 @@
 // Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
 #include <stdint.h>
 
+const int32_t dsp_sine_4[2] = {
+           0, 2147483647,
+};
+
 const int32_t dsp_sine_8[3] = {
            0, 1518500249, 2147483647,
 };

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
     
 #if defined(__XS2A__)
 
@@ -6,185 +6,199 @@
     .issue_mode  dual
 	.globl	dsp_fft_inverse_xs2
 	.align	16
-    .skip 0
+    .skip 12
 	.type	dsp_fft_inverse_xs2,@function
 	.cc_top dsp_fft_inverse_xs2.function,dsp_fft_inverse_xs2
-
+	
 dsp_fft_inverse_xs2:
 
 	dualentsp 32
     
 	stw r4, sp[27]
-	stw r5, sp[26]
-	stw r6, sp[25]
-	stw r7, sp[24]
-	stw r8, sp[23]
-	stw r9, sp[22]
-	stw r10, sp[19]
+    std r9, r10, sp[10]
+    std r7, r8, sp[11]
+    std r5, r6, sp[9]
     
-    ldc r4, 1
-    ldc r5, 30
-    shl r4, r4, r5
-	std r4, r4, sp[10]              //  0x800000000 x 2
+    { ldc r6, 1                 ;  ldc r5, 31 }
+    { mkmsk r4, r5              ;  shl r5, r6, r5 }
+	std r4, r4, sp[2]              //  0x800000000 x 2
 
-	stw r2, sp[18]             // sine
-	stw r1, sp[17]             // N
-	stw r0, sp[16]             // pts
+	{ stw r0, sp[16]            ;  ldc r10, 29 } // pts
+	{ stw r1, sp[17]            ;  clz r11, r1 }// N
+	{ stw r2, sp[29]            ;  sub r11, r10, r11 }  // sine
 
-	clz r11, r1
-	ldc r10, 30
-	sub r11, r10, r11
-    stw r11, sp[15]            // Shift
+    { stw r11, sp[15]           ;  ldc r11, 4         } // Shift
 
-    ldc r11, 2
-    stw r11, sp[14]            // step
+	{ nop           ;    stw r11, sp[14] }           // step
+
+
+// First iteration
+    
+    { ldw r11, sp[17]     ;  ldc r8, 0     }        // N
+    { sub r11, r11, 2     ;  ldc r7, 1     }        // k + N - step: BLOCK.
+                 // N>>2 - k<<shift
+    { shl r3, r11, 3     ;  ldw r11, sp[16]  }          //  rRe
+
+    { add r4, r11, r3     ; ldc r11, 16  }          // & pts[block]
+
+.Ltmp_first_level:
+ 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
+	ldd r7, r8, r4[1]               // r5: tRE2, r2: tIM2
+	{add  r6, r6, r8       ; sub r8, r6, r8}
+	{add  r3, r3, r7       ; sub r7, r3, r7}
+	std  r3, r6, r4[0]
+	std  r7, r8, r4[1]
+
+	{ldw r6, sp[16]        ; sub r4, r4, r11}
+	lsu r8, r4, r6    
+
+	bf r8, .Ltmp_first_level
+
+
+
+
+    
 .Ltmp_outerLoop:
-    ldw r11, sp[14]
-    shl r10, r11, 3
-    stw r10, sp[9]             // step * 8
-    shr r11, r11, 1
-    stw r11, sp[13]            // step2
-    shr r10, r11, 1
-    stw r10, sp[12]            // step4
+    { ldw r11, sp[14]             ;    ldc r9, 0 }
+    { shl r10, r11, 3             ;    shr r11, r11, 1 }
+    { stw r10, sp[9]              ;    shr r10, r11, 1  }// step * 8
+    std r11, r10, sp[6]            // step2
 
-// First loop
-
-    ldc r9, 1
-    and r11, r11, r9
-    add r10, r11, r10          // step4 + (step2&1)
-    stw r10, sp[11]
-    ldc r9, 0
-.Ltmp_kLoop1:
+    { stw r10, sp[11]             ; ldc r11, 0 }
     stw r9, sp[10]             // k
+.Ltmp_kLoop1:
     ldw r10, sp[15]            // shift
-    { shl r7, r9, r10  ;   ldw r6, sp[18] }// sine
+    { shl r7, r9, r10  ;   ldw r6, sp[29] }// sine
     
     {ldw r8, sp[17]    ; nop}        // N
     { add r11, r9, r8    ; ldw r0, r6[r7]     }       // k + N        // rIm
     { shr r8, r8, 2 ;   ldw r5, sp[14] }
     { sub r11, r11, r5 ;  sub r8, r8, r7 }        // k + N - step: BLOCK.
-                 // N>>2 - k<<shift
+    // N>>2 - k<<shift
+    stw r11, sp[28]
     { ldw r1, r6[r8]   ;     shl r3, r11, 3 }          //  rRe
 
 
     { ldw r11, sp[16]	  ; ldc r8, 0}
     { add r4, r11, r3   ; ldw r11, sp[9]  }          // & pts[block]
-    {ldw r9, sp[13]     ; ldc r3, 31        }// step2
+    ldw r9, sp[13]             // step2
 
-#define HIRES 0
 
 .Ltmp_innerLoop1:
-
-	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
-
 #if HIRES
-	maccs r8, r7, r5, r0             // rIM x tRe2
-	maccs r8, r7, r2, r1             // rRE x tIm2
-	lextract r8, r8, r7, r3, 32
-	                                 // r8: sIM2
-	{ ldc r7, 0            ; neg r2, r2}
-	maccs r7, r10, r5, r1            // rRE x tRE2
-	maccs r7, r10, r2, r0            // -rIM x tIM2
-                                     // r7: sRE2
-	lextract r7, r7, r10, r3, 32
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-#else
-    ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	maccs r8, r7, r5, r0             // rIM x tRe2
-	maccs r8, r7, r2, r1             // rRE x tIm2
-	                                 // r8: sIM2
-	{ ldc r7, 0            ; neg r2, r2}
-	maccs r7, r10, r5, r1            // rRE x tRE2
-	maccs r7, r10, r2, r0            // -rIM x tIM2
-                                     // r7: sRE2
-	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
-#endif
+	ldd r5, r2, r4[r9]               // r5: tRE2, r2: tIM2
+	ldd r10, r7, sp[2]              //  0x800000000 x 2
+	maccs r8, r7, r5, r1             // rRe x tRe2
+	maccs r8, r7, r2, r0             // rIM x tIm2
+	                                 // r8: sRE2
 
-	{add  r6, r6, r7       ; sub r7, r6, r7}
-	{add  r3, r3, r8       ; sub r8, r3, r8}
-	std  r3, r6, r4[0]
+ 	ldd r6, r3, r4[0]                // r6: tRE,  r3: tIM
+
+	maccs r8, r7, r6, r10
+	{stw r8, r4[0]; neg r10, r10}
+	maccs r8, r7, r6, r10
+	maccs r8, r7, r6, r10
+
+	ldd r6, r10, sp[2]              //  0x800000000 x 2
+	{ ldc r7, 0            ; neg r5, r5}
+	maccs r7, r10, r5, r0            // rIM x -tRE2
+	maccs r7, r10, r2, r1            // rRE x tIM2
+                                     // r7: sIM2
+	maccs r7, r10, r3, r6
+	{stw r7, r4[1]; neg r6, r6}
+	maccs r7, r10, r3, r6
+	maccs r7, r10, r3, r6
+	{neg r8, r8; neg r7, r7}
 	std  r8, r7, r4[r9]
-
+#else
+ 	ldd r6, r3, r4[0]                // r6: tRE,  r3: tIM
+	ldd r5, r2, r4[r9]               // r5: tRE2, r2: tIM2
+	ldd r10, r7, sp[2]              //  0x800000000 x 2
+	maccs r8, r7, r5, r1             // rRe x tRe2
+	maccs r8, r7, r2, r0             // rIM x tIm2
+	                                 // r8: sRE2
+	{ ldc r7, 0            ; neg r5, r5}
+	maccs r7, r10, r5, r0            // rIM x -tRE2
+	maccs r7, r10, r2, r1            // rRE x tIM2
+                                     // r7: sIM2    
+    { shl r8, r8, 1                  ; shl r7, r7, 1 }
+	{add  r6, r6, r8       ; sub r8, r6, r8}
+	{add  r3, r3, r7       ; sub r7, r3, r7}
+	std  r6, r3, r4[0]
+	std  r8, r7, r4[r9]
+#endif
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
 	lsu r8, r4, r6    
 
-	{bf r8, .Ltmp_innerLoop1 ;ldc r3, 31}
+	bf r8, .Ltmp_innerLoop1
 
-    ldw r9, sp[10]             // k
-    add r9, r9, 1
-	ldw r10, sp[11]
-    lsu r10, r9, r10
-	bt r10, .Ltmp_kLoop1
 
-// Second inner loop
+    { neg r1, r0                ; add r0, r1, 0}
 
-	ldw r10, sp[12]             // step4
-    {ldw r11, sp[13]             ;    ldc r9, 1}
-    {and r7, r11, r9             ;   bu  .Ltmp_kLoop2In}
-    nop
-.Ltmp_kLoop2:
-    { ldw r10, sp[15]  ; add r11, r7, 0}           // shift
-    { shl r9, r11, r10 ;     ldw r7, sp[18]   }         // sine         // k << shift
-
-    ldw r1, r7[r9]            // rRe
-    { neg r1, r1                ;    ldw r8, sp[17]}             // N
-    { add r11, r11, r8 ;    ldw r6, sp[14]}      // k + N
     
-    { shr r8, r8, 2               ;    sub r11, r11, r6}
-
-    { sub r8, r8, r9  ;     ldw r5, sp[12] }            // step4          // N>>2 - k<<shift
-    { ldw r0, r7[r8]  ;     add r11, r11, r5 }          // k + N - step + step4: BLOCK.            // rIm
-
-    {shl r3, r11, 3              ;    ldw r11, sp[16]}
-    {add r4, r11, r3   ;     ldw r9, sp[13] }            // step2        // & pts[block]
-
-	{ldc r8, 0                   ;    ldw r11, sp[9]}
- 	{ldc r3, 31; nop}
-.Ltmp_innerLoop2:
-
-	ldd r2, r5, r4[r9]               // r5: tRE2, r2: tIM2
-	ldd r10, r7, sp[10]              //  0x800000000 x 2
-
+    ldd r7, r5, sp[6]     // step4
+    { ldw r11, sp[28]  ;    ldc r8, 0  }  // k + N - step
+    { nop              ;    add r11, r11, r5 } // k + N - step + step4: BLOCK.
+    
+    {shl r3, r11, 3    ;    ldw r11, sp[16]}
+    {add r4, r11, r3   ;    ldw r11, sp[9] }            // step2        // & pts[block]
+    
+.Ltmp_innerloop2:
 #if HIRES
-	maccs r8, r7, r5, r0             // rIM x tRe2
-	maccs r8, r7, r2, r1             // rRE x tIm2
-	lextract r8, r8, r7, r3, 32
-	                                 // r8: sIM2
-	{ ldc r7, 0            ; neg r2, r2}
-	maccs r7, r10, r5, r1            // rRE x tRE2
-	maccs r7, r10, r2, r0            // -rIM x tIM2
-                                     // r7: sRE2
-	lextract r7, r7, r10, r3, 32
- 	ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
+	ldd r5, r2, r4[r7]               // r5: tRE2, r2: tIM2
+	ldd r10, r9, sp[2]              //  0x800000000 x 2
+	maccs r8, r9, r5, r1             // rRe x tRe2
+	maccs r8, r9, r2, r0             // rIM x tIm2
+	                                 // r8: sRE2
+
+ 	ldd r6, r3, r4[0]                // r6: tRE,  r3: tIM
+
+	maccs r8, r9, r6, r10
+	{stw r8, r4[0]; neg r10, r10}
+	maccs r8, r9, r6, r10
+	maccs r8, r9, r6, r10
+
+	ldd r6, r10, sp[2]              //  0x800000000 x 2
+	{ ldc r9, 0            ; neg r5, r5}
+	maccs r9, r10, r5, r0            // rIM x -tRE2
+	maccs r9, r10, r2, r1            // rRE x tIM2
+                                     // r9: sIM2
+	maccs r9, r10, r3, r6
+	{stw r9, r4[1]; neg r6, r6}
+	maccs r9, r10, r3, r6
+	maccs r9, r10, r3, r6
+	{neg r8, r8; neg r9, r9}
+	std  r8, r9, r4[r7]
 #else
-    ldd r3, r6, r4[0]                // r6: tRE,  r3: tIM
-	maccs r8, r7, r5, r0             // rIM x tRe2
-	maccs r8, r7, r2, r1             // rRE x tIm2
-	                                 // r8: sIM2
-	{ ldc r7, 0            ; neg r2, r2}
-	maccs r7, r10, r5, r1            // rRE x tRE2
-	maccs r7, r10, r2, r0            // -rIM x tIM2
-                                     // r7: sRE2
-	{ shl r8, r8, 1        ; 	shl r7, r7, 1 }                  // sRE2          // sIM2
+ 	ldd r6, r3, r4[0]               // r6: tRE,  r3: tIM
+//ashr r6, r6, 1                  // tRE
+//ashr r3, r3, 1                  // tIM
+	ldd r5, r2, r4[r7]              // r5: tRE2, r2: tIM2
+    
+	ldd r10, r9, sp[2]              //  0x800000000 x 2
+
+	maccs r8, r9, r5, r1            // rRe x tRe2
+	maccs r8, r9, r2, r0            // rIM x tIm2
+	                                // r8: sRE2
+	{ ldc r9, 0                     ; neg r5, r5 }
+
+	maccs r9, r10, r5, r0            // rIM x -tRE2
+	maccs r9, r10, r2, r1            // rRE x tIM2
+                                    // r9: sIM2
+    { shl r8, r8, 1                  ; shl r9, r9, 1 }
+	{add  r6, r6, r8           ; sub r8, r6, r8}
+	{add  r3, r3, r9           ; sub r9, r3, r9}
+	std  r6, r3, r4[0]
+	std  r8, r9, r4[r7]
 #endif
-
-	{add  r6, r6, r7       ; sub r7, r6, r7}
-	{add  r3, r3, r8       ; sub r8, r3, r8}
-
-	std  r3, r6, r4[0]
-	std  r8, r7, r4[r9]
-
 	{ldw r6, sp[16]        ; sub r4, r4, r11}
-	{lsu r8, r4, r6         ;    ldw r7, sp[10]}             // k
+	{lsu r8, r4, r6         ;    ldw r9, sp[10]}             // k
 
-	{bf r8, .Ltmp_innerLoop2; ldc r3, 31}
+	bf r8, .Ltmp_innerloop2
 
-    {add r7, r7, 1              ;	ldw r10, sp[12]}             // step4
-
-.Ltmp_kLoop2In:   
-    {lsu r10, r7, r10            ;    stw r7, sp[10]}             // k
-	bt r10, .Ltmp_kLoop2
+    {add r9, r9, 1              ;	ldw r10, sp[12]}             // step4
+    {lsu r10, r9, r10            ;    stw r9, sp[10]}             // k
+	bt r10, .Ltmp_kLoop1
 
 	ldd r10, r11, sp[7]
 	{sub r10, r10, 1; shl r11, r11, 1}
@@ -194,13 +208,10 @@ dsp_fft_inverse_xs2:
     add r10, r10, 1
     lsu r10, r10, r11
     bf  r10, .Ltmp_outerLoop
-    
-	ldw r10, sp[19]
-	ldw r9, sp[22]
-	ldw r8, sp[23]
-	ldw r7, sp[24]
-	ldw r6, sp[25]
-	ldw r5, sp[26]
+
+    ldd r9, r10, sp[10]
+    ldd r7, r8, sp[11]
+    ldd r5, r6, sp[9]
 	ldw r4, sp[27]
 	retsp 32
 	

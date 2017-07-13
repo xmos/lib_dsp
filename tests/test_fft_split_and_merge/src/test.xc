@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
-#include <debug_print.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "dsp_fft.h"
@@ -34,13 +34,13 @@ void test_split_and_merge(){
             int e = g[i].re - f[i].re;
             if (e<0) e=-e;
             if(e > FFT_LENGTH_LOG2){
-                debug_printf("Error: error in split spectrum operation(real)\n");
+                printf("Error: error in split spectrum operation(real)\n");
                 _Exit(1);
             }
             e = g[i].im - f[i].im;
             if (e<0) e=-e;
             if(e > FFT_LENGTH_LOG2){
-                debug_printf("Error: error in split spectrum operation(imaginary)\n");
+                printf("Error: error in split spectrum operation(imaginary)\n");
                 _Exit(1);
             }
         }
@@ -48,18 +48,18 @@ void test_split_and_merge(){
             int e = 0 - f[i].re;
             if (e<0) e=-e;
             if(e > FFT_LENGTH_LOG2){
-                debug_printf("Error: error in split spectrum operation(real)\n");
+                printf("Error: error in split spectrum operation(real)\n");
                 _Exit(1);
             }
             e = 0 - f[i].im;
             if (e<0) e=-e;
             if(e > FFT_LENGTH_LOG2){
-                debug_printf("Error: error in split spectrum operation(imaginary)\n");
+                printf("Error: error in split spectrum operation(imaginary)\n");
                 _Exit(1);
             }
         }
     }
-    debug_printf("Split spectrum: Pass.\n");
+    printf("Split spectrum: Pass.\n");
 
     unsigned average_error = 0;
     //Merge spectrum is correct iff it is the inverse of the split operation.
@@ -79,7 +79,7 @@ void test_split_and_merge(){
             if (e<0) e=-e;
             average_error += e;
             if(e > 1){
-                debug_printf("Error: error in merge spectrum operation(real)\n");
+                printf("Error: error in merge spectrum operation(real)\n");
                 _Exit(1);
             }
             e = g[i].im - f[i].im;
@@ -87,12 +87,12 @@ void test_split_and_merge(){
             average_error += e;
 
             if(e > 1){
-                debug_printf("Error: error in merge spectrum operation(imaginary)\n");
+                printf("Error: error in merge spectrum operation(imaginary)\n");
                 _Exit(1);
             }
         }
     }
-    debug_printf("Merge spectra: Pass.\n");
+    printf("Merge spectra: Pass.\n");
 }
 
 unsafe int main(){

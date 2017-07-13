@@ -1,7 +1,7 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
-#include <debug_print.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "dsp_fft.h"
@@ -35,7 +35,7 @@ void test_inverse_fft(){
             int e = f[i].re - re;
             if (e<0) e=-e;
             if(e > FFT_LENGTH * 4){
-                debug_printf("Error: error in inverse FFT (real)\n");
+                printf("Error: error in inverse FFT (real)\n");
                 _Exit(1);
             }
             average_error += e;
@@ -44,7 +44,7 @@ void test_inverse_fft(){
             e = f[i].im - im;
             if (e<0) e=-e;
             if(e > FFT_LENGTH * 4){
-                debug_printf("Error: error in inverse FFT (imaginary)\n");
+                printf("Error: error in inverse FFT (imaginary)\n");
                 _Exit(1);
             }
             average_error += e;
@@ -52,7 +52,7 @@ void test_inverse_fft(){
                 max_error = e;
         }
     }
-    debug_printf("Inverse FFT: Pass.\n");
+    printf("Inverse FFT: Pass.\n");
 }
 
 
