@@ -1,6 +1,13 @@
 xCORE-200 DSP library change log
 ================================
 
+4.0.0
+-----
+
+  * Removed synchronous sample rate conversion functions - now maintained in
+    lib_src
+  * Fixed bug in dsp_vector_mulv_addv()
+
 3.1.0
 -----
 
