@@ -137,4 +137,40 @@ dsp_complex_add_vector_shl:
     
     .issue_mode  single
     
+#undef NSTACKWORDS
+#define NSTACKWORDS 2
+
+	.text
+    .issue_mode  dual
+    .align 4
+	.globl	dsp_complex_sub_vector
+	.type	dsp_complex_sub_vector,@function
+	.cc_top dsp_complex_sub_vector.function,dsp_complex_sub_vector
+	
+dsp_complex_sub_vector:
+	{ dualentsp NSTACKWORDS       ; sub r2, r2, 1 }
+    std r4, r5, sp[0]
+.Lloopsub:
+    ldd r4, r5, r0[r2]
+    ldd r3, r11, r1[r2]
+    { sub r4, r4, r3              ; sub r5, r5, r11 }
+    std r4, r5, r0[r2]
+    { sub r2, r2, 1               ; bt r2, .Lloopsub }
+    
+    ldd r4, r5, sp[0]
+	retsp NSTACKWORDS
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom dsp_complex_sub_vector.function
+	.set	dsp_complex_sub_vector.nstackwords,NSTACKWORDS
+	.globl	dsp_complex_sub_vector.nstackwords
+	.set	dsp_complex_sub_vector.maxcores,1
+	.globl	dsp_complex_sub_vector.maxcores
+	.set	dsp_complex_sub_vector.maxtimers,0
+	.globl	dsp_complex_sub_vector.maxtimers
+	.set	dsp_complex_sub_vector.maxchanends,0
+	.globl	dsp_complex_sub_vector.maxchanends
+.Ltmp5:
+	.size	dsp_complex_sub_vector, .Ltmp5-dsp_complex_sub_vector
+    
 #endif

@@ -143,4 +143,15 @@ void dsp_complex_add_vector_shl(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_add_vector_scale(dsp_complex_t a[], dsp_complex_t b[],
                                   uint32_t N, int32_t scalar);
 
+/** Function that computes the element-by-element sum of two complex vectors::
+ *
+ *   a = a - b
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ */
+void dsp_complex_sub_vector(dsp_complex_t a[], dsp_complex_t b[],
+                            uint32_t N);
+
 #endif

@@ -108,6 +108,19 @@ int main(void) {
                 }
             }
         }
+        for(int i = 0; i < N; i++) {
+            dsp_complex_t z;
+            z.re = -fir[i].re;
+            z.im = -fir[i].im;
+            d[i] = dsp_complex_add(data[i], z);
+        }
+        dsp_complex_sub_vector(data, fir, N);
+        for(int i = 0; i < N; i++) {
+            if (d[i].re != data[i].re || d[i].im != data[i].im) {
+                errors++;
+                printf("vector_sub: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+            }
+        }
 
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);
