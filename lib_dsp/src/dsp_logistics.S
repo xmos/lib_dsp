@@ -1,4 +1,3 @@
-
 // Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
     
 #if defined(__XS2A__)
