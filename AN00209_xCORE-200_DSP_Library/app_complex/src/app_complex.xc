@@ -7,7 +7,9 @@
 #include <xs1.h>
 #include <dsp.h>
 
-dsp_complex_t data[5] = {
+#define MAXN 5
+
+dsp_complex_t data[MAXN] = {
     {1000,-1000},
     {500,500},
     {-8000,1000},
@@ -15,7 +17,7 @@ dsp_complex_t data[5] = {
     {1000,-100000},
 };
 
-dsp_complex_t fir[5] = {
+dsp_complex_t fir[MAXN] = {
     {0x0100000,-0x0100000},
     {0x1000000, 0x1000000},
     {0x2000000,-0x1000000},
@@ -23,10 +25,11 @@ dsp_complex_t fir[5] = {
     {-0x0000040,0x0020000},
 };
 
-dsp_complex_t d[5];
+dsp_complex_t d[MAXN];
+dsp_complex_t o[MAXN];
 
 int main(void) {
-    for(int N = 3; N <= 5; N++) {
+    for(int N = 3; N <= MAXN; N++) {
         int errors = 0;
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_mul(data[i], fir[i], 24);
@@ -53,11 +56,16 @@ int main(void) {
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_add(data[i], fir[i]);
         }
+        dsp_complex_add_vector3(o, data, fir, N);
         dsp_complex_add_vector(data, fir, N);
         for(int i = 0; i < N; i++) {
             if (d[i].re != data[i].re || d[i].im != data[i].im) {
                 errors++;
                 printf("vector_add: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+            }
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("add_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
     
@@ -114,11 +122,30 @@ int main(void) {
             z.im = -fir[i].im;
             d[i] = dsp_complex_add(data[i], z);
         }
+        dsp_complex_sub_vector3(o, data, fir, N);
         dsp_complex_sub_vector(data, fir, N);
         for(int i = 0; i < N; i++) {
             if (d[i].re != data[i].re || d[i].im != data[i].im) {
                 errors++;
                 printf("vector_sub: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+            }
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("sub_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
+            }
+        }
+
+        int Q = 5;
+        for(int i = 0; i < N; i++) {
+            dsp_complex_t z;
+            z = dsp_complex_mul(data[i], fir[i], Q);
+            d[i] = dsp_complex_add(o[i], z);
+        }
+        dsp_complex_macc_vector(o, data, fir, N, Q);
+        for(int i = 0; i < N; i++) {
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("macc_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
 

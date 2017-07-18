@@ -154,4 +154,44 @@ void dsp_complex_add_vector_scale(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_sub_vector(dsp_complex_t a[], dsp_complex_t b[],
                             uint32_t N);
 
+/** Function that computes the element-by-element difference of two
+ * complex vectors, into a third vector::
+ *
+ *   o = a + b
+ *
+ * \param[out]    o   output complex vector
+ * \param[in]     a   first complex vector
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ */
+void dsp_complex_add_vector3(dsp_complex_t o[], dsp_complex_t a[],
+                             dsp_complex_t b[], uint32_t N);
+
+/** Function that computes the element-by-element difference of two
+ * complex vectors, into a third vector::
+ *
+ *   o = a - b
+ *
+ * \param[out]    o   output complex vector
+ * \param[in]     a   first complex vector
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ */
+void dsp_complex_sub_vector3(dsp_complex_t o[], dsp_complex_t a[],
+                             dsp_complex_t b[], uint32_t N);
+
+/** Function that computes the element-by-element product of two complex
+ * vectors, and adds the result to a third vector::
+ *
+ *   a = a + b * c
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     c   third complex vector
+ * \param[in]     N   Length of the vectors
+ * \param[in]     Q   Number of bits behind the binary point in one of the numbers
+ */
+void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
+                             dsp_complex_t c[], uint32_t N, int Q);
+
 #endif
