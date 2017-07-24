@@ -45,11 +45,16 @@ int main(void) {
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_mul_conjugate(data[i], fir[i], 24);
         }
+        dsp_complex_mul_conjugate_vector3(o, data, fir, N, 24);
         dsp_complex_mul_conjugate_vector(data, fir, N, 24);
         for(int i = 0; i < N; i++) {
             if (d[i].re != data[i].re || d[i].im != data[i].im) {
                 errors++;
-                printf("%d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+                printf("mul_conjugate_vector: %d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
+            }
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("mul_conjugate_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
     
