@@ -1,3 +1,4 @@
+// Copyright (c) 2017, XMOS Ltd, All rights reserved
 #include <dsp_complex.h>
 
 dsp_complex_t dsp_complex_add(dsp_complex_t a, dsp_complex_t b) {
