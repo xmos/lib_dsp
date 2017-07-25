@@ -205,6 +205,30 @@ void dsp_vector_addv
     const int32_t vector_length
 );
 
+/** Vector / vector min: ``X[i] = min(X[i], Y[i])``
+ *
+ *  Unsigned min on X and Y
+ *  The results are stored in result vector X.
+ *
+ *  Example:
+ *
+ *  \code
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_vector_Y[256] = { 0, 5, 1, 2, ... not shown for brevity };
+ *  dsp_vector_addv( input_vector_X, input_vector_Y, 256 );
+ *  \endcode
+ *
+ *  \param  vector_X    Pointer to source data array X.
+ *  \param  vector_Y    Pointer to source data array Y.
+ *  \param  vector_length     Length of the input and output vectors.
+ */
+
+void dsp_vector_minv(
+    uint32_t vector_X[],
+    const uint32_t vector_Y[],
+    const int32_t vector_length
+);
+
 /** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
  * 
  *  32 bit subtraction is used to subtract Vector Y from Vector X. 
