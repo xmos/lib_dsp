@@ -1,0 +1,7 @@
+def use_module(bld):
+    sources = bld.path.ant_glob(['src/**/*.xc', 'src/**/*.c', 'src/**/*.S'])
+    bld.module(
+        source=sources,
+        includes=['api'],
+        optional_headers=['debug_conf.h', 'xmos_dsp_elements.h'],
+        version='3.1.0')

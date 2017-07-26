@@ -12,3 +12,8 @@
 **/test_results.csv
 **/.metadata/*
 *.prefs
+
+# waf files and folders
+.lock-waf_*
+.waf-*/
+build/
