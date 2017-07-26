@@ -237,4 +237,18 @@ void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
                               dsp_complex_t c[], uint32_t N, int Q);
 
+/** Function that multiplies a complex vector with a scalar, and shifts
+ * the data down. The scalar is a 8.24 number
+ *
+ *   a = scalar * b >> Q
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     N   Length of the vectors
+ * \param[in]     Q   Number of bits behind the binary point in one of the
+ *                    vectors
+ */
+void dsp_complex_scalar_vector3(dsp_complex_t a[], dsp_complex_t b[],
+                                uint32_t N, int32_t scalar, uint32_t Q);
+
 #endif

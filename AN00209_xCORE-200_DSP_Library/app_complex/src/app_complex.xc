@@ -154,6 +154,22 @@ int main(void) {
             }
         }
 
+        int scalar_ = 0x01800000;
+        Q = 5;
+        for(int i = 0; i < N; i++) {
+            dsp_complex_t z;
+            d[i].re = dsp_math_multiply(data[i].re, scalar_, 24) >> Q;
+            d[i].im = dsp_math_multiply(data[i].im, scalar_, 24) >> Q;
+        }
+
+        dsp_complex_scalar_vector3(o, data, N, scalar_, Q);
+        for(int i = 0; i < N; i++) {
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("dsp_complex_scalar_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
+            }
+        }
+        
         Q = 16;
         for(int i = 0; i < N; i++) {
             dsp_complex_t z;
@@ -167,7 +183,7 @@ int main(void) {
                 printf("nmacc_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
-
+        
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);
         } else {

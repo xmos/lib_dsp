@@ -149,5 +149,53 @@ dsp_complex_mul_conjugate_vector3:
 	.globl	dsp_complex_mul_conjugate_vector3.maxchanends
 .Ltmpdsp_complex_mul_conjugate_vector3:
 	.size	dsp_complex_mul_conjugate_vector3, .Ltmpdsp_complex_mul_conjugate_vector3-dsp_complex_mul_conjugate_vector3
-     
+
+
+
+#undef NSTACKWORDS
+#define NSTACKWORDS 6
+
+    .align 4
+	.globl	dsp_complex_scalar_vector3
+	.type	dsp_complex_scalar_vector3,@function
+	.cc_top dsp_complex_scalar_vector3.function,dsp_complex_scalar_vector3
+	
+dsp_complex_scalar_vector3:
+	dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r7, r8, sp[1]
+    std r9, r10, sp[2]
+    { sub r2, r2, 1               ; ldw r9, sp[NSTACKWORDS+1] }
+    { ldc r7, 24                  ; nop }
+.Lloopdsp_complex_scalar_vector3:
+    { ldc r10, 0                  ; ldc r11, 0  }
+    ldd r4, r5, r1[r2]
+    maccs r10, r11, r4, r3
+    lextract r4, r10, r11, r7, 32
+    ashr r4, r4, r9
+    { ldc r10, 0                  ; ldc r11, 0  }
+    maccs r10, r11, r5, r3
+    lextract r5, r10, r11, r7, 32
+    ashr r5, r5, r9
+    std r4, r5, r0[r2]
+    { sub r2, r2, 1               ; bt r2, .Lloopdsp_complex_scalar_vector3 }
+    
+    ldd r4, r5, sp[0]
+    ldd r7, r8, sp[1]
+    ldd r9, r10, sp[2]
+	retsp NSTACKWORDS
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom dsp_complex_scalar_vector3.function
+	.set	dsp_complex_scalar_vector3.nstackwords,NSTACKWORDS
+	.globl	dsp_complex_scalar_vector3.nstackwords
+	.set	dsp_complex_scalar_vector3.maxcores,1
+	.globl	dsp_complex_scalar_vector3.maxcores
+	.set	dsp_complex_scalar_vector3.maxtimers,0
+	.globl	dsp_complex_scalar_vector3.maxtimers
+	.set	dsp_complex_scalar_vector3.maxchanends,0
+	.globl	dsp_complex_scalar_vector3.maxchanends
+.Ltmpdsp_complex_scalar_vector3:
+	.size	dsp_complex_scalar_vector3, .Ltmpdsp_complex_scalar_vector3-dsp_complex_scalar_vector3
+    
 #endif
