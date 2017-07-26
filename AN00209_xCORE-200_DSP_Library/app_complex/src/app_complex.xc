@@ -154,6 +154,20 @@ int main(void) {
             }
         }
 
+        Q = 16;
+        for(int i = 0; i < N; i++) {
+            dsp_complex_t z;
+            z = dsp_complex_mul(data[i], fir[i], Q);
+            d[i] = dsp_complex_sub(o[i], z);
+        }
+        dsp_complex_nmacc_vector(o, data, fir, N, Q);
+        for(int i = 0; i < N; i++) {
+            if (d[i].re != o[i].re || d[i].im != o[i].im) {
+                errors++;
+                printf("nmacc_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
+            }
+        }
+
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);
         } else {

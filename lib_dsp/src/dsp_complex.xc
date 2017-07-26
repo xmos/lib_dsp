@@ -6,6 +6,11 @@ dsp_complex_t dsp_complex_add(dsp_complex_t a, dsp_complex_t b) {
     return sum;
 }
 
+dsp_complex_t dsp_complex_sub(dsp_complex_t a, dsp_complex_t b) {
+    dsp_complex_t diff = { a.re - b.re, a.im - b.im };
+    return diff;
+}
+
 dsp_complex_t dsp_complex_mul(dsp_complex_t a, dsp_complex_t b, uint32_t N) {
     int32_t re = (a.re * (int64_t) b.re - a.im * (int64_t) b.im) >> N;
     int32_t im = (a.re * (int64_t) b.im + a.im * (int64_t) b.re) >> N;

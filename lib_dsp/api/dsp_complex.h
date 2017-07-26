@@ -33,6 +33,16 @@ typedef struct {
  */
 dsp_complex_t dsp_complex_add(dsp_complex_t a, dsp_complex_t b);
 
+/** Function that subtracts two complex numbers that use the same fixed point
+ * representation
+ *
+ * \param[in] a   first complex number
+ * \param[in] b   second complex number
+ *
+ * \returns       difference - it may overflow.
+ */
+dsp_complex_t dsp_complex_sub(dsp_complex_t a, dsp_complex_t b);
+
 /** Function that multiplies two complex numbers. The fixed point
  * representation of one number has to be specified, the result will use
  * the fixed point representation of the other number.
@@ -212,5 +222,19 @@ void dsp_complex_sub_vector3(dsp_complex_t o[], dsp_complex_t a[],
  */
 void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
                              dsp_complex_t c[], uint32_t N, int Q);
+
+/** Function that computes the element-by-element product of two complex
+ * vectors, and subtracts the result from a third vector::
+ *
+ *   a = a - b * c
+ *
+ * \param[in,out] a   first complex vector, also output
+ * \param[in]     b   second complex vector
+ * \param[in]     c   third complex vector
+ * \param[in]     N   Length of the vectors
+ * \param[in]     Q   Number of bits behind the binary point in one of the numbers
+ */
+void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
+                              dsp_complex_t c[], uint32_t N, int Q);
 
 #endif
