@@ -4,8 +4,10 @@
 
 // Include files
 #include <stdio.h>
+#include <stdlib.h>
 #include <xs1.h>
 #include <dsp.h>
+#include <math.h>
 
 #define MAXN 5
 
@@ -183,6 +185,25 @@ int main(void) {
                 printf("nmacc_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
+
+        uint32_t magnitude[MAXN];
+        for(int k = 32-MAXN; k >= 1; k-=3) {
+            dsp_complex_magnitude_vector(magnitude, d, N, 0);
+            for(int i = 0; i < N; i++) {
+                double h = hypot(d[i].re, d[i].im);
+                int err = abs((int) (h - magnitude[i]));
+                int acceptable = h / (1<<24);
+                if (err > acceptable + 1) {
+                    errors++;
+                    printf("dsp_complex_magnitude_vector: shoudl be %f is %u: %d %d\n", h, magnitude[i], d[i].re, d[i].im);
+                }
+            }
+            d[0].re = sext(d[0].re, k);
+            d[1].im = sext(d[1].im, k);
+            d[2].re = sext(d[2].re, k);
+            d[2].im = sext(d[2].im, k);
+        }
+
         
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);

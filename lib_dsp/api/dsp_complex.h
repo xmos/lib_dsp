@@ -251,4 +251,25 @@ void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_scalar_vector3(dsp_complex_t a[], dsp_complex_t b[],
                                 uint32_t N, int32_t scalar, uint32_t Q);
 
+/** Function that computes the magnitude of an array of complex numbers
+ *
+ * The function allows for a trade-off to be made between accuracy and
+ * speed. The precision parameter should be set to (24-P) to request P bits
+ * accuracy in the magnitude. Hence, the value 0 requests a 24-bit accurate
+ * magnitude, whereas 23 requests a 1-bit accurate magnitude. precision
+ * must be between 0 and 23 inclusive.
+ *
+ * Execution time is ((31 + 5 N) x P) thread cycles.
+ *
+ * \param [out] magnitude array in which magnitudes are stored
+ * \param [in]  input     Array of complex numbers of which to compute magnitude
+ * \param [in]  N         Number of elements in the input and output arrays
+ * \param [in]  precision integer that sets the precision; set to 0 for maximum
+ *                        precision; and to 23 for no precision;
+ *                         0 <= precision <= 23.
+ */
+extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
+                                         dsp_complex_t input[],
+                                         uint32_t N, uint32_t P);
+
 #endif

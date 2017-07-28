@@ -1,5 +1,6 @@
 // Copyright (c) 2017, XMOS Ltd, All rights reserved
 #include <dsp_complex.h>
+#include <dsp_math.h>
 
 dsp_complex_t dsp_complex_add(dsp_complex_t a, dsp_complex_t b) {
     dsp_complex_t sum = { a.re + b.re, a.im + b.im };
@@ -56,3 +57,15 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
     }
 }
 #endif
+
+void dsp_complex_magnitude_vector(uint32_t magnitude[],
+                                  dsp_complex_t input[],
+                                  uint32_t N, uint32_t P) {
+    for(int i = N-1; i >= 0; i--) {
+        int z[2];
+        z[0] = input[i].re;
+        z[1] = input[i].im;
+        dsp_math_atan2_hypot(z, P);
+        magnitude[i] = z[0];
+    }
+}
