@@ -1,6 +1,8 @@
 // Copyright (c) 2017, XMOS Ltd, All rights reserved
 #include <dsp_complex.h>
 #include <dsp_math.h>
+#include <xs1.h>
+#include <stdio.h>
 
 dsp_complex_t dsp_complex_add(dsp_complex_t a, dsp_complex_t b) {
     dsp_complex_t sum = { a.re + b.re, a.im + b.im };
@@ -67,5 +69,39 @@ void dsp_complex_magnitude_vector(uint32_t magnitude[],
         z[1] = input[i].im;
         dsp_math_atan2_hypot(z, P);
         magnitude[i] = z[0];
+    }
+}
+
+static int32_t inline mul_by_frac(int32_t v,
+                                  uint32_t numerator,
+                                  uint32_t denominator) {
+    int sign;
+    if (v < 0) {
+        v = -v;
+        sign = -1;
+    } else {
+        sign = 1;
+    }
+    uint32_t h = 0;
+    uint32_t l = 0;
+    {h,l} = mac(v, numerator, 0, 0);
+    if (h >= denominator) {
+        return 0x7fffffff * sign;
+    }
+    int d, r;
+    asm("ldivu %0, %1, %2, %3, %4" : "=r" (d), "=r" (r) : "r" (h), "r" (l), "r" (denominator));
+    if (d > 0x7fffffff) {
+        return 0x7fffffff * sign;
+    }
+    return d * sign;
+}
+
+void dsp_complex_scale_vector(dsp_complex_t array[],
+                              uint32_t numerator[],
+                              uint32_t denominator[],
+                              uint32_t N) {
+    for(int i = N-1; i >= 0; i--) {
+        array[i].re = mul_by_frac(array[i].re, numerator[i], denominator[i]);
+        array[i].im = mul_by_frac(array[i].im, numerator[i], denominator[i]);
     }
 }

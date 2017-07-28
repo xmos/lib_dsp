@@ -272,4 +272,28 @@ extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
                                          dsp_complex_t input[],
                                          uint32_t N, uint32_t P);
 
+/** Function that scales an array of complex numbers by a fraction. It
+ * requires an array of complex number, and an array of numerators and an
+ * array of denomiators. It computes:
+ *
+ *    array = array * numerator/denominator
+ *
+ * Note that noth numerator and denominator are unsigned values.
+ * 
+ * The typical calling sequence below may be used to reset the magnitude of
+ * each element of a complex vector to a new value::
+ *
+ *   dsp_complex_magnitude_vector(cur_magnitude, input, N, 0);
+ *   dsp_complex_remagnitude_vector(input, cur_magnitude, new_mag, N);
+ *
+ * \param [in,out] array   Array of complex numbers on which to reset magnitude
+ * \param [in] numerator Array of ints that store the current magnitude 
+ * \param [in] out_magnitude Array of ints that store the desired magnitude
+ * \param [in]  N         Number of elements in the input and output arrays
+ */
+extern void dsp_complex_scale_vector(dsp_complex_t array[],
+                                     uint32_t numerator[],
+                                     uint32_t denominator[],
+                                     uint32_t N);
+
 #endif
