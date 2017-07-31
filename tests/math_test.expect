@@ -26,11 +26,11 @@ Signed Division 1.12345600 / 127.99999990): 0.00877702
 Division 1.12345600 / 127.99999990): 0.00877696
 
 Error report from test_multipliation_and_division:
-Cases Error == -1: 1, percentage: 20.00
-Cases Error == 0: 4, percentage: 80.00
+Cases Error == -1: 1, percentage: 16.67
+Cases Error == 0: 5, percentage: 83.33
 Maximum Positive Error: 0
 Maximum Negative Error: -1
-Number of values checked: 5
+Number of values checked: 6
 
 Test Exponential and Logarithmic Functions
 ------------------------------------------
