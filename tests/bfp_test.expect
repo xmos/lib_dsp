@@ -1,3 +1,5 @@
+dsp_bfp_clz() passed
+dsp_bfp_...(..., 2, ...) passed
 dsp_bfp_...(..., 4, ...) passed
 dsp_bfp_...(..., 8, ...) passed
 dsp_bfp_...(..., 16, ...) passed
