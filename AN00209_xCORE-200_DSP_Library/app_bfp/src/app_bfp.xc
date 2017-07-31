@@ -90,6 +90,50 @@ int main(void) {
         dsp_bfp_shl(outp, N, 1);
         for(int i = 0; i < N; i++) {
             if ((inp[i].re << 0) != outp[i].re) {
+                printf("Error dsp_bfp_shl: re[%d] %d not %d\n", i, outp[i].re, inp[i].re << 0);
+                errors++;
+            }
+            if ((inp[i].im << 0) != outp[i].im) {
+                printf("Error dsp_bfp_shl: im[%d] %d not %d\n", i, outp[i].im, inp[i].im << 0);
+                errors++;
+            }
+        }
+        dsp_bfp_shl2(outp, N, 3, 2);
+        for(int i = 0; i < N; i++) {
+            if ((inp[i].re << 3) != outp[i].re) {
+                printf("Error dsp_bfp_shl: re[%d] %d not %d\n", i, outp[i].re, inp[i].re << 2);
+                errors++;
+            }
+            if ((inp[i].im << 2) != outp[i].im) {
+                printf("Error dsp_bfp_shl: im[%d] %d not %d\n", i, outp[i].im, inp[i].im << 2);
+                errors++;
+            }
+        }
+        dsp_bfp_shl2(outp, N, -1, 1);
+        for(int i = 0; i < N; i++) {
+            if ((inp[i].re << 2) != outp[i].re) {
+                printf("Error dsp_bfp_shl: re[%d] %d not %d\n", i, outp[i].re, inp[i].re << 2);
+                errors++;
+            }
+            if ((inp[i].im << 3) != outp[i].im) {
+                printf("Error dsp_bfp_shl: im[%d] %d not %d\n", i, outp[i].im, inp[i].im << 2);
+                errors++;
+            }
+        }
+        dsp_bfp_shl2(outp, N, 1, -1);
+        for(int i = 0; i < N; i++) {
+            if ((inp[i].re << 3) != outp[i].re) {
+                printf("Error dsp_bfp_shl: re[%d] %d not %d\n", i, outp[i].re, inp[i].re << 2);
+                errors++;
+            }
+            if ((inp[i].im << 2) != outp[i].im) {
+                printf("Error dsp_bfp_shl: im[%d] %d not %d\n", i, outp[i].im, inp[i].im << 2);
+                errors++;
+            }
+        }
+        dsp_bfp_shl2(outp, N, -3, -2);
+        for(int i = 0; i < N; i++) {
+            if ((inp[i].re << 0) != outp[i].re) {
                 printf("Error dsp_bfp_shl: re[%d] %d not %d\n", i, outp[i].re, inp[i].re << 2);
                 errors++;
             }

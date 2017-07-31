@@ -212,6 +212,9 @@ void test_multipliation_and_division() {
     expected = Q24(dividend/divisor);
     check_result(result, expected, -1, 1, &err);
 
+    result = dsp_math_divide(0x02000000, 0x02000001, 24);
+    check_result(result, 0x01000000, -1, 1, &err);
+
     printf("Error report from test_multipliation_and_division:\n");
     report_errors(-1, 1, &err);
     printf("\n");

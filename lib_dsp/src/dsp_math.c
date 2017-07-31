@@ -41,8 +41,11 @@ int32_t dsp_math_divide( int32_t dividend, int32_t divisor, uint32_t q_format )
     ldivu(d, r, 0, dividend, divisor);
     ldivu(d2, r, r, 0, divisor);
 
-    r = d << q_format |
-        (d2 + (1<<(31-q_format))) >> (32-q_format);
+    unsigned round = 1 << (31 - q_format);
+
+    asm("maccu  %0, %1, %2, %3" : "+r" (d), "+r" (d2) : "r" (round), "r" (1));
+    asm("lextract  %0, %1, %2, %3, 32" : "=r" (r) : "r" (d), "r" (d2), "r" (32 - q_format));
+
     return r * sgn;
 }
 

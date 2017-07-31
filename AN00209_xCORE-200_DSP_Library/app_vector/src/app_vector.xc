@@ -22,6 +22,7 @@ int32_t  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q
                    Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 int32_t  Src2[] = { Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 int32_t  Src3[] = { Q24(.61), Q24(.62), Q24(.63), Q24(.64), Q24(.65), Q24(.66), Q24(.67), Q24(.68), Q24(.69), Q24(.70)};
+int32_t  Src4[] = { Q24(.51), Q24(-.31), Q24(0), Q24(.64), Q24(-0.3), Q24(.60), Q24(.67), Q24(.68), Q24(.69), Q24(.71)};
 int32_t  Dst[SAMPLE_LENGTH];
 
 int32_t A_real[] = {Q24(1.), Q24(2.), Q24(3.), Q24(4.), Q24(3.), Q24(4.), Q24(1.), Q24(2.), Q24(1.), Q24(3.), Q24(5.), Q24(7.)};
@@ -36,6 +37,17 @@ int main(void)
 {
   int32_t result;
   int32_t i;
+
+  for(int i = 0; i < 8; i++) {
+      Dst[i] = (unsigned) Src3[i] < (unsigned) Src4[i] ? Src3[i] : Src4[i];
+  }
+  dsp_vector_minv((Src4, uint32_t[]), (Src3, uint32_t[]),                   // Input vector
+                        8);         // Vector length
+  for(int i = 0; i < 8; i++) {
+      if (Dst[i] != Src4[i]) {
+          printf("Error in minv, %d %d\n", Dst[i], Src4[i]);
+      }
+  }
 
   result =
     dsp_vector_minimum (Src,                    // Input vector

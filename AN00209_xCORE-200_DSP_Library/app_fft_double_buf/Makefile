@@ -11,7 +11,7 @@ TARGET = xk-audio-216-mc
 APP_NAME = app_fft_double_buf
 
 # The USED_MODULES variable lists other build module used by the application.
-USED_MODULES = lib_dsp(>=3.0.0)
+USED_MODULES = lib_dsp(>=4.0.0)
 
 # The flags passed to xcc when building the application
 # You can also set the following to override flags for a particular language:
