@@ -9,11 +9,16 @@ xCORE-200 DSP library change log
   * Fixed bug in dsp_vector_mulv_addv()
   * Faster bit reverse and inverse FFT
   * Added real FFT
+  * Added real reverse FFT
   * Added FFT with top half blanked
   * Logistics, softplus functions
   * Block floating point functions
   * Complex FIR
   * Complex vector arithmetic, with optional scaling
+  * Added in-place complex vector scaling
+  * Added complex vector magnitude
+  * Added complex vector scaling with arithmetic shift
+  * Added complex negative multiply and accumulate
 
 3.1.0
 -----
