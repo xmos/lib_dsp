@@ -1,5 +1,7 @@
 Test example for Math functions
 ===============================
+Softplus max error: 0.000000 (fast) 1 (good)
+Softplus test passed
 Logistics max error: 0.006573 (fast) 1 (good)
 Logistics test passed
 Test Multiplication and Division

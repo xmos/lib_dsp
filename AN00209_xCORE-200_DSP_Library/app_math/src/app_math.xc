@@ -480,6 +480,41 @@ void logistics_test() {
     }
 }
 
+void softplus_test() {
+    int errors = 0;
+    int one = 1 << 24;
+    float fone = one;
+    int max_good = 0;
+    int max_fast = 0;
+    for(int i = 4*one; i >= -4*one; i-=one/8) {
+        int log1 = log(exp(i/fone) +1.0)*fone;
+//        int log2 = dsp_math_softplus_fast(i);
+        int log3 = dsp_math_softplus(i);
+//        int err = abs(log2 - log1);
+//        if (err > max_fast) {
+//            max_fast = err;
+//        }
+//        if (abs(log2 - log1) > one * 7 / 100) {
+//            errors++;
+//            printf("softplus_fast() error; %f: %f %f (err = %f)\n", i/fone, log1/fone, log2/fone, err/fone);
+//        }
+        int err = abs(log3 - log1);
+        if (err > max_good) {
+            max_good = err;
+        }
+        if (err > 1) {
+            errors++;
+            printf("softplus() error: %f: %f %f (err = %d)\n", i/fone, log1/fone, log3/fone, err);
+        }
+    }
+    printf("Softplus max error: %f (fast) %d (good)\n", max_fast/fone, max_good);
+    if (errors == 0) {
+        printf("Softplus test passed\n");
+    } else {
+        printf("Softplus test failed with %d errors\n", errors);
+    }
+}
+
 void test_math(void)
 {
 
@@ -492,6 +527,7 @@ void test_math(void)
     printf("Test example for Math functions\n");
     printf("===============================\n");
 
+    softplus_test();
     logistics_test();
 
     test_multipliation_and_division();

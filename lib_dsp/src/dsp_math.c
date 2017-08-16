@@ -562,3 +562,12 @@ q8_24 dsp_math_logistics(q8_24 x) {
     }
     return val;
 }
+
+q8_24 dsp_math_softplus(q8_24 x) {
+    if (x < 0) {
+        return dsp_math_log(0x01000000 + dsp_math_exp(x));
+    } else {
+        return x + dsp_math_log(0x01000000 + dsp_math_exp(-x));
+    }
+}
+
