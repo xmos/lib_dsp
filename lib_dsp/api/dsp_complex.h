@@ -296,4 +296,27 @@ extern void dsp_complex_scale_vector(dsp_complex_t array[],
                                      uint32_t denominator[],
                                      uint32_t N);
 
+/** Function that performs a Hanning window post FFT. That is, the FFT is
+ * performed with a rectangular window (no window), and this function is
+ * called on the resulting real spectrum.
+ *
+ * The input array shall contain N points, where N is a power of 2 greater than
+ * or equal to 4. The input array shall contain the FFT spectrum in indices
+ * 1..N, with element zero containing the DC real term (in array[0].re) and the
+ * Nyquist real term (in array[0].im).
+ *
+ * The window applied is (0.5 - 0.5 * cos(2 * pi * i / (2*N))). Note that N is
+ * used, not 2N-1.
+ *
+ * A typical calling sequence is:
+ *    dsp_fft_forward(data, N, dsp_sine_N);
+ *    dsp_split_spectrum(data, N);
+ *    dsp_complex_window_hanning_post_fft_half(data, N/2);
+ *    dsp_complex_window_hanning_post_fft_half(&data[N/2], N/2);
+ *
+ * \param [in,out] array  Array of complex numbers on which to apply the window
+ * \param [in]     N      Number of elements in the array
+ */
+extern void dsp_complex_window_hanning_post_fft_half(dsp_complex_t array[],
+                                                     uint32_t N);
 #endif
