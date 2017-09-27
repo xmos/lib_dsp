@@ -237,6 +237,13 @@ void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
                               dsp_complex_t c[], uint32_t N, int Q);
 
+#if __XC__
+#define ALIAS_PTR *alias
+#else
+#define ALIAS_PTR *
+#endif
+
+
 /** Function that multiplies a complex vector with a scalar, and shifts
  * the data down. The scalar is a 8.24 number
  *
@@ -248,7 +255,7 @@ void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
-void dsp_complex_scalar_vector3(dsp_complex_t *alias a, dsp_complex_t * alias b,
+void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a, dsp_complex_t ALIAS_PTR b,
                                 uint32_t N, int32_t scalar, uint32_t Q);
 
 /** Function that computes the magnitude of an array of complex numbers
