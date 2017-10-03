@@ -246,7 +246,7 @@ int32_t dsp_filters_biquads
     int32_t       input_sample,
     const int32_t filter_coeffs[],
     int32_t       state_data[],
-    const int32_t num_sections,
+    const uint32_t num_sections,
     const int32_t q_format
 );
 

@@ -22,6 +22,24 @@ extern const int32_t dsp_sine_16384[];
 
 #define FFT_SINE0(N) dsp_sine_ ## N
 #define FFT_SINE(N) FFT_SINE0(N)
+//
+//const int32_t const * const dsp_fft_lut_logn[14] = {
+//        0,
+//        dsp_sine_4,
+//        dsp_sine_8,
+//        dsp_sine_16,
+//        dsp_sine_32,
+//        dsp_sine_64,
+//        dsp_sine_128,
+//        dsp_sine_256,
+//        dsp_sine_512,
+//        dsp_sine_1024,
+//        dsp_sine_2048,
+//        dsp_sine_4096,
+//        dsp_sine_8192,
+//        dsp_sine_16384
+//};
+
 
 /** This function splits the spectrum of the FFT of two real sequences. Takes
  * the result of a double-packed dsp_complex_t array that has undergone
