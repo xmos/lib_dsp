@@ -55,7 +55,7 @@ loop:
 	ldd s1, s2, state_data[1]	 	// y[n-1] and y[n-2]
 	maccs h, l, s1, c1				// y[n-1] * a1
 
-	ldd c0, c1, filter_coeffs[2] 	// a2 and b1(next round)
+	ldd c0, c1, filter_coeffs[2] 	// a2 and b0(next round)
 	maccs h, l, s2, c1				// y[n-2] * a2
 
 	lextract s0, h, l, q, 32
