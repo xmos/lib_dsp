@@ -1,0 +1,9 @@
+python:
+  versions:
+    - "2.7"
+  python_packages:
+    numpy:
+      - "1.13.1"
+      - "1.13.3"
+    pycparser: 
+      - "2.17"
