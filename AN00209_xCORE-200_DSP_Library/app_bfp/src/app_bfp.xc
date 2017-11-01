@@ -20,6 +20,53 @@ unsigned max(unsigned a, unsigned b) {
     return a > b ? a : b;
 }
 
+void tx_ramp(chanend x) {
+    int32_t [[aligned(8)]] data[12];
+    int cnt = 0;
+    for(int i = 0; i < 4; i++) {
+        for(int j = 0; j < 12; j++) {
+            cnt ++;
+            data[j] = cnt << i;
+        }
+        dsp_bfp_tx(x, data, 12, i);
+    }
+}
+
+void rx_ramp(chanend x) {
+    int errors = 0;
+    int32_t [[aligned(8)]] data[32];
+    uint64_t state[DSP_BFP_RX_STATE_UINT64_SIZE(32, 12)];
+    dsp_bfp_rx_state_init(state, DSP_BFP_RX_STATE_UINT64_SIZE(32, 12));
+    int start = -19;
+    for(int i = 0; i < 4; i++) {
+        int shr = dsp_bfp_rx(x, state, data, 32, 12, 1);
+        for(int j = 0; j < 32; j++) {
+            int rxed = data[j] >> shr;
+            int expected = start + j;
+            if (expected < 0) expected = 0;
+            if (expected != rxed) {
+                printf("Error: %2d not %2d (%d/%d)\n", rxed, expected, i, j);
+                errors++;
+            }
+        }
+        start += 12;
+    }
+    if (errors == 0) {
+        printf("dsp_bfp_rx/tx() passed\n");
+    } else {
+        printf("dsp_bfp_rx/tx() FAIL with %d errors\n", errors);
+    }
+    
+}
+
+void test_tx_rx() {
+    chan x;
+    par {
+        tx_ramp(x);
+        rx_ramp(x);
+    }
+}
+
 int main(void) {
     int errors = 0;
     for(int N = 2; N <= 32; N++) {
@@ -148,6 +195,7 @@ int main(void) {
             printf("dsp_bfp_...(..., %d, ...) FAIL with %d errors\n", N, errors);
         }
     }
+    test_tx_rx();
     return 0;
 }
 

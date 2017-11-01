@@ -26,8 +26,8 @@ uint32_t dsp_bfp_cls(dsp_complex_t pts[], const uint32_t N);
  * It shifts left if the shift argument is positive, or right if the shift
  * argument is negative. Hence, a sequence::
  *
- *   unsigned ls = dsp_bfp_cls(x,N)
- *   dsp_bfp_shl(x, ls-1, N)
+ *   unsigned ls = dsp_bfp_cls(x,N);
+ *   dsp_bfp_shl(x, ls-1, N);
  *
  * will result in one leading sign bit; minimising headroom and maximising
  * dynamic range.
@@ -71,6 +71,45 @@ void dsp_bfp_shl2( dsp_complex_t pts[], const uint32_t N,
  */
 void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
 
+#include "bfp_tx_rx.h"
+
+/** Function that transmits data in BFP format to the next DSP block
+ *
+ * \param x        channel end where to send the data to
+ * \param data     array containing the data.
+ * \param N        Number of elements in the data, typically channels * advance
+ * \param exponent Number of bits that the data has been shifted left by
+ */
+extern void dsp_bfp_tx(chanend x, int32_t data[], uint32_t N, int32_t shr);
+
+/** Function that initialises a BFP_RX state. The BFP_RX state comprises an
+ * array of BFP_RX_STATE_UINT64_SIZE(N, advance) uint64_t values. N is the
+ * total number of samples needed before the DSP block can operate, advance
+ * is the number of samples that the DSP block wants the data advanced
+ * every iteration.
+ *
+ * \param state    array that holds state, must be an array declared as
+ *                 uint64_t state[BFP_RX_STATE_UINT64_SIZE(N, advance)];
+ *
+ * \param SIZE     Array size: BFP_RX_STATE_UINT64_SIZE(N, advance)
+ */
+extern void dsp_bfp_rx_state_init(uint64_t state[], int SIZE);
+
+/** Function that receives data in BFP format for this DSP block
+ *
+ * \param x        channel end where to send the data to
+ * \param state    array that holds state, must be initialised with a call to
+ *                 dsp_bfp_rx_state_init()
+ * \param data     array where data should be stored.
+ * \param N        Number of elements required for DSP block
+ * \param advance  Number of new elements on each iteration
+ * \param headroom Desired headroom in number of bits.
+ *
+ * \returns        Number of bits that the data has been shifted left by
+ */
+extern int32_t dsp_bfp_rx(chanend x, uint64_t state[], int32_t data[],
+                          uint32_t N, uint32_t advance,
+                          uint32_t headroom);
 
 #endif
 

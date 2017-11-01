@@ -5,3 +5,4 @@ dsp_bfp_...(..., 8, ...) passed
 dsp_bfp_...(..., 16, ...) passed
 dsp_bfp_...(..., 32, ...) passed
 dsp_bfp_...(..., 64, ...) passed
+dsp_bfp_rx/tx() passed
