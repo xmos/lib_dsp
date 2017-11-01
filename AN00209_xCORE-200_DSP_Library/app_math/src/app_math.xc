@@ -548,7 +548,54 @@ void divide() {
     }
 }
 
+void test_isqrt() {
+    int errors = 0;
+    for(int i = 0; i < 33; i++) {
+        for(int k = 0; k < 20; k++) {
+            unsigned r = get_random_number();
+            unsigned mask = ((1 << i)-1);
+            r &= mask;
+            if (k & 1) {
+                r |= ~mask;
+            }
+            unsigned rr = dsp_math_int_sqrt(r);
+            if (r == 0 && rr == 0) continue;
+            unsigned rrm = (rr - 1) * (rr - 1);
+            unsigned rrp = rr >= 0xffff ? 0xffffffff : (rr + 1) * (rr + 1);
+            if (r <= rrm || r > rrp) {
+                errors++;
+                printf("Error: sqrt(%08x) not %d\n", r, rr);
+            }
+        }
+    }
+    for(int i = 0; i < 65; i++) {
+        for(int k = 0; k < 20; k++) {
+            unsigned long long r = (unsigned) get_random_number() ;
+            r = (r << 32) | (unsigned) get_random_number() ;
+            unsigned long long mask = ((1ull << i)-1);
+            r &= mask;
+            if (k & 1) {
+                r |= ~mask;
+            }
+            unsigned rr = dsp_math_int_sqrt64(r);
+            if (r == 0 && rr == 0) continue;
+            unsigned long long rrm = (rr - 1ull) * (rr-1ull);
+            unsigned long long rrp = rr == 0xffffffff ? 0xffffffffffffffffull : (rr + 1ull)*(rr + 1ull);
+            if (r <= rrm || r > rrp) {
+                errors++;
+                printf("Error: sqrt64(%08llx) not %u\n", r, rr);
+            }
+        }
+    }
+    if (errors == 0) {
+        printf("isqrt() passed\n");
+    } else {
+        printf("isqrt() FAIL with %d errors\n", errors);
+    }
+}
+
 int main(void) {
+    test_isqrt();
     par {
         test_math();
 #if DIVIDE_STRESS

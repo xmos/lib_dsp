@@ -171,6 +171,8 @@ uint32_t dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32
  *  using the Babylonian method of successive averaging.
  *  Error is <= 1 LSB and worst case performance is 96 cycles.
  *
+ *  Use dsp_math_int_sqrt() or dsp_math_int_sqrt64() for integer square roots.
+ *
  *  \param  x            Unsigned 32-bit value in Q8.24 format
  *  \returns             Unsigned 32-bit value in Q8.24 format
  */
