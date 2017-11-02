@@ -5,16 +5,20 @@
 
 // All of these are in assembly code
 
-void dsp_bfp_tx_xc(chanend x, int32_t data[], uint32_t N, int32_t shr) {
+void dsp_bfp_tx_xc(chanend x, int32_t data[],
+                   uint32_t CHANS, uint32_t advance, int32_t shr) {
     chkct(x, 1);
     outuint(x, shr);
-    for(int i = N-1; i >= 0; i--) {
-        outuint(x, data[i]);
+    for(int c = CHANS-1; c >= 0; c--) {
+        outct(x, 3);
+        for(int i = advance-1; i >= 0; i--) {
+            outuint(x, data[c*advance + i]);
+        }
     }
     outct(x, 1);
 }
 
-void dsp_bsp_rx_state_init_xc(uint64_t state[], int N) {
+void dsp_bfp_rx_state_init_xc(uint64_t state[], int N) {
     for(int i = 0; i < N; i++) {
         state[i] = 0;
     }
@@ -22,33 +26,44 @@ void dsp_bsp_rx_state_init_xc(uint64_t state[], int N) {
 
 int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[],
                       int32_t target[],
-                      uint32_t N, uint32_t advance,
+                      uint32_t CHANS,
+                      uint32_t N,
+                      uint32_t advance,
                       uint32_t headroom) {
     int old_data = N - advance;
     // First copy the old data from the state into the target array
-    for(int i = 0; i < old_data; i++) {
-        target[i] = (state, int32_t[])[i];
+    for(int c = CHANS-1; c >= 0; c--) {
+        for(int i = 0; i < old_data; i++) {
+            target[N*c + i] = (state, int32_t[])[(N-advance)*c + i];
+        }
     }
     // Now advance the state, removing the oldest data.
-    for(int i = 0; i < (old_data - advance)/2; i++) {
-        state[i] = state[i+(advance/2)];
+    for(int c = CHANS-1; c >= 0; c--) {
+        for(int i = 0; i < (old_data - advance)/2; i++) {
+            state[(N-advance)/2*c + i] = state[(N-advance)/2*c + i+(advance/2)];
+        }
     }
     // Now receive the new data straight into the target array
     outct(x, 1);
     int exponent = inuint(x);
-    for(int i = N-1; i >= N-advance; i--) {
-        target[i] = inuint(x);
+    for(int c = CHANS-1; c >= 0; c--) {
+        chkct(x, 3);
+        for(int i = N-1; i >= N-advance; i--) {
+            target[N * c + i] = inuint(x);
+        }
     }
     chkct(x, 1);
     // Finally, shift the new data down
-    for(int i = N-1; i >= N-advance; i--) {
-        int y = target[i] >> exponent;
-        target[i] = y;
-        (state, int32_t[])[i-advance] = y;
+    for(int c = CHANS-1; c >= 0; c--) {
+        for(int i = N-1; i >= N-advance; i--) {
+            int y = target[N * c + i] >> exponent;
+            target[N * c + i] = y;
+            (state, int32_t[])[(N - advance) * c  + i-advance] = y;
+        }
     }
-    unsigned ls = dsp_bfp_cls((target, dsp_complex_t[]),N/2);
+    unsigned ls = dsp_bfp_cls((target, dsp_complex_t[]),CHANS * N/2);
     ls -= headroom;
-    dsp_bfp_shl((target, dsp_complex_t[]), N/2, ls);
+    dsp_bfp_shl((target, dsp_complex_t[]), CHANS * N/2, ls);
 
     return ls;
 }

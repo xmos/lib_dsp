@@ -11,6 +11,7 @@
 
     
 dsp_bfp_tx:
+    ecallt r0
     { dualentsp NSTACKWORDS  ; chkct res[r0], 1 }
     { out res[r0], r3        ; shr r2, r2, 1    }
     { nop                    ; sub r2, r2, 1    }
@@ -43,6 +44,7 @@ dsp_bfp_tx:
 	.cc_top dsp_bfp_rx_state_init.function,dsp_bfp_rx_state_init
 
 dsp_bfp_rx_state_init:
+    ecallt r0
     { dualentsp NSTACKWORDS  ; nop              }
     { ldc r11, 0             ; bu .Lloop_in     }
 .Lloop_rx_state_init:
@@ -72,6 +74,7 @@ dsp_bfp_rx_state_init:
 
     
 dsp_bfp_rx:
+    ecallt r0
     { dualentsp NSTACKWORDS  ; nop }
     std r4, r5, sp[1]
     std r6, r7, sp[2]

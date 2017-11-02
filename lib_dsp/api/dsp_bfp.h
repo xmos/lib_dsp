@@ -77,38 +77,56 @@ void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32
  *
  * \param x        channel end where to send the data to
  * \param data     array containing the data.
- * \param N        Number of elements in the data, typically channels * advance
- * \param exponent Number of bits that the data has been shifted left by
+ * \param CHANS    Number of channels in the data
+ * \param advance  Number of new elements in the data
+ * \param shr      Number of bits that the data has been shifted left by
  */
-extern void dsp_bfp_tx(chanend x, int32_t data[], uint32_t N, int32_t shr);
+extern void dsp_bfp_tx(chanend x, int32_t data[],
+                       uint32_t CHANS,
+                       uint32_t advance,
+                       int32_t shr);
+extern void dsp_bfp_tx_xc(chanend x, int32_t data[],
+                       uint32_t CHANS,
+                       uint32_t advance,
+                       int32_t shr);
 
 /** Function that initialises a BFP_RX state. The BFP_RX state comprises an
- * array of BFP_RX_STATE_UINT64_SIZE(N, advance) uint64_t values. N is the
- * total number of samples needed before the DSP block can operate, advance
- * is the number of samples that the DSP block wants the data advanced
- * every iteration.
+ * array of BFP_RX_STATE_UINT64_SIZE(CHANS, N, advance) uint64_t values.
+ * CHANS is the number of channels on which the DSP block operates. N is
+ * the total number of samples needed before the DSP block can operate,
+ * advance is the number of samples that the DSP block wants the data
+ * advanced every iteration.
  *
  * \param state    array that holds state, must be an array declared as
- *                 uint64_t state[BFP_RX_STATE_UINT64_SIZE(N, advance)];
+ *                 uint64_t state[BFP_RX_STATE_UINT64_SIZE(CHANS, N, advance)];
  *
- * \param SIZE     Array size: BFP_RX_STATE_UINT64_SIZE(N, advance)
+ * \param SIZE     Array size: BFP_RX_STATE_UINT64_SIZE(CHANS, N, advance)
  */
 extern void dsp_bfp_rx_state_init(uint64_t state[], int SIZE);
+extern void dsp_bfp_rx_state_init_xc(uint64_t state[], int SIZE);
 
 /** Function that receives data in BFP format for this DSP block
  *
  * \param x        channel end where to send the data to
  * \param state    array that holds state, must be initialised with a call to
  *                 dsp_bfp_rx_state_init()
- * \param data     array where data should be stored.
+ * \param target   array where data should be stored.
+ * \param CHANS    Number of elements required for DSP block
  * \param N        Number of elements required for DSP block
  * \param advance  Number of new elements on each iteration
  * \param headroom Desired headroom in number of bits.
  *
  * \returns        Number of bits that the data has been shifted left by
  */
-extern int32_t dsp_bfp_rx(chanend x, uint64_t state[], int32_t data[],
-                          uint32_t N, uint32_t advance,
+extern int32_t dsp_bfp_rx(chanend x, uint64_t state[], int32_t target[],
+                          uint32_t CHANS,
+                          uint32_t N,
+                          uint32_t advance,
+                          uint32_t headroom);
+extern int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[], int32_t target[],
+                          uint32_t CHANS,
+                          uint32_t N,
+                          uint32_t advance,
                           uint32_t headroom);
 
 #endif
