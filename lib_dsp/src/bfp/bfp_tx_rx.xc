@@ -67,3 +67,22 @@ int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[],
 
     return ls;
 }
+
+void dsp_bfp_tx_pairs(chanend x, dsp_complex_t data[],
+                      uint32_t channels, uint32_t advance, int32_t shr) {
+    chkct(x, 1); // extra sync to trap pairs/singles mismatch
+    dsp_bfp_tx_xc(x, (data, int32_t[]),
+                  channels >> 1, advance << 1, shr);
+}
+
+int32_t dsp_bfp_rx_pairs(chanend x, uint64_t state[],
+                         dsp_complex_t target[],
+                         uint32_t channels,
+                         uint32_t N,
+                         uint32_t advance,
+                         uint32_t headroom) {
+    outct(x, 1); // extra sync to trap pairs/singles mismatch
+    return dsp_bfp_rx_xc(x, state, (target, int32_t[]),
+                         channels >> 1, N << 1, advance << 1, headroom);
+}
+

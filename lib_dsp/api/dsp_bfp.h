@@ -129,6 +129,16 @@ extern int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[], int32_t target[],
                           uint32_t advance,
                           uint32_t headroom);
 
+extern void dsp_bfp_tx_pairs(chanend x, dsp_complex_t data[],
+                             uint32_t CHANS, uint32_t advance, int32_t shr);
+
+extern int32_t dsp_bfp_rx_pairs(chanend x, uint64_t state[],
+                                dsp_complex_t target[],
+                                uint32_t CHANS,
+                                uint32_t N,
+                                uint32_t advance,
+                                uint32_t headroom);
+
 #endif
 
 #endif
