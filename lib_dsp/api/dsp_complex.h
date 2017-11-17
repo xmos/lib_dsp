@@ -101,8 +101,7 @@ void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
 /** Function that computes the element-by-element product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
  * representation of one vector has to be specified, the result will use
- * the fixed point representation of the other number. Note that the output
- * will require one more bit than the input due to the addition::
+ * the fixed point representation of the other number::
  *
  *   a = a * conj(b)
  *
@@ -118,21 +117,20 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
 /** Function that computes the element-by-element product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
  * representation of one vector has to be specified, the result will use
- * the fixed point representation of the other number. Note that the output
- * will require one more bit than the input due to the addition::
+ * the fixed point representation of the other number::
  *
  *   o = a * conj(b)
  *
- * \param[out]    o   output complex vector
- * \param[in]     a   first input complex vector
- * \param[in]     b   second input complex vector
+ * \param[out]    o   first complex vector, also output
+ * \param[in]     a   first complex vector, also output
+ * \param[in]     b   second complex vector
  * \param[in]     N   Length of the vectors
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
-void dsp_complex_mul_conjugate_vector3(dsp_complex_t * alias o,
-                                       dsp_complex_t * alias a,
-                                       dsp_complex_t * alias b,
+void dsp_complex_mul_conjugate_vector3(dsp_complex_t o[],
+                                       dsp_complex_t a[],
+                                       dsp_complex_t b[],
                                       uint32_t N, uint32_t Q);
 
 /** Function that computes the element-by-element sum of two complex vectors::
@@ -250,7 +248,7 @@ void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
-void dsp_complex_scalar_vector3(dsp_complex_t * alias a, dsp_complex_t * alias b,
+void dsp_complex_scalar_vector3(dsp_complex_t a[], dsp_complex_t b[],
                                 uint32_t N, int32_t scalar, uint32_t Q);
 
 /** Function that computes the magnitude of an array of complex numbers

@@ -284,8 +284,6 @@ dsp_complex_nmacc_vector:
     stw r10, sp[6]
     
     { ldw r7, sp[NSTACKWORDS + 1] ; nop }
-    { shr r4, r7, 5;	ldc r5, 32}
-    { bt r4,.Ldsp_complex_nmacc_vector_output_upper_word}
 .Lloop_dsp_complex_nmacc_vector:
     ldd r4, r5, r1[r3]
     ldd r6, r11, r2[r3]
@@ -304,33 +302,12 @@ dsp_complex_nmacc_vector:
     std r4, r5, r0[r3]
     { sub r3, r3, 1               ; bt r3, .Lloop_dsp_complex_nmacc_vector }
 
-.Lepilog_dsp_complex_nmacc_vector:
     ldw r10, sp[6]
     ldd r8, r9, sp[2]
     ldd r6, r7, sp[1]
     ldd r4, r5, sp[0]
 	retsp NSTACKWORDS
 	
-.Ldsp_complex_nmacc_vector_output_upper_word:
-	{sub r7, r7, r5; nop}
-.Lloop_dsp_complex_nmacc_vector_output_upper_word:
-    ldd r4, r5, r1[r3]
-    ldd r6, r11, r2[r3]
-
-    { ldc r10, 0                  ; ldc r9, 0 }
-    maccs r10, r9, r4, r11
-    maccs r10, r9, r5, r6
-    ashr r10, r10, r7
-    { neg r6, r6                  ; ldc r8, 0 }
-    ldc r9, 0
-    maccs r8, r9, r5, r11
-    maccs r8, r9, r4, r6
-    ashr r5, r8, r7
-    ldd r6, r11, r0[r3]
-    { sub r4, r6, r10             ; sub r5, r11, r5 }
-    std r4, r5, r0[r3]
-    { sub r3, r3, 1               ; bt r3, .Lloop_dsp_complex_nmacc_vector_output_upper_word }
-	bu .Lepilog_dsp_complex_nmacc_vector
 	// RETURN_REG_HOLDER
 	.cc_bottom dsp_complex_nmacc_vector.function
 	.set	dsp_complex_nmacc_vector.nstackwords,NSTACKWORDS
