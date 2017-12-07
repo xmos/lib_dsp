@@ -1,5 +1,5 @@
 def configure(conf):
-    conf.load('compiler_xcc', tooldir='../../../build_tools/xwaf')
+    conf.load('xwaf.compiler_xcc')
 
 
 def build(bld):
@@ -7,4 +7,4 @@ def build(bld):
     bld.env.XCC_FLAGS = ['-O2', '-g', '-report', '-DDEBUG_PRINT_ENABLE=1']
 
     # Build our program
-    prog = bld.program(target='bin/test.xe', depends_on='lib_dsp(>=3.0.0) lib_logging')
+    prog = bld.program(target='bin/test.xe', depends_on='lib_dsp(>=4.0.0)')
