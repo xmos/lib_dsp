@@ -6,7 +6,7 @@
     .issue_mode  dual
 	.globl	dsp_fft_inverse_DIF_xs2
 	.align	16
-    .skip 12
+    .skip 8
 	.type	dsp_fft_inverse_DIF_xs2,@function
 	.cc_top dsp_fft_inverse_DIF_xs2.function,dsp_fft_inverse_DIF_xs2
 	
@@ -85,10 +85,12 @@ dsp_fft_inverse_DIF_xs2:
 
     
     ldd r7, r5, sp[6]     // step4
-    bf r5, .LSKIP
+
     { ldw r11, sp[28]  ;    ldc r8, 0  }  // k + N - step
-    { nop              ;    add r11, r11, r5 } // k + N - step + step4: BLOCK.
-    
+    { bu skip          ;    add r11, r11, r5 } // k + N - step + step4: BLOCK.
+    nop // aligning second loop...
+    nop
+skip:   
     {shl r3, r11, 3    ;    ldw r11, sp[16]}
     {add r4, r11, r3   ;    ldw r11, sp[9] }            // step2        // & pts[block]
     
@@ -119,7 +121,7 @@ dsp_fft_inverse_DIF_xs2:
     {add r9, r9, 1              ;	ldw r10, sp[12]}             // step4
     {lsu r10, r9, r10            ;    stw r9, sp[10]}             // k
 	bt r10, .Ltmp_kLoop1
-.LSKIP:
+
 	ldd r10, r11, sp[7]
 	{add r10, r10, 1; shr r11, r11, 1}
 	std r10, r11, sp[7]
