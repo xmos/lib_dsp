@@ -38,7 +38,7 @@ int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[],
     }
     // Now advance the state, removing the oldest data.
     for(int c = CHANS-1; c >= 0; c--) {
-        for(int i = 0; i < (old_data - advance)/2; i++) {
+        for(int i = 0; i < (int)(old_data - advance)/2; i++) {
             state[(N-advance)/2*c + i] = state[(N-advance)/2*c + i+(advance/2)];
         }
     }
@@ -47,20 +47,20 @@ int32_t dsp_bfp_rx_xc(chanend x, uint64_t state[],
     master {
         x :> exponent;
         for(int c = CHANS-1; c >= 0; c--) {
-            for(int i = N-1; i >= N-advance; i--) {
+            for(int i = N-1; i >= (int) (N-advance); i--) {
                 x :> target[N * c + i];
             }
         }
     }
     // Finally, shift the new data down
     for(int c = CHANS-1; c >= 0; c--) {
-        for(int i = N-1; i >= N-advance; i--) {
+        for(int i = N-1; i >= (int) (N-advance); i--) {
             int y = target[N * c + i] >> exponent;
             target[N * c + i] = y;
             (state, int32_t[])[(N - advance) * c  + i-advance] = y;
         }
     }
-    unsigned ls = dsp_bfp_cls((target, dsp_complex_t[]),CHANS * N/2);
+    unsigned ls = dsp_bfp_cls((target, dsp_complex_t[]),CHANS * N/2) - 1;
     ls -= headroom;
     dsp_bfp_shl((target, dsp_complex_t[]), CHANS * N/2, ls);
 
