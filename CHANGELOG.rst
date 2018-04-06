@@ -1,5 +1,5 @@
-xCORE-200 DSP library change log
-================================
+DSP library change log
+======================
 
 4.0.0
 -----
