@@ -112,10 +112,10 @@ int main(void)
   {
     TIME_FUNCTION(Dst[i] =
       dsp_filters_fir (Src[i],                 // Input data sample to be filtered
-                           firCoeffs,              // Pointer to filter coefficients
-                           filterState,            // Pointer to filter state array
-                           FIR_FILTER_LENGTH,      // Filter length
-                           Q_N);                   // Q Format N
+                       firCoeffs,              // Pointer to filter coefficients
+                       filterState,            // Pointer to filter state array
+                       FIR_FILTER_LENGTH,      // Filter length
+                       Q_N);                   // Q Format N
     );
   }
 
@@ -128,6 +128,22 @@ int main(void)
   for (i = 0; i < SAMPLE_LENGTH; i++)
   {
       printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+  }
+
+                 // Initiaize FIR filter state array
+  for (i = 0; i < FIR_FILTER_LENGTH; i++)
+  {
+    filterState[i] = 0;
+  }
+
+  // Push an impulse through the state array - do it for a shorter array
+  printf ("\nFIR Filter Push Samples Results\n");
+  for (i = 1; i < 6; i++)
+  {
+    dsp_filters_fir_add_sample (i,              // Input data sample to be filtered
+                                filterState,    // Pointer to filter state array
+                                4);             // Filter length
+    printf ("filterState : %d, %d, %d, %d\n", filterState[0], filterState[1], filterState[2], filterState[3]);
   }
 
                  // Initiaize IIR filter state array
