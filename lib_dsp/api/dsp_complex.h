@@ -328,7 +328,7 @@ extern void dsp_complex_scale_vector(dsp_complex_t array[],
 extern void dsp_complex_window_hanning_post_fft_half(dsp_complex_t array[],
                                                      uint32_t N);
 
-** Function that combines an array of real numbers and an array of imaginary numbers
+/** Function that combines an array of real numbers and an array of imaginary numbers
  * into an interleaved array of complex numbers.
  *
  * \param [in] re       Array of real numbers to combine into complex array
