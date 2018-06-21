@@ -185,6 +185,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/rst}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/pdf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/gen}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/fft}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/bfp}&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.xc.compiler.input.951271038" name="XC" superClass="com.xmos.cdt.xc.compiler.input"/>
 							</tool>
@@ -497,6 +499,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/rst}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/pdf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/gen}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/fft}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/bfp}&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.c.compiler.input.c.1950111246" name="C" superClass="com.xmos.cdt.c.compiler.input.c"/>
 							</tool>
@@ -815,6 +819,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/rst}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/doc/pdf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/gen}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/fft}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_dsp/src/bfp}&quot;"/>
 								</option>
 								<inputType id="com.xmos.cdt.cxx.compiler.input.cpp.881339440" name="C++" superClass="com.xmos.cdt.cxx.compiler.input.cpp"/>
 							</tool>

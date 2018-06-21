@@ -20,28 +20,30 @@ implementation file.
 
 .. table:: DSP library organization
 
-  +-------------+----------------+---------------------------------------------------------------+
-  | Category    | Source Files   | Functions                                                     |
-  +=============+================+===============================================================+
-  | Fixed point | dsp_qformat    | Q8 through Q31 formats, fixed and floating point conversions  |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Filters     | dsp_filters    | FIR, biquad, cascaded biquad, and convolution                 |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Adaptive    | dsp_adaptive   | LMS and NLMS Adaptive filters                                 |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Scalar math | dsp_math       | Multiply, divide, square root, exponential, natural logarithm |
-  |             |                | trigonometric, hyperbolic                                     |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Vector math | dsp_vector     | Scalar/vector add/subtract/multiply, dot product              |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Matrix math | dsp_matrix     | Scalar/matrix add/subtract/multiply, inverse and transpose    |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Statistics  | dsp_statistics | Vector mean, sum-of-squares, root-mean-square, variance       |
-  +-------------+----------------+---------------------------------------------------------------+
-  | Design      | dsp_design     | Biquad coefficient generation for various filter types        |
-  +-------------+----------------+---------------------------------------------------------------+
-  | FFT         | dsp_fft        | Forward and inverse Fast Fourier Transforms.                  |
-  +-------------+----------------+---------------------------------------------------------------+
+  +--------------+----------------+---------------------------------------------------------------+
+  | Category     | Source Files   | Functions                                                     |
+  +==============+================+===============================================================+
+  | Fixed point  | dsp_qformat    | Q8 through Q31 formats, fixed and floating point conversions  |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Filters      | dsp_filters    | FIR, biquad, cascaded biquad, and convolution                 |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Adaptive     | dsp_adaptive   | LMS and NLMS Adaptive filters                                 |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Scalar math  | dsp_math       | Multiply, divide, square root, exponential, natural logarithm |
+  |              |                | trigonometric, hyperbolic                                     |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Complex math | dsp_complex    | Complex math functions plus real, imaginary combine/split     |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Vector math  | dsp_vector     | Scalar/vector add/subtract/multiply, dot product              |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Matrix math  | dsp_matrix     | Scalar/matrix add/subtract/multiply, inverse and transpose    |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Statistics   | dsp_statistics | Vector mean, sum-of-squares, root-mean-square, variance       |
+  +--------------+----------------+---------------------------------------------------------------+
+  | Design       | dsp_design     | Biquad coefficient generation for various filter types        |
+  +--------------+----------------+---------------------------------------------------------------+
+  | FFT          | dsp_fft        | Forward and inverse Fast Fourier Transforms.                  |
+  +--------------+----------------+---------------------------------------------------------------+
 
 
 Fixed-Point Format
@@ -180,6 +182,111 @@ Scalar Math Functions: Hyperbolic Cosine
 ----------------------------------------
 
 .. doxygenfunction:: dsp_math_cosh
+
+Complex Math Functions: Add
+---------------------------
+
+.. doxygenfunction:: dsp_complex_add
+
+Complex Math Functions: Subtract
+--------------------------------
+
+.. doxygenfunction:: dsp_complex_sub
+
+Complex Math Functions: Multiplication
+--------------------------------------
+
+.. doxygenfunction:: dsp_complex_mul
+
+Complex Math Functions: Inner Product
+-------------------------------------
+
+.. doxygenfunction:: dsp_complex_mul_conjugate
+
+Complex Math Functions: Complex FIR Filter
+------------------------------------------
+
+.. doxygenfunction:: dsp_complex_fir
+
+Complex Math Functions: Element By Element Multiplication
+---------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_mul_vector
+
+Complex Math Functions: Element By Element Inner Product
+--------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_mul_conjugate_vector
+
+Complex Math Functions: Element By Element Vector Product
+---------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_mul_conjugate_vector3
+
+Complex Math Functions: Element By Element Vector Add
+-----------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_add_vector
+
+Complex Math Functions: Element By Element Add With Shift Left Scaling
+----------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_add_vector_shl
+
+Complex Math Functions: Element By Element Add With Scaling
+-----------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_add_vector_scale
+
+Complex Math Functions: Element By Element Subtraction
+------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_sub_vector
+
+Complex Math Functions: Element By Element Addition Into A Third Vector
+-----------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_add_vector3
+
+Complex Math Functions: Element By Element Subtraction Into A Third Vector
+--------------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_sub_vector3
+
+Complex Math Functions: Element By Element Multiply Accumulate
+--------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_macc_vector
+
+Complex Math Functions: Element By Element Multiply Subtract
+------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_nmacc_vector
+
+Complex Math Functions: Multiply Scalar And Shift Down
+------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_scalar_vector3
+
+Complex Math Functions: Return Magnitude With Selectable Precision
+------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_magnitude_vector
+
+Complex Math Functions: Scale By A Fraction
+-------------------------------------------
+
+.. doxygenfunction:: dsp_complex_scale_vector
+
+Complex Math Functions: Combine Separate Real And Imaginary Arrays Into Interleaved Complex
+-------------------------------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_combine
+
+Complex Math Functions: Split Interleaved Complex Array Into Separate Real And Imaginary
+----------------------------------------------------------------------------------------
+
+.. doxygenfunction:: dsp_complex_split
 
 Vector Math Functions: Minimum Value
 ------------------------------------
