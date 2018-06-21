@@ -2,7 +2,6 @@
 #include "dsp.h"
 #include <xclib.h>
 #include <stdio.h>
-#include "math.h"
 
 static inline int32_t sin_1(int i, int N, const int32_t sine[]) {
     return sine[i];

@@ -105,3 +105,28 @@ void dsp_complex_scale_vector(dsp_complex_t array[],
         array[i].im = mul_by_frac(array[i].im, numerator[i], denominator[i]);
     }
 }
+
+void dsp_complex_combine (const int32_t re[],
+    const int32_t im[],
+    dsp_complex_t complex[],
+    const uint32_t N)
+
+{
+    for (uint32_t i=0; i<N; i++) {
+        (complex, int32_t[])[2*i]   = re[i];
+        (complex, int32_t[])[2*i+1] = im[i];
+    }
+}
+
+void dsp_complex_split (const dsp_complex_t complex[],
+    int32_t re[],
+    int32_t im[],
+    const uint32_t N)
+
+{
+    for (uint32_t i=0; i<N; i++) {
+        re[i] = (complex, int32_t[])[2*i];
+        im[i] = (complex, int32_t[])[2*i+1];
+    }
+}
+

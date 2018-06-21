@@ -11,7 +11,7 @@ xCORE-200 DSP library change log
   * Added real FFT
   * Added real reverse FFT
   * Added FFT with top half blanked
-  * Logistics functions
+  * Logistics, softplus functions
   * Block floating point functions
   * Complex FIR
   * Complex vector arithmetic, with optional scaling

@@ -8,6 +8,7 @@
 #include <xs1.h>
 #include <dsp.h>
 #include <math.h>
+#include <string.h>
 
 #define MAXN 5
 
@@ -49,10 +50,17 @@ uint32_t denom[5] = {10000,  5000,       1, 1000000000, 10 };
 dsp_complex_t d[MAXN];
 dsp_complex_t o[MAXN];
 
+
+#define VECTOR_LENGTH           12
+
+int32_t A_real[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+int32_t A_imag[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120};
+dsp_complex_t A_cplx[VECTOR_LENGTH];
+
 int main(void) {
 
-    
-    
+
+
     for(int N = 3; N <= MAXN; N++) {
         int errors = 0;
 
@@ -66,7 +74,7 @@ int main(void) {
                 printf("%d %d %d %d\n", d[i].re, d[i].im, scaled_data[i].re, scaled_data[i].im);
             }
         }
-        
+
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_mul(data[i], fir[i], 24);
         }
@@ -77,7 +85,7 @@ int main(void) {
                 printf("%d %d %d %d\n", d[i].re, d[i].im, data[i].re, data[i].im);
             }
         }
-    
+
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_mul_conjugate(data[i], fir[i], 24);
         }
@@ -93,7 +101,7 @@ int main(void) {
                 printf("mul_conjugate_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
-    
+
         for(int i = 0; i < N; i++) {
             d[i] = dsp_complex_add(data[i], fir[i]);
         }
@@ -109,7 +117,7 @@ int main(void) {
                 printf("add_vector3: %d %d %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
-    
+
         int shift = 5;
         for(int i = 0; i < N; i++) {
             dsp_complex_t z;
@@ -205,7 +213,7 @@ int main(void) {
                 printf("dsp_complex_scalar_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
-        
+
         Q = 16;
         for(int i = 0; i < N; i++) {
             dsp_complex_t z;
@@ -219,7 +227,7 @@ int main(void) {
                 printf("nmacc_vector3: shoudl be %d %d is %d %d\n", d[i].re, d[i].im, o[i].re, o[i].im);
             }
         }
-        
+
         uint32_t magnitude[MAXN];
         for(int k = 32-MAXN; k >= 1; k-=3) {
             dsp_complex_magnitude_vector(magnitude, d, N, 0);
@@ -238,12 +246,35 @@ int main(void) {
             d[2].im = sext(d[2].im, k);
         }
 
-        
+
         if (errors == 0) {
             printf("Vector complex length %d pass\n", N);
         } else {
             printf("Vector complex length %d FAIL %d errors\n", N, errors);
         }
     }
+
+    dsp_complex_combine (A_real, A_imag, A_cplx, VECTOR_LENGTH);
+
+    printf ("Combined Complex Array = ");
+    for (int i = 0; i < VECTOR_LENGTH; i++)
+        printf ("%d, %d, ", A_cplx[i].re, A_cplx[i].im);
+    printf ("\n");
+
+    memset (A_real, 0, VECTOR_LENGTH*sizeof(int));      // Clear separate arrays to test that dsp_complex_split function works correctly
+    memset (A_imag, 0, VECTOR_LENGTH*sizeof(int));
+
+    dsp_complex_split (A_cplx, A_real, A_imag, VECTOR_LENGTH);
+
+    printf ("Split arrays (real) = ");
+    for (int i = 0; i < VECTOR_LENGTH; i++) {
+        printf ("%d, ", A_real[i]);
+    }
+    printf ("\n             (imag) = ");
+    for (int i = 0; i < VECTOR_LENGTH; i++) {
+        printf ("%d, ", A_imag[i]);
+    }
+    printf ("\n");
+
     return 0;
 }

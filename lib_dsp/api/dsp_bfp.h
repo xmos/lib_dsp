@@ -8,6 +8,12 @@
 
 #if defined(__XS2A__)
 
+#ifdef __XC__
+#define UNSAFE unsafe
+#else
+#define UNSAFE
+#endif //__XC_
+
 /** This function computes the number of leading sign bits in an array of
  * complex numbers. This can be used to calculate the current headroom, and
  * using dsp_bfp_shl to increase the headroom or to reduce the headroom (in
@@ -26,8 +32,8 @@ uint32_t dsp_bfp_cls(dsp_complex_t pts[], const uint32_t N);
  * It shifts left if the shift argument is positive, or right if the shift
  * argument is negative. Hence, a sequence::
  *
- *   unsigned ls = dsp_bfp_cls(x,N)
- *   dsp_bfp_shl(x, ls-1, N)
+ *   unsigned ls = dsp_bfp_cls(x,N);
+ *   dsp_bfp_shl(x, ls-1, N);
  *
  * will result in one leading sign bit; minimising headroom and maximising
  * dynamic range.
@@ -57,7 +63,7 @@ void dsp_bfp_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
  * \param[in]     shift_re  Number of places to shift the real part left by.
  * \param[in]     shift_im  Number of places to shift the imaginary part left by
  */
-void dsp_bfp_shl2( dsp_complex_t pts[], const uint32_t N,
+void dsp_bfp_shl2( dsp_complex_t * UNSAFE pts, const uint32_t N,
                    const int32_t shift_re, const int32_t shift_im );
 
 /** This function shifts an array of complex numbers to adjust the headroom,
@@ -70,7 +76,6 @@ void dsp_bfp_shl2( dsp_complex_t pts[], const uint32_t N,
  * \param[in]     shift     Number of places to shift left by.
  */
 void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
-
 
 #endif
 

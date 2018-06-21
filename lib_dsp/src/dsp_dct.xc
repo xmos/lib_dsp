@@ -14,6 +14,8 @@
  * dct32() comprises two calls two dct16();
  */
 
+// Table contents: cos((i+0.5)/N/4.0*2*3.1415926535)*256*256*256*128
+
 static const int32_t costable8[4] = {
     2106220352,
     1785567396,
@@ -81,6 +83,33 @@ static const int32_t costable24[12] = {
     140452151,
 };
 
+static const int32_t costable48[24] = {
+    2146333858,
+    2137142927,
+    2118800422,
+    2091384888,
+    2055013723,
+    2009842673,
+    1956065169,
+    1893911494,
+    1823647798,
+    1745574963,
+    1660027308,
+    1567371161,
+    1468003290,
+    1362349204,
+    1250861329,
+    1134017074,
+    1012316784,
+    886281597,
+    756451217,
+    623381597,
+    487642561,
+    349815365,
+    210490206,
+    70263695,
+};
+
 static inline int32_t mulcos(int32_t x, int32_t cos) {
     long long r = cos * (long long) x;
     return r >> 31;
@@ -145,6 +174,7 @@ DCT(12,6)
 DCT(16,8)
 DCT(24,12)
 DCT(32,16)
+DCT(48,24)
 
 #ifdef INCLUDE_REFERENCE_DCT
 #include <math.h>
