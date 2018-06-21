@@ -4,4 +4,4 @@ def use_module(bld):
         source=sources,
         includes=['api'],
         optional_headers=['debug_conf.h', 'xmos_dsp_elements.h'],
-        version='4.0.0')
+        version='4.1.0')
