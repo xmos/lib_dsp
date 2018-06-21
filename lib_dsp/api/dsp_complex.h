@@ -50,7 +50,7 @@ dsp_complex_t dsp_complex_sub(dsp_complex_t a, dsp_complex_t b);
  * \param[in] a   first complex number
  * \param[in] b   second complex number
  * \param[in] Q   Number of bits behind the binary point in one of the numbers
- * 
+ *
  * \returns       product - it may overflow.
  */
 dsp_complex_t dsp_complex_mul(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
@@ -63,7 +63,7 @@ dsp_complex_t dsp_complex_mul(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
  * \param[in] a   first complex number
  * \param[in] b   second complex number
  * \param[in] Q   Number of bits behind the binary point in one of the numbers
- * 
+ *
  * \returns       product - it may overflow.
  */
 dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
@@ -77,7 +77,7 @@ dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32
  * \param[in] N   Length of the vectors
  * \param[in] offset  starting point to use in vector a
  * \param[in] Q   Number of bits behind the binary point in one of the vectors
- * 
+ *
  * \returns       inner product - it may overflow.
  */
 dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
@@ -249,11 +249,12 @@ void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
  *
  *   a = scalar * b >> Q
  *
- * \param[in,out] a   first complex vector, also output
- * \param[in]     b   second complex vector
- * \param[in]     N   Length of the vectors
- * \param[in]     Q   Number of bits behind the binary point in one of the
- *                    vectors
+ * \param[in,out] a      first complex vector, also output
+ * \param[in]     b      second complex vector
+ * \param[in]     N      Length of the vectors
+ * \param[in]     scalar Scalar multiplier
+ * \param[in]     Q      Number of bits behind the binary point in one of the
+ *                       vectors
  */
 void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a, dsp_complex_t ALIAS_PTR b,
                                 uint32_t N, int32_t scalar, uint32_t Q);
@@ -271,7 +272,7 @@ void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a, dsp_complex_t ALIAS_P
  * \param [out] magnitude array in which magnitudes are stored
  * \param [in]  input     Array of complex numbers of which to compute magnitude
  * \param [in]  N         Number of elements in the input and output arrays
- * \param [in]  precision integer that sets the precision; set to 0 for maximum
+ * \param [in]  P         Integer that sets the precision; set to 0 for maximum
  *                        precision; and to 23 for no precision;
  *                         0 <= precision <= 23.
  */
@@ -285,8 +286,8 @@ extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
  *
  *    array = array * numerator/denominator
  *
- * Note that noth numerator and denominator are unsigned values.
- * 
+ * Note that both numerator and denominator are unsigned values.
+ *
  * The typical calling sequence below may be used to reset the magnitude of
  * each element of a complex vector to a new value::
  *
@@ -294,9 +295,9 @@ extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
  *   dsp_complex_remagnitude_vector(input, cur_magnitude, new_mag, N);
  *
  * \param [in,out] array   Array of complex numbers on which to reset magnitude
- * \param [in] numerator Array of ints that store the current magnitude 
- * \param [in] out_magnitude Array of ints that store the desired magnitude
- * \param [in]  N         Number of elements in the input and output arrays
+ * \param [in] numerator   Array of ints that store the current magnitude
+ * \param [in] denominator Array of ints that store the desired magnitude
+ * \param [in] N           Number of elements in the input and output arrays
  */
 extern void dsp_complex_scale_vector(dsp_complex_t array[],
                                      uint32_t numerator[],
@@ -326,4 +327,30 @@ extern void dsp_complex_scale_vector(dsp_complex_t array[],
  */
 extern void dsp_complex_window_hanning_post_fft_half(dsp_complex_t array[],
                                                      uint32_t N);
+
+** Function that combines an array of real numbers and an array of imaginary numbers
+ * into an interleaved array of complex numbers.
+ *
+ * \param [in] re       Array of real numbers to combine into complex array
+ * \param [in] im       Array of imaginary numbers to combine into complex array
+ * \param [out] complex Array of complex numbers, with interleaved real an imaginary value
+ * \param [in]  N       Number of elements in the input and output arrays
+ */
+void dsp_complex_combine (const int32_t re[],
+                          const int32_t im[],
+                          dsp_complex_t complex[],
+                          const uint32_t N);
+
+/** Function that splits an array of complex numbers into separate arrays for the
+ * real and imaginary numbers.
+ *
+ * \param [in] complex Array of complex numbers, with interleaved real an imaginary value
+ * \param [out] re     Array of real numbers split from complex array
+ * \param [out] im     Array of imaginary numbers split from complex array
+ * \param [in]  N      Number of elements in the input and output arrays
+ */
+void dsp_complex_split (const dsp_complex_t complex[],
+                        int32_t re[],
+                        int32_t im[],
+                        const uint32_t N);
 #endif

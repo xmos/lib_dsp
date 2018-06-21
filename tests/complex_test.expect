@@ -1,3 +1,6 @@
 Vector complex length 3 pass
 Vector complex length 4 pass
 Vector complex length 5 pass
+Combined Complex Array = 1, 10, 2, 20, 3, 30, 4, 40, 5, 50, 6, 60, 7, 70, 8, 80, 9, 90, 10, 100, 11, 110, 12, 120,
+Split arrays (real) = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+             (imag) = 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,
