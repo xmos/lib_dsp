@@ -480,6 +480,41 @@ void logistics_test() {
     }
 }
 
+void softplus_test() {
+    int errors = 0;
+    int one = 1 << 24;
+    float fone = one;
+    int max_good = 0;
+    int max_fast = 0;
+    for(int i = 4*one; i >= -4*one; i-=one/8) {
+        int log1 = log(exp(i/fone) +1.0)*fone;
+//        int log2 = dsp_math_softplus_fast(i);
+        int log3 = dsp_math_softplus(i);
+//        int err = abs(log2 - log1);
+//        if (err > max_fast) {
+//            max_fast = err;
+//        }
+//        if (abs(log2 - log1) > one * 7 / 100) {
+//            errors++;
+//            printf("softplus_fast() error; %f: %f %f (err = %f)\n", i/fone, log1/fone, log2/fone, err/fone);
+//        }
+        int err = abs(log3 - log1);
+        if (err > max_good) {
+            max_good = err;
+        }
+        if (err > 1) {
+            errors++;
+            printf("softplus() error: %f: %f %f (err = %d)\n", i/fone, log1/fone, log3/fone, err);
+        }
+    }
+    printf("Softplus max error: %f (fast) %d (good)\n", max_fast/fone, max_good);
+    if (errors == 0) {
+        printf("Softplus test passed\n");
+    } else {
+        printf("Softplus test failed with %d errors\n", errors);
+    }
+}
+
 void test_math(void)
 {
 
@@ -492,6 +527,7 @@ void test_math(void)
     printf("Test example for Math functions\n");
     printf("===============================\n");
 
+    softplus_test();
     logistics_test();
 
     test_multipliation_and_division();
@@ -512,7 +548,54 @@ void divide() {
     }
 }
 
+void test_isqrt() {
+    int errors = 0;
+    for(int i = 0; i < 33; i++) {
+        for(int k = 0; k < 20; k++) {
+            unsigned r = get_random_number();
+            unsigned mask = ((1 << i)-1);
+            r &= mask;
+            if (k & 1) {
+                r |= ~mask;
+            }
+            unsigned rr = dsp_math_int_sqrt(r);
+            if (r == 0 && rr == 0) continue;
+            unsigned rrm = (rr - 1) * (rr - 1);
+            unsigned rrp = rr >= 0xffff ? 0xffffffff : (rr + 1) * (rr + 1);
+            if (r <= rrm || r > rrp) {
+                errors++;
+                printf("Error: sqrt(%08x) not %d\n", r, rr);
+            }
+        }
+    }
+    for(int i = 0; i < 65; i++) {
+        for(int k = 0; k < 20; k++) {
+            unsigned long long r = (unsigned) get_random_number() ;
+            r = (r << 32) | (unsigned) get_random_number() ;
+            unsigned long long mask = ((1ull << i)-1);
+            r &= mask;
+            if (k & 1) {
+                r |= ~mask;
+            }
+            unsigned rr = dsp_math_int_sqrt64(r);
+            if (r == 0 && rr == 0) continue;
+            unsigned long long rrm = (rr - 1ull) * (rr-1ull);
+            unsigned long long rrp = rr == 0xffffffff ? 0xffffffffffffffffull : (rr + 1ull)*(rr + 1ull);
+            if (r <= rrm || r > rrp) {
+                errors++;
+                printf("Error: sqrt64(%08llx) not %u\n", r, rr);
+            }
+        }
+    }
+    if (errors == 0) {
+        printf("isqrt() passed\n");
+    } else {
+        printf("isqrt() FAIL with %d errors\n", errors);
+    }
+}
+
 int main(void) {
+    test_isqrt();
     par {
         test_math();
 #if DIVIDE_STRESS

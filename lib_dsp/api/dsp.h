@@ -9,9 +9,12 @@
 #include <dsp_matrix.h>
 #include <dsp_statistics.h>
 #include <dsp_math.h>
+#include <dsp_math_int.h>
 #include <dsp_qformat.h>
 #include <dsp_vector.h>
 #include <dsp_fft.h>
+#include <dsp_bfp.h>
+#include <dsp_dct.h>
 
 /* Macro to time function calls
  * After execution of this line the value in cycle_taken is valid.

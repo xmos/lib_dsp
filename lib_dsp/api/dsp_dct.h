@@ -6,8 +6,19 @@
 #include "stdint.h"
 
 /* This library provides a limited set of discrete cosine transforms */
-/* DCT: 32, 24, 16, 12, 8, 6, 4, 3, 2 and 1 point */
+/* DCT: 48, 32, 24, 16, 12, 8, 6, 4, 3, 2 and 1 point */
 /* inverse DCT: 4, 3, 2, 1 point only */
+
+/** This function performs a 48 point DCT
+ *
+ *  The first output is the DC value, subsequent values are the values for
+ *  the basis vectors of half a cosine, a whole cosine, 1.5 cosine, 2
+ *  consines, etc.
+ *
+ *  \param  input           input values to the DCT
+ *  \param  output          DCT values.
+ */
+void dsp_dct_forward48(int32_t output[48], int32_t input[48]);
 
 /** This function performs a 32 point DCT
  *

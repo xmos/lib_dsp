@@ -22,7 +22,7 @@ dsp_bfp_shl:
     std r3, r11, r0[r1]                               // store re/im back
     { bt r1, .Lloopl              ; sub r1, r1, 1 } 
         
-    retsp 0
+    retsp NSTACKWORDS
 .Lshr:
     neg r2, r2
 .Lloopr:
@@ -46,6 +46,54 @@ dsp_bfp_shl:
 	.globl	dsp_bfp_shl.maxchanends
 .Ltmpdsp_bfp_shl:
 	.size	dsp_bfp_shl, .Ltmpdsp_bfp_shl-dsp_bfp_shl
+
+
+#undef NSTACKWORDS
+#define NSTACKWORDS 2
+
+	.text
+    .issue_mode  dual
+	.globl	dsp_bfp_shl_2
+	.align	16
+    .skip   0
+	.type	dsp_bfp_shl_2,@function
+	.cc_top dsp_bfp_shl_2.function,dsp_bfp_shl_2
+
+dsp_bfp_shl_2:
+    { dualentsp NSTACKWORDS       ; clz r11, r3     } // r3 < 0 indicates SHR
+    std r4, r5, sp[0]
+    { bf r11, .LshrX              ; sub r2, r2, 1   } // Start on N-1
+.LlooplX:
+    ldd r4, r11, r1[r2]                               // pick re/im from vector
+    { shl r4, r4, r3              ; shl r11, r11, r3} // Shift up re and im
+    std r4, r11, r0[r2]                               // store re/im back
+    { bt r2, .LlooplX             ; sub r2, r2, 1 } 
+    bu .LdoneX
+
+.LshrX:
+    neg r3, r3
+.LlooprX:
+    ldd r4, r11, r1[r2]                               // pick re/im from vector
+    ashr r4, r4, r3
+    ashr r11, r11, r3                                 // Shift down re and im
+    std r4, r11, r0[r2]                               // store re/im back
+    { bt r2, .LlooprX             ; sub r2, r2, 1 } 
+.LdoneX:        
+    ldd r4, r5, sp[0]
+    retsp NSTACKWORDS
+    
+	// RETURN_REG_HOLDER
+	.cc_bottom dsp_bfp_shl_2.function
+	.set	dsp_bfp_shl_2.nstackwords, NSTACKWORDS
+	.globl	dsp_bfp_shl_2.nstackwords
+	.set	dsp_bfp_shl_2.maxcores,1
+	.globl	dsp_bfp_shl_2.maxcores
+	.set	dsp_bfp_shl_2.maxtimers,0
+	.globl	dsp_bfp_shl_2.maxtimers
+	.set	dsp_bfp_shl_2.maxchanends,0
+	.globl	dsp_bfp_shl_2.maxchanends
+.Ltmpdsp_bfp_shl_2:
+	.size	dsp_bfp_shl_2, .Ltmpdsp_bfp_shl_2-dsp_bfp_shl_2
 
 
 #undef NSTACKWORDS
