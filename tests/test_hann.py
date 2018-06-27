@@ -3,7 +3,7 @@ import xmostest
 def runtest():
     resources = xmostest.request_resource("xsim")
      
-    tester = xmostest.ComparisonTester(open('hann.expect'),
+    tester = xmostest.ComparisonTester(open('hann_test.expect'),
                                        'lib_dsp', 'simple_tests',
                                        'app_window_post_fft', {})
      
