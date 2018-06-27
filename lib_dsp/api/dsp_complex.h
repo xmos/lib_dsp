@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2018, XMOS Ltd, All rights reserved
 
 #ifndef DSP_COMPLEX_H_
 #define DSP_COMPLEX_H_
