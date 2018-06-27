@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 // XMOS DSP Library - DCT Functions test program
 
 #include <stdio.h>

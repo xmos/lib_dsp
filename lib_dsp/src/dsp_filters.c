@@ -1,5 +1,5 @@
-
 // Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
+
 
 #include <platform.h>
 #include "dsp_qformat.h"
