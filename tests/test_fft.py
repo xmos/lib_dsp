@@ -49,6 +49,8 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
 
     tester.set_min_testlevel(testlevel)
 
+    #Doesn't work on Windows without this. Should be a nop on other systems.
+    binary = binary.replace("\\","/")
     xmostest.run_on_simulator(resources['xsim'], binary,
                               simargs=[],
                               tester = tester)

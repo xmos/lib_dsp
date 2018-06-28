@@ -5,6 +5,3 @@ dsp_bfp_...(..., 8, ...) passed
 dsp_bfp_...(..., 16, ...) passed
 dsp_bfp_...(..., 32, ...) passed
 dsp_bfp_...(..., 64, ...) passed
-dsp_bfp_rx/tx(12) passed
-dsp_bfp_rx/tx(16) passed
-dsp_bfp_rx/tx_p(12) passed
