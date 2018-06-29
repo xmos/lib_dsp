@@ -24,7 +24,7 @@ This application note is designed to run on any XMOS xCORE-200 multicore microco
 Prerequisites
 .............
 
-  - This document assumes familiarity with the XMOS xCORE architecture, xCONNECT interconnect communication, the XMOS tool chain and the xC language. Documentation related to these aspects are linked to in the appendix references_.
+  - This document assumes familiarity with the XMOS xCORE architecture, xCONNECT interconnect communication, the XMOS tool chain and the xC language.
 
   - For descriptions of XMOS related terms found in this document please see the XMOS Glossary [#]_.
 
