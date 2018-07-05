@@ -32,6 +32,8 @@ implementation file.
   | Scalar math  | dsp_math       | Multiply, divide, square root, exponential, natural logarithm |
   |              |                | trigonometric, hyperbolic                                     |
   +--------------+----------------+---------------------------------------------------------------+
+  | Integer math | dsp_math       | Square root                                                   |
+  +--------------+----------------+---------------------------------------------------------------+
   | Complex math | dsp_complex    | Complex math functions plus real, imaginary combine/split     |
   +--------------+----------------+---------------------------------------------------------------+
   | Vector math  | dsp_vector     | Scalar/vector add/subtract/multiply, dot product              |
@@ -43,6 +45,8 @@ implementation file.
   | Design       | dsp_design     | Biquad coefficient generation for various filter types        |
   +--------------+----------------+---------------------------------------------------------------+
   | FFT          | dsp_fft        | Forward and inverse Fast Fourier Transforms.                  |
+  +--------------+----------------+---------------------------------------------------------------+
+  | DCT          | dsp_dct        | Forward and inverse Discrete Cosine Transforms.               |
   +--------------+----------------+---------------------------------------------------------------+
 
 
@@ -92,6 +96,11 @@ Filter Functions: Finite Impulse Response (FIR) Filter
 ------------------------------------------------------
 
 .. doxygenfunction:: dsp_filters_fir
+
+Filter Functions: Finite Impulse Response (FIR) Filter Add Sample
+-----------------------------------------------------------------
+
+.. doxygenfunction:: dsp_filters_fir_add_sample
 
 Filter Functions: Interpolating FIR Filter
 ------------------------------------------
@@ -182,6 +191,21 @@ Scalar Math Functions: Hyperbolic Cosine
 ----------------------------------------
 
 .. doxygenfunction:: dsp_math_cosh
+
+Scalar Math Functions: Softplus
+----------------------------------------
+
+.. doxygenfunction:: dsp_math_softplus
+
+Integer Math Functions: Square Root
+-----------------------------------
+
+.. doxygenfunction:: dsp_math_int_sqrt
+
+Integer Math Functions: 64-bit Square Root
+------------------------------------------
+
+.. doxygenfunction:: dsp_math_int_sqrt64
 
 Complex Math Functions: Add
 ---------------------------
@@ -473,6 +497,25 @@ dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spec
 .. doxygenfunction:: dsp_fft_bit_reverse
 .. doxygenfunction:: dsp_fft_forward
 .. doxygenfunction:: dsp_fft_inverse
+
+DCT functions
+-------------
+
+.. doxygenfunction:: dsp_dct_forward48
+.. doxygenfunction:: dsp_dct_forward32
+.. doxygenfunction:: dsp_dct_forward24
+.. doxygenfunction:: dsp_dct_forward16
+.. doxygenfunction:: dsp_dct_forward12
+.. doxygenfunction:: dsp_dct_forward8
+.. doxygenfunction:: dsp_dct_forward6
+.. doxygenfunction:: dsp_dct_forward4
+.. doxygenfunction:: dsp_dct_forward3
+.. doxygenfunction:: dsp_dct_forward2
+.. doxygenfunction:: dsp_dct_forward1
+.. doxygenfunction:: dsp_dct_inverse4
+.. doxygenfunction:: dsp_dct_inverse3
+.. doxygenfunction:: dsp_dct_inverse2
+.. doxygenfunction:: dsp_dct_inverse1
 
 |appendix|
 
