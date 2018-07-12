@@ -4,14 +4,14 @@ xCORE-200 DSP library change log
 4.1.0
 -----
 
-* Added post-FFT Hanning windowing
-* Added function to combine real and imaginary arrays into complex array
-* Added function to split complex array into real and imaginary arrays
-* Added 48-point DCT
-* Added dsp filter FIR add sample
-* Added softplus
-* Added integer sqrt
-* Documentation updates
+  * Added post-FFT Hanning windowing
+  * Added function to combine real and imaginary arrays into complex array
+  * Added function to split complex array into real and imaginary arrays
+  * Added 48-point DCT
+  * Added dsp filter FIR add sample
+  * Added softplus
+  * Added integer sqrt
+  * Documentation updates
 
 4.0.0
 -----
