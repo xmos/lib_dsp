@@ -6,9 +6,10 @@ Q_FORMAT = (1,31)
 ERROR_THRESHOLD = 1e-5
 
 class DCTTester(xmostest.Tester):
-    def __init__(self, dcts):
+    def __init__(self, dcts, saturate=True):
         super(DCTTester, self).__init__()
         self._dcts = []
+        self._saturate = saturate
         self.register_dct_tests(dcts)
 
     def register_dct_tests(self, dcts):
@@ -30,6 +31,12 @@ class DCTTester(xmostest.Tester):
             cos_arr = np.cos((np.arange(N) + 0.5) * (np.pi / N) * k,
                              dtype=np.float32)
             val = np.dot(x, cos_arr)
+            type_info = np.iinfo(dtype)
+            if self._saturate:
+                if val > type_info.max:
+                    val = type_info.max
+                elif val < type_info.min:
+                    val = type_info.min
             X[k] = np.round(val)
         return X
 
@@ -49,7 +56,11 @@ class DCTTester(xmostest.Tester):
                 print in_val, output[i], reference_output[i],
                 print "<----" if i == max_error_i else ""
             return False
-        print "Success" + (", with overflow" if overflow else "")
+        print "Success",
+        if overflow:
+            print "(with " + ("saturation)" if self._saturate else "overflow)")
+        else:
+            print ""
         return True
 
     def run(self, output):
