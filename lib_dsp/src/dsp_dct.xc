@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 
 #include "dsp_dct.h"
-#include <stdio.h>
 
 /* This is a simple DCT implementation. It can be optimised for memory and
  * speed at a later time. 
@@ -118,7 +117,7 @@ static inline int32_t add_sat(int32_t a, int32_t b) {
     // has a different sign (overflow)
     int32_t sat_reqd = (~(a ^ b) & (a ^ c)) & 0x80000000;
     if (sat_reqd) {
-        printf("Warning: Overflow detected, saturating...");
+        debug_printf("Warning: Overflow detected, saturating...");
         c = (a & 0x80000000) ? 0x80000000 : 0x7fffffff;
     }
     #endif

@@ -4,6 +4,7 @@
 #define DSP_DCT_H_
 
 #include "stdint.h"
+#include "debug_print.h"
 
 /* This library provides a limited set of discrete cosine transforms */
 /* DCT: 48, 32, 24, 16, 12, 8, 6, 4, 3, 2 and 1 point */
