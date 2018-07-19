@@ -22,13 +22,12 @@ pipeline {
     }
     stage('App Notes') {
       steps {
-        buildAllApps("${REPO}/examples")
-        buildAllAppNotes("${REPO}/examples")
+        buildAppNote("${REPO}/AN00209_xCORE-200_DSP_Library")
       }
     }
     stage('Test') {
       steps {
-        runXmostest("${REPO}", "tests") // May want to call runPytest() instead, or as well here.
+        runXmostest("${REPO}", "tests") 
       }
     }
   }
