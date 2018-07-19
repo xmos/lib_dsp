@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 // XMOS DSP Library - DCT Functions test program
 
 #include <stdio.h>
@@ -17,23 +17,52 @@ int32_t data2[24] = {
     40000,  30000,  20000,  10000
 };
 
-int main( void )
-{
-    int32_t dcted[24];
-
-    dsp_dct_forward24(dcted, data);
+void print_dct(int32_t dcted[], int32_t data[], int32_t N) {
     printf("BEGIN\n");
-    for(int32_t i = 0; i < 24; i++) {
+    for(int32_t i = 0; i < N; i++) {
         printf("%5d %6d\n", data[i], dcted[i]);
     }
     printf("END\n");
+}
+
+int main( void )
+{
+    /* DCT: 48, 32, 24, 16, 12, 8, 6, 4, 3, 2 and 1 point */
+    int32_t dcted[48];
+
+    //dsp_dct_forward48(dcted, data);
+    //print_dct(dcted, data, 48);
+
+    //dsp_dct_forward32(dcted, data);
+    //print_dct(dcted, data, 32);
+
+    dsp_dct_forward24(dcted, data);
+    print_dct(dcted, data, 24);
+
+    dsp_dct_forward16(dcted, data);
+    print_dct(dcted, data, 16);
 
     dsp_dct_forward12(dcted, data2);
-    printf("BEGIN\n");
-    for(int32_t i = 0; i < 12; i++) {
-        printf("%5d %6d\n", data2[i], dcted[i]);
-    }
-    printf("END\n");
+    print_dct(dcted, data2, 12);
+
+    dsp_dct_forward8(dcted, data);
+    print_dct(dcted, data, 8);
+
+    dsp_dct_forward6(dcted, data);
+    print_dct(dcted, data, 6);
+
+    dsp_dct_forward4(dcted, data);
+    print_dct(dcted, data, 4);
+
+    dsp_dct_forward3(dcted, data);
+    print_dct(dcted, data, 3);
+
+    dsp_dct_forward2(dcted, data);
+    print_dct(dcted, data, 2);
+
+    dsp_dct_forward1(dcted, data);
+    print_dct(dcted, data, 1);
+
     return 0;
 }
 

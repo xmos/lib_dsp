@@ -501,6 +501,15 @@ dsp_fft_merge_spectra is used to merge the two half-spectra into a combined spec
 DCT functions
 -------------
 
+**Note:**
+Overflow errors occur when using the DCT functions if the input is
+too large. To avoid this, input values should be shifted right by log base 2 of
+the input length. For example, input to `dsp_dct_forward48()` should be shifted
+right by `log_2(48) = 5` bits.
+
+By default, the DCT functions will saturate when an overflow is detected.
+Saturation can be disabled by defining `DSP_DCT_DONT_SATURATE`.
+
 .. doxygenfunction:: dsp_dct_forward48
 .. doxygenfunction:: dsp_dct_forward32
 .. doxygenfunction:: dsp_dct_forward24

@@ -1,6 +1,7 @@
 // Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 
 #include "dsp_dct.h"
+#include <stdio.h>
 
 /* This is a simple DCT implementation. It can be optimised for memory and
  * speed at a later time. 
@@ -110,6 +111,25 @@ static const int32_t costable48[24] = {
     70263695,
 };
 
+static inline int32_t add_sat(int32_t a, int32_t b) {
+    int32_t c = a + b;
+    #ifndef DSP_DCT_DONT_SATURATE
+    // Sat reqd. if a and b have the same sign and the result of addition
+    // has a different sign (overflow)
+    int32_t sat_reqd = (~(a ^ b) & (a ^ c)) & 0x80000000;
+    if (sat_reqd) {
+        printf("Warning: Overflow detected, saturating...");
+        c = (a & 0x80000000) ? 0x80000000 : 0x7fffffff;
+    }
+    #endif
+    return c;
+}
+
+static inline int32_t sub_sat(int32_t a, int32_t b) {
+    int32_t r = -b;
+    return add_sat(a, r);
+}
+
 static inline int32_t mulcos(int32_t x, int32_t cos) {
     long long r = cos * (long long) x;
     return r >> 31;
@@ -117,24 +137,21 @@ static inline int32_t mulcos(int32_t x, int32_t cos) {
 
 #define DCT(N,M)                                \
 void dsp_dct_forward##N(int32_t output[N], int32_t input[N]) { \
-    int32_t temp[N/2], temp2[N/2]; \
+    int32_t temp[N/2], temp2[N/2], temp_r[N/2], temp2_r[N/2]; \
     for(int32_t i = 0; i < N/2; i++) { \
-        temp[i] = input[i] + input[N-1-i]; \
+        temp[i] = add_sat(input[i], input[N-1-i]); \
+        int32_t z = sub_sat(input[i], input[N-1-i]); \
+        temp_r[i] = mulcos(z, costable##N[i]); \
     } \
     dsp_dct_forward##M(temp2, temp); \
-    for(int32_t i = 0; i < N/2; i++) { \
-        output[2*i] = temp2[i]; \
-    } \
-    for(int32_t i = 0; i < N/2; i++) { \
-        int32_t z = input[i] - input[N-1-i]; \
-        temp[i] = mulcos(z, costable##N[i]); \
-    } \
-    dsp_dct_forward##M(temp2, temp); \
-    int32_t last = temp2[0]; \
+    dsp_dct_forward##M(temp2_r, temp_r); \
+    int32_t last = temp2_r[0]; \
+    output[0] = temp2[0]; \
     output[1] = last; \
     for(int32_t i = 1; i < N/2; i++) { \
-        last = temp2[i]*2 - last; \
+        last = sub_sat(temp2_r[i]*2, last); \
         output[2*i+1] = last; \
+        output[2*i] = temp2[i]; \
     } \
 }
 
@@ -143,30 +160,29 @@ void dsp_dct_forward4(int32_t output[4], int32_t input[4]) {
     int32_t i12 = input[1] + input[2];
     int32_t i03_ = input[0] - input[3];
     int32_t i12_ = input[1] - input[2];
-    output[0] = i03 + i12;
-    output[2] = mulcos(i03 - i12, 1518500250);
+    output[0] = add_sat(i03, i12);
+    output[2] = mulcos(sub_sat(i03, i12), 1518500250);
     output[1] =  mulcos(i03_, 1984016189) +
         mulcos(i12_, 821806413);
-    output[3] = mulcos(i03_, 821806413) + 
+    output[3] = mulcos(i03_, 821806413) +
         mulcos(i12_, -1984016189);
 }
 
 void dsp_dct_forward3(int32_t output[3], int32_t input[3]) {
-    output[0] = input[0] + input[1] + input[2];
-    output[1] = mulcos(input[0] - input[2], 1859775393);
-    output[2] = ((input[0]+input[2])>>1) - input[1];
+    output[0] = add_sat(add_sat(input[0], input[1]), input[2]);
+    output[1] = mulcos(sub_sat(input[0], input[2]), 1859775393);
+    output[2] = sub_sat(((add_sat(input[0],input[2]))>>1), input[1]);
 }
 
 void dsp_dct_forward2(int32_t output[2], int32_t input[2]) {
-    output[0] = input[0] + input[1];
-    int32_t z = input[0] - input[1];
+    output[0] = add_sat(input[0], input[1]);
+    int32_t z = sub_sat(input[0], input[1]);
     output[1] = mulcos(z, 1518500250);
 }
 
 void dsp_dct_forward1(int32_t output[1], int32_t input[1]) {
     output[0] = input[0];
 }
-
 
 DCT(6,3)
 DCT(8,4)
@@ -175,19 +191,3 @@ DCT(16,8)
 DCT(24,12)
 DCT(32,16)
 DCT(48,24)
-
-#ifdef INCLUDE_REFERENCE_DCT
-#include <math.h>
-
-void referenceDCT(int32_t output[], int32_t input[], int32_t N) {
-    for(int32_t k = 0; k < N; k++) {
-        double sum = 0;
-        for(int32_t i = 0; i < N; i++) {
-            double z = input[i] * cos(M_PI*(2*i+1)*k/(2*N));
-            sum += z;
-        }
-        output[k] = sum;
-    }
-}
-#endif
-

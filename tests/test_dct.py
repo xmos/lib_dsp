@@ -23,9 +23,9 @@ class DCTTester(xmostest.Tester):
                                 result, {})
 
     # Uses DCT-II following the algorithm on wikipedia
-    def dct(self, x, q=(1,31)):
+    def dct(self, x, q=(1,31), dtype=np.int32):
         N = len(x)
-        X = np.zeros((N,), dtype=np.int64)
+        X = np.zeros((N,), dtype=dtype)
         for k, _ in enumerate(x):
             cos_arr = np.cos((np.arange(N) + 0.5) * (np.pi / N) * k,
                              dtype=np.float32)
@@ -36,6 +36,8 @@ class DCTTester(xmostest.Tester):
     def verify_dct(self, input, output):
         print "\nDCT %d: " % len(input),
         reference_output = np.array(self.dct(input, Q_FORMAT))
+        no_overflow_output = np.array(self.dct(input, Q_FORMAT, np.int64))
+        overflow = np.any(reference_output != no_overflow_output)
         error = np.abs(reference_output - output)
         max_error_i = np.argmax(error)
         real_error = float(error[max_error_i]) / (1<<Q_FORMAT[1])
@@ -47,7 +49,7 @@ class DCTTester(xmostest.Tester):
                 print in_val, output[i], reference_output[i],
                 print "<----" if i == max_error_i else ""
             return False
-        print "Success"
+        print "Success" + (", with overflow" if overflow else "")
         return True
 
     def run(self, output):
@@ -78,7 +80,7 @@ class DCTTester(xmostest.Tester):
 def runtest():
     resources = xmostest.request_resource("xsim")
 
-    tester = DCTTester(dcts=[12, 24])
+    tester = DCTTester(dcts=[48, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1])
 
     xmostest.run_on_simulator(resources['xsim'],
                               '../AN00209_xCORE-200_DSP_Library/app_dct/bin/app_dct.xe',
