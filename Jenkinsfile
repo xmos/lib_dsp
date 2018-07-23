@@ -17,7 +17,7 @@ pipeline {
     }
     stage('Library checks') {
       steps {
-        xmosLibraryChecks("${REPO}")
+        xcoreLibraryChecks("${REPO}")
       }
     }
     stage('App Notes') {
