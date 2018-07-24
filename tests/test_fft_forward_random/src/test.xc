@@ -6,7 +6,7 @@
 
 #include "dsp_fft.h"
 
-#define SEED 1
+#define SEED 255
 #define DATA_SHIFT 1
 
 #define MAX_FFT_LENGTH 8192
@@ -91,7 +91,7 @@ void test_forward_fft(){
 
     dsp_complex_t f[MAX_FFT_LENGTH];
     int32_t sine_array[MAX_FFT_LENGTH];
-    printf("x=%d\n", x);
+    printf("SEED=%d\n", SEED);
 
     for(unsigned j=0; j<num_lengths; j++) {
         unsigned fft_length = fft_lengths[j];
@@ -103,10 +103,6 @@ void test_forward_fft(){
                 f[i].im = random(x)>>DATA_SHIFT;
             }
             printf("FFT%d:\n", fft_length);
-            for(unsigned i=0;i<fft_length;i++){
-                printf("%d,%d;", f[i].re, f[i].im);
-            }
-            printf("\n");
 
             get_dsp_sine(fft_length, sine_array);
             dsp_fft_bit_reverse(f, fft_length);

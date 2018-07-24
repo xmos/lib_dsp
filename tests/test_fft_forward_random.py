@@ -61,6 +61,7 @@ class FFTTester(xmostest.Tester):
                            result, {})
 
     def generate(self, fft_length, fft_input=None):
+        fft_input = None
         fft_count = 180*1024 / (8*fft_length)
 
         fft_output = np.zeros((fft_length,2), dtype=np.int32)
@@ -116,20 +117,21 @@ class FFTTester(xmostest.Tester):
 
     def run(self, output):
         for i, line in enumerate(output):
+            if line[:4] == "SEED":
+                seed = int(line[5:])
+                if self._seed != seed:
+                    print "Error! Seed of .xc does not equal given seed: %d != %d"\
+                        % (seed, self._seed)
+                    return
+                else:
+                    print "Seed correct!"
             if line[:3] == "FFT":
-                print "FFT LINE: ",line
                 fft_length = int(line.strip()[3:-1])
             else:
                 continue
-            fft_input_line = output[i+1]
-            fft_output_line = output[i+2]
-            fft_input = self.parse_line(fft_input_line, fft_length)
+            fft_output_line = output[i+1]
             fft_output = self.parse_line(fft_output_line, fft_length)
-
-            fft_input_complex = []
-            for i in range(fft_input.shape[0]):
-                fft_input_complex.append(complex(fft_input[i,0], fft_input[i,1]))
-            if self.verify_fft(fft_length, fft_output, fft_input_complex):
+            if self.verify_fft(fft_length, fft_output, None):
                 result = "PASS"
             else:
                 result = "FAIL"
@@ -139,9 +141,7 @@ def runtest():
     resources = xmostest.request_resource("axe")
 
     tester = FFTTester(fft_lengths=[8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192],
-            test_name="forward_random", seed=223123123)
-    #tester = FFTTester(fft_lengths=[8],
-    #        test_name="forward_random", seed=1)
+            test_name="forward_random", seed=255)
 
     xmostest.run_on_simulator(resources['axe'],
                               'test_fft_forward_random/bin/test.xe',
