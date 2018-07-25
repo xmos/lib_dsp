@@ -1,0 +1,10 @@
+def configure(conf):
+    conf.load('xwaf.compiler_xcc')
+
+
+def build(bld):
+    bld.env.TARGET_ARCH = 'XCORE-200-EXPLORER'
+    bld.env.XCC_FLAGS = ['-O2', '-g', '-report', '-DDEBUG_PRINT_ENABLE=1']
+
+    # Build our program
+    prog = bld.program(target='bin/test.xe', depends_on='lib_dsp(>=4.0.0)')
