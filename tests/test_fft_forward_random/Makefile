@@ -11,12 +11,14 @@ APP_NAME = test
 # The USED_MODULES variable lists other modules used by the application.
 USED_MODULES = lib_dsp(>=4.0.0)
 
+TEST_SEED = $(shell ./get_seed)
+
 # The flags passed to xcc when building the application
 # You can also set the following to override flags for a particular language:
 # XCC_XC_FLAGS, XCC_C_FLAGS, XCC_ASM_FLAGS, XCC_CPP_FLAGS
 # If the variable XCC_MAP_FLAGS is set it overrides the flags passed to
 # xcc for the final link (mapping) stage.
-XCC_FLAGS = -O2 -g -report -DDEBUG_PRINT_ENABLE=1
+XCC_FLAGS = -O2 -g -report -DDEBUG_PRINT_ENABLE=1 -DSEED=$(TEST_SEED)
 
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this
 # project to create both xCORE and ARM binaries.

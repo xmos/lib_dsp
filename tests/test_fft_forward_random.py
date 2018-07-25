@@ -14,19 +14,15 @@ import numpy as np
 Q_FORMAT = (1, 31)
 ERROR_THRESHOLD = 1e-5
 
-class DeletyComparisonTester(xmostest.ComparisonTester):
-    def __init__(self, golden, product, group, test, dir_to_delete, config = {}, env = {},
-                 regexp = False, ignore=[]):
-        super(DeletyComparisonTester, self).__init__( golden, product, group, test,  config, env,
-                 regexp, ignore)
-        self.d = dir_to_delete
-
-
-    def run(self, output):
-        super(DeletyComparisonTester, self).run(output)
-
-    def __del__(self):
-        shutil.rmtree(self.d)
+def get_seed():
+    script_location = os.path.dirname(os.path.realpath(__file__))
+    stdout, stderr = xmostest.call_get_output(['git', 'rev-parse', 'HEAD'],
+                                              cwd=script_location)
+    if not stderr:
+        seed = int(stdout[0].strip()[:7], 16)
+    else:
+        seed = 255
+    return seed
 
 def crc32(d, x, poly):
 	crc = d
@@ -138,10 +134,12 @@ class FFTTester(xmostest.Tester):
             self.set_fft_test_result(fft_length, result)
 
 def runtest():
+    seed = get_seed()
+
     resources = xmostest.request_resource("axe")
 
     tester = FFTTester(fft_lengths=[8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192],
-            test_name="forward_random", seed=255)
+            test_name="forward_random", seed=seed)
 
     xmostest.run_on_simulator(resources['axe'],
                               'test_fft_forward_random/bin/test.xe',

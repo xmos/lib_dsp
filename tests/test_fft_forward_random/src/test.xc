@@ -6,7 +6,10 @@
 
 #include "dsp_fft.h"
 
+#ifndef SEED
 #define SEED 255
+#endif
+
 #define DATA_SHIFT 1
 
 #define MAX_FFT_LENGTH 8192
