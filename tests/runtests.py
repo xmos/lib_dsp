@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+# Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 import xmostest
 
 if __name__ == "__main__":
