@@ -12,16 +12,18 @@
 
 #define DATA_SHIFT 1
 
-#define MAX_VECTOR_LENGTH 2048
+#define MAX_VECTOR_LENGTH 10
+#define RSHIFT 16
 
 int random(unsigned &x){
     crc32(x, -1, 0xEB31D82E);
     return (int)x;
 }
 
-void generate_vector(int32_t vec[], unsigned length, unsigned &seed) {
+void generate_vector(int32_t vec[], unsigned length, unsigned &seed,
+                     unsigned rshift) {
     for (int i=0; i<length; i++) {
-        vec[i] = random(seed);
+        vec[i] = random(seed) >> rshift;
     }
 }
 
@@ -40,6 +42,7 @@ void copy_vector(int32_t src[], int32_t dst[], unsigned length) {
 
 void test_vector(){
     unsigned x=SEED;
+    unsigned rshift=RSHIFT;
 
     unsigned num_repeats = 10;
 
@@ -55,26 +58,30 @@ void test_vector(){
     int32_t vec_result_re[MAX_VECTOR_LENGTH];
     int32_t vec_result_im[MAX_VECTOR_LENGTH];
 
-    printf("SEED=%d\n", SEED);
     printf("MAX_VECTOR_LENGTH=%d\n", MAX_VECTOR_LENGTH);
+    printf("RSHIFT=%d\n", rshift);
 
     for (unsigned i=0; i<num_repeats; i++) {
+
+        if (i == 2) {
+            rshift = 0;
+            printf("RSHIFT=%d\n", rshift);
+        }
 
         ///////////////////////////////////////////////////
         //     Generate all values for this test run     //
         ///////////////////////////////////////////////////
-
+        printf("SEED=%d\n", x);
+        printf("GENERATE\n");
         unsigned length = ((unsigned) random(x)) % MAX_VECTOR_LENGTH;
-        int32_t scalar = random(x);
-        generate_vector(vec1, length, x);
-        generate_vector(vec2, length, x);
-        generate_vector(vec3, length, x);
-        generate_vector(vec1_re, length, x);
-        generate_vector(vec1_im, length, x);
-        generate_vector(vec2_re, length, x);
-        generate_vector(vec2_im, length, x);
-        generate_vector(vec_result_re, length, x);
-        generate_vector(vec_result_im, length, x);
+        int32_t scalar = random(x) >> rshift;
+        generate_vector(vec1, length, x, rshift);
+        generate_vector(vec2, length, x, rshift);
+        generate_vector(vec3, length, x, rshift);
+        generate_vector(vec1_re, length, x, rshift);
+        generate_vector(vec1_im, length, x, rshift);
+        generate_vector(vec2_re, length, x, rshift);
+        generate_vector(vec2_im, length, x, rshift);
 
         ///////////////////////////////
         //       Execute tests       //
@@ -82,84 +89,84 @@ void test_vector(){
 
         // dsp_vector_minimum
         int min_index = dsp_vector_minimum(vec1, length);
-        printf("min:\n");
-        printf("%d", min_index);
+        printf("min\n");
+        printf("%d\n", min_index);
 
         // dsp_vector_maximum
         int max_index = dsp_vector_maximum(vec1, length);
-        printf("max:\n");
-        printf("%d", max_index);
+        printf("max\n");
+        printf("%d\n", max_index);
 
         // dsp_vector_negate
         dsp_vector_negate(vec1, vec_result, length);
-        printf("negate:\n");
+        printf("negate\n");
         print_vector(vec_result, length);
 
         // dsp_vector_abs
         dsp_vector_abs(vec1, vec_result, length);
-        printf("abs:\n");
+        printf("abs\n");
         print_vector(vec_result, length);
 
         // dsp_vector_adds
         dsp_vector_adds(vec1, scalar, vec_result, length);
-        printf("adds:\n");
+        printf("adds\n");
         print_vector(vec_result, length);
 
         // dsp_vector_muls
         dsp_vector_muls(vec1, scalar, vec_result, length, 24);
-        printf("muls:\n");
+        printf("muls\n");
         print_vector(vec_result, length);
 
         // dsp_vector_addv
         dsp_vector_addv(vec1, vec2, vec_result, length);
-        printf("addv:\n");
+        printf("addv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_minv
         copy_vector(vec1, vec_result, length);
         dsp_vector_minv((uint32_t*) vec_result, (uint32_t*) vec2, length);
-        printf("minv:\n");
+        printf("minv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_subv
         dsp_vector_subv(vec1, vec2, vec_result, length);
-        printf("subv:\n");
+        printf("subv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_mulv
         dsp_vector_mulv(vec1, vec2, vec_result, length, 24);
-        printf("mulv:\n");
+        printf("mulv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_mulv_adds
         dsp_vector_mulv_adds(vec1, vec2, scalar, vec_result, length, 24);
-        printf("mulv_adds:\n");
+        printf("mulv_adds\n");
         print_vector(vec_result, length);
 
         // dsp_vector_muls_addv
         dsp_vector_muls_addv(vec1, scalar, vec2, vec_result, length, 24);
-        printf("muls_addv:\n");
+        printf("muls_addv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_muls_subv
         dsp_vector_muls_subv(vec1, scalar, vec2, vec_result, length, 24);
-        printf("muls_subv:\n");
+        printf("muls_subv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_mulv_addv
         dsp_vector_mulv_addv(vec1, vec2, vec3, vec_result, length, 24);
-        printf("mulv_addv:\n");
+        printf("mulv_addv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_mulv_subv
         dsp_vector_mulv_subv(vec1, vec2, vec3, vec_result, length, 24);
-        printf("mulv_subv:\n");
+        printf("mulv_subv\n");
         print_vector(vec_result, length);
 
         // dsp_vector_mulv_complex
         dsp_vector_mulv_complex(vec1_re, vec1_im, vec2_re, vec2_im,
                                 vec_result_re, vec_result_im, length, 24);
-        printf("mulv_complex:\n");
+        printf("mulv_complex\n");
         print_vector(vec_result_re, length);
         print_vector(vec_result_im, length);
 
