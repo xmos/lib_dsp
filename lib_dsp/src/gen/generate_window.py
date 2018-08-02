@@ -1,4 +1,4 @@
-# Copyright (c) 2018, XMOS Ltd, All rights reserved
+# Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 import numpy
 from numpy import log10, abs, pi
 import scipy
