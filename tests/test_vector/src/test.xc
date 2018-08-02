@@ -12,8 +12,8 @@
 
 #define DATA_SHIFT 1
 
-#define MAX_VECTOR_LENGTH 10
-#define RSHIFT 16
+#define MAX_VECTOR_LENGTH 64
+#define RSHIFT 20
 
 int random(unsigned &x){
     crc32(x, -1, 0xEB31D82E);
@@ -44,7 +44,7 @@ void test_vector(){
     unsigned x=SEED;
     unsigned rshift=RSHIFT;
 
-    unsigned num_repeats = 10;
+    unsigned num_repeats = 2;
 
     int32_t vec1[MAX_VECTOR_LENGTH];
     int32_t vec2[MAX_VECTOR_LENGTH];
@@ -63,7 +63,7 @@ void test_vector(){
 
     for (unsigned i=0; i<num_repeats; i++) {
 
-        if (i == 2) {
+        if (i == 15) {
             rshift = 0;
             printf("RSHIFT=%d\n", rshift);
         }
@@ -74,6 +74,10 @@ void test_vector(){
         printf("SEED=%d\n", x);
         printf("GENERATE\n");
         unsigned length = ((unsigned) random(x)) % MAX_VECTOR_LENGTH;
+        if (length == 0) length = 1;
+        if (i < 10) {
+            length = i+1;
+        }
         int32_t scalar = random(x) >> rshift;
         generate_vector(vec1, length, x, rshift);
         generate_vector(vec2, length, x, rshift);

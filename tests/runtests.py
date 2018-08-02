@@ -14,6 +14,11 @@ if __name__ == "__main__":
                            "fft_tests",
                            "Test FFT correctness and functionality",
                            "Test FFT correctness and functionality for all supported FFT lengths.")
+
+   xmostest.register_group("lib_dsp",
+                           "vector_tests",
+                           "Test vector functions' correctness and functionality",
+                           "Test vector functions' correctness and functionality for a variety of supported vector lengths.")
     
    xmostest.runtests()
    xmostest.finish()
