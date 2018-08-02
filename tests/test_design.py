@@ -2,12 +2,12 @@
 import xmostest
 
 def runtest():
-    resources = xmostest.request_resource("xsim")
+    resources = xmostest.request_resource("axe")
      
     tester = xmostest.ComparisonTester(open('design_test.expect'),
                                        'lib_dsp', 'simple_tests',
                                        'app_design', {})
      
-    xmostest.run_on_simulator(resources['xsim'],
+    xmostest.run_on_simulator(resources['axe'],
                               '../AN00209_xCORE-200_DSP_Library/app_design/bin/app_design.xe',
                               tester=tester)

@@ -38,7 +38,7 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
     shutil.copy(os.path.join(test_dir_name,'src','test.xc'), source_directory)
     shutil.copy(os.path.join(test_dir_name,'Makefile'), directory_name)
 
-    resources = xmostest.request_resource("xsim")
+    resources = xmostest.request_resource("axe")
 
     binary = os.path.join(directory_name, 'bin', 'test.xe')
 
@@ -52,7 +52,7 @@ def do_fft_test(length_log2, testlevel, test_dir_name, test_name):
 
     #Doesn't work on Windows without this. Should be a nop on other systems.
     binary = binary.replace("\\","/")
-    xmostest.run_on_simulator(resources['xsim'], binary,
+    xmostest.run_on_simulator(resources['axe'], binary,
                               simargs=[],
                               tester = tester)
 
