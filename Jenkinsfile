@@ -20,14 +20,9 @@ pipeline {
         xcoreLibraryChecks("${REPO}")
       }
     }
-//    stage('App Notes') {
-//      steps {
-//        buildAppNote("${REPO}/AN00209_xCORE-200_DSP_Library")
-//      }
-//    }
     stage('Test') {
       steps {
-        runXmostest("${REPO}", "tests") 
+        runXmostest("${REPO}", "tests")
       }
     }
   }
