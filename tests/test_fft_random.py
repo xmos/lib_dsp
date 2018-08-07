@@ -10,6 +10,7 @@ import random
 import tempfile
 import ctypes
 import time
+import math
 import numpy as np
 
 Q_FORMAT = (1, 31)
@@ -37,6 +38,7 @@ def crc32(d, x, poly):
 	return crc
 
 def bitrev(x):
+    x = np.array([x], dtype=np.uint32)[0]
     return int('{:032b}'.format(x)[::-1], 2)
 
 def clz(x):
@@ -44,6 +46,15 @@ def clz(x):
     if leading_zeros < 0:
         return 32
     return leading_zeros
+
+def index_bitrev(x, fft_length):
+    x = np.array([x], dtype=np.uint32)[0]
+    x_string = '{:032b}'.format(x)
+    mask = fft_length - 1
+    mask_length = int(math.log(fft_length, 2))
+    reverse_val = bitrev(mask & x) >> (clz(fft_length) + 1)
+    x_string = x_string[:-mask_length] + ('{:0%db}' % mask_length).format(reverse_val)
+    return int(x_string, 2)
 
 class FFTTester(xmostest.Tester):
     def __init__(self, test_name, seed, verbose=False, print_all=False):
@@ -69,8 +80,8 @@ class FFTTester(xmostest.Tester):
             test_name = result[0]
             test_config = result[1]
             test_result = result[2]
-            self.register_test("lib_dsp", "fft_tests", test_name, test_config)
-            xmostest.set_test_result("lib_dsp", "fft_tests", test_name,
+            self.register_test("lib_dsp", "fft_tests_fast", test_name, test_config)
+            xmostest.set_test_result("lib_dsp", "fft_tests_fast", test_name,
                                      test_config, test_result, {})
 
     def _generate_fft_input(self, fft_length):
@@ -92,7 +103,7 @@ class FFTTester(xmostest.Tester):
     def _complex_array_to_tuple(self, complex_arr):
         tuples = []
         for z in complex_arr:
-            tuples.append((z.real, z.imag))
+            tuples.append((int(z.real), int(z.imag)))
         return tuples
 
     def _calculate_fft(self, fft_length, fft_input=None):
@@ -146,6 +157,37 @@ class FFTTester(xmostest.Tester):
                     % (re_error_float, ERROR_THRESHOLD)
             eq_vec = (np.array(re_error, dtype=np.float_) / (1<<Q_FORMAT[1])) < ERROR_THRESHOLD
             self._print_diff([reference_fft], output, fft_input, eq_vec, fft_length)
+            #print "Input | Output | Correct"
+            #for i, in_val in enumerate(input):
+            #    print in_val, output[i], reference_fft[i],
+            #    print "<----" if i == max_error_i else ""
+            return False
+        print "Success",
+        return True
+
+    def _verify_bit_reverse(self, fft_length, output, fft_input):
+        print "\nBit Reverse %d: " % fft_length
+        fft_input = np.array(self._complex_array_to_tuple(fft_input))
+        reference_vec = []
+        for (i, j) in fft_input:
+            i = i % fft_length
+            j = j % fft_length
+            reference_vec.append((index_bitrev(i, fft_length), index_bitrev(j, fft_length)));
+        #print "FFT out: ", output
+        #print "Ref out: ", reference_fft
+        output = np.array(output)
+        reference_vec = np.array(reference_vec, dtype=np.int32)
+        re_error = np.abs(output[:, 0] - reference_vec[:, 0])
+        im_error = np.abs(output[:, 1] - reference_vec[:, 1])
+        max_re_error_i = np.argmax(re_error)
+        max_im_error_i = np.argmax(im_error)
+        re_error_float = float(re_error[max_re_error_i]) / (1<<Q_FORMAT[1])
+        im_error_float = float(im_error[max_im_error_i]) / (1<<Q_FORMAT[1])
+        if re_error_float > ERROR_THRESHOLD:
+            print "\nError of %f greater than threshold %f!"\
+                    % (re_error_float, ERROR_THRESHOLD)
+            eq_vec = (np.array(re_error, dtype=np.float_) / (1<<Q_FORMAT[1])) < ERROR_THRESHOLD
+            self._print_diff([fft_input], output, reference_vec, eq_vec, fft_length)
             #print "Input | Output | Correct"
             #for i, in_val in enumerate(input):
             #    print in_val, output[i], reference_fft[i],
@@ -212,7 +254,7 @@ class FFTTester(xmostest.Tester):
                     return
                 else:
                     print "Seed correct!"
-            if line[:3] == "FFT":
+            if line == "FFT":
                 # Forward FFT
                 fft_output_line = next_line
                 fft_output = self._parse_line(fft_output_line, fft_length)
@@ -221,7 +263,7 @@ class FFTTester(xmostest.Tester):
                 else:
                     result = "FAIL"
                 self._set_fft_test_result("fft_forward", fft_length, result)
-            if line[:4] == "IFFT":
+            if line == "IFFT":
                 # Inverse FFT
                 fft_output_line = next_line
                 fft_output = self._parse_line(fft_output_line, fft_length)
@@ -230,6 +272,14 @@ class FFTTester(xmostest.Tester):
                 else:
                     result = "FAIL"
                 self._set_fft_test_result("fft_inverse", fft_length, result)
+            if line == "BIT_REVERSE":
+                bit_reverse_line = next_line
+                bit_reverse_output = self._parse_line(bit_reverse_line, fft_length)
+                if self._verify_bit_reverse(fft_length, bit_reverse_output, fft_input):
+                    result = "PASS"
+                else:
+                    result = "FAIL"
+                self._set_fft_test_result("fft_bit_reverse", fft_length, result)
         print "\nTests complete."
         time.sleep(1)
         self._push_test_results()

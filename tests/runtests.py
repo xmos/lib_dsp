@@ -11,7 +11,7 @@ if __name__ == "__main__":
     
     
    xmostest.register_group("lib_dsp",
-                           "fft_tests",
+                           "fft_tests_fast",
                            "Test FFT correctness and functionality",
                            "Test FFT correctness and functionality for all supported FFT lengths.")
     

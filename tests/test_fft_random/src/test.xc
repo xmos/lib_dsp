@@ -69,10 +69,10 @@ void get_dsp_sine(unsigned fft_length, int32_t sine_array[]) {
             for(int i=0; i<(fft_length>>2)+1; i++)
                 sine_array[i] = dsp_sine_8192[i];
             break;
-        case 16384:
-            for(int i=0; i<(fft_length>>2)+1; i++)
-                sine_array[i] = dsp_sine_16384[i];
-            break;
+        //case 16384:
+        //    for(int i=0; i<(fft_length>>2)+1; i++)
+        //        sine_array[i] = dsp_sine_16384[i];
+        //    break;
         default:
             for(int i=0; i<(fft_length>>2)+1; i++)
                 sine_array[i] = dsp_sine_4[i];
@@ -92,13 +92,14 @@ void test_forward_fft(){
     unsigned average_error = 0;
     unsigned test_count = 2;
 
-    unsigned num_lengths = 11;
+    unsigned num_lengths = 1;
     unsigned fft_lengths[] = {
-        8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192
+        8//, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192
     };
 
     dsp_complex_t f[MAX_FFT_LENGTH];
     dsp_complex_t f_tmp[MAX_FFT_LENGTH];
+    dsp_complex_t f_freq[MAX_FFT_LENGTH];
     int32_t sine_array[MAX_FFT_LENGTH];
     printf("SEED=%d\n", SEED);
 
@@ -115,7 +116,7 @@ void test_forward_fft(){
             }
 
             // Forward FFT
-            printf("FFT%d:\n", fft_length);
+            printf("FFT\n");
             copy_vector(f, f_tmp, fft_length);
             get_dsp_sine(fft_length, sine_array);
             dsp_fft_bit_reverse(f_tmp, fft_length);
@@ -126,9 +127,12 @@ void test_forward_fft(){
             }
             printf("\n");
 
+            // Copy FFT for later use...
+            copy_vector(f_tmp, f_freq, fft_length);
+
             // Inverse FFT
-            printf("IFFT%d:\n", fft_length);
-            //copy_vector(f, f_tmp, fft_length);
+            printf("IFFT\n");
+            copy_vector(f_freq, f_tmp, fft_length);
             get_dsp_sine(fft_length, sine_array);
             dsp_fft_bit_reverse(f_tmp, fft_length);
             dsp_fft_inverse(f_tmp, fft_length, sine_array);
@@ -138,6 +142,19 @@ void test_forward_fft(){
             }
             printf("\n");
 
+            // Index Bit Reverse
+            printf("BIT_REVERSE\n");
+            copy_vector(f, f_tmp, fft_length);
+            for (int i=0; i<fft_length; i++) {
+                f_tmp[i].re = (unsigned) f_tmp[i].re % fft_length;
+                f_tmp[i].im = (unsigned) f_tmp[i].im % fft_length;
+            }
+            dsp_fft_bit_reverse(f_tmp, fft_length);
+
+            for(unsigned i=0;i<fft_length;i++){
+                printf("%d,%d;", f_tmp[i].re, f_tmp[i].im);
+            }
+            printf("\n");
         }
     }
     printf("Tests completed.\n");
