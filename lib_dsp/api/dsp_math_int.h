@@ -6,7 +6,7 @@
 #include "stdint.h"
 
 /** Integer square root 32 -> 16 bits
- * 
+ *
  *  This function computes the square root of an unsigned input value
  *  use dsp_math_sqrt() for fixed point square roots.
  *
@@ -16,7 +16,7 @@
 uint32_t dsp_math_int_sqrt(uint32_t x);
 
 /** Integer square root, 64 -> 32 bits
- * 
+ *
  *  This function computes the square root of an unsigned input value
  *  use dsp_math_sqrt() for fixed point square roots.
  *

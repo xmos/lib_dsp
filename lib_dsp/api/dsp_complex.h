@@ -10,8 +10,8 @@
  * is dependent on the use case
  */
 typedef struct {
-    int32_t re;
-    int32_t im;
+  int32_t re;
+  int32_t im;
 } dsp_complex_t;
 
 /** Type that represents a complex number. Both the real and imaginary
@@ -19,8 +19,8 @@ typedef struct {
  * is dependent on the use case
  */
 typedef struct {
-    int16_t re;
-    int16_t im;
+  int16_t re;
+  int16_t im;
 } dsp_complex_short_t;
 
 /** Function that adds two complex numbers that use the same fixed point
@@ -66,7 +66,8 @@ dsp_complex_t dsp_complex_mul(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
  *
  * \returns       product - it may overflow.
  */
-dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
+dsp_complex_t
+    dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32_t Q);
 
 /** Function that computes the inner product of two complex vectors. The
  * representation of one vector has to be specified, the result will use
@@ -80,8 +81,11 @@ dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32
  *
  * \returns       inner product - it may overflow.
  */
-dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
-                              uint32_t N, uint32_t offset, uint32_t Q);
+dsp_complex_t dsp_complex_fir(dsp_complex_t a[],
+                              dsp_complex_t b[],
+                              uint32_t      N,
+                              uint32_t      offset,
+                              uint32_t      Q);
 
 /** Function that computes the element-by-element product of two complex
  * vectors. The representation of one vector has to be specified, the
@@ -95,8 +99,10 @@ dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
-void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
-                            uint32_t N, uint32_t Q);
+void dsp_complex_mul_vector(dsp_complex_t a[],
+                            dsp_complex_t b[],
+                            uint32_t      N,
+                            uint32_t      Q);
 
 /** Function that computes the element-by-element product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
@@ -111,8 +117,10 @@ void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     Q   Number of bits behind the binary point in one of the
  *                    vectors
  */
-void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
-                                      uint32_t N, uint32_t Q);
+void dsp_complex_mul_conjugate_vector(dsp_complex_t a[],
+                                      dsp_complex_t b[],
+                                      uint32_t      N,
+                                      uint32_t      Q);
 
 /** Function that computes the element-by-element product of two complex
  * vectors, where the complex conjugate of the second vector is used. The
@@ -131,7 +139,8 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
 void dsp_complex_mul_conjugate_vector3(dsp_complex_t o[],
                                        dsp_complex_t a[],
                                        dsp_complex_t b[],
-                                      uint32_t N, uint32_t Q);
+                                       uint32_t      N,
+                                       uint32_t      Q);
 
 /** Function that computes the element-by-element sum of two complex vectors::
  *
@@ -141,8 +150,7 @@ void dsp_complex_mul_conjugate_vector3(dsp_complex_t o[],
  * \param[in]     b   second complex vector
  * \param[in]     N   Length of the vectors
  */
-void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[],
-                            uint32_t N);
+void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[], uint32_t N);
 
 /** Function that computes the element-by-element sum of two complex vectors,
  * scaling one vector by a fixed number of bit positions::
@@ -155,8 +163,10 @@ void dsp_complex_add_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     shift Number of bits to shift b left by prior to adding.
  *                      negative values indicate right shift.
  */
-void dsp_complex_add_vector_shl(dsp_complex_t a[], dsp_complex_t b[],
-                                uint32_t N, int32_t shift);
+void dsp_complex_add_vector_shl(dsp_complex_t a[],
+                                dsp_complex_t b[],
+                                uint32_t      N,
+                                int32_t       shift);
 
 /** Function that computes the element-by-element sum of two complex vectors,
  * scaling one vector by a fixed number of bit positions::
@@ -169,8 +179,10 @@ void dsp_complex_add_vector_shl(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     scalar Number to multiply b with, in q8_24 notation.
  *                       Use 0x01000000 to mimic dsp_complex_add_vector().
  */
-void dsp_complex_add_vector_scale(dsp_complex_t a[], dsp_complex_t b[],
-                                  uint32_t N, int32_t scalar);
+void dsp_complex_add_vector_scale(dsp_complex_t a[],
+                                  dsp_complex_t b[],
+                                  uint32_t      N,
+                                  int32_t       scalar);
 
 /** Function that computes the element-by-element sum of two complex vectors::
  *
@@ -180,8 +192,7 @@ void dsp_complex_add_vector_scale(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     b   second complex vector
  * \param[in]     N   Length of the vectors
  */
-void dsp_complex_sub_vector(dsp_complex_t a[], dsp_complex_t b[],
-                            uint32_t N);
+void dsp_complex_sub_vector(dsp_complex_t a[], dsp_complex_t b[], uint32_t N);
 
 /** Function that computes the element-by-element difference of two
  * complex vectors, into a third vector::
@@ -193,8 +204,10 @@ void dsp_complex_sub_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     b   second complex vector
  * \param[in]     N   Length of the vectors
  */
-void dsp_complex_add_vector3(dsp_complex_t o[], dsp_complex_t a[],
-                             dsp_complex_t b[], uint32_t N);
+void dsp_complex_add_vector3(dsp_complex_t o[],
+                             dsp_complex_t a[],
+                             dsp_complex_t b[],
+                             uint32_t      N);
 
 /** Function that computes the element-by-element difference of two
  * complex vectors, into a third vector::
@@ -206,8 +219,10 @@ void dsp_complex_add_vector3(dsp_complex_t o[], dsp_complex_t a[],
  * \param[in]     b   second complex vector
  * \param[in]     N   Length of the vectors
  */
-void dsp_complex_sub_vector3(dsp_complex_t o[], dsp_complex_t a[],
-                             dsp_complex_t b[], uint32_t N);
+void dsp_complex_sub_vector3(dsp_complex_t o[],
+                             dsp_complex_t a[],
+                             dsp_complex_t b[],
+                             uint32_t      N);
 
 /** Function that computes the element-by-element product of two complex
  * vectors, and adds the result to a third vector::
@@ -218,10 +233,14 @@ void dsp_complex_sub_vector3(dsp_complex_t o[], dsp_complex_t a[],
  * \param[in]     b   second complex vector
  * \param[in]     c   third complex vector
  * \param[in]     N   Length of the vectors
- * \param[in]     Q   Number of bits behind the binary point in one of the numbers
+ * \param[in]     Q   Number of bits behind the binary point in one of the
+ * numbers
  */
-void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
-                             dsp_complex_t c[], uint32_t N, int Q);
+void dsp_complex_macc_vector(dsp_complex_t a[],
+                             dsp_complex_t b[],
+                             dsp_complex_t c[],
+                             uint32_t      N,
+                             int           Q);
 
 /** Function that computes the element-by-element product of two complex
  * vectors, and subtracts the result from a third vector::
@@ -232,10 +251,14 @@ void dsp_complex_macc_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     b   second complex vector
  * \param[in]     c   third complex vector
  * \param[in]     N   Length of the vectors
- * \param[in]     Q   Number of bits behind the binary point in one of the numbers
+ * \param[in]     Q   Number of bits behind the binary point in one of the
+ * numbers
  */
-void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
-                              dsp_complex_t c[], uint32_t N, int Q);
+void dsp_complex_nmacc_vector(dsp_complex_t a[],
+                              dsp_complex_t b[],
+                              dsp_complex_t c[],
+                              uint32_t      N,
+                              int           Q);
 
 #if __XC__
 #define ALIAS_PTR *alias
@@ -256,8 +279,11 @@ void dsp_complex_nmacc_vector(dsp_complex_t a[], dsp_complex_t b[],
  * \param[in]     Q      Number of bits behind the binary point in one of the
  *                       vectors
  */
-void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a, dsp_complex_t ALIAS_PTR b,
-                                uint32_t N, int32_t scalar, uint32_t Q);
+void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a,
+                                dsp_complex_t ALIAS_PTR b,
+                                uint32_t                N,
+                                int32_t                 scalar,
+                                uint32_t                Q);
 
 /** Function that computes the magnitude of an array of complex numbers
  *
@@ -276,9 +302,10 @@ void dsp_complex_scalar_vector3(dsp_complex_t ALIAS_PTR a, dsp_complex_t ALIAS_P
  *                        precision; and to 23 for no precision;
  *                         0 <= precision <= 23.
  */
-extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
+extern void dsp_complex_magnitude_vector(uint32_t      magnitude[],
                                          dsp_complex_t input[],
-                                         uint32_t N, uint32_t P);
+                                         uint32_t      N,
+                                         uint32_t      P);
 
 /** Function that scales an array of complex numbers by a fraction. It
  * requires an array of complex number, and an array of numerators and an
@@ -300,9 +327,9 @@ extern void dsp_complex_magnitude_vector(uint32_t magnitude[],
  * \param [in] N           Number of elements in the input and output arrays
  */
 extern void dsp_complex_scale_vector(dsp_complex_t array[],
-                                     uint32_t numerator[],
-                                     uint32_t denominator[],
-                                     uint32_t N);
+                                     uint32_t      numerator[],
+                                     uint32_t      denominator[],
+                                     uint32_t      N);
 
 /** Function that performs a Hanning window post FFT. That is, the FFT is
  * performed with a rectangular window (no window), and this function is
@@ -326,31 +353,32 @@ extern void dsp_complex_scale_vector(dsp_complex_t array[],
  * \param [in]     N      Number of elements in the array
  */
 extern void dsp_complex_window_hanning_post_fft_half(dsp_complex_t array[],
-                                                     uint32_t N);
+                                                     uint32_t      N);
 
-/** Function that combines an array of real numbers and an array of imaginary numbers
- * into an interleaved array of complex numbers.
+/** Function that combines an array of real numbers and an array of imaginary
+ * numbers into an interleaved array of complex numbers.
  *
  * \param [in] re       Array of real numbers to combine into complex array
  * \param [in] im       Array of imaginary numbers to combine into complex array
- * \param [out] complex Array of complex numbers, with interleaved real an imaginary value
- * \param [in]  N       Number of elements in the input and output arrays
+ * \param [out] complex Array of complex numbers, with interleaved real an
+ * imaginary value \param [in]  N       Number of elements in the input and
+ * output arrays
  */
-void dsp_complex_combine (const int32_t re[],
-                          const int32_t im[],
-                          dsp_complex_t complex[],
-                          const uint32_t N);
+void dsp_complex_combine(const int32_t  re[],
+                         const int32_t  im[],
+                         dsp_complex_t  complex[],
+                         const uint32_t N);
 
-/** Function that splits an array of complex numbers into separate arrays for the
- * real and imaginary numbers.
+/** Function that splits an array of complex numbers into separate arrays for
+ * the real and imaginary numbers.
  *
- * \param [in] complex Array of complex numbers, with interleaved real an imaginary value
- * \param [out] re     Array of real numbers split from complex array
- * \param [out] im     Array of imaginary numbers split from complex array
+ * \param [in] complex Array of complex numbers, with interleaved real an
+ * imaginary value \param [out] re     Array of real numbers split from complex
+ * array \param [out] im     Array of imaginary numbers split from complex array
  * \param [in]  N      Number of elements in the input and output arrays
  */
-void dsp_complex_split (const dsp_complex_t complex[],
-                        int32_t re[],
-                        int32_t im[],
-                        const uint32_t N);
+void dsp_complex_split(const dsp_complex_t complex[],
+                       int32_t             re[],
+                       int32_t             im[],
+                       const uint32_t      N);
 #endif

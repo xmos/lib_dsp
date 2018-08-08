@@ -33,60 +33,57 @@ typedef uint32_t uq8_24;
 
 /** This constant is the closest q8_24 fixed point representation of 2 PI.
  */
-#define PI2_Q8_24     (105414357)
+#define PI2_Q8_24 (105414357)
 
 /** This constant is the closest q8_24 fixed point representation of PI.
  */
-#define PI_Q8_24     (105414357>>1)
+#define PI_Q8_24 (105414357 >> 1)
 
 /** This constant is the q8_24 fixed point representation of PI/2
  */
-#define PIHALF_Q8_24   (26353589)
+#define PIHALF_Q8_24 (26353589)
 
 /** This constant is the q8_24 fixed point representation of 2/PI
  */
 #define ONE_OVER_HALFPI_Q8_24 (10680707)
 
 
-#define HALF_Q8_24   (1<<(24-1))
+#define HALF_Q8_24 (1 << (24 - 1))
 
-#define ONE_Q8_24    (1<<24)
+#define ONE_Q8_24 (1 << 24)
 
 
 /**  Scalar multipliplication
- * 
+ *
  *  This function multiplies two scalar values and produces a result according
  *  to fixed-point format specified by the ``q_format`` parameter.
- * 
+ *
  *  The two operands are multiplied to produce a 64-bit result,
  *  and shifted right by ``q_format`` bits.
  *
  *  Algorithm:
- * 
+ *
  *  \code
  *  1) Y = X1 * X2
  *  3) Y = Y >> q_format
  *  \endcode
  *
  *  Example:
- * 
+ *
  *  \code
  *  int32_t  result;
  *  result = dsp_math_multiply( Q28(-0.33), sample, 28 );
  *  \endcode
- * 
+ *
  *  \param  input1_value  Multiply operand #1.
  *  \param  input2_value  Multiply operand #2.
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
 
-int32_t  dsp_math_multiply
-(
-    int32_t  input1_value,
-    int32_t  input2_value,
-    const int32_t q_format
-);
+int32_t dsp_math_multiply(int32_t       input1_value,
+                          int32_t       input2_value,
+                          const int32_t q_format);
 
 /**  Scalar saturated multipliplication
  *
@@ -94,8 +91,8 @@ int32_t  dsp_math_multiply
  *  to fixed-point format specified by the ``q_format`` parameter.
  *
  *  The two operands are multiplied to produce a 64-bit result,
- *  saturated at the minimum/maximum value given the fixed-point format if overflow occurs,
- *  and finally shifted right by ``q_format`` bits.
+ *  saturated at the minimum/maximum value given the fixed-point format if
+ * overflow occurs, and finally shifted right by ``q_format`` bits.
  *
  *  Algorithm:
  *
@@ -118,18 +115,17 @@ int32_t  dsp_math_multiply
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int32_t  dsp_math_multiply_sat(
-    int32_t  input1_value,
-    int32_t  input2_value,
-    const int32_t q_format 
-);
+int32_t dsp_math_multiply_sat(int32_t       input1_value,
+                              int32_t       input2_value,
+                              const int32_t q_format);
 
 
 /** Signed Division
  *
- *  This function divides two signed integer values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- *  It was optimised for performance using a dedicated instruction for unsinged long division.
+ *  This function divides two signed integer values and produces a result
+ * according to fixed-point format specified by the ``q_format`` parameter. It
+ * was optimised for performance using a dedicated instruction for unsinged long
+ * division.
  *
  *  Example:
  *
@@ -140,16 +136,17 @@ int32_t  dsp_math_multiply_sat(
  *
  *  \param  dividend     Value to be divided
  *  \param  divisor      Dividing value
- *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
- *  \returns             Quotient of dividend/divisor
+ *  \param  q_format     Fixed point32_t  format (i.e. number of fractional
+ * bits). \returns             Quotient of dividend/divisor
  */
-int32_t  dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_format );
+int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format);
 
 /** Unsigned Division
  *
- *  This function divides two unsigned integer values and produces a result according
- *  to fixed-point format specified by the ``q_format`` parameter.
- *  It was optimised for performance using a dedicated instruction for unsinged long division.
+ *  This function divides two unsigned integer values and produces a result
+ * according to fixed-point format specified by the ``q_format`` parameter. It
+ * was optimised for performance using a dedicated instruction for unsinged long
+ * division.
  *
  *  Example:
  *
@@ -160,13 +157,15 @@ int32_t  dsp_math_divide( int32_t  dividend, int32_t  divisor, uint32_t  q_forma
  *
  *  \param  dividend     Value to be divided
  *  \param  divisor      Dividing value
- *  \param  q_format     Fixed point32_t  format (i.e. number of fractional bits).
- *  \returns             Quotient of dividend/divisor
+ *  \param  q_format     Fixed point32_t  format (i.e. number of fractional
+ * bits). \returns             Quotient of dividend/divisor
  */
-uint32_t dsp_math_divide_unsigned (uint32_t  dividend, uint32_t  divisor, uint32_t  q_format );
+uint32_t dsp_math_divide_unsigned(uint32_t dividend,
+                                  uint32_t divisor,
+                                  uint32_t q_format);
 
 /** Scalar square root
- * 
+ *
  *  This function computes the square root of an unsigned input value
  *  using the Babylonian method of successive averaging.
  *  Error is <= 1 LSB and worst case performance is 96 cycles.
@@ -187,23 +186,23 @@ uq8_24 dsp_math_sqrt(uq8_24 x);
  **/
 q8_24 dsp_math_sin(q8_24 rad);
 
-/** This function returns the cosine of a q8_24 fixed point number in radians. The
- * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
+/** This function returns the cosine of a q8_24 fixed point number in radians.
+ *The input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
  *
  * \param rad input value in radians
  * \returns cosine(rad)
  **/
 inline q8_24 dsp_math_cos(q8_24 rad) {
-    return dsp_math_sin(rad+PIHALF_Q8_24);
+  return dsp_math_sin(rad + PIHALF_Q8_24);
 }
 
 /** This function returns the arctangent of x.
  *  It uses an algorithm based on Cody and Waite pp. 194-216.
- *  The algorihm was optimised for accuracy (using improved precision and rounding)
- *  and performance (using a dedicated instruction for unsinged long division)
- *  Error compared to atan from math.h is <= 1 LSB. Performance is 84 cycles worst case.
- *  MIN_INT is an invalid input because the algorithm negates all negative inputs 
- *  and there is no positive representation of MIN_INT
+ *  The algorihm was optimised for accuracy (using improved precision and
+ * rounding) and performance (using a dedicated instruction for unsinged long
+ * division) Error compared to atan from math.h is <= 1 LSB. Performance is 84
+ * cycles worst case. MIN_INT is an invalid input because the algorithm negates
+ * all negative inputs and there is no positive representation of MIN_INT
  *
  *  Example:
  *
@@ -269,16 +268,16 @@ extern void dsp_math_atan2_hypot(int z[2], unsigned int precision);
 #endif
 
 
-/** This function returns the arcsine of a q8_24 fixed point number in radians. The
- * input number has to be in the range -1..1
+/** This function returns the arcsine of a q8_24 fixed point number in radians.
+ *The input number has to be in the range -1..1
  *
  * \param sin input value
  * \returns arcsine(rad) in radians
  **/
 q8_24 dsp_math_asin(q8_24 sin);
 
-/** This function returns the arccosine of a q8_24 fixed point number in radians. The
- * input number has to be in the range -1..1
+/** This function returns the arccosine of a q8_24 fixed point number in
+ *radians. The input number has to be in the range -1..1
  *
  * \param cos input value
  * \returns arccosine(rad) in radians
@@ -296,8 +295,8 @@ q8_24 dsp_math_acos(q8_24 cos);
  **/
 q8_24 dsp_math_exp(q8_24 x);
 
-/** This function returns the natural logarithm (ln) of a fixed point number. The
- * input number has to be positive.
+/** This function returns the natural logarithm (ln) of a fixed point number.
+ *The input number has to be positive.
  *
  * \param x input value Q8.24 format.
  * \returns ln(x).
@@ -315,7 +314,7 @@ extern q8_24 dsp_math_sinh_(q8_24 x, int cosine);
  * \returns sinh(x)
  **/
 inline q8_24 dsp_math_sinh(q8_24 x) {
-    return dsp_math_sinh_(x, 0);
+  return dsp_math_sinh_(x, 0);
 }
 
 /** This function returns the hyperbolic cosine (cosh) of a fixed point
@@ -327,7 +326,7 @@ inline q8_24 dsp_math_sinh(q8_24 x) {
  * \returns sinh(x)
  **/
 inline q8_24 dsp_math_cosh(q8_24 x) {
-    return dsp_math_sinh_(x, 1);
+  return dsp_math_sinh_(x, 1);
 }
 
 /** This function computes the logistics function, 1/(1+exp(-x)). The

@@ -6,350 +6,343 @@
 #include "dsp_fft.h"
 
 #ifndef __XS2A__
-void dsp_fft_bit_reverse( dsp_complex_t pts[], const uint32_t N )
-{
+void dsp_fft_bit_reverse(dsp_complex_t pts[], const uint32_t N) {
 #warning "Bit reverse code in dsp_fft_bit_reverse not verified for XS1"
-    uint32_t shift = clz(N);
-    for(uint32_t i = 1; i < N-1; i++) {
-        uint32_t rev = bitrev(i) >> (shift + 1);
-        if (rev > i) {
-            int32_t im1, re1, im2, re2;
-            im1 = pst[i].im;
-            re1 = pst[i].re;
-            im2 = pst[rev].im;
-            re2 = pst[rev].re;
-            pts[i].re = re2;
-            pts[i].im = im2;
-            pts[rev].re = re1;
-            pts[rev].im = im1;
-        }
+  uint32_t shift = clz(N);
+  for (uint32_t i = 1; i < N - 1; i++) {
+    uint32_t rev = bitrev(i) >> (shift + 1);
+    if (rev > i) {
+      int32_t im1, re1, im2, re2;
+      im1         = pst[i].im;
+      re1         = pst[i].re;
+      im2         = pst[rev].im;
+      re2         = pst[rev].re;
+      pts[i].re   = re2;
+      pts[i].im   = im2;
+      pts[rev].re = re1;
+      pts[rev].im = im1;
     }
+  }
 }
 #endif
 
 #pragma unsafe arrays
-void dsp_fft_forward_xs1 (
-    dsp_complex_t pts[],
-    const uint32_t  N,
-    const int32_t   sine[] )
-{
-    uint32_t shift = 30-clz(N);
-    for(uint32_t step = 2 ; step <= N; step = step * 2, shift--) {
-        uint32_t step2 = step >> 1;
-        uint32_t step4 = step2 >> 1;
-        uint32_t k;
-        for(k = 0; k < step4 + (step2&1); k++) {
-            int32_t rRe = sine[(N>>2)-(k<<shift)];
-            int32_t rIm = sine[k<<shift];
-            for(int32_t block = k+N-step; block >= 0; block-=step) {
-                int32_t tRe = pts[block].re;
-                int32_t tIm = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
+void           dsp_fft_forward_xs1(dsp_complex_t  pts[],
+                                   const uint32_t N,
+                                   const int32_t  sine[]) {
+  uint32_t shift = 30 - clz(N);
+  for (uint32_t step = 2; step <= N; step = step * 2, shift--) {
+    uint32_t step2 = step >> 1;
+    uint32_t step4 = step2 >> 1;
+    uint32_t k;
+    for (k = 0; k < step4 + (step2 & 1); k++) {
+      int32_t rRe = sine[(N >> 2) - (k << shift)];
+      int32_t rIm = sine[k << shift];
+      for (int32_t block = k + N - step; block >= 0; block -= step) {
+        int32_t tRe  = pts[block].re;
+        int32_t tIm  = pts[block].im;
+        int32_t tRe2 = pts[block + step2].re;
+        int32_t tIm2 = pts[block + step2].im;
 
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);
-                {h,l} = macs(tIm2, rIm, h, l);
-                sRe2 = h;
-                {h,l} = macs(tRe2, -rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h;
-                tRe >>= 1;
-                tIm >>= 1;
-                pts[block].re = tRe + sRe2;
-                pts[block].im = tIm + sIm2;
-                pts[block+step2].re = tRe - sRe2;
-                pts[block+step2].im = tIm - sIm2;
-
-            }
-        }
-        for(k=(step2 & 1); k < step4; k++) {
-            int32_t rRe = -sine[k<<shift];
-            int32_t rIm = sine[(N>>2)-(k<<shift)];
-            for(int32_t block = k+step4+N-step; block >= 0; block-=step) {
-                int32_t tRe = pts[block].re;
-                int32_t tIm = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
-
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);
-                {h,l} = macs(tIm2, rIm, h, l);
-                sRe2 = h;
-                {h,l} = macs(tRe2, -rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h;
-                tRe >>= 1;
-                tIm >>= 1;
-                pts[block].re = tRe + sRe2;
-                pts[block].im = tIm + sIm2;
-                pts[block+step2].re = tRe - sRe2;
-                pts[block+step2].im = tIm - sIm2;
-
-            }
-        }
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l} = macs(tRe2, rRe, 0, 0x80000000);
+        {h, l} = macs(tIm2, rIm, h, l);
+        sRe2   = h;
+        {h, l} = macs(tRe2, -rIm, 0, 0x80000000);
+        {h, l} = macs(tIm2, rRe, h, l);
+        sIm2   = h;
+        tRe >>= 1;
+        tIm >>= 1;
+        pts[block].re         = tRe + sRe2;
+        pts[block].im         = tIm + sIm2;
+        pts[block + step2].re = tRe - sRe2;
+        pts[block + step2].im = tIm - sIm2;
+      }
     }
+    for (k = (step2 & 1); k < step4; k++) {
+      int32_t rRe = -sine[k << shift];
+      int32_t rIm = sine[(N >> 2) - (k << shift)];
+      for (int32_t block = k + step4 + N - step; block >= 0; block -= step) {
+        int32_t tRe  = pts[block].re;
+        int32_t tIm  = pts[block].im;
+        int32_t tRe2 = pts[block + step2].re;
+        int32_t tIm2 = pts[block + step2].im;
+
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l} = macs(tRe2, rRe, 0, 0x80000000);
+        {h, l} = macs(tIm2, rIm, h, l);
+        sRe2   = h;
+        {h, l} = macs(tRe2, -rIm, 0, 0x80000000);
+        {h, l} = macs(tIm2, rRe, h, l);
+        sIm2   = h;
+        tRe >>= 1;
+        tIm >>= 1;
+        pts[block].re         = tRe + sRe2;
+        pts[block].im         = tIm + sIm2;
+        pts[block + step2].re = tRe - sRe2;
+        pts[block + step2].im = tIm - sIm2;
+      }
+    }
+  }
 }
 
 #pragma unsafe arrays
-void dsp_fft_inverse_xs1 (
-    dsp_complex_t pts[],
-    const uint32_t  N,
-    const int32_t   sine[] )
-{
-    uint32_t shift = 30-clz(N);
-    for(uint32_t step = 2 ; step <= N; step = step * 2, shift--) {
-        uint32_t step2 = step >> 1;
-        uint32_t step4 = step2 >> 1;
-        uint32_t k;
-        for(k = 0; k < step4 + (step2&1); k++) {
-            int32_t rRe = sine[(N>>2)-(k<<shift)];
-            int32_t rIm = sine[k<<shift];
-            for(unsigned block = k; block < k+N; block+=step) {
-                int32_t tRe = pts[block].re;
-                int32_t tIm = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);  // Make this 0x40000000
-                {h,l} = macs(tIm2, -rIm, h, l);
-                sRe2 = h << 1;// | l >> 31;              // And include this part
-                {h,l} = macs(tRe2, rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h << 1;// | l >> 31;
-                pts[block].re = tRe + sRe2;
-                pts[block].im = tIm + sIm2;
-                pts[block+step2].re = tRe - sRe2;
-                pts[block+step2].im = tIm - sIm2;
-            }
-        }
-        for(k=(step2 & 1); k < step2-step4; k++) {
-            int32_t rRe = -sine[k<<shift];
-            int32_t rIm = sine[(N>>2)-(k<<shift)];
-            for(unsigned block = k+step4; block < k+step4+N; block+=step) {
-                int32_t tRe = pts[block].re;
-                int32_t tIm = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);
-                {h,l} = macs(tIm2, -rIm, h, l);
-                sRe2 = h << 1;// | l >> 31;
-                {h,l} = macs(tRe2, rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h << 1;// | l >> 31;
-                pts[block].re = tRe + sRe2;
-                pts[block].im = tIm + sIm2;
-                pts[block+step2].re = tRe - sRe2;
-                pts[block+step2].im = tIm - sIm2;
-            }
-        }
+void           dsp_fft_inverse_xs1(dsp_complex_t  pts[],
+                                   const uint32_t N,
+                                   const int32_t  sine[]) {
+  uint32_t shift = 30 - clz(N);
+  for (uint32_t step = 2; step <= N; step = step * 2, shift--) {
+    uint32_t step2 = step >> 1;
+    uint32_t step4 = step2 >> 1;
+    uint32_t k;
+    for (k = 0; k < step4 + (step2 & 1); k++) {
+      int32_t rRe = sine[(N >> 2) - (k << shift)];
+      int32_t rIm = sine[k << shift];
+      for (unsigned block = k; block < k + N; block += step) {
+        int32_t  tRe  = pts[block].re;
+        int32_t  tIm  = pts[block].im;
+        int32_t  tRe2 = pts[block + step2].re;
+        int32_t  tIm2 = pts[block + step2].im;
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l} = macs(tRe2, rRe, 0, 0x80000000); // Make this 0x40000000
+        {h, l} = macs(tIm2, -rIm, h, l);
+        sRe2 = h << 1; // | l >> 31;              // And include this part
+        {h, l}                = macs(tRe2, rIm, 0, 0x80000000);
+        {h, l}                = macs(tIm2, rRe, h, l);
+        sIm2                  = h << 1; // | l >> 31;
+        pts[block].re         = tRe + sRe2;
+        pts[block].im         = tIm + sIm2;
+        pts[block + step2].re = tRe - sRe2;
+        pts[block + step2].im = tIm - sIm2;
+      }
     }
+    for (k = (step2 & 1); k < step2 - step4; k++) {
+      int32_t rRe = -sine[k << shift];
+      int32_t rIm = sine[(N >> 2) - (k << shift)];
+      for (unsigned block = k + step4; block < k + step4 + N; block += step) {
+        int32_t  tRe  = pts[block].re;
+        int32_t  tIm  = pts[block].im;
+        int32_t  tRe2 = pts[block + step2].re;
+        int32_t  tIm2 = pts[block + step2].im;
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l}                = macs(tRe2, rRe, 0, 0x80000000);
+        {h, l}                = macs(tIm2, -rIm, h, l);
+        sRe2                  = h << 1; // | l >> 31;
+        {h, l}                = macs(tRe2, rIm, 0, 0x80000000);
+        {h, l}                = macs(tIm2, rRe, h, l);
+        sIm2                  = h << 1; // | l >> 31;
+        pts[block].re         = tRe + sRe2;
+        pts[block].im         = tIm + sIm2;
+        pts[block + step2].re = tRe - sRe2;
+        pts[block + step2].im = tIm - sIm2;
+      }
+    }
+  }
 }
 
 #pragma unsafe arrays
-void dsp_fft_inverse_DIF_xs1 (
-    dsp_complex_t pts[],
-    const uint32_t  N,
-    const int32_t   sine[] )
-{
-    uint32_t shift = 0;
-    for(uint32_t step = N ; step >= 2; step = step / 2, shift++) {
-        uint32_t step2 = step >> 1;
-        uint32_t step4 = step2 >> 1;
-        uint32_t k;
-        for(k = 0; k < step4 + (step2&1); k++) {
-            int32_t rRe = sine[(N>>2)-(k<<shift)];
-            int32_t rIm = sine[k<<shift];
-            for(unsigned block = k; block < k+N; block+=step) {
-                int32_t tRe1 = pts[block].re;
-                int32_t tIm1 = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
-                int32_t tRe = tRe1 + tRe2;
-                int32_t tIm = tIm1 + tIm2;
-                        tRe2 = tRe1 - tRe2;
-                        tIm2 = tIm1 - tIm2;
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);  // Make this 0x40000000
-                {h,l} = macs(tIm2, -rIm, h, l);
-                sRe2 = h << 1;// | l >> 31;              // And include this part
-                {h,l} = macs(tRe2, rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h << 1;// | l >> 31;
-                pts[block].re = tRe;
-                pts[block].im = tIm;
-                pts[block+step2].re = sRe2;
-                pts[block+step2].im = sIm2;
-            }
-        }
-        for(k=(step2 & 1); k < step2-step4; k++) {
-            int32_t rRe = -sine[k<<shift];
-            int32_t rIm = sine[(N>>2)-(k<<shift)];
-            for(unsigned block = k+step4; block < k+step4+N; block+=step) {
-                int32_t tRe1 = pts[block].re;
-                int32_t tIm1 = pts[block].im;
-                int32_t tRe2 = pts[block + step2].re;
-                int32_t tIm2 = pts[block + step2].im;
-                int32_t tRe = tRe1 + tRe2;
-                int32_t tIm = tIm1 + tIm2;
-                        tRe2 = tRe1 - tRe2;
-                        tIm2 = tIm1 - tIm2;
-                int32_t h;
-                uint32_t l;
-                int32_t sRe2, sIm2;
-                {h,l} = macs(tRe2, rRe, 0, 0x80000000);
-                {h,l} = macs(tIm2, -rIm, h, l);
-                sRe2 = h << 1;// | l >> 31;
-                {h,l} = macs(tRe2, rIm, 0, 0x80000000);
-                {h,l} = macs(tIm2, rRe, h, l);
-                sIm2 = h << 1;// | l >> 31;
-                pts[block].re = tRe;
-                pts[block].im = tIm;
-                pts[block+step2].re = sRe2;
-                pts[block+step2].im = sIm2;
-            }
-        }
+void           dsp_fft_inverse_DIF_xs1(dsp_complex_t  pts[],
+                                       const uint32_t N,
+                                       const int32_t  sine[]) {
+  uint32_t shift = 0;
+  for (uint32_t step = N; step >= 2; step = step / 2, shift++) {
+    uint32_t step2 = step >> 1;
+    uint32_t step4 = step2 >> 1;
+    uint32_t k;
+    for (k = 0; k < step4 + (step2 & 1); k++) {
+      int32_t rRe = sine[(N >> 2) - (k << shift)];
+      int32_t rIm = sine[k << shift];
+      for (unsigned block = k; block < k + N; block += step) {
+        int32_t tRe1 = pts[block].re;
+        int32_t tIm1 = pts[block].im;
+        int32_t tRe2 = pts[block + step2].re;
+        int32_t tIm2 = pts[block + step2].im;
+        int32_t tRe  = tRe1 + tRe2;
+        int32_t tIm  = tIm1 + tIm2;
+        tRe2         = tRe1 - tRe2;
+        tIm2         = tIm1 - tIm2;
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l} = macs(tRe2, rRe, 0, 0x80000000); // Make this 0x40000000
+        {h, l} = macs(tIm2, -rIm, h, l);
+        sRe2 = h << 1; // | l >> 31;              // And include this part
+        {h, l}                = macs(tRe2, rIm, 0, 0x80000000);
+        {h, l}                = macs(tIm2, rRe, h, l);
+        sIm2                  = h << 1; // | l >> 31;
+        pts[block].re         = tRe;
+        pts[block].im         = tIm;
+        pts[block + step2].re = sRe2;
+        pts[block + step2].im = sIm2;
+      }
     }
+    for (k = (step2 & 1); k < step2 - step4; k++) {
+      int32_t rRe = -sine[k << shift];
+      int32_t rIm = sine[(N >> 2) - (k << shift)];
+      for (unsigned block = k + step4; block < k + step4 + N; block += step) {
+        int32_t tRe1 = pts[block].re;
+        int32_t tIm1 = pts[block].im;
+        int32_t tRe2 = pts[block + step2].re;
+        int32_t tIm2 = pts[block + step2].im;
+        int32_t tRe  = tRe1 + tRe2;
+        int32_t tIm  = tIm1 + tIm2;
+        tRe2         = tRe1 - tRe2;
+        tIm2         = tIm1 - tIm2;
+        int32_t  h;
+        uint32_t l;
+        int32_t  sRe2, sIm2;
+        {h, l}                = macs(tRe2, rRe, 0, 0x80000000);
+        {h, l}                = macs(tIm2, -rIm, h, l);
+        sRe2                  = h << 1; // | l >> 31;
+        {h, l}                = macs(tRe2, rIm, 0, 0x80000000);
+        {h, l}                = macs(tIm2, rRe, h, l);
+        sIm2                  = h << 1; // | l >> 31;
+        pts[block].re         = tRe;
+        pts[block].im         = tIm;
+        pts[block + step2].re = sRe2;
+        pts[block + step2].im = sIm2;
+      }
+    }
+  }
 }
 
 #if defined(__XS2A__)
 
-extern void dsp_fft_forward_xs2 (
-        dsp_complex_t pts[],
-        uint32_t  N,
-        const int32_t   sine[]);
+extern void
+    dsp_fft_forward_xs2(dsp_complex_t pts[], uint32_t N, const int32_t sine[]);
 
-extern void dsp_fft_inverse_xs2 (
-        dsp_complex_t pts[],
-        uint32_t  N,
-        const int32_t   sine[]);
+extern void
+    dsp_fft_inverse_xs2(dsp_complex_t pts[], uint32_t N, const int32_t sine[]);
 
-extern void dsp_fft_split_spectrum_xs2( dsp_complex_t pts[], uint32_t N );
+extern void dsp_fft_split_spectrum_xs2(dsp_complex_t pts[], uint32_t N);
 
-extern void dsp_fft_merge_spectra_xs2( dsp_complex_t pts[], uint32_t N );
+extern void dsp_fft_merge_spectra_xs2(dsp_complex_t pts[], uint32_t N);
 
-extern void dsp_fft_short_to_long_xs2( const dsp_complex_short_t s[], dsp_complex_t l[], uint32_t N );
+extern void dsp_fft_short_to_long_xs2(const dsp_complex_short_t s[],
+                                      dsp_complex_t             l[],
+                                      uint32_t                  N);
 
-extern void dsp_fft_long_to_short_xs2( const dsp_complex_t l[], dsp_complex_short_t s[], uint32_t N );
+extern void dsp_fft_long_to_short_xs2(const dsp_complex_t l[],
+                                      dsp_complex_short_t s[],
+                                      uint32_t            N);
 
 #endif
 
-void dsp_fft_forward (
-    dsp_complex_t pts[],
-    const uint32_t  N,
-    const int32_t   sine[] ){
+void dsp_fft_forward(dsp_complex_t  pts[],
+                     const uint32_t N,
+                     const int32_t  sine[]) {
 #if defined(__XS2A__)
-    dsp_fft_forward_xs2 (pts, (uint32_t) N, sine);
+  dsp_fft_forward_xs2(pts, (uint32_t)N, sine);
 #else
-    dsp_fft_forward_complex_xs1 (pts, N, sine);
+  dsp_fft_forward_complex_xs1(pts, N, sine);
 #endif
 }
 
-void dsp_fft_inverse (
-    dsp_complex_t pts[],
-    const uint32_t  N,
-    const int32_t   sine[] ){
+void dsp_fft_inverse(dsp_complex_t  pts[],
+                     const uint32_t N,
+                     const int32_t  sine[]) {
 #if defined(__XS2A__)
-    dsp_fft_inverse_xs2 (pts, (uint32_t) N, sine);
+  dsp_fft_inverse_xs2(pts, (uint32_t)N, sine);
 #else
-    dsp_fft_inverse_xs1 (pts, N, sine);
+  dsp_fft_inverse_xs1(pts, N, sine);
 #endif
 }
 
 
-void dsp_fft_split_spectrum( dsp_complex_t pts[], const uint32_t N ){
+void dsp_fft_split_spectrum(dsp_complex_t pts[], const uint32_t N) {
 #if defined(__XS2A__)
-    dsp_fft_split_spectrum_xs2(pts, (uint32_t) N);
+  dsp_fft_split_spectrum_xs2(pts, (uint32_t)N);
 #else
-    for(uint32_t i=1;i<n/2;i++){
-        int32_t a_re = (pts[i].re + pts[N-i].re)/2;
-        int32_t a_im = (pts[i].im - pts[N-i].im)/2;
-        int32_t b_re = (pts[i].im + pts[N-i].im)/2;
-        int32_t b_im = (-pts[i].re + pts[N-i].re)/2;
+  for (uint32_t i = 1; i < n / 2; i++) {
+    int32_t a_re = (pts[i].re + pts[N - i].re) / 2;
+    int32_t a_im = (pts[i].im - pts[N - i].im) / 2;
+    int32_t b_re = (pts[i].im + pts[N - i].im) / 2;
+    int32_t b_im = (-pts[i].re + pts[N - i].re) / 2;
 
-        pts[i].re = a_re;
-        pts[i].im = a_im;
-        pts[N-i].re = b_re;
-        pts[N-i].im = b_im;
-    }
+    pts[i].re     = a_re;
+    pts[i].im     = a_im;
+    pts[N - i].re = b_re;
+    pts[N - i].im = b_im;
+  }
 
-    int32_t re = pts[N/2].re;
-    int32_t im = pts[N/2].im;
+  int32_t re = pts[N / 2].re;
+  int32_t im = pts[N / 2].im;
 
-    pts[N/2].re = pts[0].im;
-    pts[N/2].im = im;
-    pts[0].im = re;
+  pts[N / 2].re = pts[0].im;
+  pts[N / 2].im = im;
+  pts[0].im     = re;
 
 
-    for(uint32_t i=1;i<N/4;i++){
-        dsp_complex_t a = pts[N/2 + i];
-        dsp_complex_t b = pts[N - i];
-        pts[N/2 + i] = b;
-        pts[N - i]  = a;
-    }
+  for (uint32_t i = 1; i < N / 4; i++) {
+    dsp_complex_t a = pts[N / 2 + i];
+    dsp_complex_t b = pts[N - i];
+    pts[N / 2 + i]  = b;
+    pts[N - i]      = a;
+  }
 #endif
 }
 
-void dsp_fft_merge_spectra( dsp_complex_t pts[], const uint32_t N ){
+void dsp_fft_merge_spectra(dsp_complex_t pts[], const uint32_t N) {
 #if defined(__XS2A__)
-    dsp_fft_merge_spectra_xs2(pts, (uint32_t) N);
+  dsp_fft_merge_spectra_xs2(pts, (uint32_t)N);
 #else
-    for(uint32_t i=1;i<n/4;i++){
-        dsp_complex_t a = pts[N/2 + i];
-        dsp_complex_t b = pts[N - i];
-        pts[N/2 + i] = b;
-        pts[N - i]  = a;
-    }
+  for (uint32_t i = 1; i < n / 4; i++) {
+    dsp_complex_t a = pts[N / 2 + i];
+    dsp_complex_t b = pts[N - i];
+    pts[N / 2 + i]  = b;
+    pts[N - i]      = a;
+  }
 
-    int32_t t = pts[0].im;
-    pts[0].im = pts[N/2].re;
-    pts[N/2].re = t;N
+  int32_t t     = pts[0].im;
+  pts[0].im     = pts[N / 2].re;
+  pts[N / 2].re = t;
+  N
 
-    for(uint32_t i=1;i<n/2;i++){
+      for (uint32_t i = 1; i < n / 2; i++) {
 
-        int32_t a_re = pts[i].re;
-        int32_t a_im = pts[i].im;
-        int32_t b_re = pts[N-i].re;
-        int32_t b_im = pts[N-i].im;
+    int32_t a_re = pts[i].re;
+    int32_t a_im = pts[i].im;
+    int32_t b_re = pts[N - i].re;
+    int32_t b_im = pts[N - i].im;
 
-        pts[i].re = a_re-b_im;
-        pts[i].im = a_im+b_re;
-        pts[N-i].re = b_im+a_re;
-        pts[N-i].im = b_re-a_im;
-    }
+    pts[i].re     = a_re - b_im;
+    pts[i].im     = a_im + b_re;
+    pts[N - i].re = b_im + a_re;
+    pts[N - i].im = b_re - a_im;
+  }
 #endif
 }
 
-void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], const uint32_t N ) {
+void dsp_fft_short_to_long(const dsp_complex_short_t s[],
+                           dsp_complex_t             l[],
+                           const uint32_t            N) {
 #if defined(__XS2A__)
-    dsp_fft_short_to_long_xs2(s, l, (uint32_t) N);
+  dsp_fft_short_to_long_xs2(s, l, (uint32_t)N);
 #else
-    for(uint32_t i=0;i<n;i++){
-        l[i].re = ((int)s[i].re)<<16;
-        l[i].im = ((int)s[i].im)<<16;
-    }
+  for (uint32_t i = 0; i < n; i++) {
+    l[i].re = ((int)s[i].re) << 16;
+    l[i].im = ((int)s[i].im) << 16;
+  }
 #endif
 }
 
-void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], const uint32_t N ) {
+void dsp_fft_long_to_short(const dsp_complex_t l[],
+                           dsp_complex_short_t s[],
+                           const uint32_t      N) {
 #if defined(__XS2A__)
-    dsp_fft_long_to_short_xs2(l, s, (uint32_t) N);
+  dsp_fft_long_to_short_xs2(l, s, (uint32_t)N);
 #else
-    for(uint32_t i=0;i<n;i++){
-        s[i].re = l[i].re>>16;
-        s[i].im = l[i].im>>16;
-    }
+  for (uint32_t i = 0; i < n; i++) {
+    s[i].re = l[i].re >> 16;
+    s[i].im = l[i].im >> 16;
+  }
 #endif
 }
-
