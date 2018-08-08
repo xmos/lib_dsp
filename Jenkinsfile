@@ -10,6 +10,11 @@ pipeline {
     skipDefaultCheckout()
   }
   stages {
+    stage('App Notes') {
+      steps {
+        xcoreAppNoteBuild("${REPO}/AN00209_xCORE-200_DSP_Library")
+      }
+    }
     stage('Get view') {
       steps {
         prepareAppsSandbox("${VIEW}", "${REPO}")
