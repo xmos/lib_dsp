@@ -25,6 +25,11 @@ pipeline {
         xcoreAllAppsBuild("${REPO}/AN00209_xCORE-200_DSP_Library")
       }
     }
+    stage('Build Docs') {
+      steps {
+        runXdoc("${REPO}/lib_dsp/doc/rst")
+      }
+    }
     stage('Test') {
       steps {
         runXmostest("${REPO}", "tests")
