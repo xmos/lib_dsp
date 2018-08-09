@@ -155,6 +155,40 @@ void test_forward_fft(){
                 printf("%d,%d;", f_tmp[i].re, f_tmp[i].im);
             }
             printf("\n");
+
+            // Split Spectrum
+            printf("SPLIT_SPECTRUM\n");
+            for (int i=0; i<fft_length; i++) {
+                f_tmp[i].re = f[i].re;
+                f_tmp[i].im = 0;
+            }
+            copy_vector(f_tmp, f_freq, fft_length);
+            dsp_fft_forward(f_tmp, fft_length, sine_array);
+            dsp_fft_forward(f_freq, fft_length, sine_array);
+
+
+            dsp_fft_split_spectrum(f_tmp, fft_length);
+
+            for(unsigned i=0;i<fft_length;i++){
+                printf("%d,%d;", f_tmp[i].re, f_tmp[i].im);
+            }
+            printf("\n");
+
+            // FFT Input
+            for(unsigned i=0;i<fft_length;i++){
+                printf("%d,%d;", f[i].re, 0);
+            }
+            printf("\n");
+
+            // FFT Output
+            for(unsigned i=0;i<fft_length;i++){
+                printf("%d,%d;", f_freq[i].re, f_freq[i].im);
+            }
+            printf("\n");
+
+            dsp_fft_merge_spectra(f_tmp, fft_length);
+
+
         }
     }
     printf("Tests completed.\n");

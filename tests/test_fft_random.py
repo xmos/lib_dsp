@@ -196,6 +196,37 @@ class FFTTester(xmostest.Tester):
         print "Success",
         return True
 
+    def _verify_split_spectrum(self, fft_length, output, fft_input, reference_fft):
+        print "\nBit Reverse %d: " % fft_length
+        fft_input = np.array(self._complex_array_to_tuple(fft_input))
+        #print "FFT out: ", output
+        #print "Ref out: ", reference_fft
+        output = np.array(output)
+        reference_vec = reference_fft
+        reference_vec = np.array(reference_vec, dtype=np.int32)
+        reference_vec[0, 1] = reference_vec[fft_length/2, 0]
+        reference_vec[fft_length/2:,:] = 0
+        re_error = np.abs(output[:, 0] - reference_vec[:, 0])
+        im_error = np.abs(output[:, 1] - reference_vec[:, 1])
+        max_re_error_i = np.argmax(re_error)
+        max_im_error_i = np.argmax(im_error)
+        re_error_float = float(re_error[max_re_error_i]) / (1<<Q_FORMAT[1])
+        im_error_float = float(im_error[max_im_error_i]) / (1<<Q_FORMAT[1])
+        if re_error_float > ERROR_THRESHOLD:
+            print "In: " + ";".join("%d,%d" % (a[0], a[1]) for a in fft_input)
+            print "Ref: " + ";".join("%d,%d" % (a[0], a[1]) for a in reference_fft)
+            print "\nError of %f greater than threshold %f!"\
+                    % (re_error_float, ERROR_THRESHOLD)
+            eq_vec = (np.array(re_error, dtype=np.float_) / (1<<Q_FORMAT[1])) < ERROR_THRESHOLD
+            self._print_diff([fft_input], output, reference_vec, eq_vec, fft_length)
+            #print "Input | Output | Correct"
+            #for i, in_val in enumerate(input):
+            #    print in_val, output[i], reference_fft[i],
+            #    print "<----" if i == max_error_i else ""
+            return False
+        print "Success",
+        return True
+
     def _print_diff(self, input, output_vec, reference_vec, eq_vec, length):
         print "Vector length = %d" % length
         if self._verbose:
@@ -246,6 +277,8 @@ class FFTTester(xmostest.Tester):
             if line == "GENERATE":
                 fft_input = self._generate_fft_input(fft_length)
                 reference_fft = self._calculate_fft(fft_length, fft_input)
+                fft_input_re = [(z.real+0j) for z in fft_input]
+                reference_fft_re = self._calculate_fft(fft_length, fft_input_re)
             if line[:4] == "SEED":
                 seed = int(line[5:])
                 if self._seed != seed:
@@ -280,6 +313,14 @@ class FFTTester(xmostest.Tester):
                 else:
                     result = "FAIL"
                 self._set_fft_test_result("fft_bit_reverse", fft_length, result)
+            if line == "SPLIT_SPECTRUM":
+                split_spectrum_line = next_line
+                split_spectrum_output = self._parse_line(split_spectrum_line, fft_length)
+                if self._verify_split_spectrum(fft_length, split_spectrum_output, fft_input_re, reference_fft_re):
+                    result = "PASS"
+                else:
+                    result = "FAIL"
+                self._set_fft_test_result("fft_split_spectrum", fft_length, result)
         print "\nTests complete."
         time.sleep(1)
         self._push_test_results()
