@@ -1,21 +1,21 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
 void test_inverse_fft() {
-  unsigned x             = SEED;
-  unsigned test_count    = 2;
-  unsigned max_error     = 0;
+  unsigned x = SEED;
+  unsigned test_count = 2;
+  unsigned max_error = 0;
   unsigned average_error = 0;
   for (unsigned t = 0; t < test_count; t++) {
 
@@ -56,7 +56,6 @@ void test_inverse_fft() {
   }
   printf("Inverse FFT: Pass.\n");
 }
-
 
 unsafe int main() {
   test_inverse_fft();

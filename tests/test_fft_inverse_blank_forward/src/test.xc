@@ -1,10 +1,10 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
-#include <print.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <platform.h>
+#include <print.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 
@@ -14,32 +14,28 @@
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
-extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[],
-                                         int           l,
+extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[], int l,
                                          const int32_t sine[]);
 extern void dsp_fft_inverse_xs2(dsp_complex_t f[], int l, const int32_t sine[]);
 
 void gc1(dsp_complex_t g[FFT_LENGTH]) {
   timer tmr;
-  int   r0, r1;
-tmr:
-  > r0;
+  int r0, r1;
+  tmr :> r0;
   dsp_fft_bit_reverse(g, FFT_LENGTH);
   dsp_fft_inverse_xs2(g, FFT_LENGTH, FFT_SI);
   dsp_fft_zero_reverse_forward(g, FFT_LENGTH, FFT_SI);
-tmr:
-  > r1;
+  tmr :> r1;
   //    printf("%d ticks for integrated\n", r1-r0);
 }
 
 void gc2(dsp_complex_t g[FFT_LENGTH]) {
   timer tmr;
-  int   r0, r1;
-tmr:
-  > r0;
+  int r0, r1;
+  tmr :> r0;
   dsp_fft_bit_reverse(g, FFT_LENGTH);
   dsp_fft_inverse_xs2(g, FFT_LENGTH, FFT_SI);
   for (int i = FFT_LENGTH / 2; i < FFT_LENGTH; i++) {
@@ -48,8 +44,7 @@ tmr:
   }
   dsp_fft_bit_reverse(g, FFT_LENGTH);
   dsp_fft_forward(g, FFT_LENGTH, FFT_SI);
-tmr:
-  > r1;
+  tmr :> r1;
   //    printf("%d ticks for separate\n", r1-r0);
 }
 

@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
 void test_index_bit_reverse() {

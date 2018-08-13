@@ -3,20 +3,19 @@
 #ifndef DSP_MATH_H_
 #define DSP_MATH_H_
 
-#include "xccompat.h"
 #include "stdint.h"
-
+#include "xccompat.h"
 
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions are fixed to this Q format.
  */
-typedef int32_t  q1_31;
+typedef int32_t q1_31;
 typedef uint32_t uq1_31;
 
 /** Q8.24 fixed point format with 24 fractional bits
  * Explicit type to make it clear which functions are fixed to this Q format.
  */
-typedef int32_t  q8_24;
+typedef int32_t q8_24;
 typedef uint32_t uq8_24;
 
 // Constants for the Q8.24 format
@@ -47,11 +46,9 @@ typedef uint32_t uq8_24;
  */
 #define ONE_OVER_HALFPI_Q8_24 (10680707)
 
-
 #define HALF_Q8_24 (1 << (24 - 1))
 
 #define ONE_Q8_24 (1 << 24)
-
 
 /**  Scalar multipliplication
  *
@@ -81,8 +78,7 @@ typedef uint32_t uq8_24;
  *  \returns              input1_value * input2_value.
  */
 
-int32_t dsp_math_multiply(int32_t       input1_value,
-                          int32_t       input2_value,
+int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
                           const int32_t q_format);
 
 /**  Scalar saturated multipliplication
@@ -115,10 +111,8 @@ int32_t dsp_math_multiply(int32_t       input1_value,
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int32_t dsp_math_multiply_sat(int32_t       input1_value,
-                              int32_t       input2_value,
+int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
                               const int32_t q_format);
-
 
 /** Signed Division
  *
@@ -160,8 +154,7 @@ int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format);
  *  \param  q_format     Fixed point32_t  format (i.e. number of fractional
  * bits). \returns             Quotient of dividend/divisor
  */
-uint32_t dsp_math_divide_unsigned(uint32_t dividend,
-                                  uint32_t divisor,
+uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
                                   uint32_t q_format);
 
 /** Scalar square root
@@ -176,7 +169,6 @@ uint32_t dsp_math_divide_unsigned(uint32_t dividend,
  *  \returns             Unsigned 32-bit value in Q8.24 format
  */
 uq8_24 dsp_math_sqrt(uq8_24 x);
-
 
 /** This function returns the sine of a q8_24 fixed point number in radians. The
  * input number has to be in the range -MIN_Q8_24 + PI and MIN_Q8_24 - PI.
@@ -267,7 +259,6 @@ q8_24 dsp_math_atan(q8_24 x);
 extern void dsp_math_atan2_hypot(int z[2], unsigned int precision);
 #endif
 
-
 /** This function returns the arcsine of a q8_24 fixed point number in radians.
  *The input number has to be in the range -1..1
  *
@@ -283,7 +274,6 @@ q8_24 dsp_math_asin(q8_24 sin);
  * \returns arccosine(rad) in radians
  **/
 q8_24 dsp_math_acos(q8_24 cos);
-
 
 /** This function returns the natural exponent of a fixed point number. The
  * input number has to be less than 4.8, otherwise the answer cannot be
@@ -313,9 +303,7 @@ extern q8_24 dsp_math_sinh_(q8_24 x, int cosine);
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 dsp_math_sinh(q8_24 x) {
-  return dsp_math_sinh_(x, 0);
-}
+inline q8_24 dsp_math_sinh(q8_24 x) { return dsp_math_sinh_(x, 0); }
 
 /** This function returns the hyperbolic cosine (cosh) of a fixed point
  * number. The input number has to be in the range [-5.5..5.5] in order to
@@ -325,9 +313,7 @@ inline q8_24 dsp_math_sinh(q8_24 x) {
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 dsp_math_cosh(q8_24 x) {
-  return dsp_math_sinh_(x, 1);
-}
+inline q8_24 dsp_math_cosh(q8_24 x) { return dsp_math_sinh_(x, 1); }
 
 /** This function computes the logistics function, 1/(1+exp(-x)). The
  * input number has to be in q8_24 format, the output is a number between 0

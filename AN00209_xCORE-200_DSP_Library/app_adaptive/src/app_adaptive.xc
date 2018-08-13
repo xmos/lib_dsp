@@ -3,10 +3,10 @@
 // Uses Q24 format
 
 // Include files
+#include <dsp.h>
+#include <print.h>
 #include <stdio.h>
 #include <xs1.h>
-#include <print.h>
-#include <dsp.h>
 
 // Define constants
 
@@ -21,7 +21,6 @@ void print31(int32_t x) {
   else
     printf("%f ", F31(x));
 }
-
 
 // Declare global variables and arrays
 int32_t fir_coeffs[] = // 161 taps
@@ -78,7 +77,6 @@ int32_t fir_coeffs[] = // 161 taps
         Q31(+0.0783215),  Q31(+0.0191607),  Q31(+0.01531791), Q31(-0.03098222),
 };
 
-
 int32_t fir_state[FIR_FILTER_LENGTH];
 
 int32_t lms_coeffs[FIR_FILTER_LENGTH];
@@ -97,8 +95,8 @@ int main(void) {
     for (int32_t i = 0; i < FIR_FILTER_LENGTH; ++i)
       fir_state[i] = 0;
     for (int32_t i = 0; i < c + 30; ++i) {
-      x = dsp_adaptive_lms(
-          Q31(0.08), Q31(0.10), &err, lms_coeffs, fir_state, c, Q31(0.01), Q_N);
+      x = dsp_adaptive_lms(Q31(0.08), Q31(0.10), &err, lms_coeffs, fir_state, c,
+                           Q31(0.01), Q_N);
       print31(x);
       print31(err);
       printf("\n");
@@ -113,14 +111,8 @@ int main(void) {
     for (int32_t i = 0; i < FIR_FILTER_LENGTH; ++i)
       fir_state[i] = 0;
     for (int32_t i = 0; i < c + 30; ++i) {
-      x = dsp_adaptive_nlms(Q31(0.08),
-                            Q31(0.10),
-                            &err,
-                            nlms_coeffs,
-                            fir_state,
-                            c,
-                            Q31(0.01),
-                            Q_N);
+      x = dsp_adaptive_nlms(Q31(0.08), Q31(0.10), &err, nlms_coeffs, fir_state,
+                            c, Q31(0.01), Q_N);
       print31(x);
       print31(err);
       printf("\n");

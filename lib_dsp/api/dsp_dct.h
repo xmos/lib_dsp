@@ -127,7 +127,6 @@ void dsp_dct_forward2(int32_t output[2], int32_t input[2]);
  */
 void dsp_dct_forward1(int32_t output[1], int32_t input[1]);
 
-
 /** This function performs a 4 point inverse DCT
  *
  *  \param  input           Basis vector values
@@ -156,13 +155,11 @@ void dsp_dct_inverse2(int32_t output[2], int32_t input[2]);
  */
 void dsp_dct_inverse1(int32_t output[1], int32_t input[1]);
 
-
 #ifdef INCLUDE_REFERENCE_DCT
 #include <math.h>
 
 void referenceDCT(int32_t output[], int32_t input[], int32_t N);
 void referenceIDCT(int32_t output[], int32_t input[], int32_t N);
-
 
 #endif
 #endif

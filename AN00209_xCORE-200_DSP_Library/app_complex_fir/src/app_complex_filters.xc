@@ -3,9 +3,9 @@
 // Uses Q24 format
 
 // Include files
+#include <dsp.h>
 #include <stdio.h>
 #include <xs1.h>
-#include <dsp.h>
 
 dsp_complex_t data[4] = {
     {1000, -1000},
@@ -23,12 +23,10 @@ dsp_complex_t fir[4] = {
 
 int main(void) {
   timer tmr;
-  int   t0, t1;
-tmr:
-  > t0;
+  int t0, t1;
+  tmr :> t0;
   dsp_complex_t x = dsp_complex_fir(data, fir, 4, 0, 24);
-tmr:
-  > t1;
+  tmr :> t1;
   //    printf("%d\n", t1-t0);
   dsp_complex_t sum = {0, 0};
   for (int i = 0; i < 4; i++) {

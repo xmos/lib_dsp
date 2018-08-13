@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
 #define FFT_LENGTH 16
@@ -17,24 +17,11 @@ int random(unsigned &x) {
 
 void test_linear() {
   dsp_complex_t f[FFT_LENGTH];
-  int32_t       sig[FFT_LENGTH * 3 / 2 + 4] = {0,
-                                         7071,
-                                         10000,
-                                         7071,
-                                         0,
-                                         -7071,
-                                         -10000,
-                                         -7071,
-                                         0,
-                                         7071,
-                                         10000,
-                                         7071,
-                                         0,
-                                         -7071,
-                                         -10000,
-                                         -7071};
-  dsp_complex_t conv[FFT_LENGTH]            = {
-      {ONE, 0}, {ONE, 0}, {ONE, 0}, {ONE, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
+  int32_t sig[FFT_LENGTH * 3 / 2 + 4] = {
+      0, 7071, 10000, 7071, 0, -7071, -10000, -7071,
+      0, 7071, 10000, 7071, 0, -7071, -10000, -7071};
+  dsp_complex_t conv[FFT_LENGTH] = {{ONE, 0}, {ONE, 0}, {ONE, 0}, {ONE, 0},
+                                    {0, 0},   {0, 0},   {0, 0},   {0, 0}};
   for (int i = 0; i < FFT_LENGTH * 3 / 2; i++) {
     sig[i] = sin(6.283 / 10 * i) * 10000;
   }
@@ -71,37 +58,31 @@ void test_linear() {
 
 void test_forward_fft() {
   timer tmr;
-  int   t0, t1, t2;
+  int t0, t1, t2;
 
   dsp_complex_t f[FFT_LENGTH];
-  int32_t       sig[FFT_LENGTH] = {
-      0, 7071, 10000, 7071, 8000, -7071, 17000, -7071, 6000, 3000};
+  int32_t sig[FFT_LENGTH] = {0,     7071,  10000, 7071, 8000,
+                             -7071, 17000, -7071, 6000, 3000};
   for (unsigned i = 0; i < FFT_LENGTH; i++) {
     f[i].re = sig[i];
     f[i].im = 0;
   }
   printf("\n");
-tmr:
-  > t0;
+  tmr :> t0;
   dsp_fft_bit_reverse(f, FFT_LENGTH);
   dsp_fft_forward(f, FFT_LENGTH, dsp_sine_16);
-tmr:
-  > t1;
-  dsp_fft_bit_reverse_and_forward_real(
-      sig, FFT_LENGTH, dsp_sine_8, dsp_sine_16);
-tmr:
-  > t2;
+  tmr :> t1;
+  dsp_fft_bit_reverse_and_forward_real(sig, FFT_LENGTH, dsp_sine_8,
+                                       dsp_sine_16);
+  tmr :> t2;
 
   printf("%d for normal vs %d for fast\n", t1 - t0, t2 - t1);
   printf("%6d,%6d  %6d,%6d\n", f[0].re, f[0].im, sig[0], 0);
   for (unsigned i = 1; i < FFT_LENGTH / 2; i++) {
     printf("%6d,%6d  %6d,%6d\n", f[i].re, f[i].im, sig[2 * i], sig[2 * i + 1]);
   }
-  printf("%6d,%6d  %6d,%6d\n",
-         f[FFT_LENGTH / 2].re,
-         f[FFT_LENGTH / 2].im,
-         sig[1],
-         0);
+  printf("%6d,%6d  %6d,%6d\n", f[FFT_LENGTH / 2].re, f[FFT_LENGTH / 2].im,
+         sig[1], 0);
   for (unsigned i = 1; i < FFT_LENGTH / 2; i++) {
     printf("%6d,%6d\n", f[i + FFT_LENGTH / 2].re, f[i + FFT_LENGTH / 2].im);
   }

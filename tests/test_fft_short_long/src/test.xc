@@ -1,21 +1,21 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
 void test_short_long_conversion() {
-  unsigned            x = SEED;
-  dsp_complex_t       f[FFT_LENGTH];
-  dsp_complex_t       g[FFT_LENGTH];
+  unsigned x = SEED;
+  dsp_complex_t f[FFT_LENGTH];
+  dsp_complex_t g[FFT_LENGTH];
   dsp_complex_short_t h[FFT_LENGTH];
 
   for (unsigned i = 0; i < FFT_LENGTH; i++) {

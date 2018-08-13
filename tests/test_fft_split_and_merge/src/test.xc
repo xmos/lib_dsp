@@ -1,22 +1,22 @@
 // Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
-#include <xs1.h>
-#include <xclib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
 #include "dsp_fft.h"
 #include "generated.h"
 
 int random(unsigned &x) {
   crc32(x, -1, 0xEB31D82E);
-  return (int)x;
+  return (int) x;
 }
 
 void test_split_and_merge() {
-  unsigned      x = SEED;
+  unsigned x = SEED;
   dsp_complex_t f[FFT_LENGTH];
   dsp_complex_t g[FFT_LENGTH];
-  unsigned      test_count = 2;
+  unsigned test_count = 2;
   for (unsigned i = 0; i < test_count; i++) {
     for (unsigned i = 0; i < FFT_LENGTH; i++) {
       f[i].re = random(x) >> DATA_SHIFT;

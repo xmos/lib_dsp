@@ -1,38 +1,30 @@
 // Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
 // XMOS DSP Library - Example to use FFT and inverse FFT
 
-#include <stdio.h>
-#include <xs1.h>
-#include <xclib.h>
 #include <dsp.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <xclib.h>
+#include <xs1.h>
 
-extern void dsp_fft_inverse_DIF_xs1(dsp_complex_t  pts[],
-                                    const uint32_t N,
-                                    const int32_t  sine[]);
+extern void dsp_fft_inverse_DIF_xs1(dsp_complex_t pts[], const uint32_t N,
+                                    const int32_t sine[]);
 
-extern void dsp_fft_inverse_DIF_xs2(dsp_complex_t  pts[],
-                                    const uint32_t N,
-                                    const int32_t  sine[]);
+extern void dsp_fft_inverse_DIF_xs2(dsp_complex_t pts[], const uint32_t N,
+                                    const int32_t sine[]);
 
-extern void dsp_fft_inverse_xs1(dsp_complex_t  pts[],
-                                const uint32_t N,
-                                const int32_t  sine[]);
+extern void dsp_fft_inverse_xs1(dsp_complex_t pts[], const uint32_t N,
+                                const int32_t sine[]);
 
-extern void dsp_fft_gc_xs2(dsp_complex_t  pts[],
-                           const uint32_t N,
-                           const int32_t  sine[],
-                           const uint32_t overlap);
+extern void dsp_fft_gc_xs2(dsp_complex_t pts[], const uint32_t N,
+                           const int32_t sine[], const uint32_t overlap);
 
-extern void dsp_fft_inverse_xs1(dsp_complex_t  pts[],
-                                const uint32_t N,
-                                const int32_t  sine[]);
+extern void dsp_fft_inverse_xs1(dsp_complex_t pts[], const uint32_t N,
+                                const int32_t sine[]);
 
-extern void dsp_fft_gc_xs1(dsp_complex_t  pts[],
-                           const uint32_t N,
-                           const int32_t  sine[],
-                           const uint32_t overlap) {
+extern void dsp_fft_gc_xs1(dsp_complex_t pts[], const uint32_t N,
+                           const int32_t sine[], const uint32_t overlap) {
   dsp_fft_inverse_DIF_xs2(pts, N, sine);
   dsp_fft_bit_reverse(pts, N);
   for (int i = N / 2 - overlap; i < N; i++) {
@@ -61,7 +53,7 @@ void addhist(int err) {
 
 int main(void) {
   timer tmr;
-  int   t0, t1, t2;
+  int t0, t1, t2;
   for (int i = 0; i < N; i++) {
     in1[i].re = in2[i].re = in3[i].re = i * i * 9;
     in1[i].im = in2[i].im = in3[i].im = i * 7;
@@ -88,26 +80,17 @@ int main(void) {
       in2[i].re = in3[i].re = ((i * i * 9 + 5) % 32768) << shift;
       in2[i].im = in3[i].im = ((i * 7 + 3) % 32768) << shift;
     }
-  tmr:
-    > t0;
+    tmr :> t0;
     dsp_fft_gc_xs1(in2, N, SINE, 16);
-  tmr:
-    > t1;
+    tmr :> t1;
     dsp_fft_gc_xs2(in3, N, SINE, 16);
-  tmr:
-    > t2;
+    tmr :> t2;
     for (int i = 0; i < N; i++) {
       int errre = in2[i].re - in3[i].re;
       int errim = in2[i].im - in3[i].im;
       if (abs(errre) > 2 || abs(errim) > 2) {
-        printf("%d: %d %d   %d %d   %d %d\n",
-               i,
-               in3[i].re,
-               in2[i].re,
-               in3[i].im,
-               in2[i].im,
-               errre,
-               errim);
+        printf("%d: %d %d   %d %d   %d %d\n", i, in3[i].re, in2[i].re,
+               in3[i].im, in2[i].im, errre, errim);
       }
     }
     if (shift == 0) {

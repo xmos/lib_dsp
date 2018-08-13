@@ -1,9 +1,9 @@
 // Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
 // XMOS DSP Library - DCT Functions test program
 
+#include <dsp_dct.h>
 #include <stdio.h>
 #include <xs1.h>
-#include <dsp_dct.h>
 
 int32_t data[24] = {24000, 23000, 22000, 21000, 20000, 19000, 18000, 17000,
                     16000, 15000, 14000, 13000, 12000, 11000, 10000, 9000,
@@ -18,9 +18,7 @@ int main(void) {
 
   dsp_dct_forward24(dcted, data);
   for (int32_t i = 0; i < 24; i++) {
-    printf("%5d %6d%s\n",
-           data[i],
-           dcted[i],
+    printf("%5d %6d%s\n", data[i], dcted[i],
            dcted[i] != correct[i] ? " Wrong" : "");
   }
   return 0;

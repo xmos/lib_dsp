@@ -3,10 +3,10 @@
 // Uses Q24 format
 
 // Include files
-#include <stdio.h>
-#include <xs1.h>
 #include <dsp.h>
 #include <math.h>
+#include <stdio.h>
+#include <xs1.h>
 
 // Define constants
 
@@ -14,24 +14,10 @@
 #define Q_N 24
 
 // Declare global variables and arrays
-int32_t Src1[] = {Q24(.11),
-                  Q24(.12),
-                  Q24(.13),
-                  Q24(.21),
-                  Q24(.22),
-                  Q24(.23),
-                  Q24(.31),
-                  Q24(.32),
-                  Q24(.33)};
-int32_t Src2[] = {Q24(.41),
-                  Q24(.42),
-                  Q24(.43),
-                  Q24(.51),
-                  Q24(.52),
-                  Q24(.53),
-                  Q24(.61),
-                  Q24(.62),
-                  Q24(.63)};
+int32_t Src1[] = {Q24(.11), Q24(.12), Q24(.13), Q24(.21), Q24(.22),
+                  Q24(.23), Q24(.31), Q24(.32), Q24(.33)};
+int32_t Src2[] = {Q24(.41), Q24(.42), Q24(.43), Q24(.51), Q24(.52),
+                  Q24(.53), Q24(.61), Q24(.62), Q24(.63)};
 int32_t Dst[3 * 3];
 
 int main(void) {

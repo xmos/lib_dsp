@@ -3,8 +3,8 @@
 #ifndef DSP_BFP_H_
 #define DSP_BFP_H_
 
-#include <stdint.h>
 #include <dsp_complex.h>
+#include <stdint.h>
 
 #if defined(__XS2A__)
 
@@ -63,10 +63,8 @@ void dsp_bfp_shl(dsp_complex_t pts[], const uint32_t N, const int32_t shift);
  * \param[in]     shift_re  Number of places to shift the real part left by.
  * \param[in]     shift_im  Number of places to shift the imaginary part left by
  */
-void dsp_bfp_shl2(dsp_complex_t *UNSAFE pts,
-                  const uint32_t        N,
-                  const int32_t         shift_re,
-                  const int32_t         shift_im);
+void dsp_bfp_shl2(dsp_complex_t *UNSAFE pts, const uint32_t N,
+                  const int32_t shift_re, const int32_t shift_im);
 
 /** This function shifts an array of complex numbers to adjust the headroom,
  * whilst simultaneously shuffling the array around in preparation for an FFT.
@@ -77,9 +75,8 @@ void dsp_bfp_shl2(dsp_complex_t *UNSAFE pts,
  * \param[in]     N         Number of points. Must be a power of two.
  * \param[in]     shift     Number of places to shift left by.
  */
-void dsp_bfp_bit_reverse_shl(dsp_complex_t  pts[],
-                             const uint32_t N,
-                             const int32_t  shift);
+void dsp_bfp_bit_reverse_shl(dsp_complex_t pts[], const uint32_t N,
+                             const int32_t shift);
 
 #endif
 

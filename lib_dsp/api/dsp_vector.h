@@ -69,8 +69,7 @@ int32_t dsp_vector_maximum(const int32_t input_vector[],
  */
 
 void dsp_vector_negate(const int32_t input_vector_X[],
-                       int32_t       result_vector_R[],
-                       const int32_t vector_length);
+                       int32_t result_vector_R[], const int32_t vector_length);
 
 /** Vector absolute value: ``R[i] = |X[i]|``
  *
@@ -96,8 +95,7 @@ void dsp_vector_negate(const int32_t input_vector_X[],
  *  \param  vector_length     Length of the input and output vectors.
  */
 
-void dsp_vector_abs(const int32_t input_vector_X[],
-                    int32_t       result_vector_R[],
+void dsp_vector_abs(const int32_t input_vector_X[], int32_t result_vector_R[],
                     const int32_t vector_length);
 
 /** Vector / scalar addition: ``R[i] = X[i] + A``
@@ -123,10 +121,8 @@ void dsp_vector_abs(const int32_t input_vector_X[],
  *  \param  vector_length    Length of the input and output vectors
  */
 
-void dsp_vector_adds(const int32_t input_vector_X[],
-                     int32_t       input_scalar_A,
-                     int32_t       result_vector_R[],
-                     const int32_t vector_length);
+void dsp_vector_adds(const int32_t input_vector_X[], int32_t input_scalar_A,
+                     int32_t result_vector_R[], const int32_t vector_length);
 
 /** Vector / scalar multiplication: ``R[i] = X[i] * A``
  *
@@ -152,12 +148,9 @@ void dsp_vector_adds(const int32_t input_vector_X[],
  * fractional part.
  */
 
-void dsp_vector_muls(const int32_t input_vector_X[],
-                     int32_t       input_scalar_A,
-                     int32_t       result_vector_R[],
-                     const int32_t vector_length,
+void dsp_vector_muls(const int32_t input_vector_X[], int32_t input_scalar_A,
+                     int32_t result_vector_R[], const int32_t vector_length,
                      const int32_t q_format);
-
 
 /** Vector / vector addition: ``R[i] = X[i] + Y[i]``
  *
@@ -181,8 +174,7 @@ void dsp_vector_muls(const int32_t input_vector_X[],
  */
 
 void dsp_vector_addv(const int32_t input_vector_X[],
-                     const int32_t input_vector_Y[],
-                     int32_t       result_vector_R[],
+                     const int32_t input_vector_Y[], int32_t result_vector_R[],
                      const int32_t vector_length);
 
 /** Vector / vector min: ``X[i] = min(X[i], Y[i])``
@@ -203,9 +195,8 @@ void dsp_vector_addv(const int32_t input_vector_X[],
  *  \param  vector_length     Length of the input and output vectors.
  */
 
-void dsp_vector_minv(uint32_t       vector_X[],
-                     const uint32_t vector_Y[],
-                     const int32_t  vector_length);
+void dsp_vector_minv(uint32_t vector_X[], const uint32_t vector_Y[],
+                     const int32_t vector_length);
 
 /** Vector / vector subtraction: ``R[i] = X[i] - Y[i]``
  *
@@ -229,8 +220,7 @@ void dsp_vector_minv(uint32_t       vector_X[],
  */
 
 void dsp_vector_subv(const int32_t input_vector_X[],
-                     const int32_t input_vector_Y[],
-                     int32_t       result_vector_R[],
+                     const int32_t input_vector_Y[], int32_t result_vector_R[],
                      const int32_t vector_length);
 
 /** Vector / vector multiplication: ``R[i] = X[i] * Y[i]``
@@ -257,10 +247,8 @@ void dsp_vector_subv(const int32_t input_vector_X[],
  */
 
 void dsp_vector_mulv(const int32_t input_vector_X[],
-                     const int32_t input_vector_Y[],
-                     int32_t       result_vector_R[],
-                     const int32_t vector_length,
-                     const int32_t q_format);
+                     const int32_t input_vector_Y[], int32_t result_vector_R[],
+                     const int32_t vector_length, const int32_t q_format);
 
 /** Vector multiplication and scalar addition: ``R[i] = X[i] * Y[i] + A``
  *
@@ -290,10 +278,8 @@ void dsp_vector_mulv(const int32_t input_vector_X[],
 
 void dsp_vector_mulv_adds(const int32_t input_vector_X[],
                           const int32_t input_vector_Y[],
-                          int32_t       input_scalar_A,
-                          int32_t       result_vector_R[],
-                          const int32_t vector_length,
-                          const int32_t q_format);
+                          int32_t input_scalar_A, int32_t result_vector_R[],
+                          const int32_t vector_length, const int32_t q_format);
 
 /** Scalar multiplication and vector addition: ``R[i] = X[i] * A + Y[i]``
  *
@@ -325,11 +311,10 @@ void dsp_vector_mulv_adds(const int32_t input_vector_X[],
  */
 
 void dsp_vector_muls_addv(const int32_t input_vector_X[],
-                          int32_t       input_scalar_A,
+                          int32_t input_scalar_A,
                           const int32_t input_vector_Y[],
-                          int32_t       result_vector_R[],
-                          const int32_t vector_length,
-                          const int32_t q_format);
+                          int32_t result_vector_R[],
+                          const int32_t vector_length, const int32_t q_format);
 
 /** Scalar multiplication and vector subtraction: ``R[i] = X[i] * A - Y[i]``
  *
@@ -361,11 +346,10 @@ void dsp_vector_muls_addv(const int32_t input_vector_X[],
  */
 
 void dsp_vector_muls_subv(const int32_t input_vector_X[],
-                          int32_t       input_scalar_A,
+                          int32_t input_scalar_A,
                           const int32_t input_vector_Y[],
-                          int32_t       result_vector_R[],
-                          const int32_t vector_length,
-                          const int32_t q_format);
+                          int32_t result_vector_R[],
+                          const int32_t vector_length, const int32_t q_format);
 
 /** Vector multiplication and vector addition: ``R[i] = X[i] * Y[i] + Z[i]``
  *
@@ -396,9 +380,8 @@ void dsp_vector_muls_subv(const int32_t input_vector_X[],
 void dsp_vector_mulv_addv(const int32_t input_vector_X[],
                           const int32_t input_vector_Y[],
                           const int32_t input_vector_Z[],
-                          int32_t       result_vector_R[],
-                          const int32_t vector_length,
-                          const int32_t q_format);
+                          int32_t result_vector_R[],
+                          const int32_t vector_length, const int32_t q_format);
 
 /** Vector multiplication and vector subtraction: ``R[i] = X[i] * Y[i] - Z[i]``
  *
@@ -429,9 +412,8 @@ void dsp_vector_mulv_addv(const int32_t input_vector_X[],
 void dsp_vector_mulv_subv(const int32_t input_vector_X[],
                           const int32_t input_vector_Y[],
                           const int32_t input_vector_Z[],
-                          int32_t       result_vector_R[],
-                          const int32_t vector_length,
-                          const int32_t q_format);
+                          int32_t result_vector_R[],
+                          const int32_t vector_length, const int32_t q_format);
 
 /** Complex vector / vector multiplication: ``R[i] = X[i] * Y[i]``
  *
@@ -466,13 +448,10 @@ void dsp_vector_mulv_subv(const int32_t input_vector_X[],
  * bits).
  */
 
-void dsp_vector_mulv_complex(const int32_t input_vector_X_re[],
-                             const int32_t input_vector_X_im[],
-                             const int32_t input_vector_Y_re[],
-                             const int32_t input_vector_Y_im[],
-                             int32_t       result_vector_R_re[],
-                             int32_t       result_vector_R_im[],
-                             const int32_t vector_length,
-                             const int32_t q_format);
+void dsp_vector_mulv_complex(
+    const int32_t input_vector_X_re[], const int32_t input_vector_X_im[],
+    const int32_t input_vector_Y_re[], const int32_t input_vector_Y_im[],
+    int32_t result_vector_R_re[], int32_t result_vector_R_im[],
+    const int32_t vector_length, const int32_t q_format);
 
 #endif
