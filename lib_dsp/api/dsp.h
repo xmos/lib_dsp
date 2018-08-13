@@ -22,14 +22,14 @@
  * overhead_time, cycle_time overhead_time must have a valid value before the
  * call.
  */
-#define TIME_FUNCTION(function_call)                                           \
-  do {                                                                         \
-  tmr:                                                                         \
-    > start_time;                                                              \
-    function_call;                                                             \
-  tmr:                                                                         \
-    > end_time;                                                                \
-    cycles_taken = end_time - start_time - overhead_time;                      \
+#define TIME_FUNCTION(function_call)                      \
+  do {                                                    \
+  tmr:                                                    \
+    > start_time;                                         \
+    function_call;                                        \
+  tmr:                                                    \
+    > end_time;                                           \
+    cycles_taken = end_time - start_time - overhead_time; \
   } while (0)
 
 #endif

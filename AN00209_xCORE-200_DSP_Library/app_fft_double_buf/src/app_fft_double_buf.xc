@@ -18,7 +18,7 @@ mechanism accessing a shared memory area.
 The task produce_samples fills one buffer with a stereo signal
 whilst the do_fft task processes the other buffer
 "in place" which means the buffer is also used to store the real part of the
-result Tasks access these buffers via *movable* pointers. These pointers can be
+result. Tasks access these buffers via *movable* pointers. These pointers can be
 safely transferred between tasks without any race conditions between the tasks
 using them.
 
@@ -63,7 +63,7 @@ pointers (buffers)
 #endif
 
 #ifndef TWOREALS
-#define TWOREALS                                                               \
+#define TWOREALS \
   0 // Processing two real signals with a single complex FFT. Disabled by
     // default
 #endif
@@ -86,11 +86,11 @@ pointers (buffers)
 // Array holding one complex signal or two real signals
 #if INT16_BUFFERS
 #define SIGNAL_ARRAY_TYPE dsp_complex_short_t
-#define OUTPUT_SUM_TYPE                                                        \
+#define OUTPUT_SUM_TYPE \
   int32_t // double precision variable to avoid overflow in addition
 #else
 #define SIGNAL_ARRAY_TYPE dsp_complex_t
-#define OUTPUT_SUM_TYPE                                                        \
+#define OUTPUT_SUM_TYPE \
   int64_t // double precision variable to avoid overflow in addition
 #endif
 
@@ -103,12 +103,10 @@ pointers (buffers)
 /** Union to store blocks of samples for multiple digital signals
  */
 typedef union {
-  SIGNAL_ARRAY_TYPE
-      data[NUM_SIGNAL_ARRAYS]
-          [N_FFT_POINTS]; // time domain or frequency domain signals
-  SIGNAL_ARRAY_TYPE
-      half_spectra[NUM_SIGNAL_ARRAYS * 2]
-                  [N_FFT_POINTS / 2]; // frequency domain half spectra
+  // time domain or frequency domain signals
+  SIGNAL_ARRAY_TYPE data[NUM_SIGNAL_ARRAYS][N_FFT_POINTS];
+  // frequency domain half spectra
+  SIGNAL_ARRAY_TYPE half_spectra[NUM_SIGNAL_ARRAYS * 2][N_FFT_POINTS / 2];
 } multichannel_sample_block_s;
 /****/
 
@@ -157,24 +155,26 @@ interface bufswap_i {
 static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
 #endif
 
-void do_fft(server interface bufswap_i input,
+void do_fft(server interface bufswap_i   input,
             multichannel_sample_block_s *initial_buffer) {
   multichannel_sample_block_s *movable buffer = initial_buffer;
 
-  timer tmr;
+  timer    tmr;
   uint32_t start_time, end_time, overhead_time;
   tmr :> start_time;
   tmr :> end_time;
   overhead_time = end_time - start_time;
 
 #if INT16_BUFFERS
-  printf("%d Point FFT Processing of %d int16_t signals received through a "
-         "double buffer\n",
-         N_FFT_POINTS, NUM_CHANS);
+  printf(
+      "%d Point FFT Processing of %d int16_t signals received through a " "doub" "le " "buff" "er" "\n",
+      N_FFT_POINTS,
+      NUM_CHANS);
 #else
-  printf("%d Point FFT Processing of %d int32_t signals received through a "
-         "double buffer\n",
-         N_FFT_POINTS, NUM_CHANS);
+  printf(
+      "%d Point FFT Processing of %d int32_t signals received through a " "doub" "le " "buff" "er" "\n",
+      N_FFT_POINTS,
+      NUM_CHANS);
 #endif
 
   /** The main loop of the filling task waits for a swap transaction with
@@ -184,145 +184,158 @@ void do_fft(server interface bufswap_i input,
   while (1) {
     // swap buffers
     select {
-    case input.swap(multichannel_sample_block_s * movable & input_buf):
-      // Swapping uses the 'move' operator. This operator transfers the
-      // pointer to a new variable, setting the original variable to null.
-      // The 'display_buffer' variable is a reference, so updating it will
-      // update the pointer passed in by the other task.
-      multichannel_sample_block_s *movable tmp;
-      tmp = move(input_buf);
-      input_buf = move(buffer);
-      buffer = move(tmp);
+      case input.swap(multichannel_sample_block_s * movable & input_buf):
+        // Swapping uses the 'move' operator. This operator transfers the
+        // pointer to a new variable, setting the original variable to null.
+        // The 'display_buffer' variable is a reference, so updating it will
+        // update the pointer passed in by the other task.
+        multichannel_sample_block_s *movable tmp;
+        tmp       = move(input_buf);
+        input_buf = move(buffer);
+        buffer    = move(tmp);
 
 #if PRINT_INPUTS_AND_OUTPUTS
-      print_buffer(buffer);
+        print_buffer(buffer);
 #endif
 
-      tmr :> start_time;
+        tmr :> start_time;
 
-      // Do FFTs
-      for (int32_t a = 0; a < NUM_SIGNAL_ARRAYS; a++) {
-        // process the new buffer "in place"
+        // Do FFTs
+        for (int32_t a = 0; a < NUM_SIGNAL_ARRAYS; a++) {
+          // process the new buffer "in place"
 #if INT16_BUFFERS
-        dsp_complex_t tmp_buffer[N_FFT_POINTS];
-        dsp_fft_short_to_long(buffer->data[a], tmp_buffer,
-                              N_FFT_POINTS); // convert into tmp buffer
-        dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
-        dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+          dsp_complex_t tmp_buffer[N_FFT_POINTS];
+          dsp_fft_short_to_long(buffer->data[a],
+                                tmp_buffer,
+                                N_FFT_POINTS); // convert into tmp buffer
+          dsp_fft_bit_reverse(tmp_buffer, N_FFT_POINTS);
+          dsp_fft_forward(tmp_buffer, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #if TWOREALS
-        dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
+          dsp_fft_split_spectrum(tmp_buffer, N_FFT_POINTS);
 
 #endif
-        dsp_fft_long_to_short(tmp_buffer, buffer->data[a],
-                              N_FFT_POINTS); // convert from tmp buffer
+          dsp_fft_long_to_short(tmp_buffer,
+                                buffer->data[a],
+                                N_FFT_POINTS); // convert from tmp buffer
 ////// 32 bit buffers
 #else
-        dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
-        dsp_fft_forward(buffer->data[a], N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
+          dsp_fft_bit_reverse(buffer->data[a], N_FFT_POINTS);
+          dsp_fft_forward(
+              buffer->data[a], N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
 #if TWOREALS
-        dsp_fft_split_spectrum(buffer->data[a], N_FFT_POINTS);
+          dsp_fft_split_spectrum(buffer->data[a], N_FFT_POINTS);
 #endif
 
 #endif
-      }
+        }
 
-      // Process the frequency domain of all NUM_CHANS channels.
-      // 1. Lowpass
-      // cutoff frequency = (Fs/N_FFT_POINTS * cutoff_index)
-      // With cutoff_index = N_FFT_POINTS/M:
-      // cutoff frequency = Fs/M
+        // Process the frequency domain of all NUM_CHANS channels.
+        // 1. Lowpass
+        // cutoff frequency = (Fs/N_FFT_POINTS * cutoff_index)
+        // With cutoff_index = N_FFT_POINTS/M:
+        // cutoff frequency = Fs/M
 
-      uint32_t cutoff_idx = N_FFT_POINTS / 4;
-      // 2. Calculate average per frequency bin into the output signal array.
+        uint32_t cutoff_idx = N_FFT_POINTS / 4;
+        // 2. Calculate average per frequency bin into the output signal array.
 
-      // To calculate the average over all channels.
-      // To divide by NUM_CHANS, shift down throughout the loop log2(NUM_CHANS)
-      // times to avoid overflow.
-      uint32_t log_num_chan = log2(NUM_CHANS);
-      uint32_t step = NUM_CHANS / log_num_chan;
-      uint shift_idx = step;
+        // To calculate the average over all channels.
+        // To divide by NUM_CHANS, shift down throughout the loop
+        // log2(NUM_CHANS) times to avoid overflow.
+        uint32_t log_num_chan = log2(NUM_CHANS);
+        uint32_t step         = NUM_CHANS / log_num_chan;
+        uint     shift_idx    = step;
 
 #if (XCC_VERSION_MAJOR >= 1403)
-      static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
+        static SIGNAL_ARRAY_TYPE output[N_FFT_POINTS];
 #endif
 
 #if TWOREALS
-      for (unsigned i = 0; i < N_FFT_POINTS / 2; i++) {
-        OUTPUT_SUM_TYPE output_re = 0;
-        OUTPUT_SUM_TYPE output_im = 0;
-        for (int32_t c = 0; c < NUM_CHANS; c++) {
-          if (i >= cutoff_idx) {
-            buffer->half_spectra[c][i].re = 0;
-            buffer->half_spectra[c][i].im = 0;
+        for (unsigned i = 0; i < N_FFT_POINTS / 2; i++) {
+          OUTPUT_SUM_TYPE output_re = 0;
+          OUTPUT_SUM_TYPE output_im = 0;
+          for (int32_t c = 0; c < NUM_CHANS; c++) {
+            if (i >= cutoff_idx) {
+              buffer->half_spectra[c][i].re = 0;
+              buffer->half_spectra[c][i].im = 0;
+            }
+            output_re += buffer->half_spectra[c][i].re;
+            output_im += buffer->half_spectra[c][i].im;
           }
-          output_re += buffer->half_spectra[c][i].re;
-          output_im += buffer->half_spectra[c][i].im;
+          output[i].re = (OUTPUT_SUM_TYPE) output_re / NUM_CHANS; // average
+          output[i].im = (OUTPUT_SUM_TYPE) output_im / NUM_CHANS; // average
         }
-        output[i].re = (OUTPUT_SUM_TYPE) output_re / NUM_CHANS; // average
-        output[i].im = (OUTPUT_SUM_TYPE) output_im / NUM_CHANS; // average
-      }
 #else // Complex
-      for (unsigned i = 0; i < N_FFT_POINTS / 2; i++) {
-        OUTPUT_SUM_TYPE output_re = 0, output_re_ri = 0;
-        OUTPUT_SUM_TYPE output_im = 0, output_im_ri = 0;
-        uint32_t ri = N_FFT_POINTS - i; // reverse index
-        for (int32_t c = 0; c < NUM_CHANS; c++) {
-          if (i >= cutoff_idx) {
-            buffer->data[c][i].re = 0;
-            buffer->data[c][i].im = 0;
+        for (unsigned i = 0; i < N_FFT_POINTS / 2; i++) {
+          OUTPUT_SUM_TYPE output_re = 0, output_re_ri = 0;
+          OUTPUT_SUM_TYPE output_im = 0, output_im_ri = 0;
+          uint32_t        ri = N_FFT_POINTS - i; // reverse index
+          for (int32_t c = 0; c < NUM_CHANS; c++) {
+            if (i >= cutoff_idx) {
+              buffer->data[c][i].re = 0;
+              buffer->data[c][i].im = 0;
+              if (i > 0) {
+                buffer->data[c][N_FFT_POINTS - i].re = 0;
+                buffer->data[c][N_FFT_POINTS - i].im = 0;
+              }
+            }
+            output_re += buffer->data[c][i].re;
+            output_im += buffer->data[c][i].im;
             if (i > 0) {
-              buffer->data[c][N_FFT_POINTS - i].re = 0;
-              buffer->data[c][N_FFT_POINTS - i].im = 0;
+              output_re_ri += buffer->data[c][ri].re;
+              output_im_ri += buffer->data[c][ri].im;
             }
           }
-          output_re += buffer->data[c][i].re;
-          output_im += buffer->data[c][i].im;
+
+          output[i].re = (OUTPUT_SUM_TYPE) output_re / NUM_CHANS; // average
+          output[i].im = (OUTPUT_SUM_TYPE) output_im / NUM_CHANS; // average
           if (i > 0) {
-            output_re_ri += buffer->data[c][ri].re;
-            output_im_ri += buffer->data[c][ri].im;
+            output[ri].re =
+                (OUTPUT_SUM_TYPE) output_re_ri / NUM_CHANS; // average
+            output[ri].im =
+                (OUTPUT_SUM_TYPE) output_im_ri / NUM_CHANS; // average
           }
         }
-
-        output[i].re = (OUTPUT_SUM_TYPE) output_re / NUM_CHANS; // average
-        output[i].im = (OUTPUT_SUM_TYPE) output_im / NUM_CHANS; // average
-        if (i > 0) {
-          output[ri].re = (OUTPUT_SUM_TYPE) output_re_ri / NUM_CHANS; // average
-          output[ri].im = (OUTPUT_SUM_TYPE) output_im_ri / NUM_CHANS; // average
-        }
-      }
 #endif
 
-      // Todo: Add iFFT
+        // Todo: Add iFFT
 
-      tmr :> end_time;
-      int32_t cycles_taken = end_time - start_time - overhead_time;
+        tmr :> end_time;
+        int32_t cycles_taken = end_time - start_time - overhead_time;
 
 #if CHECK_TIMING
 #if TWOREALS
-      printf("%d Point FFT processing of %d real sequences 'in place' in "
-             "double buffer %x took %d cycles\n",
-             N_FFT_POINTS, NUM_CHANS, buffer, cycles_taken);
+        printf(
+            "%d Point FFT processing of %d real sequences 'in place' in " "doub" "le " "buff" "er " "%x " "took" " %d " "cycl" "es" "\n",
+            N_FFT_POINTS,
+            NUM_CHANS,
+            buffer,
+            cycles_taken);
 #else
-      printf("%d Point FFT processing of %d complex sequences 'in place' in "
-             "double buffer %x took %d cycles\n",
-             N_FFT_POINTS, NUM_CHANS, buffer, cycles_taken);
+        printf(
+            "%d Point FFT processing of %d complex sequences 'in place' in " "d" "o" "u" "b" "l" "e" " " "b" "u" "f" "f" "e" "r" " " "%" "x" " " "t" "o" "o" "k" " " "%" "d" " " "c" "y" "c" "l" "e" "s" "\n",
+            N_FFT_POINTS,
+            NUM_CHANS,
+            buffer,
+            cycles_taken);
 #endif
-      if (cycles_taken > SAMPLE_PERIOD_CYCLES * N_FFT_POINTS) {
-        printf("Timing Check ERROR: Max allowed cycles at Fs %d Hz is %d\n",
-               SAMPLE_FREQ, SAMPLE_PERIOD_CYCLES * N_FFT_POINTS);
-      } else {
-        printf("Timing Check PASS: Max allowed cycles at Fs %d Hz is %d\n",
-               SAMPLE_FREQ, SAMPLE_PERIOD_CYCLES * N_FFT_POINTS);
-      }
+        if (cycles_taken > SAMPLE_PERIOD_CYCLES * N_FFT_POINTS) {
+          printf("Timing Check ERROR: Max allowed cycles at Fs %d Hz is %d\n",
+                 SAMPLE_FREQ,
+                 SAMPLE_PERIOD_CYCLES * N_FFT_POINTS);
+        } else {
+          printf("Timing Check PASS: Max allowed cycles at Fs %d Hz is %d\n",
+                 SAMPLE_FREQ,
+                 SAMPLE_PERIOD_CYCLES * N_FFT_POINTS);
+        }
 #endif
 
 #if PRINT_INPUTS_AND_OUTPUTS
-      print_buffer(buffer);
+        print_buffer(buffer);
 #endif
-      printf("Processed output signal\n");
-      print_signal(output);
+        printf("Processed output signal\n");
+        print_signal(output);
 
-      break;
+        break;
     }
     // fill the buffer with data
   }
@@ -355,13 +368,13 @@ int32_t scaled_cos(q8_24 x) {
 
 #define MAX_SAMPLE_PERIODS 1
 
-void produce_samples(client interface bufswap_i filler,
+void produce_samples(client interface bufswap_i   filler,
                      multichannel_sample_block_s *initial_buffer) {
   multichannel_sample_block_s *movable buffer = initial_buffer;
-  timer tmr;
-  int32_t t;
-  static int32_t counter;
-  int32_t done = 0;
+  timer                                tmr;
+  int32_t                              t;
+  static int32_t                       counter;
+  int32_t                              done = 0;
 
   tmr :> t;
   /** The main loop of the display task first calls the 'swap' transaction,
@@ -383,7 +396,7 @@ void produce_samples(client interface bufswap_i filler,
 
         // Equation: x = 2pi * i/ppc = 2pi * ((i%ppc) / ppc))
         q8_24 factor = ((i % ppc) << 24) / ppc; // factor is always < Q24(1)
-        q8_24 x = dsp_math_multiply(PI2_Q8_24, factor, 24);
+        q8_24 x      = dsp_math_multiply(PI2_Q8_24, factor, 24);
 
 #if TWOREALS
         buffer->data[a][i].re = scaled_sin(x);

@@ -7,22 +7,30 @@
 #include <xclib.h>
 #include <xs1.h>
 
-#define ONE(N)                                                                 \
-  tmr :> t0;                                                                   \
-  dsp_fft_bit_reverse(data, N);                                                \
-  dsp_fft_forward(data, N, FFT_SINE(N));                                       \
-  tmr :> t1;                                                                   \
-  t1 -= t0;                                                                    \
-  printf("%4d %12d %5d %5d %10.2f\n", N, t1, t1 * 10 / 625, t1 / N,            \
+#define ONE(N)                           \
+  tmr :> t0;                             \
+  dsp_fft_bit_reverse(data, N);          \
+  dsp_fft_forward(data, N, FFT_SINE(N)); \
+  tmr :> t1;                             \
+  t1 -= t0;                              \
+  printf("%4d %12d %5d %5d %10.2f\n",    \
+         N,                              \
+         t1,                             \
+         t1 * 10 / 625,                  \
+         t1 / N,                         \
          t1 / (float) N / (31 - clz(N)));
 
-#define ONI(N)                                                                 \
-  tmr :> t0;                                                                   \
-  dsp_fft_bit_reverse(data, N);                                                \
-  dsp_fft_inverse(data, N, FFT_SINE(N));                                       \
-  tmr :> t1;                                                                   \
-  t1 -= t0;                                                                    \
-  printf("%4d %12d %5d %5d %10.2f\n", N, t1, t1 * 10 / 625, t1 / N,            \
+#define ONI(N)                           \
+  tmr :> t0;                             \
+  dsp_fft_bit_reverse(data, N);          \
+  dsp_fft_inverse(data, N, FFT_SINE(N)); \
+  tmr :> t1;                             \
+  t1 -= t0;                              \
+  printf("%4d %12d %5d %5d %10.2f\n",    \
+         N,                              \
+         t1,                             \
+         t1 * 10 / 625,                  \
+         t1 / N,                         \
          t1 / (float) N / (31 - clz(N)));
 
 extern int dsp_fft_bit_reverse_xs2(dsp_complex_t a[], unsigned N);
@@ -32,9 +40,9 @@ dsp_complex_t data2[8192];
 
 int main(void) {
   timer tmr;
-  int t0, t1;
-  printf("Forward FFT instruction count and timings @ 62.5 MIPS, includes "
-         "bit-reverse operation\n");
+  int   t0, t1;
+  printf(
+      "Forward FFT instruction count and timings @ 62.5 MIPS, includes " "bit-" "rever" "se " "opera" "tion" "\n");
   printf("   N instructions    us ins/N  ins/NlogN\n");
   ONE(4);
   ONE(8);
@@ -48,8 +56,8 @@ int main(void) {
   ONE(2048);
   ONE(4096);
   ONE(8192);
-  printf("\nInverse FFT instruction count and timings @ 62.5 MIPS, includes "
-         "bit-reverse operation\n");
+  printf(
+      "\nInverse FFT instruction count and timings @ 62.5 MIPS, includes " "bit" "-re" "ver" "se " "ope" "rat" "ion" "\n");
   printf("   N instructions    us ins/N  ins/NlogN\n");
   ONI(4);
   ONI(8);

@@ -13,10 +13,10 @@ int random(unsigned &x) {
 }
 
 void test_split_and_merge() {
-  unsigned x = SEED;
+  unsigned      x = SEED;
   dsp_complex_t f[FFT_LENGTH];
   dsp_complex_t g[FFT_LENGTH];
-  unsigned test_count = 2;
+  unsigned      test_count = 2;
   for (unsigned i = 0; i < test_count; i++) {
     for (unsigned i = 0; i < FFT_LENGTH; i++) {
       f[i].re = random(x) >> DATA_SHIFT;

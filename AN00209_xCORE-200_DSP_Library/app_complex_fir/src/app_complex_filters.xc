@@ -23,7 +23,7 @@ dsp_complex_t fir[4] = {
 
 int main(void) {
   timer tmr;
-  int t0, t1;
+  int   t0, t1;
   tmr :> t0;
   dsp_complex_t x = dsp_complex_fir(data, fir, 4, 0, 24);
   tmr :> t1;

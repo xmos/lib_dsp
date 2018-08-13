@@ -68,10 +68,14 @@ extern "C" {
  * resulting filter output sample.
  */
 
-int32_t dsp_adaptive_lms(int32_t input_sample, int32_t reference_sample,
-                         int32_t *error_sample, const int32_t filter_coeffs[],
-                         int32_t state_data[], const int32_t num_taps,
-                         const int32_t mu, int32_t q_format);
+int32_t dsp_adaptive_lms(int32_t       input_sample,
+                         int32_t       reference_sample,
+                         int32_t *     error_sample,
+                         const int32_t filter_coeffs[],
+                         int32_t       state_data[],
+                         const int32_t num_taps,
+                         const int32_t mu,
+                         int32_t       q_format);
 
 /** This function implements a normalized LMS FIR filter. LMS filters are a
  * class of adaptive filters that adjust filter coefficients in order to create
@@ -140,10 +144,14 @@ int32_t dsp_adaptive_lms(int32_t input_sample, int32_t reference_sample,
  * filter output sample.
  */
 
-int32_t dsp_adaptive_nlms(int32_t input_sample, int32_t reference_sample,
-                          int32_t *error_sample, const int32_t filter_coeffs[],
-                          int32_t state_data[], const int32_t num_taps,
-                          const int32_t mu, int32_t q_format);
+int32_t dsp_adaptive_nlms(int32_t       input_sample,
+                          int32_t       reference_sample,
+                          int32_t *     error_sample,
+                          const int32_t filter_coeffs[],
+                          int32_t       state_data[],
+                          const int32_t num_taps,
+                          const int32_t mu,
+                          int32_t       q_format);
 
 #ifdef __XC__
 }

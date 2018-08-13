@@ -13,9 +13,9 @@ int random(unsigned &x) {
 }
 
 void test_short_long_conversion() {
-  unsigned x = SEED;
-  dsp_complex_t f[FFT_LENGTH];
-  dsp_complex_t g[FFT_LENGTH];
+  unsigned            x = SEED;
+  dsp_complex_t       f[FFT_LENGTH];
+  dsp_complex_t       g[FFT_LENGTH];
   dsp_complex_short_t h[FFT_LENGTH];
 
   for (unsigned i = 0; i < FFT_LENGTH; i++) {

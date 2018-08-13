@@ -5,11 +5,12 @@
 #include "stdio.h"
 #include <platform.h>
 
-int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
+int32_t dsp_math_multiply(int32_t input1_value,
+                          int32_t input2_value,
                           int32_t q_format) {
-  int32_t ah;
+  int32_t  ah;
   uint32_t al;
-  int32_t result;
+  int32_t  result;
   // For rounding, accumulator is pre-loaded (1<<(q_format-1))
   asm("maccs %0,%1,%2,%3"
       : "=r"(ah), "=r"(al)
@@ -20,9 +21,10 @@ int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
   return result;
 }
 
-int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
+int32_t dsp_math_multiply_sat(int32_t input1_value,
+                              int32_t input2_value,
                               int32_t q_format) {
-  int32_t ah;
+  int32_t  ah;
   uint32_t al;
   asm("maccs %0,%1,%2,%3"
       : "=r"(ah), "=r"(al)
@@ -32,18 +34,18 @@ int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
   return ah;
 }
 
-#define ldivu(a, b, c, d, e)                                                   \
+#define ldivu(a, b, c, d, e) \
   asm("ldivu %0,%1,%2,%3,%4" : "=r"(a), "=r"(b) : "r"(c), "r"(d), "r"(e))
 
 int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format) {
-  int32_t sgn = 1;
+  int32_t  sgn = 1;
   uint32_t d, d2, r;
   if (dividend < 0) {
-    sgn = -1;
+    sgn      = -1;
     dividend = -dividend;
   }
   if (divisor < 0) {
-    sgn = -sgn;
+    sgn     = -sgn;
     divisor = -divisor;
   }
   ldivu(d, r, 0, dividend, divisor);
@@ -59,7 +61,8 @@ int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format) {
   return r * sgn;
 }
 
-uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
+uint32_t dsp_math_divide_unsigned(uint32_t dividend,
+                                  uint32_t divisor,
                                   uint32_t q_format) {
   // h and l hold a 64-bit value
   uint32_t h;
@@ -82,7 +85,7 @@ uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
 #define SQRT_COEFF_B (10920575)       // 9633812
 
 uq8_24 dsp_math_sqrt(uq8_24 x) {
-  int32_t zeroes;
+  int32_t            zeroes;
   unsigned long long approx;
 
   if (x == 0)
@@ -95,13 +98,13 @@ uq8_24 dsp_math_sqrt(uq8_24 x) {
 
   // initial linear approximation of the result.
   if (zeroes >= 0) {
-    approx = (SQRT_COEFF_A >> zeroes) +
-             dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
+    approx = (SQRT_COEFF_A >> zeroes)
+             + dsp_math_multiply(x << zeroes, SQRT_COEFF_B, 24);
   } else {
     // For Q8.24 values > 1 (0x01.000000)
     zeroes = -zeroes;
-    approx = (SQRT_COEFF_A << zeroes) +
-             dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
+    approx = (SQRT_COEFF_A << zeroes)
+             + dsp_math_multiply(x >> zeroes, SQRT_COEFF_B, 24);
   }
 
   // successive approximation
@@ -132,7 +135,7 @@ q8_24 dsp_math_sin(q8_24 rad) {
   int32_t sqr;
 
   if (rad < 0) {
-    rad = -rad;
+    rad       = -rad;
     finalSign = -1;
   } else /* rad >= 0 */ {
     finalSign = 1;
@@ -149,20 +152,23 @@ q8_24 dsp_math_sin(q8_24 rad) {
     rad = ((PI2_Q8_24 + 1) >> 1) - rad;
   }
   sqr = (dsp_math_multiply(rad, rad, 24) + 1) >> 1;
-  return (rad +
-          ((dsp_math_multiply(
-                dsp_math_multiply(
-                    dsp_math_multiply(
-                        dsp_math_multiply(dsp_math_multiply(R3, sqr, 24) + R2,
-                                          sqr, 24) +
-                            R1,
-                        sqr, 24) +
-                        R0,
-                    sqr, 24),
-                rad, 24) +
-            6) >>
-           4)) *
-         finalSign;
+  return (rad
+          + ((dsp_math_multiply(
+                  dsp_math_multiply(
+                      dsp_math_multiply(
+                          dsp_math_multiply(
+                              dsp_math_multiply(R3, sqr, 24) + R2, sqr, 24)
+                              + R1,
+                          sqr,
+                          24)
+                          + R0,
+                      sqr,
+                      24),
+                  rad,
+                  24)
+              + 6)
+             >> 4))
+         * finalSign;
 }
 
 // Polynomial coefficients
@@ -185,7 +191,7 @@ q8_24 dsp_math_atan(q8_24 f) {
     f = -f;
   }
   uint32_t XN;
-  int32_t d, r;
+  int32_t  d, r;
   if (f > ONE_OVER_TS3) { // F large
     XN = 421657428;       // pi/2 in Q4.28 format
     // 1 / f.
@@ -193,9 +199,9 @@ q8_24 dsp_math_atan(q8_24 f) {
         : "=r"(d), "=r"(r)
         : "r"(1 << 20), "r"(0), "r"(f));
     f = d;
-  } else if (f > (1 << 24)) { // F less than 3.6 greater than 1
-    XN = 281104952;           // pi/3 in Q4.28 format
-    f = f << 4;
+  } else if (f > (1 << 24)) {  // F less than 3.6 greater than 1
+    XN            = 281104952; // pi/3 in Q4.28 format
+    f             = f << 4;
     uint32_t thed = dsp_math_multiply((1 << 27), f, 28);
     uint32_t then = (1 << 27) + dsp_math_multiply(B, f, 28);
     if (A >= thed) {
@@ -212,8 +218,8 @@ q8_24 dsp_math_atan(q8_24 f) {
       f = -d >> 4;
     }
   } else if (f > (TS3 >> 4)) { // F less than 1 > 0.28
-    XN = 140552476;            // pi/6 in Q4.28 format
-    f = f << 4;
+    XN            = 140552476; // pi/6 in Q4.28 format
+    f             = f << 4;
     uint32_t thed = dsp_math_multiply(A, f, 28);
     uint32_t then = (f >> 1) + B;
     if (thed >> 27) {
@@ -231,19 +237,20 @@ q8_24 dsp_math_atan(q8_24 f) {
     }
   } else { // F tiny
     XN = 0;
-    f = f << 4;
+    f  = f << 4;
   }
 
   int32_t g = dsp_math_multiply(f, f, 28);
 
   uint32_t gPg = dsp_math_multiply(dsp_math_multiply(P1_ATAN, g, 28) + P0_ATAN,
-                                   g, 28); // Positive - p0/p1 positive
+                                   g,
+                                   28); // Positive - p0/p1 positive
   uint32_t Qg =
       dsp_math_multiply(Q1_ATAN, g, 28) + Q0_ATAN; // Positive - q0/q1 positive
   asm("ldivu %0,%1,%2,%3,%4\n"
       : "=r"(d), "=r"(r)
       : "r"(gPg >> 4), "r"(gPg << 28), "r"(2 * Qg));
-  int32_t Rg = d;
+  int32_t Rg  = d;
   int32_t ffR = f + dsp_math_multiply(f, -Rg, 28);
   if (XN >> 28) {
     ffR = -ffR;
@@ -272,7 +279,7 @@ q8_24 dsp_math_asin(q8_24 sin) {
   int32_t result;
 
   if (sin < 0) {
-    sin = -sin;
+    sin       = -sin;
     finalSign = -1;
   } else /* sin >= 0 */ {
     finalSign = 1;
@@ -283,28 +290,28 @@ q8_24 dsp_math_asin(q8_24 sin) {
     result = sin;
   } else {
     if (sin < HALF_Q8_24) {
-      sqr = dsp_math_multiply(sin, sin, 24);
+      sqr         = dsp_math_multiply(sin, sin, 24);
       int32_t gPg = dsp_math_multiply(
           dsp_math_multiply(P2_ASC, sqr, 24) + P1_ASC, sqr, 24);
       int32_t Qg = dsp_math_multiply(
-                       dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC, sqr, 24) +
-                   Q0_ASC;
+                       dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC, sqr, 24)
+                   + Q0_ASC;
       unsigned long long z = gPg * (unsigned long long)sin;
-      int d, r;
+      int                d, r;
       asm("ldivu %0,%1,%2,%3,%4\n"
           : "=r"(d), "=r"(r)
           : "r"((int)(z >> 32)), "r"((int)(z & 0xFFFFFFFF)), "r"(Qg));
       result = sin + d;
     } else {
-      sqr = 2 * (ONE_Q8_24 - sin);
-      sin = dsp_math_sqrt(sqr);
+      sqr         = 2 * (ONE_Q8_24 - sin);
+      sin         = dsp_math_sqrt(sqr);
       int32_t gPg = dsp_math_multiply(
           dsp_math_multiply(P2_ASC, sqr, 26) + P1_ASC, sqr, 26);
       int32_t Qg = dsp_math_multiply(
-                       dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC, sqr, 26) +
-                   Q0_ASC;
+                       dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC, sqr, 26)
+                   + Q0_ASC;
       unsigned long long z = gPg * (unsigned long long)sin;
-      int d, r;
+      int                d, r;
       asm("ldivu %0,%1,%2,%3,%4\n"
           : "=r"(d), "=r"(r)
           : "r"((int)(z >> 32)), "r"((int)(z & 0xFFFFFFFF)), "r"(Qg));
@@ -321,7 +328,7 @@ q8_24 dsp_math_acos(q8_24 cos) {
   int32_t ai;
 
   if (cos < 0) {
-    cos = -cos;
+    cos           = -cos;
     inputNegative = 1;
   } else /* cos >= 0 */ {
     inputNegative = 0;
@@ -329,37 +336,37 @@ q8_24 dsp_math_acos(q8_24 cos) {
   // Now cos >= 0.
 
   if (cos < (1 << 12)) {
-    ai = PIHALF_Q8_24;
+    ai     = PIHALF_Q8_24;
     result = cos;
   } else {
     if (cos < HALF_Q8_24) {
-      ai = PIHALF_Q8_24;
-      sqr = dsp_math_multiply(cos, cos, 24);
+      ai          = PIHALF_Q8_24;
+      sqr         = dsp_math_multiply(cos, cos, 24);
       int32_t gPg = dsp_math_multiply(
           dsp_math_multiply(P2_ASC, sqr, 24) + P1_ASC, sqr, 24);
       int32_t Qg = dsp_math_multiply(
-                       dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC, sqr, 24) +
-                   Q0_ASC;
+                       dsp_math_multiply(Q2_ASC, sqr, 24) + Q1_ASC, sqr, 24)
+                   + Q0_ASC;
 
       unsigned long long z = gPg * (unsigned long long)cos;
-      int d, r;
+      int                d, r;
       asm("ldivu %0,%1,%2,%3,%4\n"
           : "=r"(d), "=r"(r)
           : "r"((int)(z >> 32)), "r"((int)(z & 0xFFFFFFFF)), "r"(Qg));
 
       result = cos + d;
     } else {
-      ai = inputNegative ? PI_Q8_24 : 0;
-      sqr = (ONE_Q8_24 - cos) << 1;
-      cos = dsp_math_sqrt(sqr);
+      ai          = inputNegative ? PI_Q8_24 : 0;
+      sqr         = (ONE_Q8_24 - cos) << 1;
+      cos         = dsp_math_sqrt(sqr);
       int32_t gPg = dsp_math_multiply(
           dsp_math_multiply(P2_ASC, sqr, 26) + P1_ASC, sqr, 26);
       int32_t Qg = dsp_math_multiply(
-                       dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC, sqr, 26) +
-                   Q0_ASC;
+                       dsp_math_multiply(Q2_ASC, sqr, 26) + Q1_ASC, sqr, 26)
+                   + Q0_ASC;
 
       unsigned long long z = gPg * (unsigned long long)cos;
-      int d, r;
+      int                d, r;
       asm("ldivu %0,%1,%2,%3,%4\n"
           : "=r"(d), "=r"(r)
           : "r"((int)(z >> 32)), "r"((int)(z & 0xFFFFFFFF)), "r"(Qg));
@@ -427,8 +434,8 @@ q8_24 dsp_math_exp(q8_24 x) {
   // fraction bit count q_format = 24 + 31 - 24 = 31
 #if MULT_FUNC
   q8_24 N_q8_24 = N << 24;
-  q8_24 g = x - dsp_math_multiply(N_q8_24, EXP_C1, 24) -
-            dsp_math_multiply(N_q8_24, EXP_C2, 24);
+  q8_24 g       = x - dsp_math_multiply(N_q8_24, EXP_C1, 24)
+            - dsp_math_multiply(N_q8_24, EXP_C2, 24);
 #else
   q8_24 g = x - N * (EXP_C1 + EXP_C2);
 #endif
@@ -443,7 +450,7 @@ q8_24 dsp_math_exp(q8_24 x) {
   q8_24 precise = dsp_math_multiply(
       (dsp_math_multiply(P1_EXP, z4, 24) + (P0_EXP << 2)), g << 3, 24);
   q8_24 gP = (precise + 4) >> 3;
-  q8_24 Q = dsp_math_multiply(Q1_EXP, z4, 24) + (Q0_EXP << 2);
+  q8_24 Q  = dsp_math_multiply(Q1_EXP, z4, 24) + (Q0_EXP << 2);
   // Q1_EXP = 0.8, Q1_EXP*z = [0..0.096], Q0_EXP = 8, Q [8..8.096]
 
   q8_24 r = (ONE_Q8_24 << 2) + (dsp_math_divide(precise, Q - gP, 24));
@@ -501,25 +508,25 @@ void log2_with_remainder(q8_24 x, int *log2_p2, q8_24 *rem, int q_format) {
 
 q8_24 dsp_math_log(uq8_24 x) {
   q8_24 f, zden, y, Bw, Aw, rz2, v, qz, rz, z, w;
-  int N;
+  int   N;
   log2_with_remainder(x, &N, &f, 24);
 
   if (f < LOG_C0) {
-    y = f - HALF_Q8_24;
+    y    = f - HALF_Q8_24;
     zden = (y >> 1) + HALF_Q8_24;
     N--;
   } else {
-    y = f - ONE_Q8_24;
+    y    = f - ONE_Q8_24;
     zden = (y >> 1) + ONE_Q8_24;
   }
-  z = dsp_math_divide(y, zden, 24);
-  w = dsp_math_multiply(z, z, 24);
-  Bw = dsp_math_multiply(B1_LOG, w, 24) + B0_LOG;
-  Aw = A0_LOG;
+  z   = dsp_math_divide(y, zden, 24);
+  w   = dsp_math_multiply(z, z, 24);
+  Bw  = dsp_math_multiply(B1_LOG, w, 24) + B0_LOG;
+  Aw  = A0_LOG;
   rz2 = dsp_math_multiply(w, C + dsp_math_divide(Aw, Bw, 24), 24);
-  v = dsp_math_divide(HALF_Q8_24 >> 1, zden, 24);
-  qz = v + dsp_math_multiply(rz2, v, 24);
-  rz = dsp_math_multiply(4 * y, qz, 24);
+  v   = dsp_math_divide(HALF_Q8_24 >> 1, zden, 24);
+  qz  = v + dsp_math_multiply(rz2, v, 24);
+  rz  = dsp_math_multiply(4 * y, qz, 24);
   return (N * LOG_C2 + rz) + N * LOG_C1;
 }
 
@@ -540,7 +547,7 @@ q8_24 dsp_math_log(uq8_24 x) {
 
 q8_24 dsp_math_sinh_(q8_24 x, int cosine) {
   q8_24 Y, R, W, Z;
-  int negative = 1;
+  int   negative = 1;
 
   if (x < 0) {
     Y = -x;
@@ -563,11 +570,12 @@ q8_24 dsp_math_sinh_(q8_24 x, int cosine) {
     }
     R = R * negative;
   } else {
-    q8_24 g = dsp_math_multiply(x, x, 24);
+    q8_24 g  = dsp_math_multiply(x, x, 24);
     q8_24 gP = dsp_math_multiply(
-        dsp_math_multiply(dsp_math_multiply(P2_SINH, g, 24) + P1_SINH, g, 24) +
-            P0_SINH,
-        g, 24);
+        dsp_math_multiply(dsp_math_multiply(P2_SINH, g, 24) + P1_SINH, g, 24)
+            + P0_SINH,
+        g,
+        24);
     R = x + dsp_math_multiply(x, gP, 24);
   }
   return R;

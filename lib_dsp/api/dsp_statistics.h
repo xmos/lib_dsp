@@ -28,7 +28,8 @@
  */
 
 int32_t dsp_vector_abs_sum(const int32_t *input_vector_X,
-                           const int32_t vector_length, const int32_t q_format);
+                           const int32_t  vector_length,
+                           const int32_t  q_format);
 
 /** Vector mean: ``R = (X[0] + X[1] + ...\ + X[N-1]) / N``
  *
@@ -54,7 +55,8 @@ int32_t dsp_vector_abs_sum(const int32_t *input_vector_X,
  */
 
 int32_t dsp_vector_mean(const int32_t input_vector_X[],
-                        const int32_t vector_length, const int32_t q_format);
+                        const int32_t vector_length,
+                        const int32_t q_format);
 
 /** Vector power (sum of squares): ``R = X[0]^2 + X[1]^2 + ...\ + X[N-1]^2``
  *
@@ -82,7 +84,8 @@ int32_t dsp_vector_mean(const int32_t input_vector_X[],
  */
 
 int32_t dsp_vector_power(const int32_t input_vector_X[],
-                         const int32_t vector_length, const int32_t q_format);
+                         const int32_t vector_length,
+                         const int32_t q_format);
 
 /** Vector root mean square: ``R = ((X[0]^2 + X[1]^2 + ...\ + X[N-1]^2) / N) ^
  * 0.5)``
@@ -119,7 +122,8 @@ int32_t dsp_vector_power(const int32_t input_vector_X[],
  */
 
 int32_t dsp_vector_rms(const int32_t input_vector_X[],
-                       const int32_t vector_length, const int32_t q_format);
+                       const int32_t vector_length,
+                       const int32_t q_format);
 
 /** Vector dot product: ``R = X[0] * Y[0] + X[1] * Y[1] + ...\ + X[N-1] *
  * Y[N-1]``
@@ -150,6 +154,7 @@ int32_t dsp_vector_rms(const int32_t input_vector_X[],
 
 int32_t dsp_vector_dotprod(const int32_t input_vector_X[],
                            const int32_t input_vector_Y[],
-                           const int32_t vector_length, const int32_t q_format);
+                           const int32_t vector_length,
+                           const int32_t q_format);
 
 #endif

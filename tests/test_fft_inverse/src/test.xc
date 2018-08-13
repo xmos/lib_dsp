@@ -13,9 +13,9 @@ int random(unsigned &x) {
 }
 
 void test_inverse_fft() {
-  unsigned x = SEED;
-  unsigned test_count = 2;
-  unsigned max_error = 0;
+  unsigned x             = SEED;
+  unsigned test_count    = 2;
+  unsigned max_error     = 0;
   unsigned average_error = 0;
   for (unsigned t = 0; t < test_count; t++) {
 

@@ -20,7 +20,7 @@ void test_forward_speed() {
   // unsigned reps = 1<<16;
   unsigned reps = 1;
   unsigned now, then;
-  timer t;
+  timer    t;
 
   dsp_complex_t f[FFT_LENGTH];
   for (unsigned i = 0; i < FFT_LENGTH; i++) {
@@ -33,7 +33,8 @@ void test_forward_speed() {
     dsp_fft_forward(f, FFT_LENGTH, FFT_SINE_LUT);
   t :> now;
 
-  printf("Time for one forward FFT(%d points): %.2f ns\n", FFT_LENGTH,
+  printf("Time for one forward FFT(%d points): %.2f ns\n",
+         FFT_LENGTH,
          (float)(now - then) * 8.0 / (float) reps);
 }
 
@@ -43,7 +44,7 @@ void test_inverse_speed() {
   // unsigned reps = 1<<16;
   unsigned reps = 1;
   unsigned now, then;
-  timer t;
+  timer    t;
 
   dsp_complex_t f[FFT_LENGTH];
   for (unsigned i = 0; i < FFT_LENGTH; i++) {
@@ -56,7 +57,8 @@ void test_inverse_speed() {
     dsp_fft_inverse(f, FFT_LENGTH, FFT_SINE_LUT);
   t :> now;
 
-  printf("Time for one inverse FFT(%d points): %.2f ns\n", FFT_LENGTH,
+  printf("Time for one inverse FFT(%d points): %.2f ns\n",
+         FFT_LENGTH,
          (float)(now - then) * 8.0 / (float) reps);
 }
 

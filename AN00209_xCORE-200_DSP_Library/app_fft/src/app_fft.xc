@@ -29,9 +29,8 @@
 #endif
 
 #ifndef TWOREALS
-#define TWOREALS                                                               \
-  0 // Processing two real signals with a single complex FFT. Disabled by
-    // default
+// Processing two real signals with a single complex FFT. Disabled by default
+#define TWOREALS 0
 #endif
 
 #if TWOREALS
@@ -63,21 +62,21 @@ int32_t cos_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]);
 #pragma unsafe arrays
 int32_t sin_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]) {
   // size of sine[] must be equal to num_points!
-  int32_t num_points = (1 << log2_points_per_cycle);
+  int32_t num_points      = (1 << log2_points_per_cycle);
   int32_t half_num_points = num_points >> 1;
 
   x = x & (num_points - 1); // mask off the index
 
   switch (x >> (log2_points_per_cycle - 2)) { // switch on upper two bits
-  // upper two bits determine the quadrant.
-  case 0:
-    return sine[x];
-  case 1:
-    return sine[half_num_points - x];
-  case 2:
-    return -sine[x - half_num_points];
-  case 3:
-    return -sine[num_points - x];
+    // upper two bits determine the quadrant.
+    case 0:
+      return sine[x];
+    case 1:
+      return sine[half_num_points - x];
+    case 2:
+      return -sine[x - half_num_points];
+    case 3:
+      return -sine[num_points - x];
   }
   return 0; // unreachable
 }
@@ -86,7 +85,8 @@ int32_t sin_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]) {
 #pragma unsafe arrays
 int32_t cos_N(int32_t x, int32_t log2_points_per_cycle, const int32_t sine[]) {
   int32_t quarter_num_points = (1 << (log2_points_per_cycle - 2));
-  return sin_N(x + (quarter_num_points), log2_points_per_cycle,
+  return sin_N(x + (quarter_num_points),
+               log2_points_per_cycle,
                sine); // cos a = sin(a + 2pi/4)
 }
 
@@ -123,46 +123,58 @@ void print_data_array() {
 #if TWOREALS
 void generate_tworeals_test_signal(int32_t N, int32_t test) {
   switch (test) {
-  case 0: {
-    printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz "
-           "cosine, re1: %d Hz cosine\n",
-           test, N, INPUT_FREQ, INPUT_FREQ);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = COS(i, 8) >> RIGHT_SHIFT;
-      data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+    case 0: {
+      printf(
+          "++++ Test %d: %d point FFT of two real signals:: re0: %d Hz " "co" "si" "n" "e, " "re1: " "%d " "Hz " "cosin" "e\n",
+          test,
+          N,
+          INPUT_FREQ,
+          INPUT_FREQ);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = COS(i, 8) >> RIGHT_SHIFT;
+        data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
-  case 1: {
-    printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, "
-           "re1: %d Hz sine\n",
-           test, N, INPUT_FREQ, INPUT_FREQ);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
-      data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+    case 1: {
+      printf(
+          "++++ Test %d: %d point FFT of two real signals:: re0: %d Hz " "si" "ne" "," " " "r" "e" "1" ":" " " "%" "d" " " "H" "z" " " "s" "i" "n" "e" "\n",
+          test,
+          N,
+          INPUT_FREQ,
+          INPUT_FREQ);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
+        data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
-  case 2: {
-    printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz sine, "
-           "re1: %d Hz cosine\n",
-           test, N, INPUT_FREQ, INPUT_FREQ);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
-      data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+    case 2: {
+      printf(
+          "++++ Test %d: %d point FFT of two real signals:: re0: %d Hz " "si" "ne" "," " " "r" "e" "1" ":" " " "%" "d" " " "H" "z" " " "c" "o" "s" "i" "n" "e" "\n",
+          test,
+          N,
+          INPUT_FREQ,
+          INPUT_FREQ);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
+        data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
-  case 3: {
-    printf("++++ Test %d: %d point FFT of two real signals:: re0: %d Hz "
-           "cosine, re1: %d Hz sine\n",
-           test, N, INPUT_FREQ, INPUT_FREQ);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = COS(i, 8) >> RIGHT_SHIFT;
-      data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+    case 3: {
+      printf(
+          "++++ Test %d: %d point FFT of two real signals:: re0: %d Hz " "co" "si" "n" "e, " "re1: " "%d " "Hz " "sine" "\n",
+          test,
+          N,
+          INPUT_FREQ,
+          INPUT_FREQ);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = COS(i, 8) >> RIGHT_SHIFT;
+        data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
   }
 #if PRINT_FFT_INPUT
   printf("Generated Two Real Input Signals:\n");
@@ -171,7 +183,7 @@ void generate_tworeals_test_signal(int32_t N, int32_t test) {
 }
 
 int32_t do_tworeals_fft_and_ifft() {
-  timer tmr;
+  timer    tmr;
   uint32_t start_time, end_time, overhead_time, cycles_taken;
   tmr :> start_time;
   tmr :> end_time;
@@ -190,12 +202,14 @@ int32_t do_tworeals_fft_and_ifft() {
 #if INT16_BUFFERS
     dsp_complex_t
         tmp_data[N_FFT_POINTS]; // tmp buffer to enable 32-bit FFT/iFFT
-    dsp_fft_short_to_long(data, tmp_data,
+    dsp_fft_short_to_long(data,
+                          tmp_data,
                           N_FFT_POINTS); // convert into tmp buffer
     dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
     dsp_fft_forward(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
     dsp_fft_split_spectrum(tmp_data, N_FFT_POINTS);
-    dsp_fft_long_to_short(tmp_data, data,
+    dsp_fft_long_to_short(tmp_data,
+                          data,
                           N_FFT_POINTS); // convert from tmp buffer
 #else
     dsp_fft_bit_reverse(data, N_FFT_POINTS);
@@ -206,17 +220,18 @@ int32_t do_tworeals_fft_and_ifft() {
     cycles_taken = end_time - start_time - overhead_time;
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for %d point FFT of two purely real signals: %d\n",
-           N_FFT_POINTS, cycles_taken);
+           N_FFT_POINTS,
+           cycles_taken);
 #endif
 
 #if PRINT_FFT_OUTPUT
     // Print forward complex FFT results
     // printf( "First half of Complex FFT output spectrum of Real signal 0
     // (cosine):\n");
-    printf("FFT output of two half spectra. Second half could be discarded due "
-           "to symmetry without loosing information\n");
-    printf("spectrum of first signal in data[0..N/2-1]. spectrum of second "
-           "signa in data[N/2..N-1]:\n");
+    printf(
+        "FFT output of two half spectra. Second half could be discarded due " "to symmetry without loosing information\n");
+    printf(
+        "spectrum of first signal in data[0..N/2-1]. spectrum of second " "sign" "a " "in " "data" "[N/" "2.." "N-1]" ":" "\n");
 
     print_data_array();
 #if 0
@@ -230,12 +245,14 @@ int32_t do_tworeals_fft_and_ifft() {
 
     tmr :> start_time;
 #if INT16_BUFFERS
-    dsp_fft_short_to_long(data, tmp_data,
+    dsp_fft_short_to_long(data,
+                          tmp_data,
                           N_FFT_POINTS); // convert into tmp buffer
     dsp_fft_merge_spectra(tmp_data, N_FFT_POINTS);
     dsp_fft_bit_reverse(tmp_data, N_FFT_POINTS);
     dsp_fft_inverse(tmp_data, N_FFT_POINTS, FFT_SINE(N_FFT_POINTS));
-    dsp_fft_long_to_short(tmp_data, data,
+    dsp_fft_long_to_short(tmp_data,
+                          data,
                           N_FFT_POINTS); // convert from tmp buffer
 #else
     dsp_fft_merge_spectra(data, N_FFT_POINTS);
@@ -262,46 +279,50 @@ int32_t do_tworeals_fft_and_ifft() {
 #else // Complex Signals
 void generate_complex_test_signal(int32_t N, int32_t test) {
   switch (test) {
-  case 0: {
-    printf("++++ Test 0: %d point FFT/iFFT of complex signal:: Real: %d Hz "
-           "cosine, Imag: 0\n",
-           N_FFT_POINTS, N_FFT_POINTS / 8);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = COS(i, 8) >> RIGHT_SHIFT;
-      data[i].im = 0;
+    case 0: {
+      printf(
+          "++++ Test 0: %d point FFT/iFFT of complex signal:: Real: %d Hz " "co" "si" "ne" ", " "Im" "ag" ": " "0" "\n",
+          N_FFT_POINTS,
+          N_FFT_POINTS / 8);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = COS(i, 8) >> RIGHT_SHIFT;
+        data[i].im = 0;
+      }
+      break;
     }
-    break;
-  }
-  case 1: {
-    printf("++++ Test 1: %d point FFT/iFFT of complex signal:: Real: %d Hz "
-           "sine, Imag: 0\n",
-           N_FFT_POINTS, N_FFT_POINTS / 8);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
-      data[i].im = 0;
+    case 1: {
+      printf(
+          "++++ Test 1: %d point FFT/iFFT of complex signal:: Real: %d Hz " "si" "ne" ", " "Im" "ag" ": " "0" "\n",
+          N_FFT_POINTS,
+          N_FFT_POINTS / 8);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = SIN(i, 8) >> RIGHT_SHIFT;
+        data[i].im = 0;
+      }
+      break;
     }
-    break;
-  }
-  case 2: {
-    printf("++++ Test 2: %d point FFT/iFFT of complex signal: Real: 0, Imag: "
-           "%d Hz cosine\n",
-           N_FFT_POINTS, N_FFT_POINTS / 8);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = 0;
-      data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+    case 2: {
+      printf(
+          "++++ Test 2: %d point FFT/iFFT of complex signal: Real: 0, Imag: " "%d Hz cosine\n",
+          N_FFT_POINTS,
+          N_FFT_POINTS / 8);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = 0;
+        data[i].im = COS(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
-  case 3: {
-    printf("++++ Test 3: %d point FFT/iFFT of complex signal: Real: 0, Imag: "
-           "%d Hz sine\n",
-           N_FFT_POINTS, N_FFT_POINTS / 8);
-    for (int32_t i = 0; i < N; i++) {
-      data[i].re = 0;
-      data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+    case 3: {
+      printf(
+          "++++ Test 3: %d point FFT/iFFT of complex signal: Real: 0, Imag: " "%d Hz sine\n",
+          N_FFT_POINTS,
+          N_FFT_POINTS / 8);
+      for (int32_t i = 0; i < N; i++) {
+        data[i].re = 0;
+        data[i].im = SIN(i, 8) >> RIGHT_SHIFT;
+      }
+      break;
     }
-    break;
-  }
   }
 #if PRINT_FFT_INPUT
   printf("Generated Signal:\n");
@@ -310,7 +331,7 @@ void generate_complex_test_signal(int32_t N, int32_t test) {
 }
 
 int32_t do_complex_fft_and_ifft() {
-  timer tmr;
+  timer    tmr;
   uint32_t start_time, end_time, overhead_time, cycles_taken;
   tmr :> start_time;
   tmr :> end_time;
@@ -348,7 +369,8 @@ int32_t do_complex_fft_and_ifft() {
 
 #if PRINT_CYCLE_COUNT
     printf("Cycles taken for %d point FFT of complex signal: %d\n",
-           N_FFT_POINTS, cycles_taken);
+           N_FFT_POINTS,
+           cycles_taken);
 #endif
 
 #if PRINT_FFT_OUTPUT

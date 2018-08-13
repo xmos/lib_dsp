@@ -28,7 +28,7 @@ uint32_t dsp_math_int_sqrt64(uint64_t hl) {
   uint32_t xh = hl >> 32;
   uint32_t xl = hl;
   uint32_t approx;
-  int32_t corr;
+  int32_t  corr;
 
   if (xh == 0) {
     return dsp_math_int_sqrt(xl);
@@ -39,12 +39,12 @@ uint32_t dsp_math_int_sqrt64(uint64_t hl) {
     return ~0;
   }
   approx = approx << 16;
-  xl = -xl;
-  xh = -xh - 1;
+  xl     = -xl;
+  xh     = -xh - 1;
   for (uint32_t i = 0; i < 4; i++) {
-    int32_t h = xh;
+    int32_t  h = xh;
     uint32_t l = xl;
-    int32_t q, r;
+    int32_t  q, r;
     {h, l} = mac(approx, approx, h, l);
     if (h >= 0) {
       asm("ldivu %0,%1,%2,%3,%4"

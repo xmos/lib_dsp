@@ -11,13 +11,24 @@
 
 int32_t coeff[8][6]; // Coefficients for each filter
 // Note: array size of 6 is chosen to enforce 64 bit alignment for ldd and std
-int32_t state[8][4] = {
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}; // State data for each filter
+int32_t state[8][4] = {{0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0},
+                       {0, 0, 0, 0}}; // State data for each filter
 
 const char *names[] = {
-    "notch    ", "lowpass  ", "highpass ", "allpass  ",
-    "bandpass ", "peaking  ", "lowshelf ", "highshelf",
+    "notch    ",
+    "lowpass  ",
+    "highpass ",
+    "allpass  ",
+    "bandpass ",
+    "peaking  ",
+    "lowshelf ",
+    "highshelf",
 };
 
 int main(void) {

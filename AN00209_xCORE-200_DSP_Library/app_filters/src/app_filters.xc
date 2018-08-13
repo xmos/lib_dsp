@@ -99,9 +99,21 @@ int32_t firCoeffsInt[] = {
     Q31(+0.0783215),  Q31(+0.0191607),  Q31(+0.01531791), Q31(-0.03098222),
 };
 
-int32_t iirCoeffs[] = {Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15),
-                       Q24(.21), Q24(.22), Q24(.23), Q24(.24), Q24(.25),
-                       Q24(.31), Q24(.32), Q24(.33), Q24(.34), Q24(.35)};
+int32_t iirCoeffs[] = {Q24(.11),
+                       Q24(.12),
+                       Q24(.13),
+                       Q24(.14),
+                       Q24(.15),
+                       Q24(.21),
+                       Q24(.22),
+                       Q24(.23),
+                       Q24(.24),
+                       Q24(.25),
+                       Q24(.31),
+                       Q24(.32),
+                       Q24(.33),
+                       Q24(.34),
+                       Q24(.35)};
 
 // int filterState[FIR_FILTER_LENGTH];
 int32_t filterState[INTERP_FILTER_LENGTH];
@@ -113,7 +125,7 @@ int32_t decim_input[16];
 int overhead_time;
 
 int main(void) {
-  int32_t i, j, c, r, x, y;
+  int32_t   i, j, c, r, x, y;
   const int print_cycles = 0;
 
   int32_t start_time, end_time, overhead_time, cycles_taken;
@@ -141,7 +153,8 @@ tmr:
 
   if (print_cycles) {
     printf("cycles taken for executing dsp_filters_fir of length %d: %d\n",
-           FIR_FILTER_LENGTH, cycles_taken);
+           FIR_FILTER_LENGTH,
+           cycles_taken);
   }
 
   printf("FIR Filter Results\n");
@@ -160,8 +173,11 @@ tmr:
     dsp_filters_fir_add_sample(i,           // Input data sample to be filtered
                                filterState, // Pointer to filter state array
                                4);          // Filter length
-    printf("filterState : %d, %d, %d, %d\n", filterState[0], filterState[1],
-           filterState[2], filterState[3]);
+    printf("filterState : %d, %d, %d, %d\n",
+           filterState[0],
+           filterState[1],
+           filterState[2],
+           filterState[3]);
   }
 
   // Initiaize IIR filter state array
@@ -205,9 +221,10 @@ tmr:
   }
 
   if (print_cycles) {
-    printf("cycles taken for executing dsp_filters_biquads (%d cascaded "
-           "Biquads): %d\n",
-           IIR_CASCADE_DEPTH, cycles_taken);
+    printf(
+        "cycles taken for executing dsp_filters_biquads (%d cascaded " "Biqu" "ads" "): " "%d\n",
+        IIR_CASCADE_DEPTH,
+        cycles_taken);
   }
 
   printf("\nCascaded IIR Biquad Filter Results\n");
@@ -229,8 +246,8 @@ tmr:
       filterState[i] = 0;
 
     for (i = 0; i < c; ++i) {
-      dsp_filters_interpolate(Q31(0.1), inter_coeff, filterState, c * r, r, Dst,
-                              31);
+      dsp_filters_interpolate(
+          Q31(0.1), inter_coeff, filterState, c * r, r, Dst, 31);
       for (j = 0; j < r; ++j)
         print31(Dst[j]);
       printf("\n");
@@ -245,8 +262,8 @@ tmr:
     for (i = 0; i < 160; ++i)
       filterState[i] = 0;
     for (i = 0; i < 32 / r; ++i) {
-      x = dsp_filters_decimate(decim_input, firCoeffsInt, filterState, 32, r,
-                               31);
+      x = dsp_filters_decimate(
+          decim_input, firCoeffsInt, filterState, 32, r, 31);
       print31(x);
       if ((i & 7) == 7)
         printf("\n");

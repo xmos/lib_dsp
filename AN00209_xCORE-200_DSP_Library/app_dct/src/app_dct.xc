@@ -18,7 +18,9 @@ int main(void) {
 
   dsp_dct_forward24(dcted, data);
   for (int32_t i = 0; i < 24; i++) {
-    printf("%5d %6d%s\n", data[i], dcted[i],
+    printf("%5d %6d%s\n",
+           data[i],
+           dcted[i],
            dcted[i] != correct[i] ? " Wrong" : "");
   }
   return 0;

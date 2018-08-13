@@ -17,13 +17,14 @@ int random(unsigned &x) {
   return (int) x;
 }
 
-extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[], int l,
+extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[],
+                                         int           l,
                                          const int32_t sine[]);
 extern void dsp_fft_inverse_xs2(dsp_complex_t f[], int l, const int32_t sine[]);
 
 void gc1(dsp_complex_t g[FFT_LENGTH]) {
   timer tmr;
-  int r0, r1;
+  int   r0, r1;
   tmr :> r0;
   dsp_fft_bit_reverse(g, FFT_LENGTH);
   dsp_fft_inverse_xs2(g, FFT_LENGTH, FFT_SI);
@@ -34,7 +35,7 @@ void gc1(dsp_complex_t g[FFT_LENGTH]) {
 
 void gc2(dsp_complex_t g[FFT_LENGTH]) {
   timer tmr;
-  int r0, r1;
+  int   r0, r1;
   tmr :> r0;
   dsp_fft_bit_reverse(g, FFT_LENGTH);
   dsp_fft_inverse_xs2(g, FFT_LENGTH, FFT_SI);

@@ -95,8 +95,8 @@ int main(void) {
     for (int32_t i = 0; i < FIR_FILTER_LENGTH; ++i)
       fir_state[i] = 0;
     for (int32_t i = 0; i < c + 30; ++i) {
-      x = dsp_adaptive_lms(Q31(0.08), Q31(0.10), &err, lms_coeffs, fir_state, c,
-                           Q31(0.01), Q_N);
+      x = dsp_adaptive_lms(
+          Q31(0.08), Q31(0.10), &err, lms_coeffs, fir_state, c, Q31(0.01), Q_N);
       print31(x);
       print31(err);
       printf("\n");
@@ -111,8 +111,14 @@ int main(void) {
     for (int32_t i = 0; i < FIR_FILTER_LENGTH; ++i)
       fir_state[i] = 0;
     for (int32_t i = 0; i < c + 30; ++i) {
-      x = dsp_adaptive_nlms(Q31(0.08), Q31(0.10), &err, nlms_coeffs, fir_state,
-                            c, Q31(0.01), Q_N);
+      x = dsp_adaptive_nlms(Q31(0.08),
+                            Q31(0.10),
+                            &err,
+                            nlms_coeffs,
+                            fir_state,
+                            c,
+                            Q31(0.01),
+                            Q_N);
       print31(x);
       print31(err);
       printf("\n");

@@ -13,8 +13,22 @@
 int data[N] = {10, 4, 0, -5, 7, 8, 10, 1, 10, 4, 3, -5, 7, 8, 10, 1};
 
 int window[N] = {
-    0,     2494,  9597,  20228, 32767, 45307, 55938, 63041,
-    65536, 63041, 55938, 45307, 32768, 20228, 9597,  2494,
+    0,
+    2494,
+    9597,
+    20228,
+    32767,
+    45307,
+    55938,
+    63041,
+    65536,
+    63041,
+    55938,
+    45307,
+    32768,
+    20228,
+    9597,
+    2494,
 };
 dsp_complex_t fftdata[N];
 dsp_complex_t fftdata2[N];
@@ -24,8 +38,8 @@ dsp_complex_t fftdata2[N];
 int main(void) {
   int errors = 0;
   for (int i = 0; i < 16; i++) {
-    fftdata[i].re = data[i] << 16;
-    fftdata[i].im = 0;
+    fftdata[i].re  = data[i] << 16;
+    fftdata[i].im  = 0;
     fftdata2[i].re = data[i] * window[i];
     fftdata2[i].im = 0;
   }
@@ -43,9 +57,14 @@ int main(void) {
     int diffre = fftdata[i].re - fftdata2[i].re;
     int diffim = fftdata[i].im - fftdata2[i].im;
     if (abs(diffim) > 3 || abs(diffre) > 3) {
-      printf("%2d: %8.4f, %8.4f    %8.4f %8.4f    %8.4f %8.4f\n", i,
-             f16(fftdata[i].re), f16(fftdata[i].im), f16(fftdata2[i].re),
-             f16(fftdata2[i].im), f16(diffre), f16(diffim));
+      printf("%2d: %8.4f, %8.4f    %8.4f %8.4f    %8.4f %8.4f\n",
+             i,
+             f16(fftdata[i].re),
+             f16(fftdata[i].im),
+             f16(fftdata2[i].re),
+             f16(fftdata2[i].im),
+             f16(diffre),
+             f16(diffim));
       errors++;
     }
   }

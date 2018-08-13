@@ -15,9 +15,9 @@ int random(unsigned &x) {
 void test_forward_fft() {
   unsigned x = SEED;
 
-  unsigned max_error = 0;
+  unsigned max_error     = 0;
   unsigned average_error = 0;
-  unsigned test_count = 2;
+  unsigned test_count    = 2;
 
   for (unsigned t = 0; t < test_count; t++) {
 

@@ -9,13 +9,13 @@
 /** Q1.31 fixed point format with 31 fractional bits
  * Explcit type to make it clear which functions are fixed to this Q format.
  */
-typedef int32_t q1_31;
+typedef int32_t  q1_31;
 typedef uint32_t uq1_31;
 
 /** Q8.24 fixed point format with 24 fractional bits
  * Explicit type to make it clear which functions are fixed to this Q format.
  */
-typedef int32_t q8_24;
+typedef int32_t  q8_24;
 typedef uint32_t uq8_24;
 
 // Constants for the Q8.24 format
@@ -78,7 +78,8 @@ typedef uint32_t uq8_24;
  *  \returns              input1_value * input2_value.
  */
 
-int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
+int32_t dsp_math_multiply(int32_t       input1_value,
+                          int32_t       input2_value,
                           const int32_t q_format);
 
 /**  Scalar saturated multipliplication
@@ -111,7 +112,8 @@ int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
+int32_t dsp_math_multiply_sat(int32_t       input1_value,
+                              int32_t       input2_value,
                               const int32_t q_format);
 
 /** Signed Division
@@ -154,7 +156,8 @@ int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format);
  *  \param  q_format     Fixed point32_t  format (i.e. number of fractional
  * bits). \returns             Quotient of dividend/divisor
  */
-uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
+uint32_t dsp_math_divide_unsigned(uint32_t dividend,
+                                  uint32_t divisor,
                                   uint32_t q_format);
 
 /** Scalar square root
@@ -303,7 +306,9 @@ extern q8_24 dsp_math_sinh_(q8_24 x, int cosine);
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 dsp_math_sinh(q8_24 x) { return dsp_math_sinh_(x, 0); }
+inline q8_24 dsp_math_sinh(q8_24 x) {
+  return dsp_math_sinh_(x, 0);
+}
 
 /** This function returns the hyperbolic cosine (cosh) of a fixed point
  * number. The input number has to be in the range [-5.5..5.5] in order to
@@ -313,7 +318,9 @@ inline q8_24 dsp_math_sinh(q8_24 x) { return dsp_math_sinh_(x, 0); }
  * \param x input value Q8.24 format.
  * \returns sinh(x)
  **/
-inline q8_24 dsp_math_cosh(q8_24 x) { return dsp_math_sinh_(x, 1); }
+inline q8_24 dsp_math_cosh(q8_24 x) {
+  return dsp_math_sinh_(x, 1);
+}
 
 /** This function computes the logistics function, 1/(1+exp(-x)). The
  * input number has to be in q8_24 format, the output is a number between 0

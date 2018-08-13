@@ -11,16 +11,16 @@ static inline int32_t mulcos(int32_t x, int32_t cos) {
 }
 
 void dsp_dct_inverse4(int32_t output[4], int32_t input[4]) {
-  int32_t z = input[0] >> 1;
-  int32_t y1 = mulcos(input[1], 1984016189);
-  int32_t y3 = mulcos(input[3], 1984016189);
+  int32_t z   = input[0] >> 1;
+  int32_t y1  = mulcos(input[1], 1984016189);
+  int32_t y3  = mulcos(input[3], 1984016189);
   int32_t y1_ = mulcos(input[1], 821806413);
   int32_t y3_ = mulcos(input[3], 821806413);
-  int32_t y2 = mulcos(input[2], 1518500250);
-  output[0] = z + y1 + y2 + y3_;
-  output[1] = z + y1_ - y2 - y3;
-  output[2] = z - y1_ - y2 + y3;
-  output[3] = z - y1 + y2 - y3_;
+  int32_t y2  = mulcos(input[2], 1518500250);
+  output[0]   = z + y1 + y2 + y3_;
+  output[1]   = z + y1_ - y2 - y3;
+  output[2]   = z - y1_ - y2 + y3;
+  output[3]   = z - y1 + y2 - y3_;
 }
 
 void dsp_dct_inverse3(int32_t output[3], int32_t input[3]) {

@@ -49,8 +49,10 @@
  * fractional bits). \returns                The resulting filter output sample.
  */
 
-int32_t dsp_filters_fir(int32_t input_sample, const int32_t filter_coeffs[],
-                        int32_t state_data[], const int32_t num_taps,
+int32_t dsp_filters_fir(int32_t       input_sample,
+                        const int32_t filter_coeffs[],
+                        int32_t       state_data[],
+                        const int32_t num_taps,
                         const int32_t q_format);
 
 /** This function pushes samples into an Finite Impulse Response (FIR) filter
@@ -78,7 +80,8 @@ int32_t dsp_filters_fir(int32_t input_sample, const int32_t filter_coeffs[],
  * order + 1). \returns                Void.
  */
 
-void dsp_filters_fir_add_sample(int32_t input_sample, int32_t state_data[],
+void dsp_filters_fir_add_sample(int32_t       input_sample,
+                                int32_t       state_data[],
                                 const int32_t num_taps);
 
 /** This function implements an interpolating FIR filter.
@@ -119,11 +122,13 @@ void dsp_filters_fir_add_sample(int32_t input_sample, int32_t state_data[],
  *  \param q_format        Fixed point format (i.e. number of fractional bits).
  */
 
-void dsp_filters_interpolate(int32_t input_sample,
+void dsp_filters_interpolate(int32_t       input_sample,
                              const int32_t filter_coeffs[],
-                             int32_t state_data[], const int32_t num_taps,
+                             int32_t       state_data[],
+                             const int32_t num_taps,
                              const int32_t interp_factor,
-                             int32_t output_samples[], const int32_t q_format);
+                             int32_t       output_samples[],
+                             const int32_t q_format);
 
 /** This function implements an decimating FIR filter.
  *
@@ -162,9 +167,10 @@ void dsp_filters_interpolate(int32_t input_sample,
  * of fractional bits). \returns               The resulting decimated sample.
  */
 
-int32_t dsp_filters_decimate(int32_t input_samples[],
+int32_t dsp_filters_decimate(int32_t       input_samples[],
                              const int32_t filter_coeffs[],
-                             int32_t state_data[], const int32_t num_taps,
+                             int32_t       state_data[],
+                             const int32_t num_taps,
                              const int32_t decim_factor,
                              const int32_t q_format);
 
@@ -207,10 +213,10 @@ int32_t dsp_filters_decimate(int32_t input_samples[],
  */
 
 int32_t
-dsp_filters_biquad(int32_t input_sample,
-                   const int32_t filter_coeffs[DSP_NUM_COEFFS_PER_BIQUAD],
-                   int32_t state_data[DSP_NUM_STATES_PER_BIQUAD],
-                   const int32_t q_format);
+    dsp_filters_biquad(int32_t       input_sample,
+                       const int32_t filter_coeffs[DSP_NUM_COEFFS_PER_BIQUAD],
+                       int32_t       state_data[DSP_NUM_STATES_PER_BIQUAD],
+                       const int32_t q_format);
 
 /** This function implements a cascaded direct form I BiQuad filter
  *
@@ -255,8 +261,10 @@ dsp_filters_biquad(int32_t input_sample,
  * filter output sample.
  */
 
-int32_t dsp_filters_biquads(int32_t input_sample, const int32_t filter_coeffs[],
-                            int32_t state_data[], const int32_t num_sections,
+int32_t dsp_filters_biquads(int32_t       input_sample,
+                            const int32_t filter_coeffs[],
+                            int32_t       state_data[],
+                            const int32_t num_sections,
                             const int32_t q_format);
 
 #endif

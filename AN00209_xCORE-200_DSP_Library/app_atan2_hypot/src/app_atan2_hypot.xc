@@ -9,8 +9,12 @@
 
 static int atan2_fails = 0, atan2_tests = 0;
 
-static void single_atan2_test(int y, int x, unsigned hypot, int angle,
-                              int precision, int angle_precision) {
+static void single_atan2_test(int      y,
+                              int      x,
+                              unsigned hypot,
+                              int      angle,
+                              int      precision,
+                              int      angle_precision) {
   int hypot_precision = 24 - precision;
   int z[2];
   z[0] = x;
@@ -38,8 +42,8 @@ static void single_atan2_test(int y, int x, unsigned hypot, int angle,
 }
 
 static const unsigned random_poly = 0xEDB88320;
-static unsigned random_val = 0x12345678; // seed
-int get_random_number(void) {
+static unsigned       random_val  = 0x12345678; // seed
+int                   get_random_number(void) {
   crc32(random_val, -1, random_poly);
   return (int) random_val;
 }
@@ -49,19 +53,19 @@ void atan2_test(void) {
   single_atan2_test(1000, 1000, SQRT2(1000), 0x10000000, 0, 25);
   single_atan2_test(0xFFFFFF, 0xFFFFFF, SQRT2(0xFFFFFF), 0x10000000, 0, 25);
   single_atan2_test(0xFFFFFFF, 0xFFFFFFF, SQRT2(0xFFFFFFF), 0x10000000, 0, 25);
-  single_atan2_test(0x3FFFFFFF, 0x3FFFFFFF, SQRT2(0x3FFFFFFF), 0x10000000, 0,
-                    25);
-  single_atan2_test(0x7FFFFFFF, 0x7FFFFFFF, SQRT2(0x7FFFFFFF), 0x10000000, 0,
-                    25);
-  single_atan2_test(0x7FFFFFFF, -0x7FFFFFFF, SQRT2(0x7FFFFFFF), 0x30000000, 0,
-                    25);
-  single_atan2_test(-0x7FFFFFFF, 0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x10000000, 0,
-                    25);
-  single_atan2_test(-0x7FFFFFFF, -0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x30000000, 0,
-                    25);
+  single_atan2_test(
+      0x3FFFFFFF, 0x3FFFFFFF, SQRT2(0x3FFFFFFF), 0x10000000, 0, 25);
+  single_atan2_test(
+      0x7FFFFFFF, 0x7FFFFFFF, SQRT2(0x7FFFFFFF), 0x10000000, 0, 25);
+  single_atan2_test(
+      0x7FFFFFFF, -0x7FFFFFFF, SQRT2(0x7FFFFFFF), 0x30000000, 0, 25);
+  single_atan2_test(
+      -0x7FFFFFFF, 0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x10000000, 0, 25);
+  single_atan2_test(
+      -0x7FFFFFFF, -0x7FFFFFFF, SQRT2(0x7FFFFFFF), -0x30000000, 0, 25);
   for (int i = 0; i < 23; i++) {
-    single_atan2_test(1200000000, 1600000000, 2000000000, 0x0d1bfaf9, i,
-                      24 - i);
+    single_atan2_test(
+        1200000000, 1600000000, 2000000000, 0x0d1bfaf9, i, 24 - i);
   }
 
   for (int i = 0; i < PI2_Q8_24; i += PI2_Q8_24 / 391) {
@@ -88,11 +92,15 @@ void atan2_test(void) {
     int angle =
         (int)((atan2((double) y, (double) x)) * (0x40000000 / 3.1415926536f));
     single_atan2_test(
-        y, x, hypot, angle, 0,
+        y,
+        x,
+        hypot,
+        angle,
+        0,
         24); // We cannot quite reach 25b on random points so set limit to 24b
   }
-  printf("Atan2: %d out of %d passes\n", atan2_tests - atan2_fails,
-         atan2_tests);
+  printf(
+      "Atan2: %d out of %d passes\n", atan2_tests - atan2_fails, atan2_tests);
 }
 
 int main(void) {
