@@ -5,8 +5,7 @@
 #include "stdio.h"
 #include <platform.h>
 
-int32_t dsp_math_multiply(int32_t input1_value,
-                          int32_t input2_value,
+int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
                           int32_t q_format) {
   int32_t  ah;
   uint32_t al;
@@ -21,8 +20,7 @@ int32_t dsp_math_multiply(int32_t input1_value,
   return result;
 }
 
-int32_t dsp_math_multiply_sat(int32_t input1_value,
-                              int32_t input2_value,
+int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
                               int32_t q_format) {
   int32_t  ah;
   uint32_t al;
@@ -61,8 +59,7 @@ int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format) {
   return r * sgn;
 }
 
-uint32_t dsp_math_divide_unsigned(uint32_t dividend,
-                                  uint32_t divisor,
+uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
                                   uint32_t q_format) {
   // h and l hold a 64-bit value
   uint32_t h;

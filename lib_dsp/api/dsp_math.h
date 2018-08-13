@@ -78,8 +78,7 @@ typedef uint32_t uq8_24;
  *  \returns              input1_value * input2_value.
  */
 
-int32_t dsp_math_multiply(int32_t       input1_value,
-                          int32_t       input2_value,
+int32_t dsp_math_multiply(int32_t input1_value, int32_t input2_value,
                           const int32_t q_format);
 
 /**  Scalar saturated multipliplication
@@ -112,8 +111,7 @@ int32_t dsp_math_multiply(int32_t       input1_value,
  *  \param  q_format      Fixed point format (i.e. number of fractional bits).
  *  \returns              input1_value * input2_value.
  */
-int32_t dsp_math_multiply_sat(int32_t       input1_value,
-                              int32_t       input2_value,
+int32_t dsp_math_multiply_sat(int32_t input1_value, int32_t input2_value,
                               const int32_t q_format);
 
 /** Signed Division
@@ -156,8 +154,7 @@ int32_t dsp_math_divide(int32_t dividend, int32_t divisor, uint32_t q_format);
  *  \param  q_format     Fixed point32_t  format (i.e. number of fractional
  * bits). \returns             Quotient of dividend/divisor
  */
-uint32_t dsp_math_divide_unsigned(uint32_t dividend,
-                                  uint32_t divisor,
+uint32_t dsp_math_divide_unsigned(uint32_t dividend, uint32_t divisor,
                                   uint32_t q_format);
 
 /** Scalar square root

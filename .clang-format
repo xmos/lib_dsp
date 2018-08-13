@@ -16,7 +16,7 @@ AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: false
 BinPackArguments: false
-BinPackParameters: false
+BinPackParameters: true
 BraceWrapping:
   AfterClass:      false
   AfterControlStatement: false

@@ -27,9 +27,8 @@ void dsp_fft_bit_reverse(dsp_complex_t pts[], const uint32_t N) {
 #endif
 
 #pragma unsafe arrays
-void           dsp_fft_forward_xs1(dsp_complex_t  pts[],
-                                   const uint32_t N,
-                                   const int32_t  sine[]) {
+void           dsp_fft_forward_xs1(dsp_complex_t pts[], const uint32_t N,
+                                   const int32_t sine[]) {
   uint32_t shift = 30 - clz(N);
   for (uint32_t step = 2; step <= N; step = step * 2, shift--) {
     uint32_t step2 = step >> 1;
@@ -91,9 +90,8 @@ void           dsp_fft_forward_xs1(dsp_complex_t  pts[],
 }
 
 #pragma unsafe arrays
-void           dsp_fft_inverse_xs1(dsp_complex_t  pts[],
-                                   const uint32_t N,
-                                   const int32_t  sine[]) {
+void           dsp_fft_inverse_xs1(dsp_complex_t pts[], const uint32_t N,
+                                   const int32_t sine[]) {
   uint32_t shift = 30 - clz(N);
   for (uint32_t step = 2; step <= N; step = step * 2, shift--) {
     uint32_t step2 = step >> 1;
@@ -149,9 +147,8 @@ void           dsp_fft_inverse_xs1(dsp_complex_t  pts[],
 }
 
 #pragma unsafe arrays
-void           dsp_fft_inverse_DIF_xs1(dsp_complex_t  pts[],
-                                       const uint32_t N,
-                                       const int32_t  sine[]) {
+void           dsp_fft_inverse_DIF_xs1(dsp_complex_t pts[], const uint32_t N,
+                                       const int32_t sine[]) {
   uint32_t shift = 0;
   for (uint32_t step = N; step >= 2; step = step / 2, shift++) {
     uint32_t step2 = step >> 1;
@@ -216,29 +213,26 @@ void           dsp_fft_inverse_DIF_xs1(dsp_complex_t  pts[],
 
 #if defined(__XS2A__)
 
-extern void
-    dsp_fft_forward_xs2(dsp_complex_t pts[], uint32_t N, const int32_t sine[]);
+extern void dsp_fft_forward_xs2(dsp_complex_t pts[], uint32_t N,
+                                const int32_t sine[]);
 
-extern void
-    dsp_fft_inverse_xs2(dsp_complex_t pts[], uint32_t N, const int32_t sine[]);
+extern void dsp_fft_inverse_xs2(dsp_complex_t pts[], uint32_t N,
+                                const int32_t sine[]);
 
 extern void dsp_fft_split_spectrum_xs2(dsp_complex_t pts[], uint32_t N);
 
 extern void dsp_fft_merge_spectra_xs2(dsp_complex_t pts[], uint32_t N);
 
 extern void dsp_fft_short_to_long_xs2(const dsp_complex_short_t s[],
-                                      dsp_complex_t             l[],
-                                      uint32_t                  N);
+                                      dsp_complex_t l[], uint32_t N);
 
 extern void dsp_fft_long_to_short_xs2(const dsp_complex_t l[],
-                                      dsp_complex_short_t s[],
-                                      uint32_t            N);
+                                      dsp_complex_short_t s[], uint32_t N);
 
 #endif
 
-void dsp_fft_forward(dsp_complex_t  pts[],
-                     const uint32_t N,
-                     const int32_t  sine[]) {
+void dsp_fft_forward(dsp_complex_t pts[], const uint32_t N,
+                     const int32_t sine[]) {
 #if defined(__XS2A__)
   dsp_fft_forward_xs2(pts, (uint32_t) N, sine);
 #else
@@ -246,9 +240,8 @@ void dsp_fft_forward(dsp_complex_t  pts[],
 #endif
 }
 
-void dsp_fft_inverse(dsp_complex_t  pts[],
-                     const uint32_t N,
-                     const int32_t  sine[]) {
+void dsp_fft_inverse(dsp_complex_t pts[], const uint32_t N,
+                     const int32_t sine[]) {
 #if defined(__XS2A__)
   dsp_fft_inverse_xs2(pts, (uint32_t) N, sine);
 #else
@@ -319,9 +312,8 @@ void dsp_fft_merge_spectra(dsp_complex_t pts[], const uint32_t N) {
 #endif
 }
 
-void dsp_fft_short_to_long(const dsp_complex_short_t s[],
-                           dsp_complex_t             l[],
-                           const uint32_t            N) {
+void dsp_fft_short_to_long(const dsp_complex_short_t s[], dsp_complex_t l[],
+                           const uint32_t N) {
 #if defined(__XS2A__)
   dsp_fft_short_to_long_xs2(s, l, (uint32_t) N);
 #else
@@ -332,9 +324,8 @@ void dsp_fft_short_to_long(const dsp_complex_short_t s[],
 #endif
 }
 
-void dsp_fft_long_to_short(const dsp_complex_t l[],
-                           dsp_complex_short_t s[],
-                           const uint32_t      N) {
+void dsp_fft_long_to_short(const dsp_complex_t l[], dsp_complex_short_t s[],
+                           const uint32_t N) {
 #if defined(__XS2A__)
   dsp_fft_long_to_short_xs2(l, s, (uint32_t) N);
 #else

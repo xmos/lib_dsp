@@ -17,8 +17,7 @@ int random(unsigned &x) {
   return (int) x;
 }
 
-extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[],
-                                         int           l,
+extern void dsp_fft_zero_reverse_forward(dsp_complex_t f[], int l,
                                          const int32_t sine[]);
 extern void dsp_fft_inverse_xs2(dsp_complex_t f[], int l, const int32_t sine[]);
 

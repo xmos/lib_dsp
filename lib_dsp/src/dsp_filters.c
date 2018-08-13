@@ -7,11 +7,9 @@
 #include "dsp_vector.h"
 #include <platform.h>
 
-int32_t dsp_filters_fir(int32_t        input_sample,
-                        const int32_t *filter_coeffs,
-                        int32_t *      state_data,
-                        const int32_t  num_taps,
-                        const int32_t  q_format) {
+int32_t dsp_filters_fir(int32_t input_sample, const int32_t *filter_coeffs,
+                        int32_t *state_data, const int32_t num_taps,
+                        const int32_t q_format) {
   int32_t  ah = 0, b0, b1, s0 = input_sample, s1, s2, s3;
   uint32_t al = 1 << (q_format - 1);
 
@@ -1133,8 +1131,7 @@ int32_t dsp_filters_fir(int32_t        input_sample,
 // FIR filter push samples into an Finite Impulse Response (FIR) filter state
 // array
 
-void dsp_filters_fir_add_sample(int32_t       input_sample,
-                                int32_t *     state_data,
+void dsp_filters_fir_add_sample(int32_t input_sample, int32_t *state_data,
                                 const int32_t num_taps) {
   int32_t s0 = input_sample, s1, s2, s3;
 
@@ -1523,9 +1520,8 @@ void dsp_filters_fir_add_sample(int32_t       input_sample,
 // use only)
 
 int32_t _dsp_filters_interpolate__fir_even(const int32_t *coeff,
-                                           const int32_t *state,
-                                           int32_t        taps,
-                                           int32_t        format) {
+                                           const int32_t *state, int32_t taps,
+                                           int32_t format) {
   int32_t  ah = 0, b0, b1, s0, s1;
   uint32_t al = 1 << (format - 1);
 
@@ -1703,9 +1699,8 @@ int32_t _dsp_filters_interpolate__fir_even(const int32_t *coeff,
 // use only)
 
 int32_t _dsp_filters_interpolate__fir_odd(const int32_t *coeff,
-                                          const int32_t *state,
-                                          int32_t        taps,
-                                          int32_t        format) {
+                                          const int32_t *state, int32_t taps,
+                                          int32_t format) {
   int32_t  ah = 0, b0, b1, s0, s1;
   uint32_t al = 1 << (format - 1);
 
@@ -1884,13 +1879,10 @@ int32_t _dsp_filters_interpolate__fir_odd(const int32_t *coeff,
   return ah;
 }
 
-void dsp_filters_interpolate(int32_t       input,
-                             const int32_t coeff[],
-                             int32_t       state[],
-                             const int32_t num_taps,
+void dsp_filters_interpolate(int32_t input, const int32_t coeff[],
+                             int32_t state[], const int32_t num_taps,
                              const int32_t interp_factor,
-                             int32_t       output_samples[],
-                             const int32_t q_format) {
+                             int32_t output_samples[], const int32_t q_format) {
   int32_t  s0  = input, s1, s2, s3;
   int32_t  odd = 0, length = num_taps / interp_factor, len;
   int32_t *ss = state;
@@ -1991,8 +1983,7 @@ void dsp_filters_interpolate(int32_t       input,
 
 int32_t dsp_filters_decimate(int32_t       input_samples[],
                              const int32_t filter_coeffs[],
-                             int32_t       state_data[],
-                             const int32_t num_taps,
+                             int32_t state_data[], const int32_t num_taps,
                              const int32_t decim_factor,
                              const int32_t q_format) {
   int32_t  output;
@@ -2015,10 +2006,8 @@ int32_t dsp_filters_decimate(int32_t       input_samples[],
   return output;
 }
 
-int32_t dsp_filters_biquad(int32_t        input_sample,
-                           const int32_t *filter_coeffs,
-                           int32_t *      state_data,
-                           const int32_t  q_format) {
+int32_t dsp_filters_biquad(int32_t input_sample, const int32_t *filter_coeffs,
+                           int32_t *state_data, const int32_t q_format) {
   uint32_t al;
   int32_t  ah, c1, c2, s1, s2;
   asm("ldd %0,%1,%2[0]" : "=r"(c2), "=r"(c1) : "r"(filter_coeffs));
@@ -2047,11 +2036,9 @@ int32_t dsp_filters_biquad(int32_t        input_sample,
   return ah;
 }
 
-int32_t dsp_filters_biquads(int32_t        input_sample,
-                            const int32_t *filter_coeffs,
-                            int32_t *      state_data,
-                            const int32_t  num_sections,
-                            const int32_t  q_format) {
+int32_t dsp_filters_biquads(int32_t input_sample, const int32_t *filter_coeffs,
+                            int32_t *state_data, const int32_t num_sections,
+                            const int32_t q_format) {
   uint32_t al;
   int32_t  ah, b0, b1, s1, s2;
 

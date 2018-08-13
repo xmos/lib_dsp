@@ -142,9 +142,8 @@ int32_t dsp_vector_maximum(const int32_t *input_vector,
   return result_location;
 }
 
-void dsp_vector_negate(const int32_t *input_vector_X,
-                       int32_t *      result_vector_R,
-                       const int32_t  vector_length) {
+void dsp_vector_negate(const int32_t *input_vector_X, int32_t *result_vector_R,
+                       const int32_t vector_length) {
   int32_t x1, x0;
   int32_t vl = vector_length;
   while (vl >= 4) {
@@ -180,9 +179,8 @@ void dsp_vector_negate(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_abs(const int32_t *input_vector_X,
-                    int32_t *      result_vector_R,
-                    const int32_t  vector_length) {
+void dsp_vector_abs(const int32_t *input_vector_X, int32_t *result_vector_R,
+                    const int32_t vector_length) {
   int32_t x1, x0;
   int32_t vl = vector_length;
   while (vl >= 4) {
@@ -222,10 +220,8 @@ void dsp_vector_abs(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_adds(const int32_t *input_vector_X,
-                     int32_t        input_scalar_A,
-                     int32_t *      result_vector_R,
-                     const int32_t  vector_length) {
+void dsp_vector_adds(const int32_t *input_vector_X, int32_t input_scalar_A,
+                     int32_t *result_vector_R, const int32_t vector_length) {
   int32_t x1, x0;
   int32_t vl = vector_length;
   while (vl >= 4) {
@@ -261,11 +257,9 @@ void dsp_vector_adds(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_muls(const int32_t *input_vector_X,
-                     int32_t        input_scalar_A,
-                     int32_t *      result_vector_R,
-                     const int32_t  vector_length,
-                     const int32_t  q_format) {
+void dsp_vector_muls(const int32_t *input_vector_X, int32_t input_scalar_A,
+                     int32_t *result_vector_R, const int32_t vector_length,
+                     const int32_t q_format) {
   int32_t  ah, x1, x0;
   uint32_t al;
 
@@ -391,9 +385,8 @@ void dsp_vector_muls(const int32_t *input_vector_X,
 }
 
 void dsp_vector_addv(const int32_t *input_vector_X,
-                     const int32_t *input_vector_Y,
-                     int32_t *      result_vector_R,
-                     const int32_t  vector_length) {
+                     const int32_t *input_vector_Y, int32_t *result_vector_R,
+                     const int32_t vector_length) {
   int32_t x1, x0, y1, y0;
 
   int32_t vl = vector_length;
@@ -428,9 +421,8 @@ void dsp_vector_addv(const int32_t *input_vector_X,
 }
 
 void dsp_vector_subv(const int32_t *input_vector_X,
-                     const int32_t *input_vector_Y,
-                     int32_t *      result_vector_R,
-                     const int32_t  vector_length) {
+                     const int32_t *input_vector_Y, int32_t *result_vector_R,
+                     const int32_t vector_length) {
   int32_t x1, x0, y1, y0;
   int32_t vl = vector_length;
   while (vl >= 8) {
@@ -464,10 +456,8 @@ void dsp_vector_subv(const int32_t *input_vector_X,
 }
 
 void dsp_vector_mulv(const int32_t *input_vector_X,
-                     const int32_t *input_vector_Y,
-                     int32_t *      result_vector_R,
-                     const int32_t  vector_length,
-                     const int32_t  q_format) {
+                     const int32_t *input_vector_Y, int32_t *result_vector_R,
+                     const int32_t vector_length, const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0;
   uint32_t al;
 
@@ -580,11 +570,9 @@ void dsp_vector_mulv(const int32_t *input_vector_X,
 }
 
 void dsp_vector_mulv_adds(const int32_t *input_vector_X,
-                          const int32_t *input_vector_Y,
-                          int32_t        input_scalar_A,
-                          int32_t *      result_vector_R,
-                          const int32_t  vector_length,
-                          const int32_t  q_format) {
+                          const int32_t *input_vector_Y, int32_t input_scalar_A,
+                          int32_t *result_vector_R, const int32_t vector_length,
+                          const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0;
   uint32_t al;
   int32_t  vl = vector_length;
@@ -688,12 +676,10 @@ void dsp_vector_mulv_adds(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_muls_addv(const int32_t *input_vector_X,
-                          int32_t        input_scalar_A,
+void dsp_vector_muls_addv(const int32_t *input_vector_X, int32_t input_scalar_A,
                           const int32_t *input_vector_Y,
-                          int32_t *      result_vector_R,
-                          const int32_t  vector_length,
-                          const int32_t  q_format) {
+                          int32_t *result_vector_R, const int32_t vector_length,
+                          const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0;
   uint32_t al;
   int32_t  vl = vector_length;
@@ -797,12 +783,10 @@ void dsp_vector_muls_addv(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_muls_subv(const int32_t *input_vector_X,
-                          int32_t        input_scalar_A,
+void dsp_vector_muls_subv(const int32_t *input_vector_X, int32_t input_scalar_A,
                           const int32_t *input_vector_Y,
-                          int32_t *      result_vector_R,
-                          const int32_t  vector_length,
-                          const int32_t  q_format) {
+                          int32_t *result_vector_R, const int32_t vector_length,
+                          const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0;
   uint32_t al;
   int32_t  vl = vector_length;
@@ -909,9 +893,8 @@ void dsp_vector_muls_subv(const int32_t *input_vector_X,
 void dsp_vector_mulv_addv(const int32_t *input_vector_X,
                           const int32_t *input_vector_Y,
                           const int32_t *input_vector_Z,
-                          int32_t *      result_vector_R,
-                          const int32_t  vector_length,
-                          const int32_t  q_format) {
+                          int32_t *result_vector_R, const int32_t vector_length,
+                          const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0, z1, z0;
   uint32_t al;
 
@@ -1025,9 +1008,8 @@ void dsp_vector_mulv_addv(const int32_t *input_vector_X,
 void dsp_vector_mulv_subv(const int32_t *input_vector_X,
                           const int32_t *input_vector_Y,
                           const int32_t *input_vector_Z,
-                          int32_t *      result_vector_R,
-                          const int32_t  vector_length,
-                          const int32_t  q_format) {
+                          int32_t *result_vector_R, const int32_t vector_length,
+                          const int32_t q_format) {
   int32_t  ah, x1, x0, y1, y0, z1, z0;
   uint32_t al;
 
@@ -1138,14 +1120,11 @@ void dsp_vector_mulv_subv(const int32_t *input_vector_X,
   }
 }
 
-void dsp_vector_mulv_complex(const int32_t *input_vector_X_re,
-                             const int32_t *input_vector_X_im,
-                             const int32_t *input_vector_Y_re,
-                             const int32_t *input_vector_Y_im,
-                             int32_t *      result_vector_R_re,
-                             int32_t *      result_vector_R_im,
-                             const int32_t  vector_length,
-                             const int32_t  q_format) {
+void dsp_vector_mulv_complex(
+    const int32_t *input_vector_X_re, const int32_t *input_vector_X_im,
+    const int32_t *input_vector_Y_re, const int32_t *input_vector_Y_im,
+    int32_t *result_vector_R_re, int32_t *result_vector_R_im,
+    const int32_t vector_length, const int32_t q_format) {
   int32_t  x0_re0, x0_im0, y0_re0, y0_im0, z0_00, z0_10;
   int32_t  x0_re1, x0_im1, y0_re1, y0_im1, z0_01, z0_11;
   int32_t  ah;

@@ -9,12 +9,8 @@
 
 static int atan2_fails = 0, atan2_tests = 0;
 
-static void single_atan2_test(int      y,
-                              int      x,
-                              unsigned hypot,
-                              int      angle,
-                              int      precision,
-                              int      angle_precision) {
+static void single_atan2_test(int y, int x, unsigned hypot, int angle,
+                              int precision, int angle_precision) {
   int hypot_precision = 24 - precision;
   int z[2];
   z[0] = x;

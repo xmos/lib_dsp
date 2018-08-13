@@ -11,18 +11,15 @@ static inline int32_t cos_1(int i, int N, const int32_t sine[]) {
   return sine[N / 2 - i];
 }
 
-extern void dsp_fft_real_fix_forward_xs2(dsp_complex_t  pts[],
-                                         const uint32_t N,
-                                         const int32_t  sine[]);
+extern void dsp_fft_real_fix_forward_xs2(dsp_complex_t pts[], const uint32_t N,
+                                         const int32_t sine[]);
 
-extern void dsp_fft_real_fix_inverse_xs2(dsp_complex_t  pts[],
-                                         const uint32_t N,
-                                         const int32_t  sine[]);
+extern void dsp_fft_real_fix_inverse_xs2(dsp_complex_t pts[], const uint32_t N,
+                                         const int32_t sine[]);
 
 #pragma unsafe arrays
-void           dsp_fft_real_fix_forward(dsp_complex_t  pts[],
-                                        const uint32_t N,
-                                        const int32_t  sine[]) {
+void           dsp_fft_real_fix_forward(dsp_complex_t pts[], const uint32_t N,
+                                        const int32_t sine[]) {
   int shift = 32;
   int Xrk, Xik, XrNk, XiNk;
   asm("ldd %0, %1, %2[%3]" : "=r"(Xik), "=r"(Xrk) : "r"(pts), "r"(0));
@@ -57,9 +54,8 @@ void           dsp_fft_real_fix_forward(dsp_complex_t  pts[],
 }
 
 #pragma unsafe arrays
-void           dsp_fft_real_fix_inverse(dsp_complex_t  pts[],
-                                        const uint32_t N,
-                                        const int32_t  sine[]) {
+void           dsp_fft_real_fix_inverse(dsp_complex_t pts[], const uint32_t N,
+                                        const int32_t sine[]) {
   int shift = 30;
   int Xrk, Xik, XrNk, XiNk;
   asm("ldd %0, %1, %2[%3]" : "=r"(Xik), "=r"(Xrk) : "r"(pts), "r"(0));
@@ -93,20 +89,18 @@ void           dsp_fft_real_fix_inverse(dsp_complex_t  pts[],
   }
 }
 
-void dsp_fft_bit_reverse_and_forward_real(int32_t        pts[],
-                                          const uint32_t N,
-                                          const int32_t  sine[],
-                                          const int32_t  sin2[]) {
+void dsp_fft_bit_reverse_and_forward_real(int32_t pts[], const uint32_t N,
+                                          const int32_t sine[],
+                                          const int32_t sin2[]) {
 
   dsp_fft_bit_reverse((pts, dsp_complex_t[]), N >> 1);
   dsp_fft_forward((pts, dsp_complex_t[]), N >> 1, sine);
   dsp_fft_real_fix_forward_xs2((pts, dsp_complex_t[]), N >> 1, sin2);
 }
 
-void dsp_fft_bit_reverse_and_inverse_real(int32_t        pts[],
-                                          const uint32_t N,
-                                          const int32_t  sine[],
-                                          const int32_t  sin2[]) {
+void dsp_fft_bit_reverse_and_inverse_real(int32_t pts[], const uint32_t N,
+                                          const int32_t sine[],
+                                          const int32_t sin2[]) {
 
   dsp_fft_real_fix_inverse_xs2((pts, dsp_complex_t[]), N >> 1, sin2);
   dsp_fft_bit_reverse((pts, dsp_complex_t[]), N >> 1);

@@ -5,30 +5,23 @@
 #include "dsp_vector.h"
 #include <platform.h>
 
-void dsp_matrix_negate(const int32_t *input_matrix_X,
-                       int32_t *      result_matrix_R,
-                       int32_t        row_count,
-                       int32_t        column_count) {
+void dsp_matrix_negate(const int32_t *input_matrix_X, int32_t *result_matrix_R,
+                       int32_t row_count, int32_t column_count) {
   dsp_vector_negate(input_matrix_X, result_matrix_R, row_count * column_count);
 }
 
-void dsp_matrix_adds(const int32_t *input_matrix_X,
-                     int32_t        scalar_value_A,
-                     int32_t *      result_matrix_R,
-                     int32_t        row_count,
-                     int32_t        column_count) {
+void dsp_matrix_adds(const int32_t *input_matrix_X, int32_t scalar_value_A,
+                     int32_t *result_matrix_R, int32_t row_count,
+                     int32_t column_count) {
   dsp_vector_adds(input_matrix_X,
                   scalar_value_A,
                   result_matrix_R,
                   row_count * column_count);
 }
 
-void dsp_matrix_muls(const int32_t *input_matrix_X,
-                     int32_t        scalar_value_A,
-                     int32_t *      result_matrix_R,
-                     int32_t        row_count,
-                     int32_t        column_count,
-                     const int32_t  q_format) {
+void dsp_matrix_muls(const int32_t *input_matrix_X, int32_t scalar_value_A,
+                     int32_t *result_matrix_R, int32_t row_count,
+                     int32_t column_count, const int32_t q_format) {
   dsp_vector_muls(input_matrix_X,
                   scalar_value_A,
                   result_matrix_R,
@@ -37,10 +30,8 @@ void dsp_matrix_muls(const int32_t *input_matrix_X,
 }
 
 void dsp_matrix_addm(const int32_t *input_matrix_X,
-                     const int32_t *input_matrix_Y,
-                     int32_t *      result_matrix_R,
-                     int32_t        row_count,
-                     int32_t        column_count) {
+                     const int32_t *input_matrix_Y, int32_t *result_matrix_R,
+                     int32_t row_count, int32_t column_count) {
   dsp_vector_addv(input_matrix_X,
                   input_matrix_Y,
                   result_matrix_R,
@@ -48,10 +39,8 @@ void dsp_matrix_addm(const int32_t *input_matrix_X,
 }
 
 void dsp_matrix_subm(const int32_t *input_matrix_X,
-                     const int32_t *input_matrix_Y,
-                     int32_t *      result_matrix_R,
-                     int32_t        row_count,
-                     int32_t        column_count) {
+                     const int32_t *input_matrix_Y, int32_t *result_matrix_R,
+                     int32_t row_count, int32_t column_count) {
   dsp_vector_subv(input_matrix_X,
                   input_matrix_Y,
                   result_matrix_R,
@@ -62,12 +51,9 @@ void dsp_matrix_subm(const int32_t *input_matrix_X,
 #define MATRIX_Y_IN_EXTERNAL_RAM 0
 
 void dsp_matrix_mulm(const int32_t *input_matrix_X,
-                     const int32_t *input_matrix_Y,
-                     int32_t *      result_matrix_R,
-                     const int32_t  rows_X,
-                     const int32_t  cols_Y,
-                     const int32_t  cols_X_rows_Y,
-                     const int32_t  q_format) {
+                     const int32_t *input_matrix_Y, int32_t *result_matrix_R,
+                     const int32_t rows_X, const int32_t cols_Y,
+                     const int32_t cols_X_rows_Y, const int32_t q_format) {
   int32_t  ah;
   uint32_t al;
 
@@ -118,10 +104,8 @@ void dsp_matrix_mulm(const int32_t *input_matrix_X,
 }
 
 void dsp_matrix_transpose(const int32_t *input_matrix_X,
-                          int32_t *      result_matrix_R,
-                          int32_t        row_count,
-                          int32_t        column_count,
-                          const int32_t  q_format) {
+                          int32_t *result_matrix_R, int32_t row_count,
+                          int32_t column_count, const int32_t q_format) {
   // <TODO>: Optimize
   for (int32_t r = 0; r < row_count; ++r) {
     for (int32_t c = 0; c < column_count; ++c) {

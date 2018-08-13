@@ -106,11 +106,8 @@ void reset_errors(error_s *e) {
  * \returns        true if check passed
  */
 
-int32_t check_result(int32_t  result,
-                     int32_t  expected,
-                     int32_t  min_error,
-                     int32_t  max_error,
-                     error_s *e) {
+int32_t check_result(int32_t result, int32_t expected, int32_t min_error,
+                     int32_t max_error, error_s *e) {
   static int32_t half_range  = ERROR_RANGE / 2;
   uint32_t       error_found = 0;
 
@@ -328,15 +325,9 @@ q8_24 execute(int func, q8_24 x, unsigned &cycles_taken) {
   return INT32_MIN;
 }
 
-int test_input_range(int            func,
-                     char           name[],
-                     int            min,
-                     int            max,
-                     stimulus_t     exponential,
-                     int            minerror,
-                     int            maxerror,
-                     int            permille,
-                     print_values_t print_values) {
+int test_input_range(int func, char name[], int min, int max,
+                     stimulus_t exponential, int minerror, int maxerror,
+                     int permille, print_values_t print_values) {
   int      fail                      = 0;
   int      done                      = 0;
   int      done_after_next_iteration = 0;
@@ -435,12 +426,9 @@ printf("%d per thousand in one bit error\n", achieved_permille);
 
 #if PRINT_CYCLE_COUNT
 printf("Worst case cycles for executing %s was measured for input %.7f: %d\n",
-       name,
-       F24(worst_cycles_input),
-       worst_cycles_fixed);
+       name, F24(worst_cycles_input), worst_cycles_fixed);
 perf_ratio = dsp_math_divide(worst_cycles_float, worst_cycles_fixed, 24);
-printf("%s is %.2f times faster than it's floating point equivalent\n",
-       name,
+printf("%s is %.2f times faster than it's floating point equivalent\n", name,
        F24(perf_ratio));
 #endif
 
@@ -509,12 +497,8 @@ void test_single_input_functions() {
 
 static int atan2_fails = 0, atan2_tests = 0;
 
-static void single_atan2_test(int      y,
-                              int      x,
-                              unsigned hypot,
-                              int      angle,
-                              int      precision,
-                              int      angle_precision) {
+static void single_atan2_test(int y, int x, unsigned hypot, int angle,
+                              int precision, int angle_precision) {
   int hypot_precision = 24 - precision;
   int z[2];
   z[0] = x;

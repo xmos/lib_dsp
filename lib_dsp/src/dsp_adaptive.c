@@ -8,14 +8,10 @@
 #include "dsp_vector.h"
 #include <platform.h>
 
-int32_t dsp_adaptive_lms(int32_t        source_sample,
-                         int32_t        reference_sample,
-                         int32_t *      error_sample,
-                         const int32_t *filter_coeffs,
-                         int32_t *      state_data,
-                         const int32_t  num_taps,
-                         const int32_t  mu,
-                         const int32_t  q_format) {
+int32_t dsp_adaptive_lms(int32_t source_sample, int32_t reference_sample,
+                         int32_t *error_sample, const int32_t *filter_coeffs,
+                         int32_t *state_data, const int32_t num_taps,
+                         const int32_t mu, const int32_t q_format) {
   int32_t output_sample, mu_err;
 
   // Output signal y[n] is computed via standard FIR filter:
@@ -43,14 +39,10 @@ int32_t dsp_adaptive_lms(int32_t        source_sample,
   return output_sample;
 }
 
-int32_t dsp_adaptive_nlms(int32_t        source_sample,
-                          int32_t        reference_sample,
-                          int32_t *      error_sample,
-                          const int32_t *filter_coeffs,
-                          int32_t *      state_data,
-                          const int32_t  num_taps,
-                          const int32_t  mu,
-                          const int32_t  q_format) {
+int32_t dsp_adaptive_nlms(int32_t source_sample, int32_t reference_sample,
+                          int32_t *error_sample, const int32_t *filter_coeffs,
+                          int32_t *state_data, const int32_t num_taps,
+                          const int32_t mu, const int32_t q_format) {
   int32_t output_sample, energy, adjustment, ee, qq;
 
   // Output signal y[n] is computed via standard FIR filter:

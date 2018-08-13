@@ -56,9 +56,8 @@ void dsp_fft_merge_spectra(dsp_complex_t pts[], const uint32_t N);
  * \param[in]     s   Array of dsp_complex_short_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_short_to_long(const dsp_complex_short_t s[],
-                           dsp_complex_t             l[],
-                           const uint32_t            N);
+void dsp_fft_short_to_long(const dsp_complex_short_t s[], dsp_complex_t l[],
+                           const uint32_t N);
 
 /** This function copies an array of dsp_complex_t elements to an array of an
  * equal number of dsp_complex_short_t elements.
@@ -67,9 +66,8 @@ void dsp_fft_short_to_long(const dsp_complex_short_t s[],
  * \param[in]     l   Array of dsp_complex_t elements.
  * \param[in]     N   Number of points.
  */
-void dsp_fft_long_to_short(const dsp_complex_t l[],
-                           dsp_complex_short_t s[],
-                           const uint32_t      N);
+void dsp_fft_long_to_short(const dsp_complex_t l[], dsp_complex_short_t s[],
+                           const uint32_t N);
 
 /** This function preforms index bit reversing on the the arrays around prior to
  * computing an FFT. A calling sequence for a forward FFT involves
@@ -100,9 +98,8 @@ void dsp_fft_bit_reverse(dsp_complex_t pts[], const uint32_t N);
  * provided in dsp_tables.c; for example, for a 1024 point FFT use
  * dsp_sine_1024.
  */
-void dsp_fft_forward(dsp_complex_t  pts[],
-                     const uint32_t N,
-                     const int32_t  sine[]);
+void dsp_fft_forward(dsp_complex_t pts[], const uint32_t N,
+                     const int32_t sine[]);
 
 /** This function computes an inverse FFT. The complex input array is
  * supplied as two arrays of integers, with numbers represented as
@@ -122,9 +119,8 @@ void dsp_fft_forward(dsp_complex_t  pts[],
  * provided in dsp_tables.c; for example, for a 1024 point FFT use
  * dsp_sine_1024.
  */
-void dsp_fft_inverse(dsp_complex_t  pts[],
-                     const uint32_t N,
-                     const int32_t  sine[]);
+void dsp_fft_inverse(dsp_complex_t pts[], const uint32_t N,
+                     const int32_t sine[]);
 
 /** This function computes a forward FFT of a real signal.
  *
@@ -175,10 +171,9 @@ void dsp_fft_inverse(dsp_complex_t  pts[],
  * \param[in]     sin2  Array of N/4+1 sine values, represented as above.
  *                      For example, for a 1024 point FFT use dsp_sine_1024.
  */
-void dsp_fft_bit_reverse_and_forward_real(int32_t        pts[],
-                                          const uint32_t N,
-                                          const int32_t  sine[],
-                                          const int32_t  sin2[]);
+void dsp_fft_bit_reverse_and_forward_real(int32_t pts[], const uint32_t N,
+                                          const int32_t sine[],
+                                          const int32_t sin2[]);
 
 /** This function computes an inverse FFT of a symmetric spectrum
  *
@@ -229,8 +224,7 @@ void dsp_fft_bit_reverse_and_forward_real(int32_t        pts[],
  * \param[in]     sin2  Array of N/4+1 sine values, represented as above.
  *                      For example, for a 1024 point FFT use dsp_sine_1024.
  */
-void dsp_fft_bit_reverse_and_inverse_real(int32_t        pts[],
-                                          const uint32_t N,
-                                          const int32_t  sine[],
-                                          const int32_t  sin2[]);
+void dsp_fft_bit_reverse_and_inverse_real(int32_t pts[], const uint32_t N,
+                                          const int32_t sine[],
+                                          const int32_t sin2[]);
 #endif

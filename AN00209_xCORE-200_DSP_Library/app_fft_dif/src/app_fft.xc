@@ -8,31 +8,23 @@
 #include <xclib.h>
 #include <xs1.h>
 
-extern void dsp_fft_inverse_DIF_xs1(dsp_complex_t  pts[],
-                                    const uint32_t N,
-                                    const int32_t  sine[]);
+extern void dsp_fft_inverse_DIF_xs1(dsp_complex_t pts[], const uint32_t N,
+                                    const int32_t sine[]);
 
-extern void dsp_fft_inverse_DIF_xs2(dsp_complex_t  pts[],
-                                    const uint32_t N,
-                                    const int32_t  sine[]);
+extern void dsp_fft_inverse_DIF_xs2(dsp_complex_t pts[], const uint32_t N,
+                                    const int32_t sine[]);
 
-extern void dsp_fft_inverse_xs1(dsp_complex_t  pts[],
-                                const uint32_t N,
-                                const int32_t  sine[]);
+extern void dsp_fft_inverse_xs1(dsp_complex_t pts[], const uint32_t N,
+                                const int32_t sine[]);
 
-extern void dsp_fft_gc_xs2(dsp_complex_t  pts[],
-                           const uint32_t N,
-                           const int32_t  sine[],
-                           const uint32_t overlap);
+extern void dsp_fft_gc_xs2(dsp_complex_t pts[], const uint32_t N,
+                           const int32_t sine[], const uint32_t overlap);
 
-extern void dsp_fft_inverse_xs1(dsp_complex_t  pts[],
-                                const uint32_t N,
-                                const int32_t  sine[]);
+extern void dsp_fft_inverse_xs1(dsp_complex_t pts[], const uint32_t N,
+                                const int32_t sine[]);
 
-extern void dsp_fft_gc_xs1(dsp_complex_t  pts[],
-                           const uint32_t N,
-                           const int32_t  sine[],
-                           const uint32_t overlap) {
+extern void dsp_fft_gc_xs1(dsp_complex_t pts[], const uint32_t N,
+                           const int32_t sine[], const uint32_t overlap) {
   dsp_fft_inverse_DIF_xs2(pts, N, sine);
   dsp_fft_bit_reverse(pts, N);
   for (int i = N / 2 - overlap; i < N; i++) {
