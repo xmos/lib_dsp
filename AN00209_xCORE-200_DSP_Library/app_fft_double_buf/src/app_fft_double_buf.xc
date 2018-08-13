@@ -63,9 +63,8 @@ pointers (buffers)
 #endif
 
 #ifndef TWOREALS
-#define TWOREALS \
-  0 // Processing two real signals with a single complex FFT. Disabled by
-    // default
+// Processing two real signals with a single complex FFT. Disabled by default
+#define TWOREALS 0
 #endif
 
 #define SAMPLE_FREQ 48000
