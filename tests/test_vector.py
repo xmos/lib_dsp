@@ -153,7 +153,7 @@ class VectorTester(xmostest.Tester):
                     length = 1
                 if xc_i < 10:
                     length = xc_i + 1
-                scalar = self._get_random() >> rshift
+                scalar = ctypes.c_int32(self._get_random()).value >> rshift
                 vec1 = self._generate_vector(length) >> rshift
                 vec2 = self._generate_vector(length) >> rshift
                 vec3 = self._generate_vector(length) >> rshift
