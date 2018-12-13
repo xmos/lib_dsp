@@ -29,7 +29,10 @@ pipeline {
     stage('Build') {
       steps {
         dir("${REPO}") {
-          xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
+          xcoreAllAppsBuild('AN00209_xCORE-200_DSP_Library')
+          dir('AN00209_xCORE-200_DSP_Library') {
+            runXdoc('doc')
+          }
           dir("${REPO}") {
             runXdoc('doc')
           }
