@@ -106,6 +106,18 @@ int main(void)
     printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
   }
 
+  dsp_vector_divs (Src,                         // Input vector
+                   Q24(0.5),                     // Input scalar
+                   Dst,                         // Output vector
+                   SHORT_SAMPLE_LENGTH,         // Vector length
+                   Q_N);                        // Q Format N
+
+  printf ("Vector / scalar division Result\n");
+  for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
+  {
+    printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+  }
+
   dsp_vector_addv (Src,                         // Input vector
                    Src2,                        // Input vector 2
                    Dst,                         // Output vector

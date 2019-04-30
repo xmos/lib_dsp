@@ -156,7 +156,7 @@ void dsp_vector_adds
  *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
  *  int32_t input_scalar_A = Q28( 0.333 );  
  *  int32_t result_vector_R[256];
- *  dsp_vector_muls( input_vector_X, scalar_value_A, result_vector_R, 256 );
+ *  dsp_vector_muls( input_vector_X, scalar_value_A, result_vector_R, 256, 28 );
  *  \endcode 
  * 
  *  \param  input_vector_X    Pointer/reference to source data array X.
@@ -174,6 +174,35 @@ void dsp_vector_muls
     const int32_t vector_length,
     const int32_t q_format
 );
+
+/** Vector / scalar division: ``R[i] = X[i] / A``
+ *
+ *  The elements in vector X are divided by  the scalar A and stored in result vector R.
+ * 
+ *  Example:
+ *
+ *  \code 
+ *  int32_t input_vector_X[256] = { 0, 1, 2, 3, ... not shown for brevity };
+ *  int32_t input_scalar_A = Q28( 2.333 );  
+ *  int32_t result_vector_R[256];
+ *  dsp_vector_divs( input_vector_X, scalar_value_A, result_vector_R, 256, 28 );
+ *  \endcode 
+ * 
+ *  \param  input_vector_X    Pointer/reference to source data array X.
+ *  \param  input_scalar_A    Scalar value to multiply each element by.
+ *  \param  result_vector_R   Pointer to the resulting data array.
+ *  \param  vector_length     Length of the input and output vectors.
+ *  \param  q_format          Fixed point format, the number of bits making up fractional part.
+ */
+void dsp_vector_divs
+(
+    const int32_t input_vector_X[],
+    int32_t       input_scalar_A,
+    int32_t       result_vector_R[],
+    const int32_t vector_length,
+    const int32_t q_format
+);
+
 
  
 /** Vector / vector addition: ``R[i] = X[i] + Y[i]``
