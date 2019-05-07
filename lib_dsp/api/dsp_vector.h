@@ -203,7 +203,13 @@ void dsp_vector_divs
     const int32_t q_format
 );
 
-
+void dsp_vector_exp
+(
+    const int32_t  input_vector_X[],
+    int32_t        result_vector_R[],
+    const int32_t  vector_length,
+    const int32_t  q_format
+);
  
 /** Vector / vector addition: ``R[i] = X[i] + Y[i]``
  * 

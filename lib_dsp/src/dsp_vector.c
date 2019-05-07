@@ -4,6 +4,7 @@
 #include "dsp_qformat.h"
 #include "dsp_vector.h"
 #include "dsp_math.h"
+#include "assert.h"
 
 int32_t dsp_vector_minimum
 (
@@ -412,7 +413,74 @@ void dsp_vector_divs
         
         case 1:
         
-        x0 = dsp_math_divide(input_vector_X[2], input_scalar_A, q_format);
+        x0 = dsp_math_divide(input_vector_X[0], input_scalar_A, q_format);
+        result_vector_R[0] = x0;
+        break;
+    }
+}
+
+void check_exp_exponent(int32_t exponent) {
+    assert(exponent <= Q24(4.8)); // 4.8 in Q24 format
+}
+
+void dsp_vector_exp
+(
+    const int32_t* input_vector_X,
+    int32_t*       result_vector_R,
+    const int32_t  vector_length,
+    const int32_t  q_format
+) {
+    int32_t x1, x0;
+    
+    int32_t vl = vector_length;  
+    while( vl >= 4 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        check_exp_exponent(x0);
+        check_exp_exponent(x1);
+        x0 = dsp_math_exp(x0);
+        x1 = dsp_math_exp(x1);
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+
+        asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        check_exp_exponent(x0);
+        check_exp_exponent(x1);
+        x0 = dsp_math_exp(x0);
+        x1 = dsp_math_exp(x1);
+        asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
+    }
+    switch( vl )
+    {
+        case 3:
+        
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        check_exp_exponent(x0);
+        check_exp_exponent(x1);
+        x0 = dsp_math_exp(x0);
+        x1 = dsp_math_exp(x1);
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+
+        check_exp_exponent(input_vector_X[2]);
+        x0 = dsp_math_exp(input_vector_X[2]);
+        result_vector_R[2] = x0;
+        break;
+        
+        case 2:
+        
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        check_exp_exponent(x0);
+        check_exp_exponent(x1);
+        x0 = dsp_math_exp(x0);
+        x1 = dsp_math_exp(x1);
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        break;
+        
+        case 1:
+        
+        check_exp_exponent(input_vector_X[0]);
+        x0 = dsp_math_exp(input_vector_X[0]);
         result_vector_R[0] = x0;
         break;
     }
