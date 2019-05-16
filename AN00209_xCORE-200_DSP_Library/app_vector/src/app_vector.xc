@@ -120,8 +120,7 @@ int main(void)
 
   dsp_vector_exp (Src,                          // Input vector
                    Dst,                         // Output vector
-                   SAMPLE_LENGTH,               // Vector length
-                   Q_N);                        // Q Format N
+                   SAMPLE_LENGTH);              // Vector length                   
 
   printf ("Elementwise vector exp Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
