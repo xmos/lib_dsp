@@ -51,6 +51,22 @@ int32_t dsp_vector_maximum
     const int32_t vector_length
 );
 
+void dsp_vector_maximum_scalar
+(
+    const int32_t input_vector[], 
+    const int32_t scalar, 
+    int32_t result_vector_R[],
+    const uint32_t vector_length
+);
+
+void dsp_vector_greater_scalar
+(
+    const int32_t input_vector[], 
+    const int32_t scalar, 
+    int32_t result_vector_R[],
+    const uint32_t vector_length
+);
+
 /** Vector negation: ``R[i] = -X[i]``
  *
  *  This function sets each result element to the negative value of the

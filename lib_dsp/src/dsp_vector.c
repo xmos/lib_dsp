@@ -173,6 +173,31 @@ int32_t dsp_vector_maximum
 }
 
 
+void dsp_vector_maximum_scalar
+(
+    const int32_t* input_vector,
+    const int32_t  scalar, 
+    int32_t*       result_vector_R,
+    const uint32_t vector_length
+) 
+{
+  for(unsigned i=0; i<vector_length; ++i) {
+    result_vector_R[i] = input_vector[i] > scalar ? input_vector[i] : scalar;
+  }
+}
+
+void dsp_vector_greater_scalar
+(
+    const int32_t* input_vector,
+    const int32_t  scalar, 
+    int32_t*       result_vector_R,
+    const uint32_t vector_length
+) 
+{
+  for(unsigned i=0; i<vector_length; ++i) {
+    result_vector_R[i] = input_vector[i] > scalar ? input_vector[i] : 0;
+  }
+}
 
 void dsp_vector_negate
 (

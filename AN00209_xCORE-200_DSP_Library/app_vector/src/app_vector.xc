@@ -63,6 +63,32 @@ int main(void)
   printf ("Maximum location = %d\n", result);
   printf ("Maximum = %lf\n", F24 (Src[result]));
 
+
+
+  dsp_vector_maximum_scalar(Src,                    // Input vector
+                            Q24(.13),               // scalar
+                            Dst,                    // Output
+                            SHORT_SAMPLE_LENGTH);         // Vector length
+
+  printf ("dsp_vector_maximum_scalar Result\n");
+  for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
+  {
+    printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+  }
+
+  dsp_vector_greater_scalar(Src,                    // Input vector
+                            Q24(.13),               // scalar
+                            Dst,                    // Output
+                            SHORT_SAMPLE_LENGTH);         // Vector length
+
+  printf ("dsp_vector_greater_scalar Result\n");
+  for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
+  {
+    printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+  }
+
+
+
   dsp_vector_negate (Src,                       // Input vector
                      Dst,                       // Output vector
                      SHORT_SAMPLE_LENGTH);      // Vector length
