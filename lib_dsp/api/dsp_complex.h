@@ -23,6 +23,15 @@ typedef struct {
     int16_t im;
 } dsp_complex_short_t;
 
+/** Type that represents a complex number. Both the real and imaginary
+ * parts are represented as 32-bit fixed point values, with a Q value that
+ * is dependent on the use case
+ */
+typedef struct {
+    double re;
+    double im;
+} dsp_complex_fp;
+
 /** Function that adds two complex numbers that use the same fixed point
  * representation
  *
