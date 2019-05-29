@@ -24,8 +24,7 @@ typedef struct {
 } dsp_complex_short_t;
 
 /** Type that represents a complex number. Both the real and imaginary
- * parts are represented as 32-bit fixed point values, with a Q value that
- * is dependent on the use case
+ * parts are represented as double precision values.
  */
 typedef struct {
     double re;
