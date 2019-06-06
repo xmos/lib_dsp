@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2018, XMOS Ltd, All rights reserved
+# Copyright (c) 2018-2019, XMOS Ltd, All rights reserved
 import xmostest
 import sys
 sys.path.insert(0, 'test_fft_correctness/src')
