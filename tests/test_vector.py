@@ -1,3 +1,4 @@
+# Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 #!/usr/bin/env python
 import time
 import xmostest

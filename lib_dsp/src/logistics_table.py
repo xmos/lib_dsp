@@ -1,3 +1,4 @@
+# Copyright (c) 2017-2018, XMOS Ltd, All rights reserved
 import numpy as np
 import matplotlib.pyplot as plt
 
