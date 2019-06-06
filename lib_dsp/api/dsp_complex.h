@@ -31,6 +31,38 @@ typedef struct {
     double im;
 } dsp_complex_fp;
 
+/**
+ * Struct containing the sample data of two channels. Both channels
+ * are represented as 32-bit fixed point values, with a Q value that
+ * is dependent on the use case.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    int32_t ch_a;  ///< First channel in the pair.
+    int32_t ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_t;
+
+/**
+ * Struct containing the sample data of two channels. Both channels
+ * are represented as 16-bit fixed point values, with a Q value that
+ * is dependent on the use case.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    int16_t ch_a;  ///< First channel in the pair.
+    int16_t ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_short_t;
+
+/**
+ * Struct containing the floating poing sample data of two channels.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    double ch_a;  ///< First channel in the pair.
+    double ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_fp;
+
+
 /** Function that adds two complex numbers that use the same fixed point
  * representation
  *

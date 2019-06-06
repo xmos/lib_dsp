@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+4.2.0
+-----
+
+  * Added dsp_ch_pair_t struct to represent channel pairs
+
 4.1.0
 -----
 
