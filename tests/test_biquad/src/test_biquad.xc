@@ -1,4 +1,4 @@
-// Copyright (c) 2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2017-2019, XMOS Ltd, All rights reserved
 #include "unity.h"
 
 #include <xs1.h>

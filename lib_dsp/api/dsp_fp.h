@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_FP_H_
 #define DSP_FP_H_
