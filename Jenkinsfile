@@ -22,6 +22,10 @@ pipeline {
         message 'Allow Jenkins to run on this commit?'
         ok 'Yes'
       }
+      agent  any // Must be declared after input directive
+      steps {
+        echo 'Allowed to run'
+      }
     }
     stage('Get view') {
       agent {
