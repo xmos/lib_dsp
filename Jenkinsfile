@@ -1,8 +1,6 @@
 @Library('xmos_jenkins_shared_library@master') _
 pipeline {
-  agent {
-    label 'x86&&macOS&&Apps'
-  }
+  agent none
   environment {
     VIEW = 'dsp'
     REPO = 'lib_dsp'
@@ -12,21 +10,33 @@ pipeline {
   }
   stages {
     stage('Get view') {
+      agent {
+        label 'x86&&macOS&&Apps'
+      }
       steps {
         prepareAppsSandbox("${VIEW}", "${REPO}")
       }
     }
     stage('Library checks') {
+      agent {
+        label 'x86&&macOS&&Apps'
+      }
       steps {
         xcoreLibraryChecks("${REPO}")
       }
     }
     stage('Tests') {
+      agent {
+        label 'x86&&macOS&&Apps'
+      }
       steps {
         runXmostest("${REPO}", 'tests')
       }
     }
     stage('Build') {
+      agent {
+        label 'x86&&macOS&&Apps'
+      }
       steps {
         dir("${REPO}") {
           /* Cannot call xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
@@ -45,10 +55,14 @@ pipeline {
   }
   post {
     success {
-      updateViewfiles()
+      node('x86&&macOS&&Apps') {
+        updateViewfiles()
+      }
     }
     cleanup {
-      cleanWs()
+      node('x86&&macOS&&Apps') {
+        cleanWs()
+      }
     }
   }
 }
