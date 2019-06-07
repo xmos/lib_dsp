@@ -9,6 +9,20 @@ pipeline {
     skipDefaultCheckout()
   }
   stages {
+    stage('Allow Jenkins run') {
+      when {
+        expression {
+          isOrganisation('xmos')
+        }
+      }
+      options {
+        timeout(time: 1, unit: 'DAYS')
+      }
+      input {
+        message 'Allow Jenkins to run on this commit?'
+        ok 'Yes'
+      }
+    }
     stage('Get view') {
       agent {
         label 'x86&&macOS&&Apps'
