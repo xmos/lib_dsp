@@ -22,7 +22,9 @@ pipeline {
         message 'Allow Jenkins to run on this commit?'
         ok 'Yes'
       }
-      agent  any // Must be declared after input directive
+      agent { // Must be declared after input directive
+        label 'x86&&macOS&&Apps'
+      }
       steps {
         echo 'Allowed to run'
       }
