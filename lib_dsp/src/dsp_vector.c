@@ -286,6 +286,14 @@ void dsp_vector_adds
 ) {
     int32_t x1, x0;
     int32_t vl = vector_length;  
+
+
+    if(((uint32_t) input_vector_X&7)!=0) {
+        // ensure following ldd are 64 bit aligned
+        *result_vector_R++ = *input_vector_X++ + input_scalar_A;
+        vl -= 1;
+    }
+
     while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -521,6 +529,13 @@ void dsp_vector_addv
     int32_t x1, x0, y1, y0;
 
     int32_t vl = vector_length;  
+
+    if(((uint32_t) input_vector_X&7)!=0) {
+        // ensure following ldd are 64 bit aligned
+        *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
+        vl -= 1;
+    }
+
     while( vl >= 8 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
