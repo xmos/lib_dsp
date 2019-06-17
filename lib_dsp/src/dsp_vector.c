@@ -323,6 +323,41 @@ void dsp_vector_adds
     }
 }
 
+void dsp_vector_adds_xs1
+(
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    int32_t*       result_vector_R,
+    const int32_t  vector_length
+) {
+
+    int32_t vl = vector_length;  
+
+    while( vl >= 4 )
+    {
+        result_vector_R[0] = input_vector_X[0] + input_scalar_A;
+        result_vector_R[1] = input_vector_X[1] + input_scalar_A;
+        result_vector_R[2] = input_vector_X[2] + input_scalar_A;
+        result_vector_R[3] = input_vector_X[3] + input_scalar_A;
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
+    }
+    switch( vl )
+    {
+        case 3:
+        result_vector_R[0] = input_vector_X[0] + input_scalar_A;
+        result_vector_R[1] = input_vector_X[1] + input_scalar_A;
+        result_vector_R[2] = input_vector_X[2] + input_scalar_A;
+        break;
+        case 2:
+        result_vector_R[0] = input_vector_X[0] + input_scalar_A;
+        result_vector_R[1] = input_vector_X[1] + input_scalar_A;
+        break;
+        case 1:
+        result_vector_R[0] = input_vector_X[0] + input_scalar_A;
+        break;
+    }
+}
+
 
 
 void dsp_vector_muls
@@ -453,7 +488,8 @@ void dsp_vector_divs
 }
 
 void check_exp_exponent(int32_t exponent) {
-    assert(exponent <= Q24(4.8)); // 4.8 in Q24 format
+    if(exponent > Q24(4.8)) printf("Error in dsp_vector_exp: Exponent must be <= 4.8 but is %5.2f\n",F24(exponent));
+    //assert(exponent <= Q24(4.8)); // 4.8 in Q24 format
 }
 
 void dsp_vector_exp

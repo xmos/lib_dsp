@@ -159,6 +159,14 @@ void dsp_vector_adds
     const int32_t vector_length
 );
 
+void dsp_vector_adds_xs1
+(
+    const int32_t  input_vector_X[],
+    int32_t        input_scalar_A,
+    int32_t        result_vector_R[],
+    const int32_t  vector_length
+);
+
 /** Vector / scalar multiplication: ``R[i] = X[i] * A``
  *
  *  The elements in vector X are multiplied with the scalar A and stored in result vector R.
