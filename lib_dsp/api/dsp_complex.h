@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_COMPLEX_H_
 #define DSP_COMPLEX_H_
@@ -22,6 +22,46 @@ typedef struct {
     int16_t re;
     int16_t im;
 } dsp_complex_short_t;
+
+/** Type that represents a complex number. Both the real and imaginary
+ * parts are represented as double precision values.
+ */
+typedef struct {
+    double re;
+    double im;
+} dsp_complex_fp;
+
+/**
+ * Struct containing the sample data of two channels. Both channels
+ * are represented as 32-bit fixed point values, with a Q value that
+ * is dependent on the use case.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    int32_t ch_a;  ///< First channel in the pair.
+    int32_t ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_t;
+
+/**
+ * Struct containing the sample data of two channels. Both channels
+ * are represented as 16-bit fixed point values, with a Q value that
+ * is dependent on the use case.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    int16_t ch_a;  ///< First channel in the pair.
+    int16_t ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_short_t;
+
+/**
+ * Struct containing the floating poing sample data of two channels.
+ * An array of this struct can be used to hold a frame of samples.
+ */
+typedef struct {
+    double ch_a;  ///< First channel in the pair.
+    double ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_fp;
+
 
 /** Function that adds two complex numbers that use the same fixed point
  * representation
