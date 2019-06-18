@@ -179,6 +179,8 @@ def build(bld):
         source = [
             os.path.join(UNITY_TEST_DIR,
                          '{}.{}'.format(bld.variant, bld.language)),
+            os.path.join(UNITY_TEST_DIR,
+                         'iir.xc'),
             os.path.join(UNITY_RUNNER_DIR,
                          '{}{}.{}'.format(bld.variant, UNITY_RUNNER_SUFFIX,
                                           'c'))]
