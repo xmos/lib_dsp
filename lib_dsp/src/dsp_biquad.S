@@ -39,13 +39,9 @@ dsp_filters_biquads:
     std r4, r5, sp[0]
     std r6, r7, sp[1]
     std r8, r9, sp[2]
-    {stw r10, sp[6];ldc r10, 1}
 	{ldw q, sp[NSTACKWORDS+1];sub num_sections, num_sections, 1}
-	//{sub r9, q, 0;nop}
-	//{shl r10, r10, r9;nop}
-	{mkmsk r10, q;nop}
 loop:
-	{ldc h, 0; mov l, r10}			//s0 = x[n]
+	{ldc h, 0; mkmsk l, q}			//s0 = x[n]
 	shr l, l, 1
 	ldd c1, c0, filter_coeffs[0] 	// b0 and b1
 	ldd s1, s2, state_data[0]	 	// x[n-1] and x[n-2]
@@ -69,7 +65,7 @@ loop:
 
 	{bf num_sections, done;sub num_sections, num_sections, 1}
 
-	{ldc h, 0; mov l, r10}			//s0 = x[n]
+	{ldc h, 0; mkmsk l, q}			//s0 = x[n]
 	shr l, l, 1
 	ldd s1, s2, state_data[2]	 	// x[n-1] and x[n-2]
 	std s0, s1, state_data[2]
@@ -100,7 +96,6 @@ done:
     ldd r4, r5, sp[0]
     ldd r6, r7, sp[1]
     ldd r8, r9, sp[2]
-    {ldw r10, sp[6];nop}
 	retsp NSTACKWORDS
 
 	// RETURN_REG_HOLDER

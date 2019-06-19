@@ -38,10 +38,13 @@ int32_t random_int32(unsigned &r){
     for(unsigned s=0;s<order*DSP_NUM_COEFFS_PER_BIQUAD;s++){
         filter_coeffs_fp[s] = ldexp(filter_coeffs[s], -q_format);
     }
-    int32_t  [[aligned(8)]]state_data[MAX_BIQUAD_ORDER*DSP_NUM_STATES_PER_BIQUAD];
+
+#define STATE_OVER_LENGTH (MAX_BIQUAD_ORDER*DSP_NUM_STATES_PER_BIQUAD+8)
+
+    int32_t  [[aligned(8)]]state_data[STATE_OVER_LENGTH];
     memset(state_data, 0, sizeof(state_data));
 
-    double state_data_fp[MAX_BIQUAD_ORDER*DSP_NUM_STATES_PER_BIQUAD];
+    double state_data_fp[STATE_OVER_LENGTH];
     memset(state_data_fp, 0, sizeof(state_data_fp));
 
 #define DATA_LEN (1<<16)
@@ -69,9 +72,16 @@ int32_t random_int32(unsigned &r){
         mean_squared_error += (diff*diff);
 
     }
+
+    for(unsigned i=order*DSP_NUM_STATES_PER_BIQUAD;i<STATE_OVER_LENGTH;i++){
+        TEST_ASSERT_EQUAL_INT32_MESSAGE(0, state_data[i], "state_data should be zero");
+    }
+
+    //check that no state that should be written to got written to.
+
     printf("max: %f \t",m);
-//    TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(1, mean_error/DATA_LEN, "mean error too big");
-//    TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error/DATA_LEN, "mean squared error too big");
+    TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(1, mean_error/DATA_LEN, "mean error too big");
+    TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error/DATA_LEN, "mean squared error too big");
 
 
     return {mean_error/DATA_LEN, mean_squared_error/DATA_LEN};
@@ -96,7 +106,7 @@ void test_biquads(){
 }
 
 
-void test_biquads_auto_gen(){
+void t2est_biquads_auto_gen(){
 
 
     for(unsigned order_index = 0;order_index < IIR_ORDERS;order_index++){

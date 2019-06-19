@@ -3,8 +3,7 @@ import glob
 import os.path
 import subprocess
 import sys
-import pytest
-from waflib import Options, Errors
+from waflib import Options
 from waflib.Build import BuildContext, CleanContext
 
 
@@ -76,17 +75,39 @@ def generate_unity_runner(project_root_path, unity_test_path, unity_runner_dir,
         exit(1)  # TODO: Check this is the correct way to kill xwaf on error
 
 
-def add_unity_runner_build_config(waf_conf, project_root_path, unity_test_path,
-                                  unity_runner_build_flags):
+def set_common_build_config(waf_conf, project_root_path, unity_test_path,
+                            unity_runner_build_flags):
     """
-    Add a config to xwaf to build each Unity test runner into an xCORE
-    executable.
+    Set the common xwaf config variables.
     """
-    waf_conf.setenv(get_test_name(unity_test_path))
     waf_conf.load('xwaf.compiler_xcc')
     waf_conf.env.XCC_FLAGS = unity_runner_build_flags
     waf_conf.env.PROJECT_ROOT = project_root_path
     # TODO: can the xwaf boilerplate help here?
+
+
+def add_single_issue_unity_runner_build_config(waf_conf, project_root_path,
+                                               unity_test_path,
+                                               unity_runner_build_flags):
+    """
+    Add a single issue config to xwaf to build each Unity test runner into an
+    xCORE executable.
+    """
+    waf_conf.setenv(get_test_name(unity_test_path) + '_single_issue')
+    set_common_build_config(waf_conf, project_root_path, unity_test_path,
+                            unity_runner_build_flags + '-mno-dual-issue')
+
+
+def add_dual_issue_unity_runner_build_config(waf_conf, project_root_path,
+                                             unity_test_path,
+                                             unity_runner_build_flags):
+    """
+    Add a dual issue config to xwaf to build each Unity test runner into an
+    xCORE executable.
+    """
+    waf_conf.setenv(get_test_name(unity_test_path) + '_dual_issue')
+    set_common_build_config(waf_conf, project_root_path, unity_test_path,
+                            unity_runner_build_flags + '-mdual-issue')
 
 
 def prepare_unity_test_for_build(waf_conf, project_root_path, unity_test_path,
@@ -94,8 +115,12 @@ def prepare_unity_test_for_build(waf_conf, project_root_path, unity_test_path,
     generate_unity_runner(project_root_path, unity_test_path,
                           unity_runner_dir, unity_runner_suffix)
     runner_build_flags = ''  # Could extract flags from the test name
-    add_unity_runner_build_config(waf_conf, project_root_path, unity_test_path,
-                                  runner_build_flags)
+    add_single_issue_unity_runner_build_config(waf_conf, project_root_path,
+                                               unity_test_path,
+                                               runner_build_flags)
+    add_dual_issue_unity_runner_build_config(waf_conf, project_root_path,
+                                             unity_test_path,
+                                             runner_build_flags)
 
 
 def find_unity_test_paths(unity_test_dir, unity_test_prefix):
@@ -133,13 +158,25 @@ def generate_all_unity_runners(waf_conf, project_root_path,
 
 # TODO: can the xwaf boilerplate help here?
 def create_waf_contexts(configs):
-    for test_name, test_language in configs.iteritems():
+    for test_name, test_language in configs.items():
+        # Single issue test configurations
         for ctx in (BuildContext, CleanContext):
             raw_context = ctx.__name__.replace('Context', '').lower()
 
-            class tmp(ctx):
-                cmd = raw_context + '_' + test_name
-                variant = test_name
+            class si_tmp(ctx):
+                cmd = raw_context + '_' + test_name + '_single_issue'
+                variant = test_name + '_single_issue'
+                source = test_name
+                language = test_language
+
+        # Dual issue test configurations
+        for ctx in (BuildContext, CleanContext):
+            raw_context = ctx.__name__.replace('Context', '').lower()
+
+            class di_tmp(ctx):
+                cmd = raw_context + '_' + test_name + '_dual_issue'
+                variant = test_name + '_dual_issue'
+                source = test_name
                 language = test_language
 
 
@@ -164,33 +201,41 @@ def build(bld):
     if not bld.variant:
         print('Adding test runners to build queue')
         for name in UNITY_TESTS:
-            Options.commands.insert(0, 'build_' + name)
+            Options.commands.insert(0, 'build_' + name + '_single_issue')
+            Options.commands.insert(0, 'build_' + name + '_dual_issue')
         print('Build queue {}'.format(Options.commands))
     else:
         print('Building runner {}'.format(bld.variant))
         bld.env.TARGET_ARCH = 'XCORE-200-EXPLORER'
         bld.env.XSCOPE = bld.path.find_resource('config.xscope')
+        # The issue mode for each build is set during the configure step,
+        # as the string bld.env.XCC_FLAGS. We append this to the list last to
+        # ensure it takes precedence over other flags set here.
         bld.env.XCC_FLAGS = ['-O2', '-g', '-Wall', '-DUNITY_SUPPORT_64',
-                             '-DUNITY_INCLUDE_DOUBLE']
+                             '-DUNITY_INCLUDE_DOUBLE', bld.env.XCC_FLAGS]
 
-        depends_on = ['lib_dsp',
+        depends_on = ['lib_voice_toolbox', 'lib_dsp', 'audio_test_tools',
                       'Unity']
         include = ['.']
         source = [
             os.path.join(UNITY_TEST_DIR,
-                         '{}.{}'.format(bld.variant, bld.language)),
+                         '{}.{}'.format(bld.source, bld.language)),
             os.path.join(UNITY_TEST_DIR,
                          'iir.xc'),
             os.path.join(UNITY_RUNNER_DIR,
-                         '{}{}.{}'.format(bld.variant, UNITY_RUNNER_SUFFIX,
+                         '{}{}.{}'.format(bld.source, UNITY_RUNNER_SUFFIX,
                                           'c'))]
         bld.program(include=include, source=source, depends_on=depends_on)
 
 
 def test(bld):
     # Call pytest to run Unity tests inside axe or xsim
-    ret = pytest.main(['--junitxml=pytest_result.xml', '-n=auto'])
-    if ret != 0:
-        raise Errors.WafError("Pytest exited with non-zero return code!");
+    try:
+        test_output = subprocess.check_output(['pytest'])
+    except subprocess.CalledProcessError as e:
+        # pytest exits non-zero if an assertion fails
+        test_output = e.output
+    print(test_output)
+
 
 # TODO: ensure clean deletes the runners dir/
