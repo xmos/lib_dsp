@@ -23,6 +23,13 @@ pipeline {
     }
     stage('Tests') {
       steps {
+        dir("${REPO}/tests/test_biquad") {
+          runXwaf('.')
+          viewEnv() {
+            runPytest()
+          }
+        }
+
         runXmostest("${REPO}", 'tests')
       }
     }
