@@ -1476,7 +1476,7 @@ int32_t dsp_filters_biquad
     int32_t*       state_data,
     const int32_t q_format
 ) {
-    return dsp_filters_biquads(input_sample, filter_coeffs, state_data, q_format, 1);
+    return dsp_filters_biquads(input_sample, filter_coeffs, state_data, 1, q_format);
 }
 
 
