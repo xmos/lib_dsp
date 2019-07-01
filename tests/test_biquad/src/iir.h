@@ -1,3 +1,4 @@
+// Copyright (c) 2019, XMOS Ltd, All rights reserved
 #include "dsp.h"
 #define IIR_ORDERS 8
 #define MAX_BIQUAD_ORDER 4

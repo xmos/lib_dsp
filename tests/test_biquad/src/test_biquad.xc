@@ -79,7 +79,6 @@ int32_t random_int32(unsigned &r){
 
     //check that no state that should be written to got written to.
 
-    printf("max: %f \t",m);
     TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(1, mean_error/DATA_LEN, "mean error too big");
     TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error/DATA_LEN, "mean squared error too big");
 
@@ -99,7 +98,6 @@ void test_biquads(){
     double mean_error = 0;
     double mean_squared_error = 0;
     {mean_error, mean_squared_error} = biquad_measure(3, q_format, filter_coeffs);
-    printf("%f %f\n",mean_error, mean_squared_error);
     TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(1, mean_error, "mean error too big");
     TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error, "mean squared error too big");
     return;
