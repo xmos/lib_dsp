@@ -6,6 +6,9 @@
 #include <stdint.h>
 #include <dsp_complex.h>
 
+#define DSP_BFP_ZERO_EXP (-1024)
+
+
 #if defined(__XS2A__)
 
 #ifdef __XC__

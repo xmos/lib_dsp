@@ -3,34 +3,13 @@
 
 #include <xs1.h>
 #include <string.h>
-#include <math.h>
 
 #include <xclib.h>
 #include <dsp.h>
 #include <dsp_fp.h>
+#include <dsp_testing.h>
 
 #include "iir.h"
-
-int32_t double_to_int32(double d, const int d_exp){
-    int m_exp;
-    double m = frexp (d, &m_exp);
-
-    double r = ldexp(m, m_exp - d_exp);
-    int output_exponent;
-    frexp(r, &output_exponent);
-    if(output_exponent>31){
-//        printf("%d\n", output_exponent);
-//        printf("exponent is too high to cast to an int32_t (%d)\n", output_exponent);
-        return 0.0;
-    }
-    return r;
-}
-
-#define CRC_POLY (0xEB31D82E)
-int32_t random_int32(unsigned &r){
-    crc32(r, -1, CRC_POLY);
-    return (int32_t)r;
-}
 
 {double, double} biquad_measure(unsigned order, const int q_format, int32_t * filter_coeffs){
 
@@ -56,8 +35,10 @@ int32_t random_int32(unsigned &r){
     double mean_squared_error = 0;
     for(unsigned s=0;s<DATA_LEN;s++){
 
-        int32_t x = random_int32(r)>>1;
-        double x_fp = ldexp(x, x_exp);
+        int32_t x = dsp_rand_int32(&r)>>1;
+        int error = 0;
+        dsp_float_t x_fp = dsp_conv_int32_to_float(x, x_exp, &error);
+        TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
         int32_t y = dsp_filters_biquads(x, filter_coeffs, state_data, order, q_format);
         double y_fp = dsp_filters_biquads_fp(x_fp, filter_coeffs_fp, state_data_fp, order);
@@ -65,8 +46,9 @@ int32_t random_int32(unsigned &r){
         for(unsigned i=0;i<DSP_NUM_STATES_PER_BIQUAD*order;i++){
             m = fmax(m,state_data_fp[i]);
         }
-        int32_t y_fp_normalised = double_to_int32(y_fp,x_exp);
 
+        int32_t y_fp_normalised = dsp_conv_float_to_int32(y_fp,x_exp, &error);
+        TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
         double diff = (double)(y-y_fp_normalised);
         mean_error += diff;
         mean_squared_error += (diff*diff);
@@ -103,7 +85,7 @@ void test_biquads(){
     return;
 }
 
-
+//TODO
 void t2est_biquads_auto_gen(){
 
 
