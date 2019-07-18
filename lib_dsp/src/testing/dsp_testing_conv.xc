@@ -1,3 +1,4 @@
+// Copyright (c) 2019, XMOS Ltd, All rights reserved
 #include "dsp_testing.h"
 #include "dsp_bfp.h" //for DSP_BFP_ZERO_EXP
 #include <math.h>
