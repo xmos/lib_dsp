@@ -4,6 +4,7 @@
 #define DSP_COMPLEX_H_
 
 #include <stdint.h>
+#include <dsp_float_type.h>
 
 /** Type that represents a complex number. Both the real and imaginary
  * parts are represented as 32-bit fixed point values, with a Q value that
@@ -12,7 +13,7 @@
 typedef struct {
     int32_t re;
     int32_t im;
-} dsp_complex_t;
+} dsp_complex_int32_t;
 
 /** Type that represents a complex number. Both the real and imaginary
  * parts are represented as 16-bit fixed point values, with a Q value that
@@ -21,7 +22,7 @@ typedef struct {
 typedef struct {
     int16_t re;
     int16_t im;
-} dsp_complex_short_t;
+} dsp_complex_int16_t;
 
 /** Type that represents a complex number. Both the real and imaginary
  * parts are represented as double precision values.
@@ -29,7 +30,7 @@ typedef struct {
 typedef struct {
     double re;
     double im;
-} dsp_complex_fp;
+} dsp_complex_float_t;
 
 /**
  * Struct containing the sample data of two channels. Both channels
@@ -40,7 +41,7 @@ typedef struct {
 typedef struct {
     int32_t ch_a;  ///< First channel in the pair.
     int32_t ch_b;  ///< Second channel in the pair.
-} dsp_ch_pair_t;
+} dsp_ch_pair_int32_t;
 
 /**
  * Struct containing the sample data of two channels. Both channels
@@ -51,16 +52,29 @@ typedef struct {
 typedef struct {
     int16_t ch_a;  ///< First channel in the pair.
     int16_t ch_b;  ///< Second channel in the pair.
-} dsp_ch_pair_short_t;
+} dsp_ch_pair_int16_t;
 
 /**
  * Struct containing the floating poing sample data of two channels.
  * An array of this struct can be used to hold a frame of samples.
  */
 typedef struct {
-    double ch_a;  ///< First channel in the pair.
-    double ch_b;  ///< Second channel in the pair.
-} dsp_ch_pair_fp;
+    dsp_float_t ch_a;  ///< First channel in the pair.
+    dsp_float_t ch_b;  ///< Second channel in the pair.
+} dsp_ch_pair_float_t;
+
+typedef dsp_complex_int32_t dsp_complex_t;
+typedef dsp_complex_int16_t dsp_complex_short_t;
+typedef dsp_ch_pair_int32_t dsp_ch_pair_t;
+typedef dsp_ch_pair_int16_t dsp_ch_pair_short_t;
+typedef dsp_complex_float_t dsp_complex_fp;
+
+
+
+
+
+
+
 
 
 /** Function that adds two complex numbers that use the same fixed point
