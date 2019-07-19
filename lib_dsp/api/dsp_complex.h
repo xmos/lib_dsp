@@ -68,8 +68,7 @@ typedef dsp_complex_int16_t dsp_complex_short_t;
 typedef dsp_ch_pair_int32_t dsp_ch_pair_t;
 typedef dsp_ch_pair_int16_t dsp_ch_pair_short_t;
 typedef dsp_complex_float_t dsp_complex_fp;
-
-
+typedef dsp_ch_pair_float_t dsp_ch_pair_fp;
 
 
 
