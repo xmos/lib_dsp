@@ -8,13 +8,28 @@
 /*
  * Random number generation
  */
-int16_t  dsp_rand_int16(unsigned *r);
-uint16_t dsp_rand_uint16(unsigned *r);
-int32_t  dsp_rand_int32(unsigned *r);
-uint32_t dsp_rand_uint32(unsigned *r);
-int64_t  dsp_rand_int64(unsigned *r);
-uint64_t dsp_rand_uint64(unsigned *r);
-//TODO complex
+
+/**
+ * Generates a pseudorandom number based on a 32 bit CRC. Requires a seed
+ * which it will modify.
+ *
+ * \param[in]   r               Seed.
+ *
+ * \returns                     Pseudorandom value of the type given in the function name.
+ */
+int16_t  dsp_pseudo_rand_int16(unsigned *r);
+uint16_t dsp_pseudo_rand_uint16(unsigned *r);
+int32_t  dsp_pseudo_rand_int32(unsigned *r);
+uint32_t dsp_pseudo_rand_uint32(unsigned *r);
+int64_t  dsp_pseudo_rand_int64(unsigned *r);
+uint64_t dsp_pseudo_rand_uint64(unsigned *r);
+dsp_float_t dsp_pseudo_rand_float(unsigned *r);
+dsp_complex_int16_t dsp_pseudo_rand_complex_int16(unsigned *r);
+dsp_complex_int32_t dsp_pseudo_rand_complex_int32(unsigned *r);
+dsp_complex_float_t dsp_pseudo_rand_complex_float(unsigned *r);
+dsp_ch_pair_int16_t dsp_pseudo_rand_ch_pair_int16(unsigned *r);
+dsp_ch_pair_int32_t dsp_pseudo_rand_ch_pair_int32(unsigned *r);
+dsp_ch_pair_float_t dsp_pseudo_rand_ch_pair_float(unsigned *r);
 
 /*
  * Type conversion
@@ -33,6 +48,20 @@ typedef enum {
 
 } dsp_conv_error_e;
 
+
+/**
+ * Converts integer types with an exponent into the type given by dsp_float_t. Any
+ * errors during the conversion will be added into the error flags. The error flags
+ * must be initialised to zero before calling in order to detect errors.
+ *
+ * \param[in]   x               The mantissa of x.
+ *
+ * \param[in]   x_exp           The exponent of x.
+ *
+ * \param[in]   error           Pointer to where the error flags will be collected.
+ *
+ * \returns                     The floating point representation of x.
+ */
 dsp_float_t dsp_conv_int16_to_float (const int16_t x,  const int x_exp, int *error);
 dsp_float_t dsp_conv_uint16_to_float(const uint16_t x, const int x_exp, int *error);
 dsp_float_t dsp_conv_int32_to_float (const int32_t x,  const int x_exp, int *error);

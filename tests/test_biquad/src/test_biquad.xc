@@ -35,7 +35,7 @@
     double mean_squared_error = 0;
     for(unsigned s=0;s<DATA_LEN;s++){
 
-        int32_t x = dsp_rand_int32(&r)>>1;
+        int32_t x = dsp_pseudo_rand_int32(&r)>>1;
         int error = 0;
         dsp_float_t x_fp = dsp_conv_int32_to_float(x, x_exp, &error);
         TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
@@ -84,53 +84,3 @@ void test_biquads(){
     TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error, "mean squared error too big");
     return;
 }
-
-//TODO
-void t2est_biquads_auto_gen(){
-
-
-    for(unsigned order_index = 0;order_index < IIR_ORDERS;order_index++){
-
-        for(unsigned iir_index = 0; iir_index < IIRS_PER_ORDER; iir_index++){
-
-            const int q_format = q_factors[order_index][iir_index];
-            const int biquad_order = biquad_orders[order_index][iir_index];
-            int32_t [[aligned(8)]] filter_coeffs[MAX_BIQUAD_ORDER*DSP_NUM_COEFFS_PER_BIQUAD];
-
-            memcpy(filter_coeffs, filter[order_index][iir_index], biquad_order*DSP_NUM_COEFFS_PER_BIQUAD*sizeof(int32_t));
-
-            uint32_t max_coef=0,min_coef=UINT_MAX;
-                for(unsigned s=0;s<biquad_order*DSP_NUM_COEFFS_PER_BIQUAD;s++){
-                    int32_t c= filter_coeffs[s];
-                    if(c){
-                        if(c<0)c=-c;
-                        uint32_t d =c;
-                        if(d>max_coef)max_coef = d;
-                        if(d<min_coef)min_coef = d;
-                    }
-                }
-                printf("%u %u %u\t", max_coef, min_coef, 32 - clz(max_coef/ min_coef));
-
-//                printf("\n");
-//                printf("order_index: %d\n", order_index);
-//                printf("iir_index: %d\n", iir_index);
-//            printf("q_format: %d\n", q_format);
-//            printf("biquad_order: %d\n", biquad_order);
-//            for(unsigned c=0;c<DSP_NUM_COEFFS_PER_BIQUAD*biquad_order;c++){
-//
-//                printf("%f\n", ldexp(filter_coeffs[c], -q_format));
-//            }
-
-            double mean_error = 0;
-            double mean_squared_error = 0;
-            {mean_error, mean_squared_error} = biquad_measure(biquad_order, q_format, filter_coeffs);
-            printf("%f %f\n",mean_error, mean_squared_error);
-//            TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(1, mean_error, "mean error too big");
-//            TEST_ASSERT_LESS_OR_EQUAL_UINT32_MESSAGE(2048, mean_squared_error, "mean squared error too big");
-        }
-    }
-    return;
-}
-
-
-
