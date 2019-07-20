@@ -8,6 +8,12 @@
 
 #define DSP_BFP_ZERO_EXP (-1024)
 
+#ifdef __XC__
+#define UNSAFE unsafe
+#else
+#define UNSAFE
+#endif //__XC_
+
 /*
  * clz
  */
@@ -29,44 +35,38 @@ unsigned dsp_bfp_cls_ch_pair_int32(const dsp_ch_pair_int32_t d, const unsigned c
 /*
  * Vector clz
  */
-unsigned dsp_bfp_clz_vect_uint16(const uint16_t *d, const unsigned length);
-unsigned dsp_bfp_clz_vect_uint32(const uint32_t *d, const unsigned length);
-unsigned dsp_bfp_clz_vect_uint64(const uint64_t *d, const unsigned length);
+unsigned dsp_bfp_clz_vect_uint16(const uint16_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_clz_vect_uint32(const uint32_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_clz_vect_uint64(const uint64_t * UNSAFE d, const unsigned length);
 
 /*
  * Vector cls
  */
-unsigned dsp_bfp_cls_vect_int16(const int16_t *d, const unsigned length);
-unsigned dsp_bfp_cls_vect_int32(const int32_t *d, const unsigned length);
-unsigned dsp_bfp_cls_vect_complex_int16(const dsp_complex_int16_t *d, const unsigned length);
-unsigned dsp_bfp_cls_vect_complex_int32(const dsp_complex_int32_t *d, const unsigned length);
-unsigned dsp_bfp_cls_vect_ch_pair_int16(const dsp_ch_pair_int16_t *d, const unsigned length,
+unsigned dsp_bfp_cls_vect_int16(const int16_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_cls_vect_int32(const int32_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_cls_vect_complex_int16(const dsp_complex_int16_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_cls_vect_complex_int32(const dsp_complex_int32_t * UNSAFE d, const unsigned length);
+unsigned dsp_bfp_cls_vect_ch_pair_int16(const dsp_ch_pair_int16_t * UNSAFE d, const unsigned length,
         const unsigned channel_index);
-unsigned dsp_bfp_cls_vect_ch_pair_int32(const dsp_ch_pair_int32_t *d, const unsigned length,
+unsigned dsp_bfp_cls_vect_ch_pair_int32(const dsp_ch_pair_int32_t * UNSAFE d, const unsigned length,
         const unsigned channel_index);
 
 /*
  * Vector shl
  */
-void dsp_bfp_shl_vect_uint16(uint16_t *d, const unsigned length);
-void dsp_bfp_shl_vect_uint32(uint32_t *d, const unsigned length);
-void dsp_bfp_shl_vect_int16(int16_t *d, const unsigned length);
-void dsp_bfp_shl_vect_int32(int32_t *d, const unsigned length);
-void dsp_bfp_shl_vect_complex_int16(dsp_complex_int16_t *d, const unsigned length);
-void dsp_bfp_shl_vect_complex_int32(dsp_complex_int32_t *d, const unsigned length);
-unsigned dsp_bfp_cls_vect_ch_pair_int16(const dsp_ch_pair_int16_t *d, const unsigned length,
-        const unsigned channel_index);
-unsigned dsp_bfp_cls_vect_ch_pair_int32(const dsp_ch_pair_int32_t *d, const unsigned length,
-        const unsigned channel_index);
-
+void dsp_bfp_shl_vect_uint16(uint16_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_uint32(uint32_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_int16(int16_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_int32(int32_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_complex_int16(dsp_complex_int16_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_complex_int32(dsp_complex_int32_t * UNSAFE d, const unsigned length, const int shl);
+void dsp_bfp_shl_vect_ch_pair_int16(dsp_ch_pair_int16_t * UNSAFE d, const unsigned length,
+        const int shl_ch_a, const int shl_ch_b);
+void dsp_bfp_shl_vect_ch_pair_int32(dsp_ch_pair_int32_t * UNSAFE d, const unsigned length,
+        const int shl_ch_a, const int shl_ch_b);
 
 #if defined(__XS2A__)
 
-#ifdef __XC__
-#define UNSAFE unsafe
-#else
-#define UNSAFE
-#endif //__XC_
 
 /** This function computes the number of leading sign bits in an array of
  * complex numbers. This can be used to calculate the current headroom, and
