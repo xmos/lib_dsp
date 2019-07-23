@@ -307,7 +307,7 @@ static dsp_u32_float_t neg_s32_to_u32(const dsp_s32_float_t a){
 
 dsp_s32_float_t dsp_div_s32_s32(const dsp_s32_float_t a, const dsp_s32_float_t b){
     if(b.m == 0){
-      dsp_s32_float_t r = { INT_MAX,-31};
+      dsp_s32_float_t r = {0x40000000,-30};
       return r;
     }
     if(a.m > 0){
@@ -342,7 +342,7 @@ dsp_s32_float_t dsp_div_s32_s32(const dsp_s32_float_t a, const dsp_s32_float_t b
 
 dsp_s32_float_t dsp_div_s32_u32(const dsp_s32_float_t a, const dsp_u32_float_t b){
     if(b.m == 0){
-      dsp_s32_float_t r = {INT_MAX,-31};
+      dsp_s32_float_t r = {0x40000000,-30};
       return r;
     }
     if(a.m < 0){
@@ -366,7 +366,7 @@ dsp_s32_float_t dsp_div_s32_u32(const dsp_s32_float_t a, const dsp_u32_float_t b
 
 dsp_u32_float_t dsp_div_u32_u32(const dsp_u32_float_t a, const dsp_u32_float_t b){
     if(b.m == 0){
-      dsp_u32_float_t r = {UINT_MAX,-32};
+      dsp_u32_float_t r = {0x80000000,-31};
       return r;
     }
     uint32_t numerator = a.m;

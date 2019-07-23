@@ -26,7 +26,6 @@ dsp_fft_split_spectrum_xs2:
 .align 8
 .issue_mode dual
 	DUALENTSP_lu6 NSTACKWORDS
-
 	std r5, r4, sp[0]
 	std r6, r7, sp[1]
 	mov r6, j

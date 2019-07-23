@@ -570,4 +570,3 @@ q8_24 dsp_math_softplus(q8_24 x) {
         return x + dsp_math_log(0x01000000 + dsp_math_exp(-x));
     }
 }
-

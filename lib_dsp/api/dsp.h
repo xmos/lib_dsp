@@ -10,6 +10,7 @@
 #include <dsp_statistics.h>
 #include <dsp_math.h>
 #include <dsp_math_int.h>
+#include <dsp_fast_float.h>
 #include <dsp_qformat.h>
 #include <dsp_vector.h>
 #include <dsp_fft.h>
