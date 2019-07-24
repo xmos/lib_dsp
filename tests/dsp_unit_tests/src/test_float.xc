@@ -1205,7 +1205,7 @@ void test_sqrt_u32(){
         double R = sqrt(A);
 
         int error = 0;
-        uint32_t v = dsp_conv_float_to_int32(R, r.e, &error);
+        uint32_t v = dsp_conv_float_to_uint32(R, r.e, &error);
         TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_u32(&r), "Output is not properly normalised");

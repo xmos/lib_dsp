@@ -5,6 +5,7 @@
 
 #include "dsp_fast_float.h"
 #include "dsp_bfp.h"
+#include "dsp_math.h"
 
 unsigned dsp_normalise_s32(dsp_s32_float_t *val){
     if(val->m == 0){
@@ -400,21 +401,24 @@ dsp_u32_float_t dsp_div_u32_u32(const dsp_u32_float_t a, const dsp_u32_float_t b
     return r;
 }
 
+uint32_t dsp_sqrt30_xs2(uint32_t);
+void dsp_sqrt_calc_exp(const int int_exp, const  unsigned hr, int * shl, int * out_exp);
+
 dsp_u32_float_t dsp_sqrt_u32(const dsp_u32_float_t a){
-//    dsp_u32_float_t b;
-//    int shl;
-//    if(a.m != 0){
-//        {shl, b.e} = dsp_sqrt_calc_exp(a.e, clz(a.m));
-//        if(shl > 0)
-//            b.m = dsp_sqrt30_xs2(a.m<<shl);
-//        else
-//            b.m = dsp_sqrt30_xs2(a.m>>(-shl));
-//        dsp_normalise_u32(&b);
-//        return b;
-//    } else {
-//        dsp_u32_float_t b = {0, DSP_FLOAT_ZERO_EXP};
-//        return b;
-//    }
+    dsp_u32_float_t b;
+    int shl;
+    if(a.m != 0){
+        dsp_sqrt_calc_exp(a.e, clz(a.m), &shl, &b.e);
+        if(shl > 0)
+            b.m = dsp_sqrt30_xs2(a.m<<shl);
+        else
+            b.m = dsp_sqrt30_xs2(a.m>>(-shl));
+        dsp_normalise_u32(&b);
+        return b;
+    } else {
+        dsp_u32_float_t b = {0, DSP_FLOAT_ZERO_EXP};
+        return b;
+    }
 }
 
 void dsp_exponential_average_u32(dsp_u32_float_t *x, dsp_u32_float_t new_sample, uint32_t alpha){
