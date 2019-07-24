@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 
 #include <platform.h>
 #include "dsp_qformat.h"
@@ -319,6 +319,51 @@ void dsp_vector_adds
         break;
         case 1:
         result_vector_R[0] = input_vector_X[0] + input_scalar_A;
+        break;
+    }
+}
+
+void dsp_vector_shr
+(
+    const int32_t* input_vector_X,
+    int32_t        input_scalar_A,
+    int32_t*       result_vector_R,
+    const int32_t  vector_length
+) {
+    int32_t x1, x0;
+    int32_t vl = vector_length;  
+
+    if(((uint32_t) input_vector_X&7)!=0) {
+        // ensure following ldd are 64 bit aligned
+        *result_vector_R++ = *input_vector_X++ >> input_scalar_A;
+        vl -= 1;
+    }
+
+    while( vl >= 4 )
+    {
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        x1 >>= input_scalar_A; x0 >>= input_scalar_A;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        x1 >>= input_scalar_A; x0 >>= input_scalar_A;
+        asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        vl -= 4; input_vector_X += 4; result_vector_R += 4;
+    }
+    switch( vl )
+    {
+        case 3:
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        x1 >>= input_scalar_A; x0 >>= input_scalar_A;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        result_vector_R[2] = input_vector_X[2] + input_scalar_A;
+        break;
+        case 2:
+        asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
+        x1 >>= input_scalar_A; x0 >>= input_scalar_A;
+        asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
+        break;
+        case 1:
+        result_vector_R[0] = input_vector_X[0] >> input_scalar_A;
         break;
     }
 }
