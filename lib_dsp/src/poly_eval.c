@@ -1,3 +1,4 @@
+// Copyright (c) 2019, XMOS Ltd, All rights reserved
 #include <stdint.h>
 
 int32_t dsp_poly_eval_impl_xs2
