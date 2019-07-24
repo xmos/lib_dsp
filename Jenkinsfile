@@ -30,6 +30,12 @@ pipeline {
             runPytest()
           }
         }
+        dir("${REPO}/tests/dsp_unit_tests") {
+          runXwaf('.')
+          viewEnv() {
+            runPytest()
+          }
+        }
 
         runXmostest("${REPO}", 'tests')
       }
