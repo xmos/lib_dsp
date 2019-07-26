@@ -64,7 +64,8 @@ void dsp_vector_greater_scalar
     const int32_t input_vector[], 
     const int32_t scalar, 
     int32_t result_vector_R[],
-    const uint32_t vector_length
+    const uint32_t vector_length,
+    const int32_t  q_format
 );
 
 /** Vector negation: ``R[i] = -X[i]``

@@ -6,6 +6,8 @@
 #include "dsp_math.h"
 #include "assert.h"
 
+#define SUPPORT_64BIT_MISALIGNED_DATA 1
+
 int32_t dsp_vector_minimum
 (
     const int32_t* input_vector,
@@ -191,11 +193,12 @@ void dsp_vector_greater_scalar
     const int32_t* input_vector,
     const int32_t  scalar, 
     int32_t*       result_vector_R,
-    const uint32_t vector_length
+    const uint32_t vector_length,
+    const int32_t  q_format
 ) 
 {
   for(unsigned i=0; i<vector_length; ++i) {
-    result_vector_R[i] = input_vector[i] > scalar ? input_vector[i] : 0;
+    result_vector_R[i] = input_vector[i] > scalar ? 1<<q_format : 0;
   }
 }
 
@@ -287,12 +290,13 @@ void dsp_vector_adds
     int32_t x1, x0;
     int32_t vl = vector_length;  
 
-
+#if SUPPORT_64BIT_MISALIGNED_DATA
     if(((uint32_t) input_vector_X&7)!=0) {
         // ensure following ldd are 64 bit aligned
         *result_vector_R++ = *input_vector_X++ + input_scalar_A;
         vl -= 1;
     }
+#endif
 
     while( vl >= 4 )
     {
@@ -333,11 +337,13 @@ void dsp_vector_shr
     int32_t x1, x0;
     int32_t vl = vector_length;  
 
+#if SUPPORT_64BIT_MISALIGNED_DATA
     if(((uint32_t) input_vector_X&7)!=0) {
         // ensure following ldd are 64 bit aligned
         *result_vector_R++ = *input_vector_X++ >> input_scalar_A;
         vl -= 1;
     }
+#endif
 
     while( vl >= 4 )
     {
@@ -416,6 +422,18 @@ void dsp_vector_muls
     int32_t ah, x1, x0; uint32_t al;
     
     int32_t vl = vector_length;  
+
+#if SUPPORT_64BIT_MISALIGNED_DATA
+    if(((uint32_t) input_vector_X&7)!=0) {
+        // ensure following ldd are 64 bit aligned
+        asm("maccs %0,%1,%2,%3":"=r"(ah),"=r"(al):"r"(input_vector_X[0]),"r"(input_scalar_A),"0"(0),"1"(1<<(q_format-1)));
+        asm("lsats %0,%1,%2":"=r"(ah),"=r"(al):"r"(q_format),"0"(ah),"1"(al));
+        asm("lextract %0,%1,%2,%3,32":"=r"(x0):"r"(ah),"r"(al),"r"(q_format));
+        result_vector_R[0] = x0;
+        vl -= 1; input_vector_X += 1; result_vector_R += 1;
+    }
+#endif
+
     while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -546,6 +564,19 @@ void dsp_vector_exp
     int32_t x1, x0;
     
     int32_t vl = vector_length;  
+
+#if SUPPORT_64BIT_MISALIGNED_DATA
+    if(((uint32_t) input_vector_X&7)!=0) {
+        // ensure following ldd are 64 bit aligned
+        x0 = input_vector_X[0];
+        x0 <<= 8;
+        check_exp_exponent(x0);
+        x0 = dsp_math_exp(x0);
+        x0 >>= 8;
+        result_vector_R[0] = x0;
+        vl -= 1; input_vector_X += 1; result_vector_R += 1;
+    }
+#endif 
     while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
@@ -624,11 +655,13 @@ void dsp_vector_addv
 
     int32_t vl = vector_length;  
 
+#if SUPPORT_64BIT_MISALIGNED_DATA
     if(((uint32_t) input_vector_X&7)!=0) {
         // ensure following ldd are 64 bit aligned
         *result_vector_R++ = *input_vector_X++ + *input_vector_Y++;
         vl -= 1;
     }
+#endif
 
     while( vl >= 8 )
     {
