@@ -7,6 +7,7 @@ xCORE-200 DSP library change log
   * Added dsp_ch_pair_t struct to represent channel pairs
   * Added floating point biquads
   * Changed implementation of biquads to be faster and smaller
+  * Added use of pipenv to set up python environment
 
 4.1.0
 -----

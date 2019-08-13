@@ -1,8 +1,9 @@
-@Library('xmos_jenkins_shared_library@master') _
+@Library('xmos_jenkins_shared_library@develop') _
 getApproval()
 pipeline {
   agent {
     label 'x86&&macOS&&Apps'
+    label 'x86 && macOS && brew'    
   }
   environment {
     VIEW = 'dsp'
@@ -14,7 +15,7 @@ pipeline {
   stages {
     stage('Get view') {
       steps {
-        prepareAppsSandbox("${VIEW}", "${REPO}")
+        xcorePrepareSandbox("${VIEW}", "${REPO}")        
       }
     }
     stage('Library checks') {

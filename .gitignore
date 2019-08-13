@@ -18,3 +18,7 @@
 .lock-waf_*
 .waf-*/
 build/
+**/*.egg-info/
+*/.venv/*
+Pipfile.lock
+
