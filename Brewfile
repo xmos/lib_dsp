@@ -16,4 +16,3 @@ brew 'xz'
 brew 'zlib'
 
 brew 'axe'
-brew 'sox'
