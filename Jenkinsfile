@@ -2,7 +2,6 @@
 getApproval()
 pipeline {
   agent {
-    label 'x86&&macOS&&Apps'
     label 'x86 && macOS && brew'    
   }
   environment {
