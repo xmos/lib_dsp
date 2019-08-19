@@ -5,7 +5,7 @@ brew 'perl'
 brew 'cpanm'
 
 brew 'python'
-brew 'python2'
+brew 'python@2'
 brew 'pipenv'
 brew 'pyenv'
 # Build dependencies for Python (when compiled with pyenv)
