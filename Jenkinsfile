@@ -2,7 +2,7 @@
 getApproval()
 pipeline {
   agent {
-    label 'x86 && macOS && brew'    
+    label 'x86_64&&brew'    
   }
   environment {
     VIEW = 'dsp'
