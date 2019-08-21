@@ -1,10 +1,13 @@
-// Copyright (c) 2016-2018, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_BFP_H_
 #define DSP_BFP_H_
 
 #include <stdint.h>
 #include <dsp_complex.h>
+
+#define DSP_BFP_ZERO_EXP (-1024)
+
 
 #if defined(__XS2A__)
 
