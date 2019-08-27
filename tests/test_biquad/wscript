@@ -227,14 +227,3 @@ def build(bld):
         bld.program(include=include, source=source, depends_on=depends_on)
 
 
-def test(bld):
-    # Call pytest to run Unity tests inside axe or xsim
-    try:
-        test_output = subprocess.check_output(['pytest'])
-    except subprocess.CalledProcessError as e:
-        # pytest exits non-zero if an assertion fails
-        test_output = e.output
-    print(test_output)
-
-
-# TODO: ensure clean deletes the runners dir/

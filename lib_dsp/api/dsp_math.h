@@ -1,10 +1,16 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_MATH_H_
 #define DSP_MATH_H_
 
 #include "xccompat.h"
 #include "stdint.h"
+
+#ifdef __XC__
+#define UNSAFE unsafe
+#else
+#define UNSAFE
+#endif //__XC_
 
 
 /** Q1.31 fixed point format with 31 fractional bits
@@ -52,6 +58,26 @@ typedef uint32_t uq8_24;
 
 #define ONE_Q8_24    (1<<24)
 
+
+
+/**  Polynomial Evalulation
+ *
+ *  This function evalulates a polynomial at a point x. The coefficients must be in
+ *  reverse order, i.e. c
+ *  ....
+ *
+ *  \param  x            Point at which to evalulate polynomial.
+ *  \param  coefs        Coefficients of polynomial.
+ *  \param  n_coefs      Count of coefficients.
+ *  \returns             Evalulation of polynomial.
+ */
+
+int32_t dsp_poly_eval
+(
+    const int32_t x,
+    const int32_t * UNSAFE coefs,
+    const unsigned n_coefs
+);
 
 /**  Scalar multipliplication
  * 

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_H_
 #define DSP_H_
@@ -10,6 +10,7 @@
 #include <dsp_statistics.h>
 #include <dsp_math.h>
 #include <dsp_math_int.h>
+#include <dsp_fast_float.h>
 #include <dsp_qformat.h>
 #include <dsp_vector.h>
 #include <dsp_fft.h>

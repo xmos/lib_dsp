@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2019, XMOS Ltd, All rights reserved
 
 #ifndef DSP_TRANSFORMS_H_
 #define DSP_TRANSFORMS_H_
@@ -35,6 +35,7 @@ extern const int32_t dsp_sine_16384[];
  * the FFT frequency bin.
  * Note that the DC component of the imaginary output spectrum (index zero) will
  * contain the real component for the Nyquest rate.
+ * Note the minimum N is 8.
  *
  * \param[in,out] pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.
@@ -42,7 +43,7 @@ extern const int32_t dsp_sine_16384[];
 void dsp_fft_split_spectrum( dsp_complex_t pts[], const uint32_t N );
 
 /** This function merges two split spectra. It is the exact inverse operation of
- * dsp_fft_split_spectrum.
+ * dsp_fft_split_spectrum. Note the minimum N is 8.
  *
  * \param[in,out] pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points. Must be a power of two.

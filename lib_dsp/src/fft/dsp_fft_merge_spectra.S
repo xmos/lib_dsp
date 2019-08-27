@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2019, XMOS Ltd, All rights reserved
     
 	.section	.dp.data,"awd",@progbits
 	.text
@@ -26,7 +26,6 @@ dsp_fft_merge_spectra_xs2:
 .align 8
 .issue_mode dual
 	DUALENTSP_lu6 NSTACKWORDS
-
 	std r5, r4, sp[0]
 	std r6, r7, sp[1]
 	std r8, r9, sp[2]
