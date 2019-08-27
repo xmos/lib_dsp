@@ -205,7 +205,7 @@ void test_conv_int64_mostly_zeros(){
     int d_exp, error = 0;
     dsp_conv_vect_float_to_int64 (f, d, &d_exp, VECT_LEN, &error);
 
-    TEST_ASSERT_EQUAL_INT64_MESSAGE(4611686018427387904LL, d[0], "mantissa is wrong");
+    TEST_ASSERT_EQUAL_INT64_MESSAGE(0x4000000000000000LL, d[0], "mantissa is wrong");
     TEST_ASSERT_EQUAL_INT32_MESSAGE(-62, d_exp, "exponent is wrong");
     TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, error, "bad error");
     for(unsigned i=1;i<VECT_LEN;i++){
@@ -239,7 +239,7 @@ void test_conv_uint64_mostly_zeros(){
     int d_exp, error = 0;
     dsp_conv_vect_float_to_uint64 (f, d, &d_exp, VECT_LEN, &error);
 
-    TEST_ASSERT_EQUAL_UINT64_MESSAGE(9223372036854775808LLU, d[0], "mantissa is wrong");
+    TEST_ASSERT_EQUAL_UINT64_MESSAGE(0x8000000000000000LLU, d[0], "mantissa is wrong");
     TEST_ASSERT_EQUAL_INT32_MESSAGE(-63, d_exp, "exponent is wrong");
     TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, error, "bad error");
     for(unsigned i=1;i<VECT_LEN;i++){
