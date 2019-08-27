@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
 #include <stdint.h>
@@ -314,7 +314,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], const uint32_t N ){
 
     int32_t t = pts[0].im;
     pts[0].im = pts[N/2].re;
-    pts[N/2].re = t;N
+    pts[N/2].re = t;
 
     for(uint32_t i=1;i<n/2;i++){
 

@@ -180,6 +180,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app/src}&quot;"/>
 									<listOptionValue builtIn="false" value="/local/Views/swview/Installs/Linux/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include/xc"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include/clang"/>
 								</option>
 								<inputType id="com.xmos.cdt.xc.compiler.input.685240860" name="XC" superClass="com.xmos.cdt.xc.compiler.input"/>
 							</tool>
@@ -486,6 +489,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app/src}&quot;"/>
 									<listOptionValue builtIn="false" value="/local/Views/swview/Installs/Linux/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include/clang"/>
 								</option>
 								<inputType id="com.xmos.cdt.c.compiler.input.c.568058766" name="C" superClass="com.xmos.cdt.c.compiler.input.c"/>
 							</tool>
@@ -797,6 +802,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/app/src}&quot;"/>
 									<listOptionValue builtIn="false" value="/local/Views/swview/Installs/Linux/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include/clang"/>
+									<listOptionValue builtIn="false" value="/Users/andrew/sandboxes/sw3510/Installs/Mac/target/include/c++/v1"/>
 								</option>
 								<inputType id="com.xmos.cdt.cxx.compiler.input.cpp.1907912085" name="C++" superClass="com.xmos.cdt.cxx.compiler.input.cpp"/>
 							</tool>

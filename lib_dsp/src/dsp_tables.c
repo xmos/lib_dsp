@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 #include <stdint.h>
 
 const int32_t dsp_sine_4[2] = {
@@ -2099,3 +2099,4 @@ const int32_t dsp_sine_16384[4097] = {
   2147481121, 2147482226, 2147483016, 2147483490,
   2147483647,
 };
+

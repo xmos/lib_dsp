@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
 
 #include <stdio.h>
 #include "dsp.h"
@@ -9,9 +9,9 @@
 // The biquad functions utilize coeffs arrays of length 5 but ...
 // The coeffs below are arraned as N x 6 to keep coeff arrays DWORD aligned.
 
-int32_t coeff[8][6]; // Coefficients for each filter
+int32_t [[aligned(8)]]coeff[8][6]; // Coefficients for each filter
 //Note: array size of 6 is chosen to enforce 64 bit alignment for ldd and std
-int32_t state[8][4] = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+int32_t [[aligned(8)]]state[8][4] = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
                        {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}}; // State data for each filter
 
 const char* names[] =
