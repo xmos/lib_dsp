@@ -6,7 +6,8 @@ pipeline {
   }
   environment {
     REPO = 'lib_dsp'
-    VIEW = "${env.JOB_NAME.contains('PR-') ? REPO+'_'+env.CHANGE_TARGET : REPO+'_'+env.BRANCH_NAME}"
+    VIEW = 'lib_dsp_xwaf_xcommon'
+    //VIEW = "${env.JOB_NAME.contains('PR-') ? REPO+'_'+env.CHANGE_TARGET : REPO+'_'+env.BRANCH_NAME}"
   }
   triggers {
     /* Trigger this Pipeline on changes to the repos dependencies
@@ -41,8 +42,7 @@ pipeline {
     }
     stage('Patch tools') {
       steps {
-        git url: 'https://github.com/oscarbailey-xmos/xwaf_patch', credentialsId: "706befcb-4427-485e-a3dc-61de0eaadc00"
-        dir('xwaf_patch') {
+        dir('tools_released/xwaf_patch') {
           viewEnv() {
             sh './xpatch'
           }
