@@ -39,6 +39,14 @@ pipeline {
         xcorePrepareSandbox("${VIEW}", "${REPO}")
       }
     }
+    stage('Patch tools') {
+      git 'git@github.com:oscarbailey-xmos/xwaf_patch'
+      dir('xwaf_patch') {
+        viewEnv() {
+          sh './xpatch'
+        }
+      }
+    }
     stage('Library checks') {
       steps {
         xcoreLibraryChecks("${REPO}")
