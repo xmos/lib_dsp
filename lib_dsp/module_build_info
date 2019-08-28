@@ -14,4 +14,6 @@ INCLUDE_DIRS = $(EXPORT_INCLUDE_DIRS)
 SOURCE_DIRS = src \
               src/bfp \
               src/fft \
-              src/float
+              src/float \
+              src/gen \
+              src/testing
