@@ -29,14 +29,14 @@ class UnityTestSource(pytest.File):
         test_src_name = os.path.splitext(test_src_path)[0]
 
         test_bin_name_si = os.path.join(
-            test_root_dir_name + '_' + test_src_name + '_single_issue.xe')
-        test_bin_path_si = os.path.join('bin', test_src_name + '_single_issue',
+            test_src_name + '_single_issue.xe')
+        test_bin_path_si = os.path.join('bin',
                                         test_bin_name_si)
         yield UnityTestExecutable(test_bin_path_si, self)
 
         test_bin_name_di = os.path.join(
-            test_root_dir_name + '_' + test_src_name + '_dual_issue.xe')
-        test_bin_path_di = os.path.join('bin', test_src_name + '_dual_issue',
+            test_src_name + '_dual_issue.xe')
+        test_bin_path_di = os.path.join('bin',
                                         test_bin_name_di)
         yield UnityTestExecutable(test_bin_path_di, self)
 
