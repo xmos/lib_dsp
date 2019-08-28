@@ -40,10 +40,12 @@ pipeline {
       }
     }
     stage('Patch tools') {
-      git 'git@github.com:oscarbailey-xmos/xwaf_patch'
-      dir('xwaf_patch') {
-        viewEnv() {
-          sh './xpatch'
+      steps {
+        git 'git@github.com:oscarbailey-xmos/xwaf_patch'
+        dir('xwaf_patch') {
+          viewEnv() {
+            sh './xpatch'
+          }
         }
       }
     }
