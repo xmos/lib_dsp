@@ -41,7 +41,7 @@ pipeline {
     }
     stage('Patch tools') {
       steps {
-        git 'https://github.com/oscarbailey-xmos/xwaf_patch'
+        git url: 'https://github.com/oscarbailey-xmos/xwaf_patch', credentialsId: "706befcb-4427-485e-a3dc-61de0eaadc00"
         dir('xwaf_patch') {
           viewEnv() {
             sh './xpatch'
