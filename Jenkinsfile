@@ -41,7 +41,7 @@ pipeline {
     }
     stage('Patch tools') {
       steps {
-        git 'git@github.com:oscarbailey-xmos/xwaf_patch'
+        git 'https://github.com/oscarbailey-xmos/xwaf_patch'
         dir('xwaf_patch') {
           viewEnv() {
             sh './xpatch'
