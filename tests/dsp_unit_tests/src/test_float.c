@@ -11,31 +11,36 @@
 #include <math.h>
 #include <limits.h>
 
-dsp_s32_float_t random_float_s32(unsigned &r){
+signed sext(unsigned a, unsigned b){
+    asm("sext %0, %1": "=r"(a): "r"(b));
+    return a;
+}
+
+dsp_s32_float_t random_float_s32(unsigned *r){
     dsp_s32_float_t s;
-    s.e = sext(dsp_pseudo_rand_int32(&r), 4) - 31;
-    s.m = dsp_pseudo_rand_int32(&r);
+    s.e = sext(dsp_pseudo_rand_int32(r), 4) - 31;
+    s.m = dsp_pseudo_rand_int32(r);
     return s;
 }
 
-dsp_u32_float_t random_float_u32(unsigned &r){
+dsp_u32_float_t random_float_u32(unsigned *r){
     dsp_u32_float_t s;
-    s.e = sext(dsp_pseudo_rand_int32(&r), 4) - 32;
-    s.m = dsp_pseudo_rand_uint32(&r);
+    s.e = sext(dsp_pseudo_rand_int32(r), 4) - 32;
+    s.m = dsp_pseudo_rand_uint32(r);
     return s;
 }
 
-dsp_s64_float_t random_float_s64(unsigned &r){
+dsp_s64_float_t random_float_s64(unsigned *r){
     dsp_s64_float_t s;
-    s.e = sext(dsp_pseudo_rand_int32(&r), 4) - 31;
-    s.m = dsp_pseudo_rand_int64(&r);
+    s.e = sext(dsp_pseudo_rand_int32(r), 4) - 31;
+    s.m = dsp_pseudo_rand_int64(r);
     return s;
 }
 
-dsp_u64_float_t random_float_u64(unsigned &r){
+dsp_u64_float_t random_float_u64(unsigned *r){
     dsp_u64_float_t s;
-    s.e = sext(dsp_pseudo_rand_int32(&r), 4) - 32;
-    s.m = dsp_pseudo_rand_uint64(&r);
+    s.e = sext(dsp_pseudo_rand_int32(r), 4) - 32;
+    s.m = dsp_pseudo_rand_uint64(r);
     return s;
 }
 
@@ -62,7 +67,7 @@ void test_normalise_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         double Before = s32_to_double(a);
         dsp_normalise_s32(&a);
         double After = s32_to_double(a);
@@ -75,7 +80,7 @@ void test_normalise_s32_zero(){
   unsigned rand_seed = 3;
 
   for(unsigned i=0;i<TEST_COUNT;i++){
-      dsp_s32_float_t a = random_float_s32(rand_seed);
+      dsp_s32_float_t a = random_float_s32(&rand_seed);
       a.m = 0;
       double Before = s32_to_double(a);
 
@@ -92,7 +97,7 @@ void test_normalise_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         double Before = u32_to_double(a);
         dsp_normalise_u32(&a);
         double After = u32_to_double(a);
@@ -105,7 +110,7 @@ void test_normalise_u32_zero(){
     unsigned rand_seed = 5;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         a.m = 0;
         double Before = u32_to_double(a);
 
@@ -122,7 +127,7 @@ void test_normalise_s64(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s64_float_t a = random_float_s64(rand_seed);
+        dsp_s64_float_t a = random_float_s64(&rand_seed);
         double Before = s64_to_double(a);
         dsp_normalise_s64(&a);
         double After = s64_to_double(a);
@@ -136,7 +141,7 @@ void test_normalise_u64(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u64_float_t a = random_float_u64(rand_seed);
+        dsp_u64_float_t a = random_float_u64(&rand_seed);
         double Before = u64_to_double(a);
         dsp_normalise_u64(&a);
         double After = u64_to_double(a);
@@ -150,7 +155,7 @@ void test_u32_to_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_normalise_u32(&a);
 
         double Before = u32_to_double(a);
@@ -175,7 +180,7 @@ void test_u64_to_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u64_float_t a = random_float_u64(rand_seed);
+        dsp_u64_float_t a = random_float_u64(&rand_seed);
         dsp_normalise_u64(&a);
 
         double Before = u64_to_double(a);
@@ -199,7 +204,7 @@ void test_s64_to_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s64_float_t a = random_float_s64(rand_seed);
+        dsp_s64_float_t a = random_float_s64(&rand_seed);
         dsp_normalise_s64(&a);
         double Before = s64_to_double(a);
         dsp_s32_float_t b = dsp_s64_to_s32(a);
@@ -291,7 +296,7 @@ void test_abs_s32_to_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_normalise_s32(&a);
 
         double A = s32_to_double(a);
@@ -315,7 +320,7 @@ void test_abs_s32_to_s32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         a.m = 0;
         dsp_normalise_s32(&a);
 
@@ -340,7 +345,7 @@ void test_abs_s32_to_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_normalise_s32(&a);
 
         double A = s32_to_double(a);
@@ -364,7 +369,7 @@ void test_abs_s32_to_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         a.m = 0;
         dsp_normalise_s32(&a);
 
@@ -387,7 +392,7 @@ void test_neg_s32(){
     unsigned rand_seed = 16;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_normalise_s32(&a);
 
         double A = s32_to_double(a);
@@ -408,7 +413,7 @@ void test_neg_s32_zero(){
     unsigned rand_seed = 17;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         a.m = 0;
         dsp_normalise_s32(&a);
 
@@ -429,7 +434,7 @@ void test_neg_s32_zero(){
 void test_neg_s32_INT_MIN(){
     unsigned rand_seed = 18;
 
-    dsp_s32_float_t a = random_float_s32(rand_seed);
+    dsp_s32_float_t a = random_float_s32(&rand_seed);
     a.m = INT_MIN;
 
 
@@ -444,8 +449,8 @@ void test_gte_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
@@ -463,9 +468,9 @@ void test_gte_u32_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         a.m = 0;
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
@@ -479,8 +484,8 @@ void test_gte_u32_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
         b.m = 0;
 
         dsp_normalise_u32(&a);
@@ -499,8 +504,8 @@ void test_gte_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -516,9 +521,9 @@ void test_gte_s32_s32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         a.m = 0;
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -530,8 +535,8 @@ void test_gte_s32_s32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
         b.m = 0;
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -547,8 +552,8 @@ void test_eq_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
@@ -564,9 +569,9 @@ void test_eq_u32_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         a.m = 0;
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
@@ -577,8 +582,8 @@ void test_eq_u32_u32_zero(){
     }
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
         b.m = 0;
 
         dsp_normalise_u32(&a);
@@ -595,8 +600,8 @@ void test_eq_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -613,9 +618,9 @@ void test_eq_s32_s32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         a.m = 0;
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -627,8 +632,8 @@ void test_eq_s32_s32_zero(){
     }
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
         b.m = 0;
 
         dsp_normalise_s32(&a);
@@ -646,8 +651,8 @@ void test_add_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
@@ -675,7 +680,7 @@ void test_add_s32_s32_zero(){
 
   for(unsigned i=0;i<TEST_COUNT;i++){
 
-      dsp_s32_float_t a = random_float_s32(rand_seed);
+      dsp_s32_float_t a = random_float_s32(&rand_seed);
       dsp_s32_float_t b = {0, 0};
 
       dsp_normalise_s32(&a);
@@ -690,7 +695,7 @@ void test_add_s32_s32_zero(){
   for(unsigned i=0;i<TEST_COUNT;i++){
 
       dsp_s32_float_t a = {0, 0};
-      dsp_s32_float_t b = random_float_s32(rand_seed);
+      dsp_s32_float_t b = random_float_s32(&rand_seed);
 
       dsp_normalise_s32(&a);
       dsp_normalise_s32(&b);
@@ -708,8 +713,8 @@ void test_add_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double R = u32_to_double(a) + u32_to_double(b);
 
@@ -733,7 +738,7 @@ void test_add_u32_u32_zero(){
 
   for(unsigned i=0;i<TEST_COUNT;i++){
 
-      dsp_u32_float_t a = random_float_u32(rand_seed);
+      dsp_u32_float_t a = random_float_u32(&rand_seed);
       dsp_u32_float_t b = {0, 0};
 
       dsp_normalise_u32(&a);
@@ -747,7 +752,7 @@ void test_add_u32_u32_zero(){
   for(unsigned i=0;i<TEST_COUNT;i++){
 
       dsp_u32_float_t a = {0, 0};
-      dsp_u32_float_t b = random_float_u32(rand_seed);
+      dsp_u32_float_t b = random_float_u32(&rand_seed);
 
       dsp_normalise_u32(&a);
       dsp_normalise_u32(&b);
@@ -764,8 +769,8 @@ void test_sub_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         double A = s32_to_double(a);
         double B = s32_to_double(b);
@@ -793,7 +798,7 @@ void test_sub_s32_s32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_s32_float_t b = {0, 0};
 
         dsp_normalise_s32(&a);
@@ -811,8 +816,8 @@ void test_sub_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double R = u32_to_double(a) - u32_to_double(b);
 
@@ -837,7 +842,7 @@ void test_sub_u32_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_u32_float_t b = {0, 0};
 
         double actual = u32_to_double(a);
@@ -860,8 +865,8 @@ void test_mul_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         double actual = s32_to_double(a) * s32_to_double(b);
 
@@ -882,13 +887,13 @@ void test_mul_s32_s32_zero(){
     unsigned rand_seed = 35;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_s32_float_t b = {0, 0};
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
 
-        double actual = s32_to_double(b);
+        // double actual = s32_to_double(b);
 
         dsp_s32_float_t result_normalised = dsp_mul_s32_s32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_s32(&result_normalised), "Output is not properly normalised");
@@ -897,12 +902,12 @@ void test_mul_s32_s32_zero(){
     }
     for(unsigned i=0;i<TEST_COUNT;i++){
         dsp_s32_float_t a = {0, 0};
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_s32(&b);
 
-        double actual = s32_to_double(a);
+        // double actual = s32_to_double(a);
 
         dsp_s32_float_t result_normalised = dsp_mul_s32_s32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_s32(&result_normalised), "Output is not properly normalised");
@@ -916,8 +921,8 @@ void test_mul_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double actual = u32_to_double(a) * u32_to_double(b);
 
@@ -938,13 +943,13 @@ void test_mul_u32_u32_zero(){
     unsigned rand_seed = 37;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_u32_float_t b = {0, 0};
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
 
-        double actual = u32_to_double(b);
+        // double actual = u32_to_double(b);
 
         dsp_u32_float_t result_normalised = dsp_mul_u32_u32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_u32(&result_normalised), "Output is not properly normalised");
@@ -953,12 +958,12 @@ void test_mul_u32_u32_zero(){
     }
     for(unsigned i=0;i<TEST_COUNT;i++){
         dsp_u32_float_t a = {0, 0};
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_u32(&a);
         dsp_normalise_u32(&b);
 
-        double actual = u32_to_double(a);
+        // double actual = u32_to_double(a);
 
         dsp_u32_float_t result_normalised = dsp_mul_u32_u32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_u32(&result_normalised), "Output is not properly normalised");
@@ -972,8 +977,8 @@ void test_mul_s32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double actual = s32_to_double(a) * u32_to_double(b);
 
@@ -995,13 +1000,13 @@ void test_mul_s32_u32_zero(){
     unsigned rand_seed = 39;
 
     for(unsigned i=0;i<TEST_COUNT;i++){
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_u32_float_t b = {0, 0};
 
         dsp_normalise_s32(&a);
         dsp_normalise_u32(&b);
 
-        double actual = u32_to_double(b);
+        // double actual = u32_to_double(b);
 
         dsp_s32_float_t result_normalised = dsp_mul_s32_u32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_s32(&result_normalised), "Output is not properly normalised");
@@ -1010,12 +1015,12 @@ void test_mul_s32_u32_zero(){
     }
     for(unsigned i=0;i<TEST_COUNT;i++){
         dsp_s32_float_t a = {0, 0};
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         dsp_normalise_s32(&a);
         dsp_normalise_u32(&b);
 
-        double actual = s32_to_double(a);
+        // double actual = s32_to_double(a);
 
         dsp_s32_float_t result_normalised = dsp_mul_s32_u32(a, b);
         TEST_ASSERT_FALSE_MESSAGE(dsp_normalise_s32(&result_normalised), "Output is not properly normalised");
@@ -1029,8 +1034,8 @@ void test_div_s32_s32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_s32_float_t b = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_s32_float_t b = random_float_s32(&rand_seed);
 
         double A = s32_to_double(a);
         double B = s32_to_double(b);
@@ -1056,7 +1061,7 @@ void test_div_s32_s32_by_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_s32_float_t b = {0, 0};
 
         dsp_normalise_s32(&a);
@@ -1078,8 +1083,8 @@ void test_div_u32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double actual = u32_to_double(a) / u32_to_double(b);
 
@@ -1103,7 +1108,7 @@ void test_div_u32_u32_in_equals_out(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_u32_float_t b = a;
 
         double actual = 1.0;
@@ -1128,7 +1133,7 @@ void test_div_u32_u32_by_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_u32_float_t b = {0, 0};
 
         dsp_normalise_u32(&a);
@@ -1149,8 +1154,8 @@ void test_div_s32_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
-        dsp_u32_float_t b = random_float_u32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
+        dsp_u32_float_t b = random_float_u32(&rand_seed);
 
         double actual = s32_to_double(a) / u32_to_double(b);
 
@@ -1174,7 +1179,7 @@ void test_div_s32_u32_by_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_s32_float_t a = random_float_s32(rand_seed);
+        dsp_s32_float_t a = random_float_s32(&rand_seed);
         dsp_u32_float_t b = {0, 0};
 
         dsp_normalise_s32(&a);
@@ -1195,7 +1200,7 @@ void test_sqrt_u32(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         dsp_normalise_u32(&a);
 
         double A = u32_to_double(a);
@@ -1218,7 +1223,7 @@ void test_sqrt_u32_zero(){
 
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t a = random_float_u32(rand_seed);
+        dsp_u32_float_t a = random_float_u32(&rand_seed);
         a.m = 0;
         dsp_normalise_u32(&a);
 
@@ -1248,7 +1253,7 @@ void test_exponential_average_u32(){
     unsigned average_error = 0;
     for(unsigned i=0;i<TEST_COUNT;i++){
 
-        dsp_u32_float_t new_sample = random_float_u32(rand_seed);
+        dsp_u32_float_t new_sample = random_float_u32(&rand_seed);
         dsp_normalise_u32(&new_sample);
 
         double New_sample = u32_to_double(new_sample);

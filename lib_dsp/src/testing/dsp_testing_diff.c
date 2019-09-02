@@ -36,6 +36,12 @@ unsigned dsp_abs_diff_complex_int32(dsp_complex_int32_t B, const int B_exp, dsp_
     }
 }
 
+unsigned dsp_abs_diff_int8 ( int8_t B, const int B_exp, dsp_float_t f,  int *error){
+    uint32_t v = dsp_conv_float_to_int8(f, B_exp, error);
+    int diff = v - B;
+    if (diff < 0 ) diff = -diff;
+    return (unsigned)diff;
+}
 unsigned dsp_abs_diff_int16 ( int16_t B, const int B_exp, dsp_float_t f,  int *error){
     uint32_t v = dsp_conv_float_to_int16(f, B_exp, error);
     int diff = v - B;
@@ -50,6 +56,12 @@ unsigned dsp_abs_diff_int32 ( int32_t B, const int B_exp, dsp_float_t f, int *er
     return (unsigned)diff;
 }
 
+unsigned dsp_abs_diff_uint8(uint8_t B, const int B_exp, dsp_float_t f, int *error){
+    uint32_t v = dsp_conv_float_to_uint8(f, B_exp, error);
+    int diff = v - B;
+    if (diff < 0 ) diff = -diff;
+    return (unsigned)diff;
+}
 unsigned dsp_abs_diff_uint16(uint16_t B, const int B_exp, dsp_float_t f, int *error){
     uint32_t v = dsp_conv_float_to_uint16(f, B_exp, error);
     int diff = v - B;
@@ -120,6 +132,18 @@ unsigned dsp_abs_diff_vect_complex_int32(dsp_complex_int32_t * B, const int B_ex
     }
     return max_diff;
 }
+unsigned dsp_abs_diff_vect_int8 ( int8_t * B, const int B_exp, dsp_float_t * f, unsigned length,
+        int * error){
+    unsigned max_diff = 0;
+
+    for(unsigned i=0;i<length;i++){
+        unsigned diff = dsp_abs_diff_int8(B[i], B_exp, f[i], error);
+        if( diff > max_diff) {
+            max_diff = diff;
+        }
+    }
+    return max_diff;
+}
 unsigned dsp_abs_diff_vect_int16 ( int16_t * B, const int B_exp, dsp_float_t * f, unsigned length,
         int * error){
     unsigned max_diff = 0;
@@ -138,6 +162,18 @@ unsigned dsp_abs_diff_vect_int32 ( int32_t * B, const int B_exp, dsp_float_t * f
 
     for(unsigned i=0;i<length;i++){
         unsigned diff = dsp_abs_diff_int32(B[i], B_exp, f[i], error);
+        if( diff > max_diff) {
+            max_diff = diff;
+        }
+    }
+    return max_diff;
+}
+unsigned dsp_abs_diff_vect_uint8(uint8_t * B, const int B_exp, dsp_float_t * f, unsigned length,
+        int * error){
+    unsigned max_diff = 0;
+
+    for(unsigned i=0;i<length;i++){
+        unsigned diff = dsp_abs_diff_uint8(B[i], B_exp, f[i], error);
         if( diff > max_diff) {
             max_diff = diff;
         }
