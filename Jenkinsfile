@@ -48,13 +48,13 @@ pipeline {
     stage('Tests') {
       steps {
         dir("${REPO}/tests/test_biquad") {
-          runXwaf('.')
+          runWaf('.')
           viewEnv() {
             runPytest()
           }
         }
         dir("${REPO}/tests/dsp_unit_tests") {
-          runXwaf('.')
+          runWaf('.')
           viewEnv() {
             runPytest()
           }
