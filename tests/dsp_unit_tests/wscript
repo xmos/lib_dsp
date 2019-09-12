@@ -59,10 +59,12 @@ def generate_unity_runner(project_root_path, unity_test_path, unity_runner_dir,
     return the path to the generated file. The output directory will be created
     if it does not already exist.
     """
-    if not os.path.exists(unity_runner_dir):
-        os.mkdir(unity_runner_dir)
+    runner_path = os.path.join(os.path.join(unity_runner_dir, get_test_name(unity_test_path)))
+    if not os.path.exists(runner_path):
+        os.makedirs(runner_path)
+
     unity_runner_path = os.path.join(
-        unity_runner_dir, get_test_name(unity_test_path) + unity_runner_suffix
+        runner_path, get_test_name(unity_test_path) + unity_runner_suffix
         + '.' + 'c')
     try:
         subprocess.check_call([get_ruby(),
@@ -188,6 +190,9 @@ UNITY_TESTS = find_unity_tests(UNITY_TEST_DIR, UNITY_TEST_PREFIX)
 
 create_waf_contexts(UNITY_TESTS)
 
+def options(opt):
+    opt.load('xwaf.xcommon')
+
 
 def configure(conf):
     # TODO: move the call to generate_all_unity_runners() to build()
@@ -195,6 +200,7 @@ def configure(conf):
     generate_all_unity_runners(conf, project_root,
                                UNITY_TEST_DIR, UNITY_TEST_PREFIX,
                                UNITY_RUNNER_DIR, UNITY_RUNNER_SUFFIX)
+    conf.load('xwaf.xcommon')    
 
 
 def build(bld):
@@ -226,7 +232,19 @@ def build(bld):
             os.path.join(UNITY_RUNNER_DIR,
                          '{}{}.{}'.format(bld.source, UNITY_RUNNER_SUFFIX,
                                           'c'))]
-        bld.program(include=include, source=source, depends_on=depends_on)
+        print("bld.variant = {}".format(bld.variant))
+        print("bld.source = {}".format(bld.source))
+        print("config = {}".format(bld.options.config))
+        makefile_opts = {}
+        makefile_opts['SOURCE_DIRS'] = ['src', os.path.join('runners',bld.source)]
+        makefile_opts['TARGET'] = ['XCORE-200-EXPLORER']
+        makefile_opts['INCLUDE_DIRS'] = ['src']
+        makefile_opts['XCC_FLAGS'] = ['-O2', '-g', '-Wall', '-DUNITY_SUPPORT_64', '-DUNITY_INCLUDE_DOUBLE']
+        makefile_opts['APP_NAME'] = [bld.variant]
+        makefile_opts['USED_MODULES'] = depends_on
+        makefile_opts['XCOMMON_MAKEFILE'] = ['Makefile.common']
+        bld.do_xcommon(makefile_opts)
+            
 
 
 def test(bld):
@@ -238,5 +256,11 @@ def test(bld):
         test_output = e.output
     print(test_output)
 
+def dist(ctx):
+    ctx.load('xwaf.xcommon')
+
+def distcheck(ctx):
+    ctx.load('xwaf.xcommon')
+    
 
 # TODO: ensure clean deletes the runners dir/
