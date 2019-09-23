@@ -79,7 +79,10 @@ void dsp_fft_bit_reverse_and_forward_real (
 
     dsp_fft_bit_reverse((pts, dsp_complex_t[]), N>>1);
     dsp_fft_forward((pts, dsp_complex_t[]), N>>1, sine);
+
+#if defined(__XS2A__)
     dsp_fft_real_fix_forward_xs2((pts, dsp_complex_t[]), N>>1, sin2);
+#endif
 }
 
 void dsp_fft_bit_reverse_and_inverse_real (
@@ -88,7 +91,9 @@ void dsp_fft_bit_reverse_and_inverse_real (
     const int32_t sine[],
     const int32_t sin2[] ) {
 
+#if defined(__XS2A__)
     dsp_fft_real_fix_inverse_xs2((pts, dsp_complex_t[]), N>>1, sin2);
+#endif
     dsp_fft_bit_reverse((pts, dsp_complex_t[]), N>>1);
     dsp_fft_inverse((pts, dsp_complex_t[]), N>>1, sine);
 }

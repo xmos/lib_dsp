@@ -15,6 +15,40 @@
 
 #define VECT_LEN 8
 
+void test_conv_int8_zeros(){
+    dsp_float_t f[VECT_LEN];
+    int8_t d[VECT_LEN];
+
+    for(unsigned i=0;i<VECT_LEN;i++)
+        f[i] = 0.0;
+    int d_exp, error = 0;
+    dsp_conv_vect_float_to_int8 (f, d, &d_exp, VECT_LEN, &error);
+
+    TEST_ASSERT_EQUAL_INT32_MESSAGE(DSP_BFP_ZERO_EXP, d_exp, "bad exponent");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, error, "bad error");
+    for(unsigned i=0;i<VECT_LEN;i++){
+        TEST_ASSERT_EQUAL_INT8_MESSAGE(0, d[i], "output is not zero");
+    }
+}
+
+void test_conv_int8_mostly_zeros(){
+    dsp_float_t f[VECT_LEN];
+    int8_t d[VECT_LEN];
+
+    f[0] = 1.0;
+    for(unsigned i=1;i<VECT_LEN;i++)
+        f[i] = 0.0;
+    int d_exp, error = 0;
+    dsp_conv_vect_float_to_int8 (f, d, &d_exp, VECT_LEN, &error);
+
+    TEST_ASSERT_EQUAL_INT32_MESSAGE(64, d[0], "mantissa is wrong");
+    TEST_ASSERT_EQUAL_INT32_MESSAGE(-6, d_exp, "exponent is wrong");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, error, "bad error");
+    for(unsigned i=1;i<VECT_LEN;i++){
+        TEST_ASSERT_EQUAL_INT8_MESSAGE(0, d[i], "output is not zero");
+    }
+}
+
 void test_conv_int16_zeros(){
     dsp_float_t f[VECT_LEN];
     int16_t d[VECT_LEN];

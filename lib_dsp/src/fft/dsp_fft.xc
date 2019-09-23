@@ -14,10 +14,10 @@ void dsp_fft_bit_reverse( dsp_complex_t pts[], const uint32_t N )
         uint32_t rev = bitrev(i) >> (shift + 1);
         if (rev > i) {
             int32_t im1, re1, im2, re2;
-            im1 = pst[i].im;
-            re1 = pst[i].re;
-            im2 = pst[rev].im;
-            re2 = pst[rev].re;
+            im1 = pts[i].im;
+            re1 = pts[i].re;
+            im2 = pts[rev].im;
+            re2 = pts[rev].re;
             pts[i].re = re2;
             pts[i].im = im2;
             pts[rev].re = re1;
@@ -252,7 +252,7 @@ void dsp_fft_forward (
 #if defined(__XS2A__)
     dsp_fft_forward_xs2 (pts, (uint32_t) N, sine);
 #else
-    dsp_fft_forward_complex_xs1 (pts, N, sine);
+    dsp_fft_forward_xs1 (pts, N, sine);
 #endif
 }
 
@@ -272,7 +272,7 @@ void dsp_fft_split_spectrum( dsp_complex_t pts[], const uint32_t N ){
 #if defined(__XS2A__)
     dsp_fft_split_spectrum_xs2(pts, (uint32_t) N);
 #else
-    for(uint32_t i=1;i<n/2;i++){
+    for(uint32_t i=1;i<N/2;i++){
         int32_t a_re = (pts[i].re + pts[N-i].re)/2;
         int32_t a_im = (pts[i].im - pts[N-i].im)/2;
         int32_t b_re = (pts[i].im + pts[N-i].im)/2;
@@ -305,7 +305,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], const uint32_t N ){
 #if defined(__XS2A__)
     dsp_fft_merge_spectra_xs2(pts, (uint32_t) N);
 #else
-    for(uint32_t i=1;i<n/4;i++){
+    for(uint32_t i=1;i<N/4;i++){
         dsp_complex_t a = pts[N/2 + i];
         dsp_complex_t b = pts[N - i];
         pts[N/2 + i] = b;
@@ -316,7 +316,7 @@ void dsp_fft_merge_spectra( dsp_complex_t pts[], const uint32_t N ){
     pts[0].im = pts[N/2].re;
     pts[N/2].re = t;
 
-    for(uint32_t i=1;i<n/2;i++){
+    for(uint32_t i=1;i<N/2;i++){
 
         int32_t a_re = pts[i].re;
         int32_t a_im = pts[i].im;
@@ -335,7 +335,7 @@ void dsp_fft_short_to_long( const dsp_complex_short_t s[], dsp_complex_t l[], co
 #if defined(__XS2A__)
     dsp_fft_short_to_long_xs2(s, l, (uint32_t) N);
 #else
-    for(uint32_t i=0;i<n;i++){
+    for(uint32_t i=0;i<N;i++){
         l[i].re = ((int)s[i].re)<<16;
         l[i].im = ((int)s[i].im)<<16;
     }
@@ -346,7 +346,7 @@ void dsp_fft_long_to_short( const dsp_complex_t l[], dsp_complex_short_t s[], co
 #if defined(__XS2A__)
     dsp_fft_long_to_short_xs2(l, s, (uint32_t) N);
 #else
-    for(uint32_t i=0;i<n;i++){
+    for(uint32_t i=0;i<N;i++){
         s[i].re = l[i].re>>16;
         s[i].im = l[i].im>>16;
     }

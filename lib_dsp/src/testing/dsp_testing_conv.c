@@ -7,6 +7,15 @@
 /*
  * Type conversion
  */
+dsp_float_t dsp_conv_int8_to_float (const int8_t x,  const int x_exp, int *error){
+    //TODO check for errors
+    return (dsp_float_t)ldexp((dsp_float_t)x, x_exp);
+}
+
+dsp_float_t dsp_conv_uint8_to_float(const uint8_t x, const int x_exp, int *error){
+    return (dsp_float_t)ldexp((dsp_float_t)x, x_exp);
+}
+
 dsp_float_t dsp_conv_int16_to_float (const int16_t x,  const int x_exp, int *error){
     //TODO check for errors
     return (dsp_float_t)ldexp((dsp_float_t)x, x_exp);
@@ -30,6 +39,32 @@ dsp_float_t dsp_conv_int64_to_float (const int64_t x,  const int x_exp, int *err
 
 dsp_float_t dsp_conv_uint64_to_float(const uint64_t x, const int x_exp, int *error){
     return (dsp_float_t)ldexp((dsp_float_t)x, x_exp);
+}
+
+int8_t  dsp_conv_float_to_int8 (dsp_float_t d, const int d_exp, int *error){
+    int m_exp;
+    dsp_float_t m = (dsp_float_t)frexp (d, &m_exp);
+
+    dsp_float_t r = (dsp_float_t)ldexp(m, m_exp - d_exp);
+    int output_exponent;
+    frexp(r, &output_exponent);
+    if(output_exponent>7){
+        *error |= CANNOT_FIT_MANTISSA;
+        return 0;
+    }
+    error = 0;
+    return r;
+}
+
+uint8_t dsp_conv_float_to_uint8(dsp_float_t d, const int d_exp, int *error){
+    int m_exp;
+    dsp_float_t m = (dsp_float_t)frexp (d, &m_exp);
+    if(m<0.0){
+        *error |= NEGATIVE_TO_UNSIGNED;
+        return 0;
+    }
+    error = 0;
+    return ldexp(m, m_exp - d_exp);
 }
 
 int16_t  dsp_conv_float_to_int16 (dsp_float_t d, const int d_exp, int *error){
@@ -110,7 +145,6 @@ uint64_t dsp_conv_float_to_uint64(dsp_float_t d, const int d_exp, int *error){
     return (uint64_t)ldexp(m, m_exp - d_exp);
 }
 
-
 dsp_complex_float_t dsp_conv_complex_int16_to_complex_float(dsp_complex_int16_t x, const int x_exp, int *error){
     dsp_complex_float_t r;
     r.re = dsp_conv_int16_to_float(x.re, x_exp, error);
@@ -151,6 +185,7 @@ dsp_complex_int32_t dsp_conv_complex_float_to_complex_int32(dsp_complex_float_t 
     r.im = dsp_conv_float_to_int32(x.im, x_exp, error);
     return r;
 }
+
 dsp_ch_pair_int16_t dsp_conv_ch_pair_float_to_ch_pair_int16(dsp_ch_pair_float_t x, const int x_exp, int *error){
     dsp_ch_pair_int16_t r;
     r.ch_a = dsp_conv_float_to_int16(x.ch_a, x_exp, error);
@@ -167,6 +202,37 @@ dsp_ch_pair_int32_t dsp_conv_ch_pair_float_to_ch_pair_int32(dsp_ch_pair_float_t 
 /*
  * Vector conversion
  */
+
+void dsp_conv_vect_int8_to_float (const int8_t *x,  const int x_exp, dsp_float_t * f, unsigned length, int *error){
+
+    int8_t mask = 0;
+    for(unsigned i=0;i<length;i++){
+        mask |= x[i];
+    }
+
+    if(mask == 0){
+        memset(f, 0, sizeof(dsp_float_t)*length);
+        return;
+    }
+    for(unsigned i=0;i<length;i++){
+        f[i] = dsp_conv_int8_to_float(x[i], x_exp, error);
+    }
+}
+
+void dsp_conv_vect_uint8_to_float(const uint8_t *x, const int x_exp, dsp_float_t * f, unsigned length, int *error){
+    uint8_t mask = 0;
+    for(unsigned i=0;i<length;i++){
+        mask |= x[i];
+    }
+
+    if(mask == 0){
+        memset(f, 0, sizeof(dsp_float_t)*length);
+        return;
+    }
+    for(unsigned i=0;i<length;i++){
+        f[i] = dsp_conv_uint8_to_float(x[i], x_exp, error);
+    }
+}
 
 void dsp_conv_vect_int16_to_float (const int16_t *x,  const int x_exp, dsp_float_t * f, unsigned length, int *error){
 
@@ -261,6 +327,64 @@ void dsp_conv_vect_uint64_to_float(const uint64_t *x, const int x_exp, dsp_float
     }
 }
 
+void dsp_conv_vect_float_to_int8 (dsp_float_t *f, int8_t *d, int *d_exp, unsigned length, int *error){
+    if(!length)
+        return;
+
+    dsp_float_t min = f[0];
+    dsp_float_t max = f[0];
+
+    for(unsigned i=1;i<length;i++){
+        max = fmax(max, f[i]);
+        min = fmin(min, f[i]);
+    }
+
+    if((min == 0.0) && (max == 0.0)){
+        memset(d, 0, sizeof(uint8_t)*length);
+        *d_exp = DSP_BFP_ZERO_EXP;
+        return;
+    }
+    dsp_float_t abs_max = fmax(fabs(min), fabs(max));
+
+    int e;
+    frexp(abs_max, &e);
+    *d_exp = e - 7;
+    for(unsigned i=0;i<length;i++){
+        d[i] = dsp_conv_float_to_int8(f[i], *d_exp, error);
+    }
+}
+
+void dsp_conv_vect_float_to_uint8 (dsp_float_t *f, uint8_t *d, int *d_exp, unsigned length, int *error){
+    if(!length)
+        return;
+
+    dsp_float_t min = f[0];
+    dsp_float_t max = f[0];
+
+    for(unsigned i=1;i<length;i++){
+        max = fmax(max, f[i]);
+        min = fmin(min, f[i]);
+    }
+
+    if((min == 0.0) && (max == 0.0)){
+        memset(d, 0, sizeof(uint8_t)*length);
+        *d_exp = DSP_BFP_ZERO_EXP;
+        return;
+    }
+
+    if(min < 0.0){
+        *error = NEGATIVE_TO_UNSIGNED;
+        return;
+    }
+
+    int e;
+    frexp(max, &e);
+    *d_exp = e - 8;
+    for(unsigned i=0;i<length;i++){
+        d[i] = dsp_conv_float_to_uint8(f[i], *d_exp, error);
+    }
+}
+
 void dsp_conv_vect_float_to_int16 (dsp_float_t *f, int16_t *d, int *d_exp, unsigned length, int *error){
     if(!length)
         return;
@@ -274,7 +398,7 @@ void dsp_conv_vect_float_to_int16 (dsp_float_t *f, int16_t *d, int *d_exp, unsig
     }
 
     if((min == 0.0) && (max == 0.0)){
-        memset(d, 0, sizeof(uint16_t)*length);
+        memset(d, 0, sizeof(int16_t)*length);
         *d_exp = DSP_BFP_ZERO_EXP;
         return;
     }
@@ -301,7 +425,7 @@ void dsp_conv_vect_float_to_uint16 (dsp_float_t *f, uint16_t *d, int *d_exp, uns
     }
 
     if((min == 0.0) && (max == 0.0)){
-        memset(d, 0, sizeof(int16_t)*length);
+        memset(d, 0, sizeof(uint16_t)*length);
         *d_exp = DSP_BFP_ZERO_EXP;
         return;
     }
