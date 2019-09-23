@@ -37,5 +37,28 @@ void dsp_float_fft_inverse_fft    ( dsp_complex_float_t pts[], const uint32_t N,
 void dsp_float_fft_split_spectrum ( dsp_complex_float_t pts[], const uint32_t N );
 void dsp_float_fft_merge_spectra  ( dsp_complex_float_t pts[], const uint32_t N );
 
+void dsp_sub_vect_float(
+	double * a,
+	double * b, 
+	double * c,
+	unsigned length);
+
+void dsp_add_vect_float(
+	double * a,
+	double * b, 
+	double * c,
+	unsigned length);
+    
+void dsp_mul_vect_float(
+	double * a,
+	double * b, 
+	double * c,
+	unsigned length);
+
+void dsp_mul_vect_complex_float(
+	dsp_complex_float_t * a,
+	dsp_complex_float_t * b, 
+	dsp_complex_float_t * c,
+	unsigned length);
 #endif
 

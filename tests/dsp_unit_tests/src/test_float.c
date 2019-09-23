@@ -11,7 +11,7 @@
 #include <math.h>
 #include <limits.h>
 
-signed sext(unsigned a, unsigned b){
+static signed sext(unsigned a, unsigned b){
     asm("sext %0, %1": "=r"(a): "r"(b));
     return a;
 }
