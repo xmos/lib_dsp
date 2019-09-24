@@ -16,6 +16,15 @@
 #define MAX_LEN 64
 #define ITT 1024
 
+//TODO should we support saturation?
+
+
+
+//these can be anything
+#define Q_EXP_32 (-30)
+#define Q_EXP_16 (-14)
+#define Q_EXP_8 (-6)
+
 void test_add_bfp_vect_int32(){
 
 	int32_t a[MAX_LEN], b[MAX_LEN], c[MAX_LEN];
@@ -142,8 +151,12 @@ void test_add_bfp_vect_int8(){
 			c_hr = dsp_bfp_cls_vect_int8(c, len);
 
 			int error = 0;
+
 			dsp_conv_vect_int8_to_float(b, b_exp, B, len, &error);
 			dsp_conv_vect_int8_to_float(c, c_exp, C, len, &error);
+
+			if(error)
+				continue;
 
 	        TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
@@ -156,17 +169,12 @@ void test_add_bfp_vect_int8(){
 				len);
 			dsp_add_vect_float(A, B, C, len);
 
-			printf("-----\n");
-			for(unsigned i=0;i<len; i++){
-				printf("%d %28x\n", a[i], a[i]);
-			}
-
 			unsigned diff = UINT_MAX;
 			diff = dsp_abs_diff_vect_int8(a, a_exp, A, len, &error);
 			
 			unsigned actual_a_hr = dsp_bfp_cls_vect_int8(a, len);
 
-	        TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+	        TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error 2");
 	        TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
 	        TEST_ASSERT_EQUAL_UINT32_MESSAGE(actual_a_hr, a_hr, "error hr is wrong");
 	    }
@@ -186,20 +194,20 @@ void test_add_vect_int32(){
 		for(unsigned itt=0;itt<ITT;itt++){
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int32_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int32_to_float(c, 0, C, len, &error);
+			dsp_conv_vect_int32_to_float(b, Q_EXP_32, B, len, &error);
+			dsp_conv_vect_int32_to_float(c, Q_EXP_32, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			add_vect_int32(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int32(a, 0, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -225,19 +233,19 @@ void test_add_vect_int16(){
 		for(unsigned itt=0;itt<ITT;itt++){
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int16_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int16_to_float(c, 0, C, len, &error);
+			dsp_conv_vect_int16_to_float(b, Q_EXP_16, B, len, &error);
+			dsp_conv_vect_int16_to_float(c, Q_EXP_16, C, len, &error);
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			add_vect_int16(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int16(a, 0, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
 		}
@@ -250,26 +258,35 @@ void test_add_vect_int8(){
 	int8_t a[MAX_LEN], b[MAX_LEN], c[MAX_LEN];
 	dsp_float_t A[MAX_LEN], B[MAX_LEN], C[MAX_LEN];
 
-    unsigned rand_seed = 5;
+    unsigned rand_seed = 6;
 
     for(unsigned len=1;len<MAX_LEN;len++){
 		for(unsigned itt=0;itt<ITT;itt++){
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int8_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int8_to_float(c, 0, C, len, &error);
-			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error 1");
+			dsp_conv_vect_int8_to_float(b, Q_EXP_8, B, len, &error);
+			dsp_conv_vect_int8_to_float(c, Q_EXP_8, C, len, &error);
+
+			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			add_vect_int8(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int8(a, 0, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);
+			if(error){
+				printf("%x %u %u/n", error, len, diff);
+				for(unsigned i=0;i<len;i++){
+					printf("%d %d %d\n", a[i], b[i], c[i]);
+				}
+				
+			}
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
 		}
 	}
@@ -502,20 +519,20 @@ void test_vect_mul32(){
 				c[i] = 0;
 			}
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int32_to_float(b, -30, B, len, &error);
-			dsp_conv_vect_int32_to_float(c, -30, C, len, &error);
+			dsp_conv_vect_int32_to_float(b, Q_EXP_32, B, len, &error);
+			dsp_conv_vect_int32_to_float(c, Q_EXP_32, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			mul_vect_int32(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int32(a, -30, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -541,20 +558,20 @@ void test_vect_mul16(){
 			}
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int16_to_float(b, -14, B, len, &error);
-			dsp_conv_vect_int16_to_float(c, -14, C, len, &error);
+			dsp_conv_vect_int16_to_float(b, Q_EXP_16, B, len, &error);
+			dsp_conv_vect_int16_to_float(c, Q_EXP_16, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			mul_vect_int16(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int16(a, -14, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -578,20 +595,20 @@ void test_vect_mul8(){
 			}
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int8_to_float(b, -6, B, len, &error);
-			dsp_conv_vect_int8_to_float(c, -6, C, len, &error);
+			dsp_conv_vect_int8_to_float(b, Q_EXP_8, B, len, &error);
+			dsp_conv_vect_int8_to_float(c, Q_EXP_8, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			mul_vect_int8(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int8(a, -6, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -770,20 +787,20 @@ void test_vect_sub32(){
 				c[i] = 0;
 			}
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int32(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int32_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int32_to_float(c, 0, C, len, &error);
+			dsp_conv_vect_int32_to_float(b, Q_EXP_32, B, len, &error);
+			dsp_conv_vect_int32_to_float(c, Q_EXP_32, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			sub_vect_int32(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
-			unsigned diff = dsp_abs_diff_vect_int32(a, 0, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -810,30 +827,20 @@ void test_vect_sub16(){
 			// printf("----\n");
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int16(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int16_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int16_to_float(c, 0, C, len, &error);
+			dsp_conv_vect_int16_to_float(b, Q_EXP_16, B, len, &error);
+			dsp_conv_vect_int16_to_float(c, Q_EXP_16, C, len, &error);
 
-			// for(unsigned i=0;i<len;i++){
-			// 	printf("%u %d %f\n", i, b[i], B[i]);
-			// 	printf("%u %d %f\n", i, c[i], C[i]);
-			// }
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			sub_vect_int16(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
-			// for(unsigned i=0;i<len;i++){
-			// 	printf("%u %f %f\n", i, dsp_conv_int16_to_float(a[i], 0, &error), A[i]);
-			// }
-
-			unsigned diff = dsp_abs_diff_vect_int16(a, 0, A, len, &error);
-
-				// printf("%u\n", diff);
+			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
@@ -857,25 +864,20 @@ void test_vect_sub8(){
 			}
 
 			for(unsigned i=0;i<len;i++){
-				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
-				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>1;
+				b[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
+				c[i] = dsp_pseudo_rand_int8(&rand_seed)>>2;
 			}
 
 			int error = 0;
-			dsp_conv_vect_int8_to_float(b, 0, B, len, &error);
-			dsp_conv_vect_int8_to_float(c, 0, C, len, &error);
+			dsp_conv_vect_int8_to_float(b, Q_EXP_8, B, len, &error);
+			dsp_conv_vect_int8_to_float(c, Q_EXP_8, C, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
 			sub_vect_int8(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
-			// printf("----\n");
-			// for(unsigned i=0;i<len;i++){
-			// 	printf("%d %d = %d\n", b[i], c[i], b[i] - c[i]);
-			// 	printf("%u %d %f\n", i, a[i], A[i]);
-			// }
-			unsigned diff = dsp_abs_diff_vect_int8(a, 0, A, len, &error);
+			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 			TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");

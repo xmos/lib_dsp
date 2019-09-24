@@ -17,12 +17,34 @@ unsigned clz2(unsigned m){
 	return c;
 }
 
+static int32_t shr32(const int32_t d, const int s){
+	if(s > 0){
+		return d>>s;
+	} else {
+		return d<<(-s);
+	}
+}
+static int16_t shr16(const int16_t d, const int s){
+	if(s > 0){
+		return d>>s;
+	} else {
+		return d<<(-s);
+	}
+}
+static int8_t shr8(const int8_t d, const int s){
+	if(s > 0){
+		return d>>s;
+	} else {
+		return d<<(-s);
+	}
+}
+
 unsigned sub_bfp_vect_int32_impl(int32_t * a, int32_t * b, int32_t * c, 
 	unsigned length, int shr_b, int shr_c){
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) - (c[i]>>shr_c);
+		a[i] = shr32 (b[i],shr_b) - shr32 (c[i],shr_c);
 
 		int32_t v = a[i];
 		if (v<0) v=-v;
@@ -36,7 +58,7 @@ unsigned sub_bfp_vect_int16_impl(int16_t * a, int16_t * b, int16_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) - (c[i]>>shr_c);
+		a[i] = shr16 (b[i],shr_b) - shr16 (c[i],shr_c);
 
 		int16_t v = a[i];
 		if (v<0) v=-v;
@@ -50,7 +72,7 @@ unsigned sub_bfp_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) - (c[i]>>shr_c);
+		a[i] = shr8 (b[i],shr_b) - shr8 (c[i],shr_c);
 
 		int8_t v = a[i];
 		if (v<0) v=-v;
@@ -190,7 +212,7 @@ unsigned add_bfp_vect_int32_impl(int32_t * a, int32_t * b, int32_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) + (c[i]>>shr_c);
+		a[i] = shr32 (b[i],shr_b) + shr32 (c[i],shr_c);
 
 		int32_t v = a[i];
 		if (v<0) v=(~v) + 1;
@@ -204,7 +226,7 @@ unsigned add_bfp_vect_int16_impl(int16_t * a, int16_t * b, int16_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) + (c[i]>>shr_c);
+		a[i] = shr16 (b[i],shr_b) + shr16 (c[i],shr_c);
 
 		int16_t v = a[i];
 		// if (v<0) v=(~v) + 1;
@@ -219,7 +241,7 @@ unsigned add_bfp_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = (b[i]>>shr_b) + (c[i]>>shr_c);
+		a[i] = shr8 (b[i],shr_b) + shr8 (c[i],shr_c);
 
 		int8_t v = a[i];
 		if (v<0) v=(~v) + 1;
@@ -359,8 +381,8 @@ unsigned mul_bfp_vect_complex_int32_impl(dsp_complex_int32_t * a, dsp_complex_in
 	dsp_complex_int32_t * c, unsigned length, unsigned shr_b, unsigned shr_c){
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
-		int64_t re = (int64_t)(b[i].re>>shr_b) * (int64_t)(c[i].re>>shr_c) - (int64_t)(b[i].im>>shr_b) * (int64_t)(c[i].im>>shr_c);
-		int64_t im = (int64_t)(b[i].re>>shr_b) * (int64_t)(c[i].im>>shr_c) + (int64_t)(b[i].im>>shr_b) * (int64_t)(c[i].re>>shr_c);
+		int64_t re = (int64_t)shr32(b[i].re,shr_b) * (int64_t)shr32(c[i].re,shr_c) - (int64_t)shr32(b[i].im,shr_b) * (int64_t)shr32(c[i].im,shr_c);
+		int64_t im = (int64_t)shr32(b[i].re,shr_b) * (int64_t)shr32(c[i].im,shr_c) + (int64_t)shr32(b[i].im,shr_b) * (int64_t)shr32(c[i].re,shr_c);
 
 		a[i].re = re>>30;
 		a[i].im = im>>30;
@@ -395,7 +417,7 @@ unsigned mul_bfp_vect_int32_impl(int32_t * a, int32_t * b, int32_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = ((int64_t)(b[i]>>shr_b) * (int64_t)(c[i]>>shr_c))>>30;
+		a[i] = ((int64_t)shr32(b[i],shr_b) * (int64_t)shr32(c[i],shr_c))>>30;
 
 		int32_t v = a[i];
 		if (v<0) v=-v;
@@ -410,7 +432,7 @@ unsigned mul_bfp_vect_int16_impl(int16_t * a, int16_t * b, int16_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = ((int64_t)(b[i]>>shr_b) * (int64_t)(c[i]>>shr_c))>>14;
+		a[i] = ((int64_t)shr16(b[i], shr_b) * (int64_t)shr16(c[i],shr_c))>>14;
 		int16_t v = a[i];
 		if (v<0) v=-v;
 		mask |= v;
@@ -423,7 +445,7 @@ unsigned mul_bfp_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 	unsigned mask = 0;
 	for(unsigned i=0;i<length;i++){
 		
-		a[i] = ((int64_t)(b[i]>>shr_b) * (int64_t)(c[i]>>shr_c))>>6;
+		a[i] = ((int64_t)shr8(b[i],shr_b) * (int64_t)shr8(c[i],shr_c))>>6;
 
 		int8_t v = a[i];
 		if (v<0) v=-v;

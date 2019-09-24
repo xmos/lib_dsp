@@ -3,6 +3,8 @@
 #ifndef DSP_H_
 #define DSP_H_
 
+#include <stdint.h>
+
 #include <dsp_adaptive.h>
 #include <dsp_design.h>
 #include <dsp_filters.h>

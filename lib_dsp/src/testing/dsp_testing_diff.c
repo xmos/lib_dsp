@@ -37,33 +37,33 @@ unsigned dsp_abs_diff_complex_int32(dsp_complex_int32_t B, const int B_exp, dsp_
 }
 
 unsigned dsp_abs_diff_int8 ( int8_t B, const int B_exp, dsp_float_t f,  int *error){
-    uint32_t v = dsp_conv_float_to_int8(f, B_exp, error);
+    int8_t v = dsp_conv_float_to_int8(f, B_exp, error);
     int diff = v - B;
     if (diff < 0 ) diff = -diff;
     return (unsigned)diff;
 }
 unsigned dsp_abs_diff_int16 ( int16_t B, const int B_exp, dsp_float_t f,  int *error){
-    uint32_t v = dsp_conv_float_to_int16(f, B_exp, error);
+    int16_t v = dsp_conv_float_to_int16(f, B_exp, error);
     int diff = v - B;
     if (diff < 0 ) diff = -diff;
     return (unsigned)diff;
 }
 
 unsigned dsp_abs_diff_int32 ( int32_t B, const int B_exp, dsp_float_t f, int *error){
-    uint32_t v = dsp_conv_float_to_int32(f, B_exp, error);
+    int32_t v = dsp_conv_float_to_int32(f, B_exp, error);
     int diff = v - B;
     if (diff < 0 ) diff = -diff;
     return (unsigned)diff;
 }
 
 unsigned dsp_abs_diff_uint8(uint8_t B, const int B_exp, dsp_float_t f, int *error){
-    uint32_t v = dsp_conv_float_to_uint8(f, B_exp, error);
+    uint8_t v = dsp_conv_float_to_uint8(f, B_exp, error);
     int diff = v - B;
     if (diff < 0 ) diff = -diff;
     return (unsigned)diff;
 }
 unsigned dsp_abs_diff_uint16(uint16_t B, const int B_exp, dsp_float_t f, int *error){
-    uint32_t v = dsp_conv_float_to_uint16(f, B_exp, error);
+    uint16_t v = dsp_conv_float_to_uint16(f, B_exp, error);
     int diff = v - B;
     if (diff < 0 ) diff = -diff;
     return (unsigned)diff;
