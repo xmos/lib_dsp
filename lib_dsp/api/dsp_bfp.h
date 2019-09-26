@@ -74,121 +74,121 @@ void dsp_bfp_shl_vect_ch_pair_int32(dsp_ch_pair_int32_t * UNSAFE d, const unsign
 
 
 
-void sub_bfp_vect_int8(
-	int8_t * a, int * a_exp, unsigned * a_hr,
-	int8_t * b, int   b_exp, unsigned   b_hr, 
-	int8_t * c, int   c_exp, unsigned   c_hr,
+void dsp_sub_bfp_vect_int8(
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void sub_bfp_vect_int16(
-	int16_t * a, int * a_exp, unsigned * a_hr,
-	int16_t * b, int   b_exp, unsigned   b_hr, 
-	int16_t * c, int   c_exp, unsigned   c_hr,
+void dsp_sub_bfp_vect_int16(
+	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void sub_bfp_vect_int32(
-	int32_t * a, int * a_exp, unsigned * a_hr,
-	int32_t * b, int   b_exp, unsigned   b_hr, 
-	int32_t * c, int   c_exp, unsigned   c_hr,
+void dsp_sub_bfp_vect_int32(
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void sub_vect_int8(
-	int8_t * a,
-	int8_t * b,
-	int8_t * c,
+void dsp_sub_vect_int8(
+	int8_t * UNSAFE a,
+	int8_t * UNSAFE b,
+	int8_t * UNSAFE c,
 	unsigned length);
 
-void sub_vect_int16(
-	int16_t * a,
-	int16_t * b, 
-	int16_t * c,
+void dsp_sub_vect_int16(
+	int16_t * UNSAFE a,
+	int16_t * UNSAFE b, 
+	int16_t * UNSAFE c,
 	unsigned length);
 
-void sub_vect_int32(
-	int32_t * a,
-	int32_t * b,
-	int32_t * c,
+void dsp_sub_vect_int32(
+	int32_t * UNSAFE a,
+	int32_t * UNSAFE b,
+	int32_t * UNSAFE c,
 	unsigned length);
 
 
-void add_bfp_vect_int8(
-	int8_t * a, int * a_exp, unsigned * a_hr,
-	int8_t * b, int   b_exp, unsigned   b_hr, 
-	int8_t * c, int   c_exp, unsigned   c_hr,
+void dsp_add_bfp_vect_int8(
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void add_bfp_vect_int16(
-	int16_t * a, int * a_exp, unsigned * a_hr,
-	int16_t * b, int   b_exp, unsigned   b_hr, 
-	int16_t * c, int   c_exp, unsigned   c_hr,
+void dsp_add_bfp_vect_int16(
+	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void add_bfp_vect_int32(
-	int32_t * a, int * a_exp, unsigned * a_hr,
-	int32_t * b, int   b_exp, unsigned   b_hr, 
-	int32_t * c, int   c_exp, unsigned   c_hr,
+void dsp_add_bfp_vect_int32(
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void add_vect_int8(
-	int8_t * a,
-	int8_t * b,
-	int8_t * c,
+void dsp_add_vect_int8(
+	int8_t * UNSAFE a,
+	int8_t * UNSAFE b,
+	int8_t * UNSAFE c,
 	unsigned length);
 
-void add_vect_int16(
-	int16_t * a,
-	int16_t * b, 
-	int16_t * c,
+void dsp_add_vect_int16(
+	int16_t * UNSAFE a,
+	int16_t * UNSAFE b, 
+	int16_t * UNSAFE c,
 	unsigned length);
 
-void add_vect_int32(
-	int32_t * a,
-	int32_t * b,
-	int32_t * c,
+void dsp_add_vect_int32(
+	int32_t * UNSAFE a,
+	int32_t * UNSAFE b,
+	int32_t * UNSAFE c,
 	unsigned length);
 
 
 
 void mul_bfp_vect_complex_int32(
-	dsp_complex_int32_t * a, int * a_exp, unsigned * a_hr,
-	dsp_complex_int32_t * b, int   b_exp, unsigned   b_hr, 
-	dsp_complex_int32_t * c, int   c_exp, unsigned   c_hr,
+	dsp_complex_int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	dsp_complex_int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	dsp_complex_int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void mul_vect_int8(
-	int8_t * a, 
-	int8_t * b, 
-	int8_t * c, 
+	int8_t * UNSAFE a, 
+	int8_t * UNSAFE b, 
+	int8_t * UNSAFE c, 
 	unsigned length);
 
 void mul_vect_int16(
-	int16_t * a, 
-	int16_t * b,  
-	int16_t * c, 
+	int16_t * UNSAFE a, 
+	int16_t * UNSAFE b,  
+	int16_t * UNSAFE c, 
 	unsigned length);
 
 void mul_vect_int32(
-	int32_t * a, 
-	int32_t * b, 
-	int32_t * c, 
+	int32_t * UNSAFE a, 
+	int32_t * UNSAFE b, 
+	int32_t * UNSAFE c, 
 	unsigned length);
 
 void mul_bfp_vect_int8(
-	int8_t * a, int * a_exp, unsigned * a_hr,
-	int8_t * b, int   b_exp, unsigned   b_hr, 
-	int8_t * c, int   c_exp, unsigned   c_hr,
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void mul_bfp_vect_int16(
-	int16_t * a, int * a_exp, unsigned * a_hr,
-	int16_t * b, int   b_exp, unsigned   b_hr, 
-	int16_t * c, int   c_exp, unsigned   c_hr,
+	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void mul_bfp_vect_int32(
-	int32_t * a, int * a_exp, unsigned * a_hr,
-	int32_t * b, int   b_exp, unsigned   b_hr, 
-	int32_t * c, int   c_exp, unsigned   c_hr,
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 

@@ -9,6 +9,7 @@
 #define UNSAFE
 #endif //__XC_
 
+#include <dsp_complex.h>
 
 //#include <dsp_adaptive.h>
 //#include <dsp_design.h>

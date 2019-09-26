@@ -105,7 +105,7 @@ void sub_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 	return;
 }
 
-void sub_bfp_vect_int8(
+void dsp_sub_bfp_vect_int8(
 	int8_t * a, int * a_exp, unsigned * a_hr,
 	int8_t * b, int   b_exp, unsigned   b_hr, 
 	int8_t * c, int   c_exp, unsigned   c_hr,
@@ -130,7 +130,7 @@ void sub_bfp_vect_int8(
 	*a_hr = sub_bfp_vect_int8_impl(a, b, c, length, shr_b, shr_c);
 }
 
-void sub_bfp_vect_int16(
+void dsp_sub_bfp_vect_int16(
 	int16_t * a, int * a_exp, unsigned * a_hr,
 	int16_t * b, int   b_exp, unsigned   b_hr, 
 	int16_t * c, int   c_exp, unsigned   c_hr,
@@ -154,7 +154,7 @@ void sub_bfp_vect_int16(
 
 	*a_hr = sub_bfp_vect_int16_impl(a, b, c, length, shr_b, shr_c);
 }
-void sub_bfp_vect_int32(
+void dsp_sub_bfp_vect_int32(
 	int32_t * a, int * a_exp, unsigned * a_hr,
 	int32_t * b, int   b_exp, unsigned   b_hr, 
 	int32_t * c, int   c_exp, unsigned   c_hr,
@@ -180,7 +180,7 @@ void sub_bfp_vect_int32(
 }
 
 
-void sub_vect_int8(
+void dsp_sub_vect_int8(
 	int8_t * a,
 	int8_t * b,
 	int8_t * c,
@@ -189,7 +189,7 @@ void sub_vect_int8(
 	sub_vect_int8_impl(a, b, c, length);
 }
 
-void sub_vect_int16(
+void dsp_sub_vect_int16(
 	int16_t * a,
 	int16_t * b, 
 	int16_t * c,
@@ -197,7 +197,7 @@ void sub_vect_int16(
 
 	sub_vect_int16_impl(a, b, c, length);
 }
-void sub_vect_int32(
+void dsp_sub_vect_int32(
 	int32_t * a,
 	int32_t * b,
 	int32_t * c,
@@ -275,7 +275,7 @@ void add_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 }
 
 
-void add_bfp_vect_int8(
+void dsp_add_bfp_vect_int8(
 	int8_t * a, int * a_exp, unsigned * a_hr,
 	int8_t * b, int   b_exp, unsigned   b_hr, 
 	int8_t * c, int   c_exp, unsigned   c_hr,
@@ -300,7 +300,7 @@ void add_bfp_vect_int8(
 	*a_hr = add_bfp_vect_int8_impl(a, b, c, length, shr_b, shr_c);
 }
 
-void add_bfp_vect_int16(
+void dsp_add_bfp_vect_int16(
 	int16_t * a, int * a_exp, unsigned * a_hr,
 	int16_t * b, int   b_exp, unsigned   b_hr, 
 	int16_t * c, int   c_exp, unsigned   c_hr,
@@ -324,7 +324,7 @@ void add_bfp_vect_int16(
 
 	*a_hr = add_bfp_vect_int16_impl(a, b, c, length, shr_b, shr_c);
 }
-void add_bfp_vect_int32(
+void dsp_add_bfp_vect_int32(
 	int32_t * a, int * a_exp, unsigned * a_hr,
 	int32_t * b, int   b_exp, unsigned   b_hr, 
 	int32_t * c, int   c_exp, unsigned   c_hr,
@@ -350,7 +350,7 @@ void add_bfp_vect_int32(
 }
 
 
-void add_vect_int8(
+void dsp_add_vect_int8(
 	int8_t * a,
 	int8_t * b,
 	int8_t * c,
@@ -359,7 +359,7 @@ void add_vect_int8(
 	add_vect_int8_impl(a, b, c, length);
 }
 
-void add_vect_int16(
+void dsp_add_vect_int16(
 	int16_t * a,
 	int16_t * b, 
 	int16_t * c,
@@ -367,7 +367,7 @@ void add_vect_int16(
 
 	add_vect_int16_impl(a, b, c, length);
 }
-void add_vect_int32(
+void dsp_add_vect_int32(
 	int32_t * a,
 	int32_t * b,
 	int32_t * c,
@@ -397,7 +397,7 @@ unsigned mul_bfp_vect_complex_int32_impl(dsp_complex_int32_t * a, dsp_complex_in
 	return clz2(mask)-1; 
 }
 
-void mul_bfp_vect_complex_int32(
+void dsp_mul_bfp_vect_complex_int32(
 	dsp_complex_int32_t * a, int * a_exp, unsigned * a_hr,
 	dsp_complex_int32_t * b, int   b_exp, unsigned   b_hr, 
 	dsp_complex_int32_t * c, int   c_exp, unsigned   c_hr,
@@ -477,7 +477,7 @@ void mul_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
 }
 
 
-void mul_vect_int8(
+void dsp_mul_vect_int8(
 	int8_t * a, 
 	int8_t * b, 
 	int8_t * c, 
@@ -486,7 +486,7 @@ void mul_vect_int8(
 	mul_vect_int8_impl(a, b, c, length);
 }
 
-void mul_vect_int16(
+void dsp_mul_vect_int16(
 	int16_t * a, 
 	int16_t * b,  
 	int16_t * c, 
@@ -494,7 +494,7 @@ void mul_vect_int16(
 
 	mul_vect_int16_impl(a, b, c, length);
 }
-void mul_vect_int32(
+void dsp_mul_vect_int32(
 	int32_t * a, 
 	int32_t * b, 
 	int32_t * c, 
@@ -503,7 +503,7 @@ void mul_vect_int32(
 	mul_vect_int32_impl(a, b, c, length);
 }
 
-void mul_bfp_vect_int8(
+void dsp_mul_bfp_vect_int8(
 	int8_t * a, int * a_exp, unsigned * a_hr,
 	int8_t * b, int   b_exp, unsigned   b_hr, 
 	int8_t * c, int   c_exp, unsigned   c_hr,
@@ -517,7 +517,7 @@ void mul_bfp_vect_int8(
 	*a_hr = mul_bfp_vect_int8_impl(a, b, c, length, shr_b, shr_c);
 }
 
-void mul_bfp_vect_int16(
+void dsp_mul_bfp_vect_int16(
 	int16_t * a, int * a_exp, unsigned * a_hr,
 	int16_t * b, int   b_exp, unsigned   b_hr, 
 	int16_t * c, int   c_exp, unsigned   c_hr,
@@ -530,7 +530,7 @@ void mul_bfp_vect_int16(
 
 	*a_hr = mul_bfp_vect_int16_impl(a, b, c, length, shr_b, shr_c);
 }
-void mul_bfp_vect_int32(
+void dsp_mul_bfp_vect_int32(
 	int32_t * a, int * a_exp, unsigned * a_hr,
 	int32_t * b, int   b_exp, unsigned   b_hr, 
 	int32_t * c, int   c_exp, unsigned   c_hr,
