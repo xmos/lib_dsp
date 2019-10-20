@@ -9,6 +9,8 @@
 #endif //__XC_
 #include "dsp_complex.h"
 
+#define DSP_FLOAT_NUM_DIGITS 22
+
 /*
  * Random number generation
  */
@@ -181,18 +183,18 @@ unsigned dsp_abs_diff_vect_uint32(uint32_t *  UNSAFE B, const int B_exp, dsp_flo
  * Python pretty printers
  */
 
-void dsp_print_vect_ch_pair_int16(dsp_ch_pair_int16_t * B, const int B_exp, unsigned length, int channel_index, int * UNSAFE error);
-void dsp_print_vect_ch_pair_int32(dsp_ch_pair_int32_t * B, const int B_exp, unsigned length, int channel_index, int * UNSAFE error);
-void dsp_print_vect_ch_pair_float(dsp_ch_pair_float_t * B, unsigned length, int channel_index, int * UNSAFE error);
+void dsp_print_vect_ch_pair_int16(dsp_ch_pair_int16_t * UNSAFE B, const int B_exp, unsigned length, int channel_index, int * UNSAFE error);
+void dsp_print_vect_ch_pair_int32(dsp_ch_pair_int32_t * UNSAFE B, const int B_exp, unsigned length, int channel_index, int * UNSAFE error);
+void dsp_print_vect_ch_pair_float(dsp_ch_pair_float_t * UNSAFE B, unsigned length, int channel_index, int * UNSAFE error);
 
-void dsp_print_vect_complex_int16(dsp_complex_int16_t * B, const int B_exp, unsigned length, int * UNSAFE error);
-void dsp_print_vect_complex_int32(dsp_complex_int32_t * B, const int B_exp, unsigned length, int * UNSAFE error);
-void dsp_print_vect_complex_float(dsp_complex_float_t * B, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_int16(dsp_complex_int16_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_int32(dsp_complex_int32_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_float(dsp_complex_float_t * UNSAFE B, unsigned length, int * UNSAFE error);
 
 //For DC and NQ in bin zero
-void dsp_print_vect_complex_int16_fft(dsp_complex_int16_t * B, const int B_exp, unsigned length, int * UNSAFE error);
-void dsp_print_vect_complex_int32_fft(dsp_complex_int32_t * B, const int B_exp, unsigned length, int * UNSAFE error);
-void dsp_print_vect_complex_float_fft(dsp_complex_float_t * B, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_int16_fft(dsp_complex_int16_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_int32_fft(dsp_complex_int32_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
+void dsp_print_vect_complex_float_fft(dsp_complex_float_t * UNSAFE B, unsigned length, int * UNSAFE error);
 
 void dsp_print_vect_int8  (  int8_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
 void dsp_print_vect_int16 ( int16_t * UNSAFE B, const int B_exp, unsigned length, int * UNSAFE error);
