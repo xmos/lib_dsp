@@ -23,15 +23,15 @@ double dsp_filters_biquads_fp
     for(unsigned s=0;s<num_sections;s++){
 
         double r = carry * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 0]
-                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 0] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 1]
-                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 1] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 2]
-                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 2] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 3]
-                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 3] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 4];
+                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 1] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 1]
+                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 0] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 2]
+                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 3] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 3]
+                + state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 2] * filter_coeffs[(s*DSP_NUM_COEFFS_PER_BIQUAD) + 4];
 
-        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 1] = state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 0];
-        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 0] = carry;
-        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 3] = state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 2];
-        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 2] = r;
+        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 0] = state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 1];
+        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 1] = carry;
+        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 2] = state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 3];
+        state_data[(s*DSP_NUM_STATES_PER_BIQUAD) + 3] = r;
         carry = r;
     }
     return carry;
