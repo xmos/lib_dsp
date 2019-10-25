@@ -39,27 +39,27 @@ void dsp_float_fft_split_spectrum ( dsp_complex_float_t pts[], const uint32_t N 
 void dsp_float_fft_merge_spectra  ( dsp_complex_float_t pts[], const uint32_t N );
 
 void dsp_sub_vect_float(
-	double * a,
-	double * b, 
-	double * c,
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
 	unsigned length);
 
 void dsp_add_vect_float(
-	double * a,
-	double * b, 
-	double * c,
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
 	unsigned length);
     
 void dsp_mul_vect_float(
-	double * a,
-	double * b, 
-	double * c,
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
 	unsigned length);
 
 void dsp_mul_vect_complex_float(
-	dsp_complex_float_t * a,
-	dsp_complex_float_t * b, 
-	dsp_complex_float_t * c,
+	dsp_complex_float_t * UNSAFE a,
+	dsp_complex_float_t * UNSAFE b, 
+	dsp_complex_float_t * UNSAFE c,
 	unsigned length);
 #endif
 
