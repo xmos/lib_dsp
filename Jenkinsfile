@@ -2,7 +2,7 @@
 getApproval()
 pipeline {
   agent {
-    label 'x86_64&&brew'    
+    label 'x86_64&&brew'
   }
   environment {
     REPO = 'lib_dsp'
@@ -36,7 +36,7 @@ pipeline {
   stages {
     stage('Get view') {
       steps {
-        xcorePrepareSandbox("${VIEW}", "${REPO}")        
+        xcorePrepareSandbox("${VIEW}", "${REPO}")
       }
     }
     stage('Library checks') {
@@ -47,13 +47,13 @@ pipeline {
     stage('Tests') {
       steps {
         dir("${REPO}/tests/test_biquad") {
-          runXwaf('.')
+          runWaf('.')
           viewEnv() {
             runPytest()
           }
         }
         dir("${REPO}/tests/dsp_unit_tests") {
-          runXwaf('.')
+          runWaf('.')
           viewEnv() {
             runPytest()
           }
@@ -84,7 +84,7 @@ pipeline {
       updateViewfiles()
     }
     cleanup {
-      cleanWs()
+      xcoreCleanSandbox()
     }
   }
 }

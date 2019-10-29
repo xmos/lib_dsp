@@ -1,5 +1,19 @@
-OPTIONAL_HEADERS += debug_conf.h xmos_dsp_elements.h
+VERSION = 5.0.0
 
-INCLUDE_DIRS = api
+DEPENDENT_MODULES =
 
-VERSION = 4.2.0
+MODULE_XCC_FLAGS = $(XCC_FLAGS)
+
+OPTIONAL_HEADERS += debug_conf.h \
+                    xmos_dsp_elements.h
+
+EXPORT_INCLUDE_DIRS = api
+
+INCLUDE_DIRS = $(EXPORT_INCLUDE_DIRS)
+
+SOURCE_DIRS = src \
+              src/bfp \
+              src/fft \
+              src/float \
+              src/gen \
+              src/testing
