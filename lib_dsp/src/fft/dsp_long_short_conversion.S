@@ -3,7 +3,7 @@
 	.section	.dp.data,"awd",@progbits
 	.text
 
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
 	.cc_top dsp_fft_short_to_long_xs2.function
 	.globl	dsp_fft_short_to_long_xs2
 	.align	4

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
     
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
 
 	.text
     .issue_mode  dual

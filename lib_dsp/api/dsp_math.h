@@ -217,7 +217,7 @@ inline q8_24 dsp_math_cos(q8_24 rad) {
  */
 q8_24 dsp_math_atan(q8_24 x);
 
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
 /** Function that computes a fast fixed point atan2 and hypothenuse. The input
  * comprises an array of two integers (notionally a complex number with the
  * real value stored in the first index, and the imaginary value stored in

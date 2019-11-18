@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <dsp_complex.h>
 
-#if defined(__XS2A__)
+#if defined(__XS2A__)  || defined(__XS3A__)
 
 #ifdef __XC__
 #define UNSAFE unsafe
