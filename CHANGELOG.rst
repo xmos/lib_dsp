@@ -4,7 +4,7 @@ xCORE-200 DSP library change log
 5.1.0
 -----
 
-  * Added: vector add, sub and mul functions for int8, int16 and int32 in both 
+  * Added: vector add, sub and mul functions for int8, int16 and int32 in both
     fixed and block floating point.
 
 5.0.0
