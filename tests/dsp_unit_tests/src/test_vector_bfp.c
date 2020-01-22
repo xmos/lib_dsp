@@ -57,7 +57,7 @@ void test_add_bfp_vect_int32(){
 
 			int a_exp;
 			unsigned a_hr;
-			add_bfp_vect_int32(
+			dsp_add_bfp_vect_int32(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -108,7 +108,7 @@ void test_add_bfp_vect_int16(){
 
 			int a_exp;
 			unsigned a_hr;
-			add_bfp_vect_int16(
+			dsp_add_bfp_vect_int16(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -162,7 +162,7 @@ void test_add_bfp_vect_int8(){
 
 			int a_exp;
 			unsigned a_hr;
-			add_bfp_vect_int8(
+			dsp_add_bfp_vect_int8(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -204,7 +204,7 @@ void test_add_vect_int32(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			add_vect_int32(a, b, c, len);
+			dsp_add_vect_int32(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
@@ -242,7 +242,7 @@ void test_add_vect_int16(){
 			dsp_conv_vect_int16_to_float(c, Q_EXP_16, C, len, &error);
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			add_vect_int16(a, b, c, len);
+			dsp_add_vect_int16(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
@@ -274,7 +274,7 @@ void test_add_vect_int8(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			add_vect_int8(a, b, c, len);
+			dsp_add_vect_int8(a, b, c, len);
 			dsp_add_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);
@@ -329,7 +329,7 @@ void test_mul_bfp_vect_complex32(){
 			b_hr = dsp_bfp_cls_vect_complex_int32(b, len);
 			c_hr = dsp_bfp_cls_vect_complex_int32(c, len);
 
-			mul_bfp_vect_complex_int32(
+			dsp_mul_bfp_vect_complex_int32(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -381,7 +381,7 @@ void test_bfp_vect_mul32(){
 
 			int a_exp;
 			unsigned a_hr;
-			mul_bfp_vect_int32(
+			dsp_mul_bfp_vect_int32(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -434,7 +434,7 @@ void test_bfp_vect_mul16(){
 
 			int a_exp;
 			unsigned a_hr;
-			mul_bfp_vect_int16(
+			dsp_mul_bfp_vect_int16(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -484,7 +484,7 @@ void test_bfp_vect_mul8(){
 
 			int a_exp;
 			unsigned a_hr;
-			mul_bfp_vect_int8(
+			dsp_mul_bfp_vect_int8(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -529,7 +529,7 @@ void test_vect_mul32(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			mul_vect_int32(a, b, c, len);
+			dsp_mul_vect_int32(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
@@ -568,7 +568,7 @@ void test_vect_mul16(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			mul_vect_int16(a, b, c, len);
+			dsp_mul_vect_int16(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
@@ -605,7 +605,7 @@ void test_vect_mul8(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			mul_vect_int8(a, b, c, len);
+			dsp_mul_vect_int8(a, b, c, len);
 			dsp_mul_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);
@@ -649,7 +649,7 @@ void test_bfp_vect_sub32(){
 
 			int a_exp;
 			unsigned a_hr;
-			sub_bfp_vect_int32(
+			dsp_sub_bfp_vect_int32(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -702,7 +702,7 @@ void test_bfp_vect_sub16(){
 
 			int a_exp;
 			unsigned a_hr;
-			sub_bfp_vect_int16(
+			dsp_sub_bfp_vect_int16(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -752,7 +752,7 @@ void test_bfp_vect_sub8(){
 
 			int a_exp;
 			unsigned a_hr;
-			sub_bfp_vect_int8(
+			dsp_sub_bfp_vect_int8(
 				a, &a_exp, &a_hr, 
 				b, b_exp, b_hr, 
 				c, c_exp, c_hr, 
@@ -797,7 +797,7 @@ void test_vect_sub32(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			sub_vect_int32(a, b, c, len);
+			dsp_sub_vect_int32(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int32(a, Q_EXP_32, A, len, &error);
@@ -837,7 +837,7 @@ void test_vect_sub16(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			sub_vect_int16(a, b, c, len);
+			dsp_sub_vect_int16(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int16(a, Q_EXP_16, A, len, &error);
@@ -874,7 +874,7 @@ void test_vect_sub8(){
 
 			TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
-			sub_vect_int8(a, b, c, len);
+			dsp_sub_vect_int8(a, b, c, len);
 			dsp_sub_vect_float(A, B, C, len);
 
 			unsigned diff = dsp_abs_diff_vect_int8(a, Q_EXP_8, A, len, &error);

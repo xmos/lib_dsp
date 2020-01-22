@@ -3,6 +3,8 @@ import os.path
 import pytest
 import subprocess
 
+import traceback
+
 
 def pytest_collect_file(parent, path):
     # TODO: get UNITY_TEST_PREFIX and UNITY_RUNNER_SUFFIX from wscript
@@ -10,7 +12,8 @@ def pytest_collect_file(parent, path):
     if ((path.ext == ".c" or path.ext == ".xc")
             and (path.basename.startswith("test_")
                  and "_Runner" not in path.basename)):
-        return UnityTestSource(path, parent)
+        if 'bfp' in str(path):
+            return UnityTestSource(path, parent)
 
 
 class UnityTestSource(pytest.File):
@@ -94,11 +97,11 @@ class UnityTestExecutable(pytest.Item):
         if isinstance(excinfo.value, UnityTestException):
             return '\n'.join([str(self.parent).strip('<>'),
                               '{}:{}:{}()'.format(
-                                    excinfo.value[1]['test_source'],
-                                    excinfo.value[1]['line_number'],
-                                    excinfo.value[1]['test_case']),
+                                    excinfo.value.args[1]['test_source'],
+                                    excinfo.value.args[1]['line_number'],
+                                    excinfo.value.args[1]['test_case']),
                               'Failure reason:',
-                              excinfo.value[1]['failure_reason']])
+                              excinfo.value.args[1]['failure_reason']])
         else:
             return str(excinfo.value)
 
