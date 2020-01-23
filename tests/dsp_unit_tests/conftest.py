@@ -12,8 +12,7 @@ def pytest_collect_file(parent, path):
     if ((path.ext == ".c" or path.ext == ".xc")
             and (path.basename.startswith("test_")
                  and "_Runner" not in path.basename)):
-        if 'bfp' in str(path):
-            return UnityTestSource(path, parent)
+        return UnityTestSource(path, parent)
 
 
 class UnityTestSource(pytest.File):

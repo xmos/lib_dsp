@@ -44,11 +44,11 @@ void test_bfp_clz_uint64(){
 }
 
 void test_bfp_cls_int8(){
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(7, dsp_bfp_cls_int16 ((int16_t)0), "0");
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(6, dsp_bfp_cls_int16 ((int16_t)1), "1");
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_int16 ((int16_t)INT8_MAX), "INT8_MAX");
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(1, dsp_bfp_cls_int16 ((int16_t)INT8_MAX>>1), "INT8_MAX/2");
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_int16 ((int16_t)INT8_MIN), "INT8_MIN");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(7, dsp_bfp_cls_int8 ((int16_t)0), "0");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(6, dsp_bfp_cls_int8 ((int16_t)1), "1");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_int8 ((int16_t)INT8_MAX), "INT8_MAX");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(1, dsp_bfp_cls_int8 ((int16_t)INT8_MAX>>1), "INT8_MAX/2");
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_int8 ((int16_t)INT8_MIN), "INT8_MIN");
 }
 
 void test_bfp_cls_int16(){

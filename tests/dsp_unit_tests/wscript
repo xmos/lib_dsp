@@ -204,13 +204,13 @@ def configure(conf):
 
 
 def build(bld):
-    if not bld.variant:
+    if not bld.variant and bld.cmd == 'build':
         print('Adding test runners to build queue')
         for name in UNITY_TESTS:
             Options.commands.insert(0, 'build_' + name + '_single_issue')
             Options.commands.insert(0, 'build_' + name + '_dual_issue')
         print('Build queue {}'.format(Options.commands))
-    else:
+    elif bld.cmd != 'clean':
         print('Building runner {}'.format(bld.variant))
         bld.env.TARGET_ARCH = 'XCORE-200-EXPLORER'
         bld.env.XSCOPE = bld.path.find_resource('config.xscope')
