@@ -14,7 +14,7 @@
 #define ALIGNED [[aligned(8)]]
 #else
 #define UNSAFE
-#define ALIGNED
+#define ALIGNED __attribute__ ((aligned (8)))
 #endif //__XC_
 
 static signed sext(unsigned a, unsigned b){
