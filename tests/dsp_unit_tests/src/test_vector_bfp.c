@@ -905,6 +905,7 @@ void test_bfp_vect_div32() {
             for(unsigned i=0;i<len;i++){
                 b[i] = dsp_pseudo_rand_int32(&rand_seed)>>b_hr;
                 c[i] = dsp_pseudo_rand_int32(&rand_seed)>>c_hr;
+                if (c[i] == 0) { c[i]++; }
             }
 
             b_hr = dsp_bfp_cls_vect_int32(b, len);
@@ -935,6 +936,118 @@ void test_bfp_vect_div32() {
             TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
             TEST_ASSERT_LESS_THAN_UINT32_MESSAGE(3, diff, "error is too high");
             TEST_ASSERT_EQUAL_UINT32_MESSAGE(a_hr, actual_a_hr, "error hr is wrong");
+        }
+    }
+
+    return;
+}
+
+void test_bfp_vect_div16() {
+
+    int16_t a[MAX_LEN], b[MAX_LEN], c[MAX_LEN];
+    dsp_float_t A[MAX_LEN], B[MAX_LEN], C[MAX_LEN];
+
+    unsigned rand_seed = 6;
+
+    for(unsigned len=1;len<MAX_LEN;len++){
+        len = MAX_LEN;
+        for(unsigned itt=0;itt<ITT;itt++){
+
+            int b_exp = dsp_pseudo_rand_int16(&rand_seed) % 15;
+            int c_exp = dsp_pseudo_rand_int16(&rand_seed) % 15;
+
+            unsigned b_hr = 5 + dsp_pseudo_rand_uint16(&rand_seed)%6;
+            unsigned c_hr = 5 + dsp_pseudo_rand_uint16(&rand_seed)%6;
+            for(unsigned i=0;i<len;i++){
+                b[i] = dsp_pseudo_rand_int16(&rand_seed)>>b_hr;
+                c[i] = dsp_pseudo_rand_int16(&rand_seed)>>c_hr;
+                if (c[i] == 0) { c[i]++; }
+            }
+
+            b_hr = dsp_bfp_cls_vect_int16(b, len);
+            c_hr = dsp_bfp_cls_vect_int16(c, len);
+
+            int error = 0;
+            dsp_conv_vect_int16_to_float(b, b_exp, B, len, &error);
+            dsp_conv_vect_int16_to_float(c, c_exp, C, len, &error);
+
+            TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+
+            int a_exp;
+            unsigned a_hr;
+            dsp_div_bfp_vect_int16(
+                    a, &a_exp, &a_hr,
+                    b, b_exp, b_hr,
+                    c, c_exp, c_hr,
+                    len);
+
+            for (int i=0; i<len; i++) {
+                A[i] = B[i] / C[i];
+            }
+
+            unsigned diff = dsp_abs_diff_vect_int16(a, a_exp, A, len, &error);
+
+            unsigned actual_a_hr = dsp_bfp_cls_vect_int16(a, len);
+
+            TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+            TEST_ASSERT_LESS_THAN_UINT16_MESSAGE(3, diff, "error is too high");
+            TEST_ASSERT_EQUAL_UINT16_MESSAGE(a_hr, actual_a_hr, "error hr is wrong");
+        }
+    }
+
+    return;
+}
+
+void test_bfp_vect_div8() {
+
+    int8_t a[MAX_LEN], b[MAX_LEN], c[MAX_LEN];
+    dsp_float_t A[MAX_LEN], B[MAX_LEN], C[MAX_LEN];
+
+    unsigned rand_seed = 6;
+
+    for(unsigned len=1;len<MAX_LEN;len++){
+        len = MAX_LEN;
+        for(unsigned itt=0;itt<ITT;itt++){
+
+            int b_exp = dsp_pseudo_rand_int8(&rand_seed) % 15;
+            int c_exp = dsp_pseudo_rand_int8(&rand_seed) % 15;
+
+            unsigned b_hr = 5 + dsp_pseudo_rand_uint8(&rand_seed)%6;
+            unsigned c_hr = 5 + dsp_pseudo_rand_uint8(&rand_seed)%6;
+            for(unsigned i=0;i<len;i++){
+                b[i] = dsp_pseudo_rand_int8(&rand_seed)>>b_hr;
+                c[i] = dsp_pseudo_rand_int8(&rand_seed)>>c_hr;
+                if (c[i] == 0) { c[i]++; }
+            }
+
+            b_hr = dsp_bfp_cls_vect_int8(b, len);
+            c_hr = dsp_bfp_cls_vect_int8(c, len);
+
+            int error = 0;
+            dsp_conv_vect_int8_to_float(b, b_exp, B, len, &error);
+            dsp_conv_vect_int8_to_float(c, c_exp, C, len, &error);
+
+            TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+
+            int a_exp;
+            unsigned a_hr;
+            dsp_div_bfp_vect_int8(
+                    a, &a_exp, &a_hr,
+                    b, b_exp, b_hr,
+                    c, c_exp, c_hr,
+                    len);
+
+            for (int i=0; i<len; i++) {
+                A[i] = B[i] / C[i];
+            }
+
+            unsigned diff = dsp_abs_diff_vect_int8(a, a_exp, A, len, &error);
+
+            unsigned actual_a_hr = dsp_bfp_cls_vect_int8(a, len);
+
+            TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
+            TEST_ASSERT_LESS_THAN_UINT8_MESSAGE(3, diff, "error is too high");
+            TEST_ASSERT_EQUAL_UINT8_MESSAGE(a_hr, actual_a_hr, "error hr is wrong");
         }
     }
 

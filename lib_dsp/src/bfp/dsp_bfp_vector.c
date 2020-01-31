@@ -568,6 +568,7 @@ void dsp_div_bfp_vect_int32(
     int c_shift = (32 - max_c_clz - 1);
     if (c_shift <=0) { c_shift = 0; }
 
+    // Do the divide
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
         uint32_t den = abs(c[i]);
@@ -582,6 +583,84 @@ void dsp_div_bfp_vect_int32(
         }
     }
     *a_hr = clz2(mask)-1;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_exp = output_exp;
+}
+
+void dsp_div_bfp_vect_int16(
+	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length)
+{
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 16;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (32 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
+    // Do the divide
+    unsigned mask = 0;
+    for (unsigned i=0; i<length; i++) {
+        uint16_t den = abs(c[i]);
+        int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+        a[i] = (int16_t) (num / den);
+        mask |= a[i];
+        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+            a[i] *= -1;
+        }
+    }
+    *a_hr = clz2(mask)-1 - 16;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_exp = output_exp;
+}
+
+void dsp_div_bfp_vect_int8(
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length)
+{
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 8;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (32 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
+    // Do the divide
+    unsigned mask = 0;
+    for (unsigned i=0; i<length; i++) {
+        uint8_t den = abs(c[i]);
+        int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+        a[i] = (int8_t) (num / den);
+        mask |= a[i];
+        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+            a[i] *= -1;
+        }
+    }
+    *a_hr = clz2(mask)-1 - 24;
     int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
     *a_exp = output_exp;
 }
