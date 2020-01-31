@@ -554,8 +554,7 @@ void dsp_div_bfp_vect_int32(
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
         uint32_t den = abs(c[i]);
-        // Shift b up by exp(c)
-        uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) -c_exp;
+        uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) b_hr;
         uint32_t num_hi = (uint32_t) (num >> 32);
         uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
         uint32_t mod;
@@ -566,35 +565,6 @@ void dsp_div_bfp_vect_int32(
         }
     }
     *a_hr = clz2(mask)-1;
-    *a_exp = b_exp;
+    int32_t output_exp = (b_exp - b_hr) - c_exp;
+    *a_exp = output_exp;
 }
-
-#if 0
-//exponent_t sup_inv(uint32_t inv[],
-//                   const exponent_t in_exp,
-//                   const size_t length)
-//{
-    //uint32_t min = sup_array_min_u32(inv, length);
-
-    //if(min == 0){
-    //    memset(inv, 0, sizeof(uint32_t)*length);
-    //    return -1024;
-    //}
-
-    exponent_t output_exponent = clz(min) - 64 + 1 - in_exp;
-    uint64_t one = ULLONG_MAX>>(clz(min)+1);
-
-    uint32_t tmp1 = (uint32_t) (one >> 32);
-    uint32_t tmp2 = (uint32_t) (one & 0xFFFFFFFF);
-    unsigned mask = 0;
-    for (unsigned i=0; i<length; i++){
-        uint32_t mod;
-        asm(
-            "ldivu %0, %1, %2, %3, %4"
-            : "=r"(inv[i]), "=r"(mod) : "r"(tmp1), "r"(tmp2), "r"(inv[i])
-        );
-    }
-    return output_exponent;
-//}
-}
-#endif

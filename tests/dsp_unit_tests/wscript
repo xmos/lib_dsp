@@ -220,7 +220,7 @@ def build(bld):
         bld.env.XCC_FLAGS = ['-O2', '-g', '-Wall', '-DUNITY_SUPPORT_64',
                              '-DUNITY_INCLUDE_DOUBLE', bld.env.XCC_FLAGS]
 
-        depends_on = ['lib_dsp', 'audio_test_tools', 'Unity']
+        depends_on = ['lib_dsp', 'Unity']
         include = ['.']
         source = [
             os.path.join(UNITY_TEST_DIR,
