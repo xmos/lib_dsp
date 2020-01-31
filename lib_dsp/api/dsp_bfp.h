@@ -192,7 +192,6 @@ void dsp_mul_bfp_vect_int32(
 	unsigned length);
 
 
-// To avoid overflow, b_hr + c_exp must be > 0
 void dsp_div_bfp_vect_int32(
 	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
 	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,

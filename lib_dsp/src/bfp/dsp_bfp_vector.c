@@ -551,10 +551,27 @@ void dsp_div_bfp_vect_int32(
 	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length)
 {
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 32;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (32 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
         uint32_t den = abs(c[i]);
-        uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) b_hr;
+        uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
         uint32_t num_hi = (uint32_t) (num >> 32);
         uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
         uint32_t mod;
@@ -565,6 +582,6 @@ void dsp_div_bfp_vect_int32(
         }
     }
     *a_hr = clz2(mask)-1;
-    int32_t output_exp = (b_exp - b_hr) - c_exp;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
     *a_exp = output_exp;
 }
