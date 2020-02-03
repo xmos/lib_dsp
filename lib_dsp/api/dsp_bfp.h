@@ -211,6 +211,12 @@ void dsp_div_bfp_vect_int8(
 	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
+void dsp_div_bfp_vect_complex_int32(
+	dsp_complex_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	dsp_complex_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length);
+
 #if defined(__XS2A__)
 
 

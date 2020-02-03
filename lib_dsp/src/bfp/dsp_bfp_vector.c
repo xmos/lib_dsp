@@ -547,11 +547,11 @@ void dsp_mul_bfp_vect_int32(
 	*a_hr = mul_bfp_vect_int32_impl(a, b, c, length, shr_b, shr_c);
 }
 
-void dsp_div_bfp_vect_int32(
+void dsp_div_bfp_vect_int32_impl(
 	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
 	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
-	unsigned length)
+	unsigned length, unsigned nums_per_den)
 {
     // Figure out maximum possible shift that doesn't overflow
     unsigned max_c_clz = 0;
@@ -573,25 +573,53 @@ void dsp_div_bfp_vect_int32(
     // Do the divide
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
-        if (c[i]) {
-            uint32_t den = abs(c[i]);
+        int32_t den = c[i / nums_per_den];
+        if (den) {
             uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
             uint32_t num_hi = (uint32_t) (num >> 32);
             uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
             uint32_t mod;
-            asm("ldivu %0, %1, %2, %3, %4" : "=r"(a[i]), "=r"(mod) : "r"(num_hi), "r"(num_low), "r"(den));
+            asm("ldivu %0, %1, %2, %3, %4" : "=r"(a[i]), "=r"(mod) : "r"(num_hi), "r"(num_low), "r"(abs(den)));
         } else {
             a[i] = INT32_MAX;
             debug_printf("div_bfp: DIVIDE BY ZERO\n");
         }
         mask |= a[i];
-        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+        if ((den < 0 && b[i] >= 0) || (den >= 0 && b[i] < 0)) {
             a[i] *= -1;
         }
     }
     *a_hr = clz2(mask)-1;
     int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
     *a_exp = output_exp;
+}
+
+void dsp_div_bfp_vect_int32(
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length) {
+
+    return dsp_div_bfp_vect_int32_impl(
+	a, a_exp, a_hr,
+	b, b_exp, b_hr,
+	c, c_exp, c_hr,
+	length, 1
+    );
+}
+
+void dsp_div_bfp_vect_complex_int32(
+	dsp_complex_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	dsp_complex_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length) {
+
+    return dsp_div_bfp_vect_int32_impl(
+	(int32_t *) a, a_exp, a_hr,
+	(int32_t *) b, b_exp, b_hr,
+	c, c_exp, c_hr,
+	length * 2, 2
+    );
 }
 
 void dsp_div_bfp_vect_int16(
