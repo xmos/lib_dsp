@@ -4,7 +4,9 @@
 #include <xclib.h>
 #include <dsp_complex.h>
 
-#include <stdio.h>
+#include "debug_print.h"
+
+#include <stdlib.h>
 
 unsigned clz2(unsigned m){
 	if (m == 0)
@@ -543,4 +545,141 @@ void dsp_mul_bfp_vect_int32(
 	*a_exp =  b_exp + c_exp + shr_b + shr_c + 32 - (h*2);
 
 	*a_hr = mul_bfp_vect_int32_impl(a, b, c, length, shr_b, shr_c);
+}
+
+void dsp_div_bfp_vect_int32(
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length)
+{
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 32;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (32 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
+    // Do the divide
+    unsigned mask = 0;
+    for (unsigned i=0; i<length; i++) {
+        if (c[i]) {
+            uint32_t den = abs(c[i]);
+            uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+            uint32_t num_hi = (uint32_t) (num >> 32);
+            uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
+            uint32_t mod;
+            asm("ldivu %0, %1, %2, %3, %4" : "=r"(a[i]), "=r"(mod) : "r"(num_hi), "r"(num_low), "r"(den));
+        } else {
+            a[i] = INT32_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
+        mask |= a[i];
+        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+            a[i] *= -1;
+        }
+    }
+    *a_hr = clz2(mask)-1;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_exp = output_exp;
+}
+
+void dsp_div_bfp_vect_int16(
+	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length)
+{
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 16;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        cur_clz -= 16;
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (16 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
+    // Do the divide
+    unsigned mask = 0;
+    for (unsigned i=0; i<length; i++) {
+        if (c[i]) {
+            uint16_t den = abs(c[i]);
+            int32_t num = ((uint32_t) abs(b[i])) << (uint32_t) (b_hr + c_shift);
+            a[i] = (int16_t) (num / den);
+        } else {
+            a[i] = INT16_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
+        mask |= a[i];
+        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+            a[i] *= -1;
+        }
+    }
+    *a_hr = clz2(mask)-1 - 16;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_exp = output_exp;
+}
+
+void dsp_div_bfp_vect_int8(
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+	unsigned length)
+{
+    // Figure out maximum possible shift that doesn't overflow
+    unsigned max_c_clz = 0;
+    for (unsigned i=0; i<length; i++) {
+        unsigned c_abs = abs(c[i]);
+        if (c_abs == 0) {
+            max_c_clz = 8;
+            break;
+        }
+        unsigned cur_clz;
+        asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        cur_clz -= 24;
+        if (cur_clz > max_c_clz) {
+            max_c_clz = cur_clz;
+        }
+    }
+    int c_shift = (8 - max_c_clz - 1);
+    if (c_shift <=0) { c_shift = 0; }
+
+    // Do the divide
+    unsigned mask = 0;
+    for (unsigned i=0; i<length; i++) {
+        if (c[i]) {
+            uint8_t den = abs(c[i]);
+            int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+            a[i] = (int8_t) (num / den);
+        } else {
+            a[i] = INT8_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
+        mask |= a[i];
+        if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
+            a[i] *= -1;
+        }
+    }
+    *a_hr = clz2(mask)-1 - 24;
+    int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_exp = output_exp;
 }
