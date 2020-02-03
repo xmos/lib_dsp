@@ -220,7 +220,7 @@ def build(bld):
         bld.env.XCC_FLAGS = ['-O2', '-g', '-Wall', '-DUNITY_SUPPORT_64',
                              '-DUNITY_INCLUDE_DOUBLE', bld.env.XCC_FLAGS]
 
-        depends_on = ['lib_dsp', 'Unity']
+        depends_on = ['lib_dsp', 'lib_logging', 'Unity']
         include = ['.']
         source = [
             os.path.join(UNITY_TEST_DIR,
@@ -239,7 +239,10 @@ def build(bld):
         makefile_opts['SOURCE_DIRS'] = ['src', os.path.join('runners',bld.source)]
         makefile_opts['TARGET'] = ['XCORE-200-EXPLORER']
         makefile_opts['INCLUDE_DIRS'] = ['src']
-        makefile_opts['XCC_FLAGS'] = ['-Os', '-g', '-Wall', '-DUNITY_SUPPORT_64', '-DUNITY_INCLUDE_DOUBLE']
+        makefile_opts['XCC_FLAGS'] = [
+            '-Os', '-g', '-Wall', '-DUNITY_SUPPORT_64', '-DUNITY_INCLUDE_DOUBLE',
+            #'-DDEBUG_PRINT_ENABLE'
+        ]
         makefile_opts['APP_NAME'] = [bld.variant]
         makefile_opts['USED_MODULES'] = depends_on
         makefile_opts['XCOMMON_MAKEFILE'] = ['Makefile.common']

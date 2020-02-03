@@ -4,6 +4,8 @@
 #include <xclib.h>
 #include <dsp_complex.h>
 
+#include "debug_print.h"
+
 #include <stdlib.h>
 
 unsigned clz2(unsigned m){
@@ -571,12 +573,17 @@ void dsp_div_bfp_vect_int32(
     // Do the divide
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
-        uint32_t den = abs(c[i]);
-        uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
-        uint32_t num_hi = (uint32_t) (num >> 32);
-        uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
-        uint32_t mod;
-        asm("ldivu %0, %1, %2, %3, %4" : "=r"(a[i]), "=r"(mod) : "r"(num_hi), "r"(num_low), "r"(den));
+        if (c[i]) {
+            uint32_t den = abs(c[i]);
+            uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+            uint32_t num_hi = (uint32_t) (num >> 32);
+            uint32_t num_low = (uint32_t) (num & 0xFFFFFFFF);
+            uint32_t mod;
+            asm("ldivu %0, %1, %2, %3, %4" : "=r"(a[i]), "=r"(mod) : "r"(num_hi), "r"(num_low), "r"(den));
+        } else {
+            a[i] = INT32_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
         mask |= a[i];
         if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
             a[i] *= -1;
@@ -603,19 +610,25 @@ void dsp_div_bfp_vect_int16(
         }
         unsigned cur_clz;
         asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        cur_clz -= 16;
         if (cur_clz > max_c_clz) {
             max_c_clz = cur_clz;
         }
     }
-    int c_shift = (32 - max_c_clz - 1);
+    int c_shift = (16 - max_c_clz - 1);
     if (c_shift <=0) { c_shift = 0; }
 
     // Do the divide
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
-        uint16_t den = abs(c[i]);
-        int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
-        a[i] = (int16_t) (num / den);
+        if (c[i]) {
+            uint16_t den = abs(c[i]);
+            int32_t num = ((uint32_t) abs(b[i])) << (uint32_t) (b_hr + c_shift);
+            a[i] = (int16_t) (num / den);
+        } else {
+            a[i] = INT16_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
         mask |= a[i];
         if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
             a[i] *= -1;
@@ -642,19 +655,25 @@ void dsp_div_bfp_vect_int8(
         }
         unsigned cur_clz;
         asm("clz %0, %1" : "=r"(cur_clz) : "r"(c_abs));
+        cur_clz -= 24;
         if (cur_clz > max_c_clz) {
             max_c_clz = cur_clz;
         }
     }
-    int c_shift = (32 - max_c_clz - 1);
+    int c_shift = (8 - max_c_clz - 1);
     if (c_shift <=0) { c_shift = 0; }
 
     // Do the divide
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
-        uint8_t den = abs(c[i]);
-        int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
-        a[i] = (int8_t) (num / den);
+        if (c[i]) {
+            uint8_t den = abs(c[i]);
+            int32_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
+            a[i] = (int8_t) (num / den);
+        } else {
+            a[i] = INT8_MAX;
+            debug_printf("div_bfp: DIVIDE BY ZERO\n");
+        }
         mask |= a[i];
         if ((c[i] < 0 && b[i] >= 0) || (c[i] >= 0 && b[i] < 0)) {
             a[i] *= -1;
