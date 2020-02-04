@@ -1,11 +1,13 @@
 xCORE-200 DSP library change log
 ================================
 
-5.1.0
+6.0.0
 -----
 
-  * Added: vector add, sub and mul functions for int8, int16 and int32 in both
+  * ADDED: vector add, sub and mul functions for int8, int16 and int32 in both
     fixed and block floating point.
+  * CHANGED: Functions re-implemented in C, requires the use of unsafe pointers if
+    called from XC
 
 5.0.0
 -----

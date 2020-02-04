@@ -1,6 +1,6 @@
-VERSION = 5.1.0
+VERSION = 6.0.0
 
-DEPENDENT_MODULES = lib_logging
+DEPENDENT_MODULES = lib_logging(>=3.0.0)
 
 MODULE_XCC_FLAGS = $(XCC_FLAGS)
 
