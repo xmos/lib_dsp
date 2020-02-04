@@ -6,8 +6,12 @@ xCORE-200 DSP library change log
 
   * ADDED: vector add, sub and mul functions for int8, int16 and int32 in both
     fixed and block floating point.
-  * CHANGED: Functions re-implemented in C, requires the use of unsafe pointers if
-    called from XC
+  * CHANGED: Functions re-implemented in C, requires the use of unsafe pointers
+    if called from XC
+
+  * Changes to dependencies:
+
+    - lib_logging: Added dependency 3.0.0
 
 5.0.0
 -----
