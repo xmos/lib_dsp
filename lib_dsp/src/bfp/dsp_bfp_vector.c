@@ -574,6 +574,7 @@ void dsp_div_bfp_vect_int32_impl(
     unsigned mask = 0;
     for (unsigned i=0; i<length; i++) {
         int32_t den = c[i / nums_per_den];
+        int32_t num_ = b[i]; // Saved to calculate sign
         if (den) {
             uint64_t num = ((uint64_t) abs(b[i])) << (uint64_t) (b_hr + c_shift);
             uint32_t num_hi = (uint32_t) (num >> 32);
@@ -585,12 +586,12 @@ void dsp_div_bfp_vect_int32_impl(
             debug_printf("div_bfp: DIVIDE BY ZERO\n");
         }
         mask |= a[i];
-        if ((den < 0 && b[i] >= 0) || (den >= 0 && b[i] < 0)) {
+        if ((den < 0 && num_ >= 0) || (den >= 0 && num_ < 0)) {
             a[i] *= -1;
         }
     }
-    *a_hr = clz2(mask)-1;
     int32_t output_exp = (b_exp - b_hr) - c_exp - c_shift;
+    *a_hr = clz2(mask)-1;
     *a_exp = output_exp;
 }
 
@@ -622,6 +623,7 @@ void dsp_div_bfp_vect_complex_int32(
     );
 }
 
+// TODO: Fix sign for a == b
 void dsp_div_bfp_vect_int16(
 	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
 	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
@@ -667,6 +669,7 @@ void dsp_div_bfp_vect_int16(
     *a_exp = output_exp;
 }
 
+// TODO: Fix sign for a == b
 void dsp_div_bfp_vect_int8(
 	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
 	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
