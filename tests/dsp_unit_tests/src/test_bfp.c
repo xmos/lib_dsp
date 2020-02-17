@@ -176,6 +176,18 @@ void test_bfp_cls_ch_pair_int32(){
 
 //Vectors
 
+void test_bfp_clz_vect_uint8(){
+    uint8_t d[VECT_LEN];
+    for(unsigned i=0;i<VECT_LEN;i++) d[i] = 0;
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(8, dsp_bfp_clz_vect_uint8 (d, VECT_LEN), "0");
+    for(unsigned i=0;i<VECT_LEN;i++) d[i] = 1;
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(7, dsp_bfp_clz_vect_uint8 (d, VECT_LEN), "1");
+    for(unsigned i=0;i<VECT_LEN;i++) d[i] = UINT8_MAX;
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_clz_vect_uint8 (d, VECT_LEN), "UINT8_MAX");
+    for(unsigned i=0;i<VECT_LEN;i++) d[i] = UINT8_MAX/2;
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(1, dsp_bfp_clz_vect_uint8 (d, VECT_LEN), "UINT8_MAX/2");
+}
+
 void test_bfp_clz_vect_uint16(){
     uint16_t d[VECT_LEN];
     for(unsigned i=0;i<VECT_LEN;i++) d[i] = 0;
@@ -379,6 +391,26 @@ void test_bfp_cls_vect_ch_pair_int32(){
     TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_vect_ch_pair_int32 (d, VECT_LEN, 0), "INT32_MIN");
     TEST_ASSERT_EQUAL_UINT32_MESSAGE(0, dsp_bfp_cls_vect_ch_pair_int32 (d, VECT_LEN, 1), "INT32_MIN");
 
+}
+
+void test_bfp_shl_vect_uint8(){
+    uint8_t d[VECT_LEN];
+
+    for(unsigned i=0;i<VECT_LEN;i++)
+        d[i] = i;
+    dsp_bfp_shl_vect_uint8(d, VECT_LEN, 0);
+    for(unsigned i=0;i<VECT_LEN;i++)
+        TEST_ASSERT_EQUAL_UINT8_MESSAGE(i, d[i], "0");
+
+
+    dsp_bfp_shl_vect_uint8(d, VECT_LEN, 1);
+    for(unsigned i=0;i<VECT_LEN;i++)
+        TEST_ASSERT_EQUAL_UINT8_MESSAGE(i<<1, d[i], "1");
+
+
+    dsp_bfp_shl_vect_uint8(d, VECT_LEN, -1);
+    for(unsigned i=0;i<VECT_LEN;i++)
+        TEST_ASSERT_EQUAL_UINT8_MESSAGE(i, d[i], "-1");
 }
 
 void test_bfp_shl_vect_uint16(){
