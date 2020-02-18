@@ -76,19 +76,19 @@ void dsp_bfp_shl_vect_ch_pair_int32(dsp_ch_pair_int32_t * UNSAFE d, const unsign
 
 void dsp_sub_bfp_vect_int8(
 	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_sub_bfp_vect_int16(
 	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_sub_bfp_vect_int32(
 	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
@@ -100,7 +100,7 @@ void dsp_sub_vect_int8(
 
 void dsp_sub_vect_int16(
 	int16_t * UNSAFE a,
-	int16_t * UNSAFE b, 
+	int16_t * UNSAFE b,
 	int16_t * UNSAFE c,
 	unsigned length);
 
@@ -113,19 +113,19 @@ void dsp_sub_vect_int32(
 
 void dsp_add_bfp_vect_int8(
 	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_add_bfp_vect_int16(
 	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_add_bfp_vect_int32(
 	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
@@ -137,7 +137,7 @@ void dsp_add_vect_int8(
 
 void dsp_add_vect_int16(
 	int16_t * UNSAFE a,
-	int16_t * UNSAFE b, 
+	int16_t * UNSAFE b,
 	int16_t * UNSAFE c,
 	unsigned length);
 
@@ -151,52 +151,50 @@ void dsp_add_vect_int32(
 
 void dsp_mul_bfp_vect_complex_int32(
 	dsp_complex_int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	dsp_complex_int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	dsp_complex_int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	dsp_complex_int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_mul_vect_int8(
-	int8_t * UNSAFE a, 
-	int8_t * UNSAFE b, 
-	int8_t * UNSAFE c, 
+	int8_t * UNSAFE a,
+	int8_t * UNSAFE b,
+	int8_t * UNSAFE c,
 	unsigned length);
 
 void dsp_mul_vect_int16(
-	int16_t * UNSAFE a, 
-	int16_t * UNSAFE b,  
-	int16_t * UNSAFE c, 
+	int16_t * UNSAFE a,
+	int16_t * UNSAFE b,
+	int16_t * UNSAFE c,
 	unsigned length);
 
 void dsp_mul_vect_int32(
-	int32_t * UNSAFE a, 
-	int32_t * UNSAFE b, 
-	int32_t * UNSAFE c, 
+	int32_t * UNSAFE a,
+	int32_t * UNSAFE b,
+	int32_t * UNSAFE c,
 	unsigned length);
 
 void dsp_mul_bfp_vect_int8(
 	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_mul_bfp_vect_int16(
 	int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_mul_bfp_vect_int32(
 	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr, 
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
 	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-
-// Div by zero will result in an arithmetic error!
-void dsp_div_bfp_vect_int32(
-	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
-	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+void dsp_div_bfp_vect_int8(
+	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_div_bfp_vect_int16(
@@ -205,10 +203,10 @@ void dsp_div_bfp_vect_int16(
 	int16_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
-void dsp_div_bfp_vect_int8(
-	int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
-	int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
-	int8_t * UNSAFE c, int   c_exp, unsigned   c_hr,
+void dsp_div_bfp_vect_int32(
+	int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+	int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+	int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
 	unsigned length);
 
 void dsp_div_bfp_vect_complex_int32(
@@ -229,7 +227,7 @@ void dsp_div_bfp_vect_complex_int32(
  *
  * \param[in]     pts   Array of dsp_complex_t elements.
  * \param[in]     N     Number of points.
- * 
+ *
  * \returns       number of bits of headroom
  */
 uint32_t dsp_bfp_cls(dsp_complex_t pts[], const uint32_t N);
