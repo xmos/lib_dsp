@@ -191,6 +191,24 @@ void dsp_mul_bfp_vect_int32(
     int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
     unsigned length);
 
+void dsp_muls_bfp_vect_int8(
+    int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+    int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+    int8_t c,          int   c_exp, unsigned   c_hr,
+    unsigned length);
+
+void dsp_muls_bfp_vect_int16(
+    int16_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+    int16_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+    int16_t c,          int   c_exp, unsigned   c_hr,
+    unsigned length);
+
+void dsp_muls_bfp_vect_int32(
+    int32_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
+    int32_t * UNSAFE b, int   b_exp, unsigned   b_hr,
+    int32_t c,          int   c_exp, unsigned   c_hr,
+    unsigned length);
+
 void dsp_div_bfp_vect_int8(
     int8_t * UNSAFE a, int * UNSAFE a_exp, unsigned * UNSAFE a_hr,
     int8_t * UNSAFE b, int   b_exp, unsigned   b_hr,

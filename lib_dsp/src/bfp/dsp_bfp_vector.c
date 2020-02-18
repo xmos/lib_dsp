@@ -456,6 +456,47 @@ unsigned mul_bfp_vect_int8_impl(int8_t * a, int8_t * b, int8_t * c,
     return clz2(mask)-1-24;
 }
 
+unsigned muls_bfp_vect_int32_impl(int32_t * a, int32_t * b, int32_t c,
+    unsigned length, int shr_b, int shr_c){
+    unsigned mask = 0;
+    for(unsigned i=0;i<length;i++){
+
+        a[i] = ((int64_t)shr32(b[i],shr_b) * (int64_t)shr32(c,shr_c))>>30;
+
+        int32_t v = a[i];
+        if (v<0) v=-v;
+        mask |= v;
+    }
+    return clz2(mask)-1;
+}
+
+unsigned muls_bfp_vect_int16_impl(int16_t * a, int16_t * b, int16_t c,
+    unsigned length, int shr_b, int shr_c){
+    unsigned mask = 0;
+    for(unsigned i=0;i<length;i++){
+
+        a[i] = ((int64_t)shr16(b[i], shr_b) * (int64_t)shr16(c,shr_c))>>14;
+        int16_t v = a[i];
+        if (v<0) v=-v;
+        mask |= v;
+    }
+    return clz2(mask)-1-16;
+}
+
+unsigned muls_bfp_vect_int8_impl(int8_t * a, int8_t * b, int8_t c,
+    unsigned length, int shr_b, int shr_c){
+    unsigned mask = 0;
+    for(unsigned i=0;i<length;i++){
+
+        a[i] = ((int64_t)shr8(b[i],shr_b) * (int64_t)shr8(c,shr_c))>>6;
+
+        int8_t v = a[i];
+        if (v<0) v=-v;
+        mask |= v;
+    }
+    return clz2(mask)-1-24;
+}
+
 void mul_vect_int32_impl(int32_t * a, int32_t * b, int32_t * c,
     unsigned length){
     for(unsigned i=0;i<length;i++){
@@ -545,6 +586,50 @@ void dsp_mul_bfp_vect_int32(
     *a_exp =  b_exp + c_exp + shr_b + shr_c + 32 - (h*2);
 
     *a_hr = mul_bfp_vect_int32_impl(a, b, c, length, shr_b, shr_c);
+}
+
+void dsp_muls_bfp_vect_int8(
+    int8_t * a, int * a_exp, unsigned * a_hr,
+    int8_t * b, int   b_exp, unsigned   b_hr,
+    int8_t c,   int   c_exp, unsigned   c_hr,
+    unsigned length){
+
+    const unsigned h = 1;
+    int shr_b = b_hr+h;
+    int shr_c = c_hr+h;
+    *a_exp =  b_exp + c_exp + shr_b + shr_c + 8 - (h*2);
+
+    *a_hr = muls_bfp_vect_int8_impl(a, b, c, length, shr_b, shr_c);
+}
+
+void dsp_muls_bfp_vect_int16(
+    int16_t * a, int * a_exp, unsigned * a_hr,
+    int16_t * b, int   b_exp, unsigned   b_hr,
+    int16_t c,   int   c_exp, unsigned   c_hr,
+    unsigned length){
+
+
+    const unsigned h = 1;
+    int shr_b = b_hr+h;
+    int shr_c = c_hr+h;
+    *a_exp =  b_exp + c_exp + shr_b + shr_c + 16 - (h*2);
+
+    *a_hr = muls_bfp_vect_int16_impl(a, b, c, length, shr_b, shr_c);
+}
+
+void dsp_muls_bfp_vect_int32(
+    int32_t * a, int * a_exp, unsigned * a_hr,
+    int32_t * b, int   b_exp, unsigned   b_hr,
+    int32_t c,   int   c_exp, unsigned   c_hr,
+    unsigned length){
+
+
+    const unsigned h = 1;
+    int shr_b = b_hr+h;
+    int shr_c = c_hr+h;
+    *a_exp =  b_exp + c_exp + shr_b + shr_c + 32 - (h*2);
+
+    *a_hr = muls_bfp_vect_int32_impl(a, b, c, length, shr_b, shr_c);
 }
 
 void dsp_div_bfp_vect_int32_impl(
