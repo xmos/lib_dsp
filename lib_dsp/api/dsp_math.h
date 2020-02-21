@@ -3,7 +3,6 @@
 #ifndef DSP_MATH_H_
 #define DSP_MATH_H_
 
-#include "xccompat.h"
 #include "stdint.h"
 
 #ifdef __XC__
