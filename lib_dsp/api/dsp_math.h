@@ -1,9 +1,8 @@
-// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2020, XMOS Ltd, All rights reserved
 
 #ifndef DSP_MATH_H_
 #define DSP_MATH_H_
 
-#include "xccompat.h"
 #include "stdint.h"
 
 #ifdef __XC__

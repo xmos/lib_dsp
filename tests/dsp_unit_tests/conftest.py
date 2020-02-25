@@ -1,7 +1,9 @@
-# Copyright (c) 2018-2019, XMOS Ltd, All rights reserved
+# Copyright (c) 2018-2020, XMOS Ltd, All rights reserved
 import os.path
 import pytest
 import subprocess
+
+import traceback
 
 
 def pytest_collect_file(parent, path):
@@ -94,11 +96,11 @@ class UnityTestExecutable(pytest.Item):
         if isinstance(excinfo.value, UnityTestException):
             return '\n'.join([str(self.parent).strip('<>'),
                               '{}:{}:{}()'.format(
-                                    excinfo.value[1]['test_source'],
-                                    excinfo.value[1]['line_number'],
-                                    excinfo.value[1]['test_case']),
+                                    excinfo.value.args[1]['test_source'],
+                                    excinfo.value.args[1]['line_number'],
+                                    excinfo.value.args[1]['test_case']),
                               'Failure reason:',
-                              excinfo.value[1]['failure_reason']])
+                              excinfo.value.args[1]['failure_reason']])
         else:
             return str(excinfo.value)
 

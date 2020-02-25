@@ -408,11 +408,15 @@ dsp_u32_float_t dsp_sqrt_u32(const dsp_u32_float_t a){
     dsp_u32_float_t b;
     int shl;
     if(a.m != 0){
+
         dsp_sqrt_calc_exp(a.e, clz(a.m), &shl, &b.e);
+
+#if defined(__XS2A__)
         if(shl > 0)
             b.m = dsp_sqrt30_xs2(a.m<<shl);
         else
             b.m = dsp_sqrt30_xs2(a.m>>(-shl));
+#endif
         dsp_normalise_u32(&b);
         return b;
     } else {

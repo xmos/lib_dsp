@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2018-2020, XMOS Ltd, All rights reserved
 
 #include <xs1.h>
 #include <xclib.h>
@@ -8,6 +8,19 @@
 #include "dsp_testing.h"
 #include "fft.h"
 #include "unity.h"
+
+#ifdef __XC__
+#define UNSAFE unsafe
+#define ALIGNED [[aligned(8)]]
+#else
+#define UNSAFE
+#define ALIGNED __attribute__ ((aligned (8)))
+#endif //__XC_
+
+static signed sext(unsigned a, unsigned b){
+    asm("sext %0, %1": "=r"(a): "r"(b));
+    return a;
+}
 
 #define MAX_PROC_FRAME_LENGTH_LOG2 10
 #define MAX_PROC_FRAME_LENGTH (1<<MAX_PROC_FRAME_LENGTH_LOG2)
@@ -29,8 +42,8 @@ int Fft_inverseTransform(double real[], double imag[], size_t n);
 void test_complete_fft(){
 
     unsigned r = 1;
-    unsafe {
-        const  volatile int32_t const * const unsafe dsp_sine_lut[11] = {
+    UNSAFE {
+        const int32_t * UNSAFE dsp_sine_lut[11] = {
                 0,
                 0,
                 dsp_sine_4,
@@ -44,16 +57,16 @@ void test_complete_fft(){
                 dsp_sine_1024,
         };
     for(unsigned l=2;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
             double sine_lut[(MAX_PROC_FRAME_LENGTH/2) + 1];
 
             dsp_float_fft_make_sine_table(sine_lut, proc_frame_length);
 
-            dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
             double real[MAX_PROC_FRAME_LENGTH], imag[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
@@ -98,8 +111,8 @@ void test_complete_ifft(){
 
     unsigned r = 1;
 
-    unsafe {
-        const volatile int32_t  const * const unsafe dsp_sine_lut[11] = {
+    UNSAFE {
+        const int32_t * UNSAFE dsp_sine_lut[11] = {
                 0,
                 0,
                 dsp_sine_4,
@@ -114,16 +127,16 @@ void test_complete_ifft(){
         };
 
         for(unsigned l=2;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-            unsigned max_diff= 0;
+            
             for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-                unsigned init_r = r;
+                
                 unsigned proc_frame_length = (1<<l);
                 double sine_lut[(MAX_PROC_FRAME_LENGTH/2) + 1];
 
                 dsp_float_fft_make_sine_table(sine_lut, proc_frame_length);
 
-                dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-                dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+                dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+                dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
                 double real[MAX_PROC_FRAME_LENGTH], imag[MAX_PROC_FRAME_LENGTH];
 
                 int error = 0;
@@ -167,16 +180,16 @@ void test_complete_ifft(){
 void test_bit_reverse(){
 
     unsigned r = 1;
-    unsafe {
+    UNSAFE {
 
     for(unsigned l=2;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
 
-            dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
             int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -208,8 +221,8 @@ void test_bit_reverse(){
 void test_forward_fft(){
 
     unsigned r = 1;
-    unsafe {
-        const  volatile int32_t const * const unsafe dsp_sine_lut[11] = {
+    UNSAFE {
+        const int32_t * UNSAFE dsp_sine_lut[11] = {
                 0,
                 0,
                 dsp_sine_4,
@@ -223,16 +236,16 @@ void test_forward_fft(){
                 dsp_sine_1024,
         };
     for(unsigned l=2;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
             double sine_lut[(MAX_PROC_FRAME_LENGTH/2) + 1];
 
             dsp_float_fft_make_sine_table(sine_lut, proc_frame_length);
 
-            dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
             int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -261,8 +274,8 @@ void test_inverse_fft(){
 
     unsigned r = 1;
 
-    unsafe {
-        const volatile int32_t  const * const unsafe dsp_sine_lut[11] = {
+    UNSAFE {
+        const int32_t * UNSAFE dsp_sine_lut[11] = {
                 0,
                 0,
                 dsp_sine_4,
@@ -277,16 +290,16 @@ void test_inverse_fft(){
         };
 
         for(unsigned l=2;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-            unsigned max_diff= 0;
+            
             for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-                unsigned init_r = r;
+                
                 unsigned proc_frame_length = (1<<l);
                 double sine_lut[(MAX_PROC_FRAME_LENGTH/2) + 1];
 
                 dsp_float_fft_make_sine_table(sine_lut, proc_frame_length);
 
-                dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-                dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+                dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+                dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
                 int error = 0;
                 int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -314,16 +327,16 @@ void test_inverse_fft(){
 void test_split_spectrum(){
 
     unsigned r = 1;
-    unsafe {
+    UNSAFE {
 
     for(unsigned l=3;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
 
-            dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
             int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -350,16 +363,16 @@ void test_split_spectrum(){
 void test_merge_spectra(){
 
     unsigned r = 1;
-    unsafe {
+    UNSAFE {
 
     for(unsigned l=3;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
 
-            dsp_complex_int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
             int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -387,31 +400,18 @@ void test_bit_reverse_and_forward_real(){
 
 
     unsigned r = 1;
-    unsafe {
-        const  int32_t * unsafe dsp_sine_lut[11] = {
-                0,
-                0,
-                dsp_sine_4,
-                dsp_sine_8,
-                dsp_sine_16,
-                dsp_sine_32,
-                dsp_sine_64,
-                dsp_sine_128,
-                dsp_sine_256,
-                dsp_sine_512,
-                dsp_sine_1024,
-        };
+    UNSAFE {
     for(unsigned l=3;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
-            unsigned init_r = r;
+            
             unsigned proc_frame_length = (1<<l);
             double sine_lut[(MAX_PROC_FRAME_LENGTH/2) + 1];
 
             dsp_float_fft_make_sine_table(sine_lut, proc_frame_length);
 
-            int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            dsp_complex_float_t [[aligned(8)]]A[MAX_PROC_FRAME_LENGTH];
+            int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            dsp_complex_float_t ALIGNED A[MAX_PROC_FRAME_LENGTH];
 
             int error = 0;
             int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
@@ -455,29 +455,16 @@ void test_fft_bit_reverse_and_inverse_real(){
 
 
     unsigned r = 1;
-    unsafe {
-        const  int32_t * unsafe dsp_sine_lut[11] = {
-                0,
-                0,
-                dsp_sine_4,
-                dsp_sine_8,
-                dsp_sine_16,
-                dsp_sine_32,
-                dsp_sine_64,
-                dsp_sine_128,
-                dsp_sine_256,
-                dsp_sine_512,
-                dsp_sine_1024,
-        };
+    UNSAFE {
+
     for(unsigned l=3;l<MAX_PROC_FRAME_LENGTH_LOG2;l++){
-        unsigned max_diff= 0;
+        
         for(unsigned t=0;t<1<<LOOPS_LOG2;t++){
             unsigned proc_frame_length = (1<<l);
 
-            int32_t [[aligned(8)]]a[MAX_PROC_FRAME_LENGTH];
-            int32_t [[aligned(8)]]b[MAX_PROC_FRAME_LENGTH];
+            int32_t ALIGNED a[MAX_PROC_FRAME_LENGTH];
+            int32_t ALIGNED b[MAX_PROC_FRAME_LENGTH];
 
-            int exponent = sext(dsp_pseudo_rand_int32(&r), 5);
             for(unsigned i=0;i<proc_frame_length;i++){
                 a[i] = dsp_pseudo_rand_int32(&r)>>1;
                 b[i] = a[i];
