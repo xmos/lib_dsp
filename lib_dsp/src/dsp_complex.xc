@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018, XMOS Ltd, All rights reserved
+// Copyright (c) 2017-2020, XMOS Ltd, All rights reserved
 #include <dsp_complex.h>
 #include <dsp_math.h>
 #include <xs1.h>
@@ -60,6 +60,7 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
 }
 #endif
 
+#if defined(__XS2A__)
 void dsp_complex_magnitude_vector(uint32_t magnitude[],
                                   dsp_complex_t input[],
                                   uint32_t N, uint32_t P) {
@@ -71,6 +72,7 @@ void dsp_complex_magnitude_vector(uint32_t magnitude[],
         magnitude[i] = z[0];
     }
 }
+#endif
 
 static int32_t inline mul_by_frac(int32_t v,
                                   uint32_t numerator,

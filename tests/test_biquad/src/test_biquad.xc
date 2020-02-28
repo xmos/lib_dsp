@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2017-2020, XMOS Ltd, All rights reserved
 #include "unity.h"
 
 #include <xs1.h>
@@ -13,6 +13,7 @@
 
 {double, double} biquad_measure(unsigned order, const int q_format, int32_t * filter_coeffs){
 
+unsafe {
     double filter_coeffs_fp[MAX_BIQUAD_ORDER*DSP_NUM_COEFFS_PER_BIQUAD];
     for(unsigned s=0;s<order*DSP_NUM_COEFFS_PER_BIQUAD;s++){
         filter_coeffs_fp[s] = ldexp(filter_coeffs[s], -q_format);
@@ -35,9 +36,9 @@
     double mean_squared_error = 0;
     for(unsigned s=0;s<DATA_LEN;s++){
 
-        int32_t x = dsp_pseudo_rand_int32(&r)>>1;
+        int32_t x = dsp_pseudo_rand_int32((unsigned * unsafe) &r)>>1;
         int error = 0;
-        dsp_float_t x_fp = dsp_conv_int32_to_float(x, x_exp, &error);
+        dsp_float_t x_fp = dsp_conv_int32_to_float(x, x_exp, (int * unsafe) &error);
         TEST_ASSERT_FALSE_MESSAGE(error, "Conversion error");
 
         int32_t y = dsp_filters_biquads(x, filter_coeffs, state_data, order, q_format);
@@ -66,6 +67,7 @@
 
 
     return {mean_error/DATA_LEN, mean_squared_error/DATA_LEN};
+}
 }
 
 void test_biquads(){

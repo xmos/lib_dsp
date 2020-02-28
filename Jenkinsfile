@@ -23,21 +23,32 @@ pipeline {
       }
     }
     stage('Tests') {
-      steps {
-        dir("${REPO}/tests/test_biquad") {
-          runWaf('.')
-          viewEnv() {
-            runPytest()
+      stages {
+        stage('Test Biquad') {
+          steps {
+            dir("${REPO}/tests/test_biquad") {
+              runWaf('.')
+              viewEnv() {
+                runPytest()
+              }
+            }
           }
         }
-        dir("${REPO}/tests/dsp_unit_tests") {
-          runWaf('.')
-          viewEnv() {
-            runPytest()
+        stage("Unit tests") {
+          steps {
+            dir("${REPO}/tests/dsp_unit_tests") {
+              runWaf('.')
+              viewEnv() {
+                runPytest()
+              }
+            }
           }
         }
-
-        runXmostest("${REPO}", 'tests')
+        stage("Legacy Tests") {
+          steps {
+            runXmostest("${REPO}", 'tests')
+          }
+        }
       }
     }
     stage('Build') {

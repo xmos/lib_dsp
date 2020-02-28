@@ -9,6 +9,7 @@
 #define UNSAFE
 #endif //__XC_
 
+#include <dsp_complex.h>
 
 //#include <dsp_adaptive.h>
 //#include <dsp_design.h>
@@ -37,5 +38,28 @@ void dsp_float_fft_inverse_fft    ( dsp_complex_float_t pts[], const uint32_t N,
 void dsp_float_fft_split_spectrum ( dsp_complex_float_t pts[], const uint32_t N );
 void dsp_float_fft_merge_spectra  ( dsp_complex_float_t pts[], const uint32_t N );
 
+void dsp_sub_vect_float(
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
+	unsigned length);
+
+void dsp_add_vect_float(
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
+	unsigned length);
+    
+void dsp_mul_vect_float(
+	double * UNSAFE a,
+	double * UNSAFE b, 
+	double * UNSAFE c,
+	unsigned length);
+
+void dsp_mul_vect_complex_float(
+	dsp_complex_float_t * UNSAFE a,
+	dsp_complex_float_t * UNSAFE b, 
+	dsp_complex_float_t * UNSAFE c,
+	unsigned length);
 #endif
 

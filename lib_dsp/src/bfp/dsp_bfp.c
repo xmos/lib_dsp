@@ -6,6 +6,10 @@
 
 #include <stdio.h>
 
+unsigned dsp_bfp_clz_uint8(const uint8_t d){
+    return clz((unsigned)d)-24;
+}
+
 unsigned dsp_bfp_clz_uint16(const uint16_t d){
     return clz((unsigned)d)-16;
 }
@@ -26,6 +30,15 @@ unsigned dsp_bfp_clz_uint64(const uint64_t d){
     } else {
         return 32 + clz_lo;
     }
+}
+
+unsigned dsp_bfp_cls_int8(const int8_t d){
+    if(d == INT8_MIN)
+        return 0;
+    int8_t v=d;
+    if(v<0)
+        v=-v;
+    return dsp_bfp_clz_uint8((uint8_t)v)-1;
 }
 
 unsigned dsp_bfp_cls_int16(const int16_t d){
@@ -70,6 +83,14 @@ unsigned dsp_bfp_cls_ch_pair_int32(const dsp_ch_pair_int32_t d, const unsigned c
     return dsp_bfp_cls_int32(((int32_t*)&d)[channel_index]);
 }
 
+unsigned dsp_bfp_clz_vect_uint8(const uint8_t *d, const unsigned length){
+    uint8_t mask = 0;
+    for(unsigned i=0;i<length;i++){
+        mask |= d[i];
+    }
+    return dsp_bfp_clz_uint8(mask);
+}
+
 unsigned dsp_bfp_clz_vect_uint16(const uint16_t *d, const unsigned length){
     uint16_t mask = 0;
     for(unsigned i=0;i<length;i++){
@@ -96,6 +117,20 @@ unsigned dsp_bfp_clz_vect_uint64(const uint64_t *d, const unsigned length){
 /*
  * Vector cls
  */
+unsigned dsp_bfp_cls_vect_int8(const int8_t *d, const unsigned length){
+    uint8_t mask = 0;
+    for(unsigned i=0;i<length;i++){
+        if(d[i] == INT8_MIN)
+            return 0;
+        int8_t v = d[i];
+        if(v<0)
+            v=-v;
+        mask |= v;
+    }
+    unsigned c = dsp_bfp_clz_uint8((uint8_t)mask);
+    return (c - 1);
+}
+
 unsigned dsp_bfp_cls_vect_int16(const int16_t *d, const unsigned length){
     uint16_t mask = 0;
     for(unsigned i=0;i<length;i++){
@@ -163,6 +198,18 @@ unsigned dsp_bfp_cls_vect_ch_pair_int32(const dsp_ch_pair_int32_t *d, const unsi
 /*
  * Vector shl
  */
+void dsp_bfp_shl_vect_uint8(uint8_t *d, const unsigned length, const int shl){
+    if(shl == 0)
+        return;
+    for(unsigned i=0;i<length;i++){
+        if(shl>0){
+            d[i] <<= shl;
+        } else {
+            d[i] >>= (-shl);
+        }
+    }
+}
+
 void dsp_bfp_shl_vect_uint16(uint16_t *d, const unsigned length, const int shl){
     if(shl == 0)
         return;
@@ -176,6 +223,18 @@ void dsp_bfp_shl_vect_uint16(uint16_t *d, const unsigned length, const int shl){
 }
 
 void dsp_bfp_shl_vect_uint32(uint32_t *d, const unsigned length, const int shl){
+    if(shl == 0)
+        return;
+    for(unsigned i=0;i<length;i++){
+        if(shl>0){
+            d[i] <<= shl;
+        } else {
+            d[i] >>= (-shl);
+        }
+    }
+}
+
+void dsp_bfp_shl_vect_int8(int8_t *d, const unsigned length, const int shl){
     if(shl == 0)
         return;
     for(unsigned i=0;i<length;i++){
