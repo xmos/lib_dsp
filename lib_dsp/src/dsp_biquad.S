@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019, XMOS Ltd, All rights reserved
 
-#if defined(__XS2A__)
+#if (defined(__XS2A__) || defined (__XS3A__))
 
 #define NSTACKWORDS 8
 

@@ -15,7 +15,7 @@ int32_t dsp_poly_eval
     const unsigned n_coefs
 ){
 #
-#if defined(__XS2A__)
+#if (defined(__XS2A__) || defined (__XS3A__))
     return dsp_poly_eval_impl_xs2(x, coefs, n_coefs);
 #else
     int32_t r = coefs[n_coefs-1];

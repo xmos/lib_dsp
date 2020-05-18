@@ -233,7 +233,7 @@ void dsp_div_bfp_vect_complex_int32(
     int32_t * UNSAFE c, int   c_exp, unsigned   c_hr,
     unsigned length);
 
-#if defined(__XS2A__)
+#if (defined(__XS2A__) || defined (__XS3A__))
 
 
 /** This function computes the number of leading sign bits in an array of
