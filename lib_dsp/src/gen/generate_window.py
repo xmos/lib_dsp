@@ -5,7 +5,7 @@ from scipy import signal
 import argparse
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(help="Generates Q31 LUTs from scipy windows")
+    parser = argparse.ArgumentParser(description="Generates Q31 LUTs from scipy windows")
     parser.add_argument("-o", "--output-file", type=str)
     parser.add_argument("-f", "--function", type=str)
     parser.add_argument("-l", "--length", type=int)
