@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
+# Copyright (c) 2015-2020, XMOS Ltd, All rights reserved
 import sys
 import numpy as np
 from scipy import signal
