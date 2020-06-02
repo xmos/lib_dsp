@@ -1,104 +1,39 @@
 # Copyright (c) 2015-2018, XMOS Ltd, All rights reserved
-import numpy
-from numpy import log10, abs, pi
-import scipy
+import sys
+import numpy as np
 from scipy import signal
-import matplotlib
-import matplotlib.pyplot
-import matplotlib as mpl
-import sys, getopt
-import math
+import argparse
 
-def main(argv):
-   outputfile = ''
-   fn = ''
-   win_len = ''
-   try:
-      opts, args = getopt.getopt(sys.argv[1:],"o:f:l:",["output", "function", "length"])
-   except getopt.GetoptError:
-      print 'generate_window.py -o <outputfile> -w function -l length'
-      print 'supported functions: boxcar'
-      print '                     triangular'
-      print '                     hanning'
-      print '                     hamming'
-      print '                     blackman'
-      print '                     nuttall'
-      print '                     blackman-nuttall'
-      print '                     blackman-harris'
-      sys.exit(2)
-   for opt, arg in opts:
-      if opt == '-h':
-         print 'generate_window.py -o <outputfile> -w function -l length'
-         print 'supported functions: boxcar'
-         print '                     triangular'
-         print '                     hanning'
-         print '                     hamming'
-         print '                     blackman'
-         print '                     nuttall'
-         print '                     blackman-nuttall'
-         print '                     blackman-harris'
-         sys.exit()
-      elif opt in ("-o", "--output"):
-         outputfile = arg
-      elif opt in ("-f", "--function"):
-         fn = arg
-      elif opt in ("-l", "--length"):
-         win_len = arg
+def parse_arguments():
+    parser = argparse.ArgumentParser(help="Generates Q31 LUTs from scipy windows")
+    parser.add_argument("-o", "--output-file", type=str)
+    parser.add_argument("-f", "--function", type=str)
+    parser.add_argument("-l", "--length", type=int)
+    return parser.parse_args()
 
-   f = open(outputfile,'w')
-   N = int(win_len)
 
-   print 'Will generate file:', outputfile
-   print 'With function: ', fn
-   print 'Window length is ', N, ' '
-   print 'LUT length is ', (N/2), ' '
-   pi = 3.14159265434
-   #check that N is even
-   f.write('const int window[%d] = {\n' % (N/2))
-   for n in range(0, N/2):
-      val = 1.0
-      if fn == 'boxcar':
-         val = 1.0
-      elif fn == 'triangular':
-         L = N
-         val = 1.0 - abs((n - (N-1.0)/2.0)/(L/2.0))
-      elif fn == 'hanning':
-         alpha = 0.5
-         beta  =  1.0-alpha
-         val = alpha - beta*math.cos(2*pi*n/(N-1))
-      elif fn == 'hamming':
-         alpha = 0.53836
-         beta  = 1.0-alpha
-         val = alpha - beta*math.cos(2*pi*n/(N-1))
-      elif fn == 'blackman':
-         alpha  = 0.16
-         a0  = (1.0-alpha)/2.0
-         a1  = 0.5
-         a2  = alpha/2.0
-         val = a0 - a1*math.cos(2*pi*n/(N-1)) + a2*math.cos(4*pi*n/(N-1))
-      elif fn == 'nuttall':
-         a0  = 0.355768
-         a1  = 0.487396
-         a2  = 0.144232
-         a3  = 0.012604
-         val = a0 - a1*math.cos(2*pi*n/(N-1)) + a2*math.cos(4*pi*n/(N-1))- a3*math.cos(6*pi*n/(N-1))
-      elif fn == 'blackman-nuttall':
-         a0  = 0.3635819
-         a1  = 0.4891775
-         a2  = 0.1365995
-         a3  = 0.0106411
-         val = a0 - a1*math.cos(2*pi*n/(N-1)) + a2*math.cos(4*pi*n/(N-1))- a3*math.cos(6*pi*n/(N-1))
-      elif fn == 'blackman-harris':
-         a0  = 0.35875
-         a1  = 0.48829
-         a2  = 0.14128
-         a3  = 0.01168
-         val = a0 - a1*math.cos(2*pi*n/(N-1)) + a2*math.cos(4*pi*n/(N-1))- a3*math.cos(6*pi*n/(N-1))
-      f.write('%d,\n' % int(val*0x7fffffff));
-   f.write( '};\n')
+def main():
+    args = parse_arguments()
+    if args.length % 2 != 0:
+        print("Error: Length must be even")
+        sys.exit(1)
 
-   f.close();
+    window = signal.windows.get_window(args.function, args.length)
 
- 
+    # Split the window in half, then scale it to Q31
+    half_int_window = np.array(
+        window[:args.length//2] * np.iinfo(np.int32).max, dtype=np.int32
+    )
+
+    # Create a C array
+    c_window = (
+        f"const int window[120] = {{ {', '.join([str(i) for i in half_int_window])} }};"
+    )
+
+    # Write back to output file
+    with open(args.output_file, 'w') as f:
+        f.write(c_window + "\n")
+
+
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    main()
