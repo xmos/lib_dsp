@@ -21,8 +21,11 @@ def main():
     window = signal.windows.get_window(args.function, args.length)
 
     # Split the window in half, then scale it to Q31
+
+    # Window is not quite half - oddity with scipy windows, middle value is 1 so a
+    # window with even length is non-symmetric
     half_int_window = np.array(
-        window[:args.length//2] * np.iinfo(np.int32).max, dtype=np.int32
+        window[:(args.length//2)+1] * np.iinfo(np.int32).max, dtype=np.int32
     )
 
     # Create a C array
