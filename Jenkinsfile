@@ -1,12 +1,13 @@
-@Library('xmos_jenkins_shared_library@develop') _
+@Library('xmos_jenkins_shared_library@v0.14.1') _
 getApproval()
+
 pipeline {
   agent {
     label 'x86_64&&brew'
   }
   environment {
     REPO = 'lib_dsp'
-    VIEW = "${env.JOB_NAME.contains('PR-') ? REPO+'_'+env.CHANGE_TARGET : REPO+'_'+env.BRANCH_NAME}"
+    VIEW = getViewName(REPO)
   }
   options {
     skipDefaultCheckout()
