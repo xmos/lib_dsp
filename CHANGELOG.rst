@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+6.0.1
+-----
+
+  * CHANGED: Updated generate_window.py to work with Python 3
+
 6.0.0
 -----
 
