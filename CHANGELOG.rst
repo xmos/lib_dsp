@@ -5,6 +5,7 @@ xCORE-200 DSP library change log
 -----
 
   * CHANGED: Updated generate_window.py to work with Python 3
+  * CHANGED: Updated to use Jenkins shared library 0.14.1
 
 6.0.0
 -----
