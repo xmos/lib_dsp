@@ -14,8 +14,11 @@ setuptools.setup(
     packages=setuptools.find_packages(where="lib/python"),
     install_requires=[
         "flake8~=3.8",
+        "matplotlib~=3.3",
+        "numpy~=1.19",
         "pylint~=2.5",
         "pytest~=6.0",
         "pytest-xdist~=1.34",
+        "scipy~=1.4",
     ],
 )
