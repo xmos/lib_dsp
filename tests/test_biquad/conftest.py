@@ -2,7 +2,10 @@
 import os.path
 import pytest
 import subprocess
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from builtins import str
 
 def pytest_collect_file(parent, path):
     # TODO: get UNITY_TEST_PREFIX and UNITY_RUNNER_SUFFIX from wscript
@@ -71,7 +74,7 @@ class UnityTestExecutable(pytest.Item):
                 test_case = test_report[2]
                 result = test_report[3]
                 failure_reason = None
-                print('\n {}()'.format(test_case)),
+                print(('\n {}()'.format(test_case)), end=' ')
                 if result == 'PASS':
                     unity_pass = True
                     continue
@@ -85,7 +88,7 @@ class UnityTestExecutable(pytest.Item):
                                                         failure_reason})
 
         if simulator_fail:
-            raise Exception(self, "Simulation failed.")
+            raise Exception(self, "Axe simulation failed.")
         if not unity_pass:
             raise Exception(self, "Unity test output not found.")
         print('')  # Insert line break after final test_case which passed

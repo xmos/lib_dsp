@@ -17,6 +17,7 @@
 # pip-install this one as editable using this repository's setup.py file.  The
 # same modules should appear in the setup.py list as given below.
 flake8==3.8.3
+future==0.18.2
 matplotlib==3.3.1
 numpy==1.19.1
 pylint==2.5.3
