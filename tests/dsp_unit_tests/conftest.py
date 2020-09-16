@@ -63,7 +63,7 @@ class UnityTestExecutable(pytest.Item):
         unity_pass = False
         test_output = test_output.split('\n')
         for line in test_output:
-            if line.startswith(self.parent.name):
+            if self.parent.name.split("/")[-1] in line:
                 test_report = line.split(':')
                 # Unity output is as follows:
                 #   <test_source>:<line_number>:<test_case>:PASS
