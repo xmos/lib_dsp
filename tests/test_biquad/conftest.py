@@ -10,6 +10,7 @@ def pytest_collect_file(parent, path):
     if ((path.ext == ".c" or path.ext == ".xc")
             and (path.basename.startswith("test_")
                  and "_Runner" not in path.basename)):
+        print("\naaa " + str(path) + "\n" )
         return UnityTestSource.from_parent(parent, fspath=path)
 
 class UnityTestSource(pytest.File):
@@ -31,6 +32,7 @@ class UnityTestSource(pytest.File):
             test_src_name + '_single_issue.xe')
         test_bin_path_si = os.path.join('bin',
                                         test_bin_name_si)
+        print("\nzzz" + test_bin_path_si + "\n")
         yield UnityTestExecutable.from_parent(self, name=test_bin_path_si)
 
         test_bin_name_di = os.path.join(
@@ -59,10 +61,11 @@ class UnityTestExecutable(pytest.Item):
         # Parse the Unity output
         unity_pass = False
         test_output = test_output.split('\n')
-        print(test_output)
-        print(self.parent.name)
+        print("\n111" + str(test_output) + "\n")
+        print("\n222" + str(self.parent) + "\n")
+        print("\n333" + str(self.parent.name) + "\n")
         for line in test_output:
-            if line.startswith(self.parent.name):
+            if self.parent.name.split("/")[-1] in line:
                 test_report = line.split(':')
                 # Unity output is as follows:
                 #   <test_source>:<line_number>:<test_case>:PASS
