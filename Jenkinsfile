@@ -37,10 +37,14 @@ pipeline {
         }
         stage("Unit tests") {
           steps {
-            dir("${REPO}/tests/dsp_unit_tests") {
-              viewEnv() {
-                runWaf('.')
-                runPytest()
+            dir("${REPO}") {
+              dir("tests") {
+                dir("dsp_unit_tests") {
+                  viewEnv() {
+                    runWaf('.')
+                    runPytest()
+                  }
+                }
               }
             }
           }
