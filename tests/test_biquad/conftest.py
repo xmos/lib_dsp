@@ -1,11 +1,8 @@
 # Copyright (c) 2018-2020, XMOS Ltd, All rights reserved
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from builtins import str
 import os.path
 import pytest
 import subprocess
+import traceback
 
 def pytest_collect_file(parent, path):
     # TODO: get UNITY_TEST_PREFIX and UNITY_RUNNER_SUFFIX from wscript
@@ -74,7 +71,7 @@ class UnityTestExecutable(pytest.Item):
                 test_case = test_report[2]
                 result = test_report[3]
                 failure_reason = None
-                print(('\n {}()'.format(test_case)), end=' ')
+                print('\n {}()'.format(test_case)),
                 if result == 'PASS':
                     unity_pass = True
                     continue
@@ -88,7 +85,7 @@ class UnityTestExecutable(pytest.Item):
                                                         failure_reason})
 
         if simulator_fail:
-            raise Exception(self, "Axe simulation failed.")
+            raise Exception(self, "Simulation failed.")
         if not unity_pass:
             raise Exception(self, "Unity test output not found.")
         print('')  # Insert line break after final test_case which passed
@@ -97,11 +94,11 @@ class UnityTestExecutable(pytest.Item):
         if isinstance(excinfo.value, UnityTestException):
             return '\n'.join([str(self.parent).strip('<>'),
                               '{}:{}:{}()'.format(
-                                    excinfo.value[1]['test_source'],
-                                    excinfo.value[1]['line_number'],
-                                    excinfo.value[1]['test_case']),
+                                    excinfo.value.args[1]['test_source'],
+                                    excinfo.value.args[1]['line_number'],
+                                    excinfo.value.args[1]['test_case']),
                               'Failure reason:',
-                              excinfo.value[1]['failure_reason']])
+                              excinfo.value.args[1]['failure_reason']])
         else:
             return str(excinfo.value)
 
