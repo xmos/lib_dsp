@@ -1,11 +1,11 @@
 # Copyright (c) 2018-2020, XMOS Ltd, All rights reserved
-import os.path
-import pytest
-import subprocess
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from builtins import str
+import os.path
+import pytest
+import subprocess
 
 def pytest_collect_file(parent, path):
     # TODO: get UNITY_TEST_PREFIX and UNITY_RUNNER_SUFFIX from wscript
