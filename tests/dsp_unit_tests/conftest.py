@@ -30,8 +30,7 @@ class UnityTestSource(pytest.File):
         test_src_path = os.path.basename(str(self.fspath))
         test_src_name = os.path.splitext(test_src_path)[0]
 
-        test_bin_name_si = os.path.join(
-            test_src_name + '_single_issue.xe')
+        test_bin_name_si = test_src_name + '_single_issue.xe'
         test_bin_path_si = os.path.join('bin',
                                         test_bin_name_si)
         yield UnityTestExecutable.from_parent(self, name=test_bin_path_si)
@@ -63,7 +62,7 @@ class UnityTestExecutable(pytest.Item):
         unity_pass = False
         test_output = test_output.split('\n')
         for line in test_output:
-            if self.parent.name.split("/")[-1] in line:
+            if line.startswith(self.parent.name):
                 test_report = line.split(':')
                 # Unity output is as follows:
                 #   <test_source>:<line_number>:<test_case>:PASS

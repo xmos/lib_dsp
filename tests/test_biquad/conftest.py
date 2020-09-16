@@ -27,16 +27,16 @@ class UnityTestSource(pytest.File):
         test_root_dir_name = os.path.basename(os.path.dirname(__file__))
         test_src_path = os.path.basename(str(self.fspath))
         test_src_name = os.path.splitext(test_src_path)[0]
-
-        test_bin_name_si = os.path.join(
-            test_src_name + '_single_issue.xe')
+        print(test_root_dir_name + "\n")
+        print(test_src_path + "\n")
+        print(test_src_name + "\n")
+        test_bin_name_si = test_src_name + '_single_issue.xe'
         test_bin_path_si = os.path.join('bin',
                                         test_bin_name_si)
         print("\nzzz" + test_bin_path_si + "\n")
         yield UnityTestExecutable.from_parent(self, name=test_bin_path_si)
 
-        test_bin_name_di = os.path.join(
-            test_src_name + '_dual_issue.xe')
+        test_bin_name_di = test_src_name + '_dual_issue.xe'
         test_bin_path_di = os.path.join('bin',
                                         test_bin_name_di)
         yield UnityTestExecutable.from_parent(self, name=test_bin_path_di)
@@ -65,7 +65,9 @@ class UnityTestExecutable(pytest.Item):
         print("\n222" + str(self.parent) + "\n")
         print("\n333" + str(self.parent.name) + "\n")
         for line in test_output:
-            if self.parent.name.split("/")[-1] in line:
+            print(line)
+            print(self.parent.name)
+            if line.startswith(self.parent.name):
                 test_report = line.split(':')
                 # Unity output is as follows:
                 #   <test_source>:<line_number>:<test_case>:PASS
