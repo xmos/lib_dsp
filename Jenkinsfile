@@ -28,8 +28,8 @@ pipeline {
         stage('Test Biquad') {
           steps {
             dir("${REPO}/tests/test_biquad") {
-              runWaf('.')
               viewEnv() {
+                runWaf('.')
                 runPytest()
               }
             }
@@ -38,8 +38,8 @@ pipeline {
         stage("Unit tests") {
           steps {
             dir("${REPO}/tests/dsp_unit_tests") {
-              runWaf('.')
               viewEnv() {
+                runWaf('.')
                 runPytest()
               }
             }

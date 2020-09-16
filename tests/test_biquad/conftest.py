@@ -12,7 +12,6 @@ def pytest_collect_file(parent, path):
                  and "_Runner" not in path.basename)):
         return UnityTestSource.from_parent(parent, fspath=path)
 
-
 class UnityTestSource(pytest.File):
     def collect(self):
         # Find the binary built from the runner for this test file
@@ -60,6 +59,8 @@ class UnityTestExecutable(pytest.Item):
         # Parse the Unity output
         unity_pass = False
         test_output = test_output.split('\n')
+        print(test_output)
+        print(self.parent.name)
         for line in test_output:
             if line.startswith(self.parent.name):
                 test_report = line.split(':')
