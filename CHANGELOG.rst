@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+6.0.2
+-----
+
+  * CHANGED: use XS2 version of dsp_fft_bit_reverse() on XS3
+
 6.0.1
 -----
 

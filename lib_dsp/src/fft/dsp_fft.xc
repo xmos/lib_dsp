@@ -1,11 +1,11 @@
-// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2020, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include "dsp_fft.h"
 
-#ifndef __XS2A__
+#if !defined(__XS2A__) && !defined(__XS3A__)
 void dsp_fft_bit_reverse( dsp_complex_t pts[], const uint32_t N )
 {
 #warning "Bit reverse code in dsp_fft_bit_reverse not verified for XS1"
