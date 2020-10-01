@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2016, XMOS Ltd, All rights reserved
-#if defined(__XS2A__)
+// Copyright (c) 2015-2020, XMOS Ltd, All rights reserved
+#if defined(__XS2A__) || defined(__XS3A__)
     
 #define ITER(X) \
 	{bf t, y_negative_ ## X         ; add j, j, 1}; \

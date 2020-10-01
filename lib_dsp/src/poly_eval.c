@@ -1,4 +1,4 @@
-// Copyright (c) 2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2019-2020, XMOS Ltd, All rights reserved
 #include <stdint.h>
 
 int32_t dsp_poly_eval_impl_xs2
@@ -14,8 +14,8 @@ int32_t dsp_poly_eval
     const int32_t * coefs,
     const unsigned n_coefs
 ){
-#
-#if defined(__XS2A__)
+
+#if defined(__XS2A__) || defined(__XS3A__)
     return dsp_poly_eval_impl_xs2(x, coefs, n_coefs);
 #else
     int32_t r = coefs[n_coefs-1];
