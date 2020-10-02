@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+6.0.2
+-----
+
+  * CHANGED: use XS2 version of platform-specific functions on XS3
+
 6.0.1
 -----
 

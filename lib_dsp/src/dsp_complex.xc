@@ -28,7 +28,7 @@ dsp_complex_t dsp_complex_mul_conjugate(dsp_complex_t a, dsp_complex_t b, uint32
     return sum;
 }
 
-#if !defined(__XS2A__)
+#if !defined(__XS2A__) && !defined(__XS3A__)
 dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
                               uint32_t L, uint32_t off, uint32_t N) {
     int64_t re = 0;
@@ -42,7 +42,7 @@ dsp_complex_t dsp_complex_fir(dsp_complex_t a[], dsp_complex_t b[],
 }
 #endif
 
-#if !defined(__XS2A__)
+#if !defined(__XS2A__) && !defined(__XS3A__)
 void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
                                      uint32_t L, uint32_t N) {
     for(unsigned i = 0; i < L; i++) {
@@ -51,7 +51,7 @@ void dsp_complex_mul_vector(dsp_complex_t a[], dsp_complex_t b[],
 }
 #endif
 
-#if !defined(__XS2A__)
+#if !defined(__XS2A__) && !defined(__XS3A__)
 void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
                                      uint32_t L, uint32_t N) {
     for(unsigned i = 0; i < L; i++) {
@@ -60,7 +60,7 @@ void dsp_complex_mul_conjugate_vector(dsp_complex_t a[], dsp_complex_t b[],
 }
 #endif
 
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
 void dsp_complex_magnitude_vector(uint32_t magnitude[],
                                   dsp_complex_t input[],
                                   uint32_t N, uint32_t P) {
