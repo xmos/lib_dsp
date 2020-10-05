@@ -5,6 +5,7 @@ xCORE-200 DSP library change log
 -----
 
   * CHANGED: use XS2 version of platform-specific functions on XS3
+  * CHANGED: Pin Python package versions
 
 6.0.1
 -----
