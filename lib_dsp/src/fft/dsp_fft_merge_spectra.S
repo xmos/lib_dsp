@@ -1,9 +1,9 @@
-// Copyright (c) 2016-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
     
 	.section	.dp.data,"awd",@progbits
 	.text
 
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
 	.cc_top dsp_fft_merge_spectra_xs2.function
 	.globl	dsp_fft_merge_spectra_xs2
 	.align	4

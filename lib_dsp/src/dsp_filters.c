@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2020, XMOS Ltd, All rights reserved
 
 
 #include <platform.h>
@@ -1476,7 +1476,7 @@ int32_t dsp_filters_biquad
     int32_t*       state_data,
     const int32_t q_format
 ) {
-#if defined(__XS2A__)
+#if defined(__XS2A__) || defined(__XS3A__)
     return dsp_filters_biquads(input_sample, filter_coeffs, state_data, 1, q_format);
     #else
     return 0;
