@@ -79,7 +79,7 @@ pipeline {
               // Build these individually (or we can extend xcoreAllAppsBuild to support an argument
               dir('AN00209_xCORE-200_DSP_Library/') {
                 script {
-                  apps = sh(script: 'find . -maxdepth 1 -name app\* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
+                  apps = sh(script: 'find . -maxdepth 1 -name app* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
                   apps.each() {
                     dir(it) {
                       runXmake(".", "", "XCOREAI=1")
