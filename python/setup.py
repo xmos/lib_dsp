@@ -19,10 +19,10 @@ setuptools.setup(
         "pytest~=6.0",
         "pytest-xdist~=1.34",
         "scipy~=1.4",
-        "lib_logging",
+        #"lib_logging",
     ],
 
-    dependency_links=[
-        './../lib_logging#egg=lib_logging',
-    ],
+    #dependency_links=[
+    #    './../lib_logging#egg=lib_logging',
+    #],
 )
