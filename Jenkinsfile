@@ -17,7 +17,7 @@ pipeline {
         label 'x86_64&&brew'
       }
       environment {
-        REPO = 'lib_logging'
+        REPO = 'lib_dsp'
         VIEW = getViewName(REPO)
       }
       options {
