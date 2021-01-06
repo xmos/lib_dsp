@@ -94,84 +94,21 @@ pipeline {
                   }
                 }
               }
-              // Build App notes
-              //dir('AN00209_xCORE-200_DSP_Library/app_adaptive') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_window_post_fft', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_atan2_hypot') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_atan2_hypot', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_bfp') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_bfp', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_complex') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_complex', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_complex_fir') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_complex_fir', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_dct') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_dct', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_design') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_design', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_fft') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_fft', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_fft_dif') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_fft_dif', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_fft_double_buf') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_fft_double_buf', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_fft_real_single') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_fft_real_single', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_fft_timing') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_fft_timing', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_filters') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_filters', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_math') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_math', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_matrix') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_matrix', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_statistics') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_statistics', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_vector') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_vector', includes: 'bin/*xcoreai/*.xe, '
-              //}
-              //dir('AN00209_xCORE-200_DSP_Library/app_window_post_fft') {
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'app_window_post_fft', includes: 'bin/*xcoreai/*.xe, '
-              //}
 
               // Build Tests
-              dir('tests/debug_printf_test'){
-                runXmake(".", "", "XCOREAI=1")
-                stash name: 'debug_printf_test', includes: 'bin/xcoreai/*.xe'
+              dir('tests/') {
+                script {
+                  tests = [
+                    "test_fft_forward_real",
+                    "test_fft_inverse_blank_forward"
+                  ]
+                  tests.each() {
+                    dir(it) {
+                      runXmake(".", "", "XCOREAI=1")
+                      stash name: it, includes: 'bin/*xcoreai/*.xe, '
+                    }
+                  }
+                }
               }
             }
           }
@@ -203,8 +140,8 @@ pipeline {
           steps{
             dir("${REPO}") {
               toolsEnv(TOOLS_PATH) {  // load xmos tools
-                // Unstash all XCOREAI App notes
                 dir('AN00209_xCORE-200_DSP_Library/') {
+                  // Unstash all XCOREAI App notes
                   script {
                     apps = sh(script: 'find . -maxdepth 1 -name app* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
                     apps.each() {
@@ -213,7 +150,75 @@ pipeline {
                       }
                     }
                   }
+                  // Run all the tests
+                  // app_adaptive - expect
+                  sh 'xrun --io --id 0 app_adaptive/bin/xcoreai/app_adaptive.xe &> app_adaptive_test.txt'
+                  sh 'cat app_adaptive_test.txt && diff app_adaptive_test.txt ../tests/adaptive_test.expect'
+
+                  // app_atan2_hypot - no test
+                  sh 'xrun --io --id 0 app_atan2_hypot/bin/xcoreai/app_atan2_hypot.xe'
+
+                  // app_bfp - expect
+                  sh 'xrun --io --id 0 app_bfp/bin/xcoreai/app_bfp.xe &> app_bfp_test.txt'
+                  sh 'cat app_bfp_test.txt && diff app_bfp_test.txt ../tests/bfp_test.expect'
+
+                  // app_complex - expect
+                  sh 'xrun --io --id 0 app_complex/bin/xcoreai/app_complex.xe &> app_complex_test.txt'
+                  sh 'cat app_complex_test.txt && diff app_complex_test.txt ../tests/complex_test.expect'
+
+                  // app_complex_fir - expect
+                  sh 'xrun --io --id 0 app_complex_fir/bin/xcoreai/app_complex_fir.xe &> app_complex_fir_test.txt'
+                  sh 'cat app_complex_fir_test.txt && diff app_complex_fir_test.txt ../tests/complex_fir_test.expect'
+                  // app_dct - no test
+                  sh 'xrun --io --id 0 app_dct/bin/xcoreai/app_dct.xe'
+
+                  // app_design - expect
+                  sh 'xrun --io --id 0 app_design/bin/xcoreai/app_design.xe &> app_design_test.txt'
+                  sh 'cat app_design_test.txt && diff app_design_test.txt ../tests/design_test.expect'
+
+                  // app_fft - no test
+                  sh 'xrun --io --id 0 app_fft/bin/xcoreai/app_fft.xe'
+
+                  // app_fft_dif - no test
+                  sh 'xrun --io --id 0 app_fft_dif/bin/xcoreai/app_fft_dif.xe'
+
+                  // app_fft_double_buf - no test
+                  sh 'xrun --io --id 0 app_fft_double_buf/bin/xcoreai/app_fft_double_buf.xe'
+
+                  // app_fft_real_single - expect
+                  sh 'xrun --io --id 0 app_fft_real_single/bin/xcoreai/app_fft_real_single.xe &> app_fft_real_single_test.txt'
+                  sh 'cat app_fft_real_single_test.txt && diff app_fft_real_single_test.txt ../tests/fft_real_single_test.expect'
+
+                  // app_fft_timing - no test
+                  sh 'xrun --io --id 0 app_fft_timing/bin/xcoreai/app_fft_timing.xe'
+
+                  // app_filters - expect
+                  sh 'xrun --io --id 0 app_filters/bin/xcoreai/app_filters.xe &> app_filters_test.txt'
+                  sh 'cat app_filters_test.txt && diff app_filters_test.txt ../tests/filters_test.expect'
+
+                  // app_math - expect
+                  sh 'xrun --io --id 0 app_math/bin/xcoreai/app_math.xe &> app_math_test.txt'
+                  sh 'cat app_math_test.txt && diff app_math_test.txt ../tests/math_test.expect'
+
+                  // app_matrix - expect
+                  sh 'xrun --io --id 0 app_matrix/bin/xcoreai/app_matrix.xe &> app_matrix_test.txt'
+                  sh 'cat app_matrix_test.txt && diff app_matrix_test.txt ../tests/matrix_test.expect'
+
+                  // app_statistics - expect
+                  sh 'xrun --io --id 0 app_statistics/bin/xcoreai/app_statistics.xe &> app_statistics_test.txt'
+                  sh 'cat app_statistics_test.txt && diff app_statistics_test.txt ../tests/statistics_test.expect'
+
+                  // app_vector - expect
+                  sh 'xrun --io --id 0 app_vector/bin/xcoreai/app_vector.xe &> app_vector_test.txt'
+                  sh 'cat app_vector_test.txt && diff app_vector_test.txt ../tests/vector_test.expect'
+
+                  // app_window_post_fft - expect (test_hann)
+                  sh 'xrun --io --id 0 app_window_post_fft/bin/xcoreai/app_window_post_fft.xe &> app_window_post_fft_test.txt'
+                  sh 'cat app_window_post_fft_test.txt && diff app_window_post_fft_test.txt ../tests/test_hann.expect'
                 }
+
+                //Run this and diff against expected output. Note we have the lib files here available
+
 
                 ////Run this and diff against expected output. Note we have the lib files here available
                 //unstash 'debug_printf_test'
