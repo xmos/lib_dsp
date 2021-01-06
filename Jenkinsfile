@@ -85,7 +85,26 @@ pipeline {
               // Build these individually (or we can extend xcoreAllAppsBuild to support an argument
               dir('AN00209_xCORE-200_DSP_Library/') {
                 script {
-                  apps = sh(script: 'find . -maxdepth 1 -name app* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
+                  apps = [
+                    "app_adaptive",
+                    "app_atan2_hypot",
+                    "app_bfp",
+                    "app_complex",
+                    "app_complex_fir",
+                    "app_dct",
+                    "app_design",
+                    "app_fft",
+                    "app_fft_dif",
+                    "app_fft_double_buf",
+                    "app_fft_real_single",
+                    "app_fft_timing",
+                    "app_filters",
+                    "app_math",
+                    "app_matrix",
+                    "app_statistics",
+                    "app_vector",
+                    "app_window_post_fft"
+                  ]
                   apps.each() {
                     dir(it) {
                       runXmake(".", "", "XCOREAI=1")
@@ -143,7 +162,26 @@ pipeline {
                 dir('AN00209_xCORE-200_DSP_Library/') {
                   // Unstash all XCOREAI App notes
                   script {
-                    apps = sh(script: 'find . -maxdepth 1 -name app* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
+                    apps = [
+                      "app_adaptive",
+                      "app_atan2_hypot",
+                      "app_bfp",
+                      "app_complex",
+                      "app_complex_fir",
+                      "app_dct",
+                      "app_design",
+                      "app_fft",
+                      "app_fft_dif",
+                      "app_fft_double_buf",
+                      "app_fft_real_single",
+                      "app_fft_timing",
+                      "app_filters",
+                      "app_math",
+                      "app_matrix",
+                      "app_statistics",
+                      "app_vector",
+                      "app_window_post_fft"
+                    ]
                     apps.each() {
                       dir(it) {
                         unstash it
@@ -216,20 +254,6 @@ pipeline {
                   sh 'xrun --io --id 0 app_window_post_fft/bin/xcoreai/app_window_post_fft.xe &> app_window_post_fft_test.txt'
                   sh 'cat app_window_post_fft_test.txt && diff app_window_post_fft_test.txt ../tests/test_hann.expect'
                 }
-
-                //Run this and diff against expected output. Note we have the lib files here available
-
-
-                ////Run this and diff against expected output. Note we have the lib files here available
-                //unstash 'debug_printf_test'
-                //sh 'xrun --io --id 0 bin/xcoreai/debug_printf_test.xe &> debug_printf_test.txt'
-                //sh 'cat debug_printf_test.txt && diff debug_printf_test.txt tests/test.expect'
-
-                ////Just run these and error on exception
-                //unstash 'AN00239'
-                //sh 'xrun --io --id 0 bin/xcoreai/AN00239.xe'
-                //unstash 'app_debug_printf'
-                //sh 'xrun --io --id 0 bin/xcoreai/app_debug_printf.xe'
               }
             }
           }
