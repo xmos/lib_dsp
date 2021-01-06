@@ -76,6 +76,12 @@ pipeline {
               dir("${REPO}") {
                 runXdoc('doc')
               }
+            }
+          }
+        }
+        stage('Build XCOREAI') {
+          steps {
+            dir("${REPO}") {
               // Build these individually (or we can extend xcoreAllAppsBuild to support an argument
               dir('AN00209_xCORE-200_DSP_Library/') {
                 script {
@@ -88,6 +94,7 @@ pipeline {
                   }
                 }
               }
+              // Build App notes
               //dir('AN00209_xCORE-200_DSP_Library/app_adaptive') {
               //  runXmake(".", "", "XCOREAI=1")
               //  stash name: 'app_window_post_fft', includes: 'bin/*xcoreai/*.xe, '
@@ -161,10 +168,11 @@ pipeline {
               //  stash name: 'app_window_post_fft', includes: 'bin/*xcoreai/*.xe, '
               //}
 
-              //dir('tests/debug_printf_test'){
-              //  runXmake(".", "", "XCOREAI=1")
-              //  stash name: 'debug_printf_test', includes: 'bin/xcoreai/*.xe'
-              //}
+              // Build Tests
+              dir('tests/debug_printf_test'){
+                runXmake(".", "", "XCOREAI=1")
+                stash name: 'debug_printf_test', includes: 'bin/xcoreai/*.xe'
+              }
             }
           }
         }
@@ -175,6 +183,59 @@ pipeline {
         }
       }
     } // Stage Standard Build
+
+    stage('xcore.ai Verification'){
+      agent {
+        label 'xcore.ai-explorer'
+      }
+      environment {
+        // '/XMOS/tools' from get_tools.py and rest from tools installers
+        TOOLS_PATH = "/XMOS/tools/${params.TOOLS_VERSION}/XMOS/xTIMEcomposer/${params.TOOLS_VERSION}"
+      }
+      stages{
+        stage('Install Dependencies') {
+          steps {
+            sh '/XMOS/get_tools.py ' + params.TOOLS_VERSION
+            installDependencies()
+          }
+        }
+        stage('xrun'){
+          steps{
+            dir("${REPO}") {
+              toolsEnv(TOOLS_PATH) {  // load xmos tools
+                // Unstash all XCOREAI App notes
+                dir('AN00209_xCORE-200_DSP_Library/') {
+                  script {
+                    apps = sh(script: 'find . -maxdepth 1 -name app* | cut -c 3-', returnStdout: true).trim().split("\\r?\\n")
+                    apps.each() {
+                      dir(it) {
+                        unstash it
+                      }
+                    }
+                  }
+                }
+
+                ////Run this and diff against expected output. Note we have the lib files here available
+                //unstash 'debug_printf_test'
+                //sh 'xrun --io --id 0 bin/xcoreai/debug_printf_test.xe &> debug_printf_test.txt'
+                //sh 'cat debug_printf_test.txt && diff debug_printf_test.txt tests/test.expect'
+
+                ////Just run these and error on exception
+                //unstash 'AN00239'
+                //sh 'xrun --io --id 0 bin/xcoreai/AN00239.xe'
+                //unstash 'app_debug_printf'
+                //sh 'xrun --io --id 0 bin/xcoreai/app_debug_printf.xe'
+              }
+            }
+          }
+        }
+      }//stages
+      post {
+        cleanup {
+          cleanWs()
+        }
+      }
+    }// xcore.ai
 
 
   }
