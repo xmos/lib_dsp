@@ -148,6 +148,7 @@ pipeline {
       environment {
         // '/XMOS/tools' from get_tools.py and rest from tools installers
         TOOLS_PATH = "/XMOS/tools/${params.TOOLS_VERSION}/XMOS/xTIMEcomposer/${params.TOOLS_VERSION}"
+        REPO = 'lib_dsp'
       }
       stages{
         stage('Install Dependencies') {
