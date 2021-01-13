@@ -258,7 +258,7 @@ pipeline {
 
                 // app_window_post_fft - expect (test_hann)
                 sh 'xrun --io --id 0 app_window_post_fft/bin/xcoreai/app_window_post_fft.xe &> app_window_post_fft_test.txt'
-                sh 'cat app_window_post_fft_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_window_post_fft_test.txt ../tests/test_hann.expect'
+                sh 'cat app_window_post_fft_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_window_post_fft_test.txt ../tests/hann_test.expect'
               }
             }
           }
