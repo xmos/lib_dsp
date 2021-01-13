@@ -215,13 +215,19 @@ pipeline {
                 sh 'cat app_design_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_design_test.txt ../tests/design_test.expect'
 
                 // app_fft - no test
-                sh 'xrun --io --id 0 app_fft/bin/xcoreai/app_fft.xe'
+                sh 'xrun --io --id 0 app_fft/bin/complex_xcoreai/app_fft_complex_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft/bin/tworeals_xcoreai/app_fft_tworeals_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft/bin/complex_int16_buf_xcoreai/app_fft_complex_int16_buf_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft/bin/tworeals_int16_buf_xcoreai/app_fft_tworeals_int16_buf_xcoreai.xe'
 
                 // app_fft_dif - no test
                 sh 'xrun --io --id 0 app_fft_dif/bin/xcoreai/app_fft_dif.xe'
 
                 // app_fft_double_buf - no test
-                sh 'xrun --io --id 0 app_fft_double_buf/bin/xcoreai/app_fft_double_buf.xe'
+                sh 'xrun --io --id 0 app_fft_double_buf/bin/complex_xcoreai/app_fft_double_buf_complex_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft_double_buf/bin/tworeals_xcoreai/app_fft_double_buf_tworeals_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft_double_buf/bin/complex_int16_buf_xcoreai/app_fft_double_buf_complex_int16_buf_xcoreai.xe'
+                sh 'xrun --io --id 0 app_fft_double_buf/bin/tworeals_int16_buf_xcoreai/app_fft_double_buf_tworeals_int16_buf_xcoreai.xe'
 
                 // app_fft_real_single - expect
                 sh 'xrun --io --id 0 app_fft_real_single/bin/xcoreai/app_fft_real_single.xe &> app_fft_real_single_test.txt'
