@@ -34,52 +34,51 @@ pipeline {
             xcoreLibraryChecks("${REPO}")
           }
         }
-        // TODO: Re-enable these stages
-        //stage('Tests') {
-        //  stages {
-        //    stage('Test Biquad') {
-        //      steps {
-        //        dir("${REPO}/tests/test_biquad") {
-        //          runWaf('.')
-        //          viewEnv() {
-        //            runPytest()
-        //          }
-        //        }
-        //      }
-        //    }
-        //    stage("Unit tests") {
-        //      steps {
-        //        dir("${REPO}/tests/dsp_unit_tests") {
-        //          runWaf('.')
-        //          viewEnv() {
-        //            runPytest()
-        //          }
-        //        }
-        //      }
-        //    }
-        //    stage("Legacy Tests") {
-        //      steps {
-        //        runXmostest("${REPO}", 'tests')
-        //      }
-        //    }
-        //  }
-        //}
-        //stage('Build') {
-        //  steps {
-        //    dir("${REPO}") {
-        //      /* Cannot call xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
-        //       * due to the use of multiple applications within this app note.
-        //       */
-        //      xcoreAllAppsBuild('AN00209_xCORE-200_DSP_Library')
-        //      dir('AN00209_xCORE-200_DSP_Library') {
-        //        runXdoc('doc')
-        //      }
-        //      dir("${REPO}") {
-        //        runXdoc('doc')
-        //      }
-        //    }
-        //  }
-        //}
+        stage('Tests') {
+          stages {
+            stage('Test Biquad') {
+              steps {
+                dir("${REPO}/tests/test_biquad") {
+                  runWaf('.')
+                  viewEnv() {
+                    runPytest()
+                  }
+                }
+              }
+            }
+            stage("Unit tests") {
+              steps {
+                dir("${REPO}/tests/dsp_unit_tests") {
+                  runWaf('.')
+                  viewEnv() {
+                    runPytest()
+                  }
+                }
+              }
+            }
+            stage("Legacy Tests") {
+              steps {
+                runXmostest("${REPO}", 'tests')
+              }
+            }
+          }
+        }
+        stage('Build') {
+          steps {
+            dir("${REPO}") {
+              /* Cannot call xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
+               * due to the use of multiple applications within this app note.
+               */
+              xcoreAllAppsBuild('AN00209_xCORE-200_DSP_Library')
+              dir('AN00209_xCORE-200_DSP_Library') {
+                runXdoc('doc')
+              }
+              dir("${REPO}") {
+                runXdoc('doc')
+              }
+            }
+          }
+        }
         stage('Build XCOREAI') {
           steps {
             dir("${REPO}") {
