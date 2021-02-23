@@ -1,6 +1,19 @@
 xCORE-200 DSP library change log
 ================================
 
+6.0.2
+-----
+
+  * CHANGED: use XS2 version of platform-specific functions on XS3
+  * CHANGED: Pin Python package versions
+  * REMOVED: not necessary cpanfile
+
+6.0.1
+-----
+
+  * CHANGED: Updated generate_window.py to work with Python 3
+  * CHANGED: Updated to use Jenkins shared library 0.14.1
+
 6.0.0
 -----
 
