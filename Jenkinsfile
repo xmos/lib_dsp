@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.16.0') _
+@Library('xmos_jenkins_shared_library@hotfix/get_approval_404') _
 
 getApproval()
 
