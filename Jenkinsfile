@@ -132,8 +132,7 @@ pipeline {
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
               forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
-                  unstash path.replaceAll("/", "_")
-                }
+                unstash path.replaceAll("/", "_")
               }
 
               dir("{REPO}/AN00209_xCORE-200_DSP_Library/") {
