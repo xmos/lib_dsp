@@ -85,7 +85,7 @@ pipeline {
               forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 runXmake(path, '', 'XCOREAI=1')
                 dir(path) {
-                  stash name: path.replaceAll("/", "_"), includes: 'bin/*xcoreai/*.xe, '
+                  stash name: path.split("/")[-1], includes: 'bin/*xcoreai/*.xe, '
                 }
               }
 
@@ -134,7 +134,7 @@ pipeline {
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
                 forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
-                  unstash path.replaceAll("/", "_")
+                  unstash path.split("/")[-1]
                 }
 
                 dir("AN00209_xCORE-200_DSP_Library") {
