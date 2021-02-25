@@ -84,7 +84,9 @@ pipeline {
             dir("${REPO}") {
               forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 runXmake(path, '', 'XCOREAI=1')
-                stash name: path.replaceAll("/", "_"), includes: 'bin/*xcoreai/*.xe, '
+                dir(path) {
+                  stash name: path.replaceAll("/", "_"), includes: 'bin/*xcoreai/*.xe, '
+                }
               }
 
               // Build Tests
