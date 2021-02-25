@@ -66,7 +66,7 @@ pipeline {
         stage('Build') {
           steps {
             dir("${REPO}") {
-              forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+              forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 runXmake(path)
               }
 
@@ -82,7 +82,7 @@ pipeline {
         stage('Build XCOREAI') {
           steps {
             dir("${REPO}") {
-              forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+              forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 runXmake(path, '', 'XCOREAI=1')
                 stash name: path, includes: 'bin/*xcoreai/*.xe, '
               }
@@ -131,12 +131,13 @@ pipeline {
         stage('xrun'){
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
-              dir('AN00209_xCORE-200_DSP_Library/') {
-                forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
-                  dir(path) {
-                    unstash path
-                  }
+              forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                dir(path) {
+                  unstash path
                 }
+              }
+
+              dir("{REPO}/AN00209_xCORE-200_DSP_Library/") {
 
                 // Run all the tests
                 // app_adaptive - expect
