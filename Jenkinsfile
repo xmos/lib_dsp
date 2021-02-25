@@ -136,7 +136,7 @@ pipeline {
                 forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                   unstash path.split("/")[-1]
                 }
-
+                sh 'tree'
                 dir("AN00209_xCORE-200_DSP_Library") {
 
                   // Run all the tests
