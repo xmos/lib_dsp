@@ -84,7 +84,7 @@ pipeline {
             dir("${REPO}") {
               forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 runXmake(path, '', 'XCOREAI=1')
-                stash name: path, includes: 'bin/*xcoreai/*.xe, '
+                stash name: String(path), includes: 'bin/*xcoreai/*.xe, '
               }
 
               // Build Tests
@@ -132,8 +132,9 @@ pipeline {
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
               forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
-                dir(path) {
-                  unstash path
+                String path_str = new String(path)
+                dir(path_str) {
+                  unstash path_str
                 }
               }
 
