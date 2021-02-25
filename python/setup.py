@@ -1,4 +1,4 @@
-# Copyright (c) 2020, XMOS Ltd, All rights reserved
+# Copyright (c) 2020-2021, XMOS Ltd, All rights reserved
 import setuptools
 
 # Another repository might depend on python code defined in this one.  The
