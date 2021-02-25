@@ -133,7 +133,7 @@ pipeline {
         stage('xrun'){
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
-              dir("{REPO}") {
+              dir("${REPO}") {
                 forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                   unstash path.replaceAll("/", "_")
                 }
