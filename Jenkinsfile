@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.15.1') _
+@Library('xmos_jenkins_shared_library@v0.16.0') _
 
 getApproval()
 
@@ -66,10 +66,10 @@ pipeline {
         stage('Build') {
           steps {
             dir("${REPO}") {
-              /* Cannot call xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
-               * due to the use of multiple applications within this app note.
-               */
-              xcoreAllAppsBuild('AN00209_xCORE-200_DSP_Library')
+              forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                runXmake(path)
+              }
+
               dir('AN00209_xCORE-200_DSP_Library') {
                 runXdoc('doc')
               }
@@ -82,36 +82,9 @@ pipeline {
         stage('Build XCOREAI') {
           steps {
             dir("${REPO}") {
-              // Build these individually (or we can extend xcoreAllAppsBuild to support an argument
-              dir('AN00209_xCORE-200_DSP_Library/') {
-                script {
-                  apps = [
-                    "app_adaptive",
-                    "app_atan2_hypot",
-                    "app_bfp",
-                    "app_complex",
-                    "app_complex_fir",
-                    "app_dct",
-                    "app_design",
-                    "app_fft",
-                    "app_fft_dif",
-                    "app_fft_double_buf",
-                    "app_fft_real_single",
-                    "app_fft_timing",
-                    "app_filters",
-                    "app_math",
-                    "app_matrix",
-                    "app_statistics",
-                    "app_vector",
-                    "app_window_post_fft"
-                  ]
-                  apps.each() {
-                    dir(it) {
-                      runXmake(".", "", "XCOREAI=1")
-                      stash name: it, includes: 'bin/*xcoreai/*.xe, '
-                    }
-                  }
-                }
+              forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                runXmake(path, '', 'XCOREAI=1')
+                stash name: path, includes: 'bin/*xcoreai/*.xe, '
               }
 
               // Build Tests
@@ -159,34 +132,12 @@ pipeline {
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
               dir('AN00209_xCORE-200_DSP_Library/') {
-                // Unstash all XCOREAI App notes
-                script {
-                  apps = [
-                    "app_adaptive",
-                    "app_atan2_hypot",
-                    "app_bfp",
-                    "app_complex",
-                    "app_complex_fir",
-                    "app_dct",
-                    "app_design",
-                    "app_fft",
-                    "app_fft_dif",
-                    "app_fft_double_buf",
-                    "app_fft_real_single",
-                    "app_fft_timing",
-                    "app_filters",
-                    "app_math",
-                    "app_matrix",
-                    "app_statistics",
-                    "app_vector",
-                    "app_window_post_fft"
-                  ]
-                  apps.each() {
-                    dir(it) {
-                      unstash it
-                    }
+                forAllMatch("${REPO}/AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                  dir(path) {
+                    unstash path
                   }
                 }
+
                 // Run all the tests
                 // app_adaptive - expect
                 sh 'xrun --io --id 0 app_adaptive/bin/xcoreai/app_adaptive.xe &> app_adaptive_test.txt'
