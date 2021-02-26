@@ -136,7 +136,6 @@ pipeline {
               forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
                 unstash path.split("/")[-1]
               }
-              sh 'tree'
 
               // Run all the tests
               // app_adaptive - expect
