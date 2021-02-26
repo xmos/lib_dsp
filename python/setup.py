@@ -1,4 +1,4 @@
-# Copyright (c) 2020, XMOS Ltd, All rights reserved
+# Copyright (c) 2020-2021, XMOS Ltd, All rights reserved
 import setuptools
 
 # Another repository might depend on python code defined in this one.  The
@@ -19,7 +19,6 @@ setuptools.setup(
         "pytest~=6.0",
         "pytest-xdist~=1.34",
         "scipy~=1.4",
-        "lib_logging",
     ],
 
     dependency_links=[

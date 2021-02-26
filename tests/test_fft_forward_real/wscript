@@ -1,10 +1,14 @@
-def configure(conf):
-    conf.load('xwaf.compiler_xcc')
+def options(opt):
+    opt.load('xwaf.xcommon')
 
+def configure(conf):
+    conf.load('xwaf.xcommon')
 
 def build(bld):
-    bld.env.TARGET_ARCH = 'XCORE-200-EXPLORER'
-    bld.env.XCC_FLAGS = ['-O2', '-g', '-report', '-DDEBUG_PRINT_ENABLE=1']
+    bld.do_xcommon()
 
-    # Build our program
-    prog = bld.program(target='bin/test.xe', depends_on='lib_dsp(>=4.0.0)')
+def dist(ctx):
+    ctx.load('xwaf.xcommon')
+
+def distcheck(ctx):
+    ctx.load('xwaf.xcommon')
