@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.15.1') _
+@Library('xmos_jenkins_shared_library@v0.16.0') _
 
 getApproval()
 
@@ -66,10 +66,10 @@ pipeline {
         stage('Build') {
           steps {
             dir("${REPO}") {
-              /* Cannot call xcoreAppNoteBuild('AN00209_xCORE-200_DSP_Library')
-               * due to the use of multiple applications within this app note.
-               */
-              xcoreAllAppsBuild('AN00209_xCORE-200_DSP_Library')
+              forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                runXmake(path)
+              }
+
               dir('AN00209_xCORE-200_DSP_Library') {
                 runXdoc('doc')
               }
@@ -82,35 +82,10 @@ pipeline {
         stage('Build XCOREAI') {
           steps {
             dir("${REPO}") {
-              // Build these individually (or we can extend xcoreAllAppsBuild to support an argument
-              dir('AN00209_xCORE-200_DSP_Library/') {
-                script {
-                  apps = [
-                    "app_adaptive",
-                    "app_atan2_hypot",
-                    "app_bfp",
-                    "app_complex",
-                    "app_complex_fir",
-                    "app_dct",
-                    "app_design",
-                    "app_fft",
-                    "app_fft_dif",
-                    "app_fft_double_buf",
-                    "app_fft_real_single",
-                    "app_fft_timing",
-                    "app_filters",
-                    "app_math",
-                    "app_matrix",
-                    "app_statistics",
-                    "app_vector",
-                    "app_window_post_fft"
-                  ]
-                  apps.each() {
-                    dir(it) {
-                      runXmake(".", "", "XCOREAI=1")
-                      stash name: it, includes: 'bin/*xcoreai/*.xe, '
-                    }
-                  }
+              forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                runXmake(path, '', 'XCOREAI=1')
+                dir(path) {
+                  stash name: path.split("/")[-1], includes: 'bin/*xcoreai/*.xe, '
                 }
               }
 
@@ -158,107 +133,82 @@ pipeline {
         stage('xrun'){
           steps{
             toolsEnv(TOOLS_PATH) {  // load xmos tools
-              dir('AN00209_xCORE-200_DSP_Library/') {
-                // Unstash all XCOREAI App notes
-                script {
-                  apps = [
-                    "app_adaptive",
-                    "app_atan2_hypot",
-                    "app_bfp",
-                    "app_complex",
-                    "app_complex_fir",
-                    "app_dct",
-                    "app_design",
-                    "app_fft",
-                    "app_fft_dif",
-                    "app_fft_double_buf",
-                    "app_fft_real_single",
-                    "app_fft_timing",
-                    "app_filters",
-                    "app_math",
-                    "app_matrix",
-                    "app_statistics",
-                    "app_vector",
-                    "app_window_post_fft"
-                  ]
-                  apps.each() {
-                    dir(it) {
-                      unstash it
-                    }
-                  }
-                }
-                // Run all the tests
-                // app_adaptive - expect
-                sh 'xrun --io --id 0 app_adaptive/bin/xcoreai/app_adaptive.xe &> app_adaptive_test.txt'
-                sh 'cat app_adaptive_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_adaptive_test.txt ../tests/adaptive_test.expect'
-
-                // app_atan2_hypot - no test
-                sh 'xrun --io --id 0 app_atan2_hypot/bin/xcoreai/app_atan2_hypot.xe'
-
-                // app_bfp - expect
-                sh 'xrun --io --id 0 app_bfp/bin/xcoreai/app_bfp.xe &> app_bfp_test.txt'
-                sh 'cat app_bfp_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_bfp_test.txt ../tests/bfp_test.expect'
-
-                // app_complex - expect
-                sh 'xrun --io --id 0 app_complex/bin/xcoreai/app_complex.xe &> app_complex_test.txt'
-                sh 'cat app_complex_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_complex_test.txt ../tests/complex_test.expect'
-
-                // app_complex_fir - expect
-                sh 'xrun --io --id 0 app_complex_fir/bin/xcoreai/app_complex_fir.xe &> app_complex_fir_test.txt'
-                sh 'cat app_complex_fir_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_complex_fir_test.txt ../tests/complex_fir_test.expect'
-                // app_dct - no test
-                sh 'xrun --io --id 0 app_dct/bin/xcoreai/app_dct.xe'
-
-                // app_design - expect
-                sh 'xrun --io --id 0 app_design/bin/xcoreai/app_design.xe &> app_design_test.txt'
-                sh 'cat app_design_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_design_test.txt ../tests/design_test.expect'
-
-                // app_fft - no test
-                sh 'xrun --io --id 0 app_fft/bin/complex_xcoreai/app_fft_complex_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft/bin/tworeals_xcoreai/app_fft_tworeals_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft/bin/complex_int16_buf_xcoreai/app_fft_complex_int16_buf_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft/bin/tworeals_int16_buf_xcoreai/app_fft_tworeals_int16_buf_xcoreai.xe'
-
-                // app_fft_dif - no test
-                sh 'xrun --io --id 0 app_fft_dif/bin/xcoreai/app_fft_dif.xe'
-
-                // app_fft_double_buf - no test
-                sh 'xrun --io --id 0 app_fft_double_buf/bin/complex_xcoreai/app_fft_double_buf_complex_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft_double_buf/bin/tworeals_xcoreai/app_fft_double_buf_tworeals_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft_double_buf/bin/complex_int16_buf_xcoreai/app_fft_double_buf_complex_int16_buf_xcoreai.xe'
-                sh 'xrun --io --id 0 app_fft_double_buf/bin/tworeals_int16_buf_xcoreai/app_fft_double_buf_tworeals_int16_buf_xcoreai.xe'
-
-                // app_fft_real_single - expect
-                sh 'xrun --io --id 0 app_fft_real_single/bin/xcoreai/app_fft_real_single.xe &> app_fft_real_single_test.txt'
-                sh 'cat app_fft_real_single_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_fft_real_single_test.txt ../tests/fft_real_single_test.expect'
-
-                // app_fft_timing - no test
-                sh 'xrun --io --id 0 app_fft_timing/bin/xcoreai/app_fft_timing.xe'
-
-                // app_filters - expect
-                sh 'xrun --io --id 0 app_filters/bin/xcoreai/app_filters.xe &> app_filters_test.txt'
-                sh 'cat app_filters_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_filters_test.txt ../tests/filters_test.expect'
-
-                // app_math - expect
-                sh 'xrun --io --id 0 app_math/bin/xcoreai/app_math.xe &> app_math_test.txt'
-                sh 'cat app_math_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_math_test.txt ../tests/math_test.expect'
-
-                // app_matrix - expect
-                sh 'xrun --io --id 0 app_matrix/bin/xcoreai/app_matrix.xe &> app_matrix_test.txt'
-                sh 'cat app_matrix_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_matrix_test.txt ../tests/matrix_test.expect'
-
-                // app_statistics - expect
-                sh 'xrun --io --id 0 app_statistics/bin/xcoreai/app_statistics.xe &> app_statistics_test.txt'
-                sh 'cat app_statistics_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_statistics_test.txt ../tests/statistics_test.expect'
-
-                // app_vector - expect
-                sh 'xrun --io --id 0 app_vector/bin/xcoreai/app_vector.xe &> app_vector_test.txt'
-                sh 'cat app_vector_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_vector_test.txt ../tests/vector_test.expect'
-
-                // app_window_post_fft - expect (test_hann)
-                sh 'xrun --io --id 0 app_window_post_fft/bin/xcoreai/app_window_post_fft.xe &> app_window_post_fft_test.txt'
-                sh 'cat app_window_post_fft_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_window_post_fft_test.txt ../tests/hann_test.expect'
+              forAllMatch("AN00209_xCORE-200_DSP_Library", "app_*/") { path ->
+                unstash path.split("/")[-1]
               }
+              sh 'tree'
+
+              // Run all the tests
+              // app_adaptive - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_adaptive.xe &> app_adaptive_test.txt'
+              sh 'cat app_adaptive_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_adaptive_test.txt tests/adaptive_test.expect'
+
+              // app_atan2_hypot - no test
+              sh 'xrun --io --id 0 bin/xcoreai/app_atan2_hypot.xe'
+
+              // app_bfp - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_bfp.xe &> app_bfp_test.txt'
+              sh 'cat app_bfp_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_bfp_test.txt tests/bfp_test.expect'
+
+              // app_complex - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_complex.xe &> app_complex_test.txt'
+              sh 'cat app_complex_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_complex_test.txt tests/complex_test.expect'
+
+              // app_complex_fir - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_complex_fir.xe &> app_complex_fir_test.txt'
+              sh 'cat app_complex_fir_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_complex_fir_test.txt tests/complex_fir_test.expect'
+              // app_dct - no test
+              sh 'xrun --io --id 0 bin/xcoreai/app_dct.xe'
+
+              // app_design - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_design.xe &> app_design_test.txt'
+              sh 'cat app_design_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_design_test.txt tests/design_test.expect'
+
+              // app_fft - no test
+              sh 'xrun --io --id 0 bin/complex_xcoreai/app_fft_complex_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/tworeals_xcoreai/app_fft_tworeals_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/complex_int16_buf_xcoreai/app_fft_complex_int16_buf_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/tworeals_int16_buf_xcoreai/app_fft_tworeals_int16_buf_xcoreai.xe'
+
+              // app_fft_dif - no test
+              sh 'xrun --io --id 0 bin/xcoreai/app_fft_dif.xe'
+
+              // app_fft_double_buf - no test
+              sh 'xrun --io --id 0 bin/complex_xcoreai/app_fft_double_buf_complex_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/tworeals_xcoreai/app_fft_double_buf_tworeals_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/complex_int16_buf_xcoreai/app_fft_double_buf_complex_int16_buf_xcoreai.xe'
+              sh 'xrun --io --id 0 bin/tworeals_int16_buf_xcoreai/app_fft_double_buf_tworeals_int16_buf_xcoreai.xe'
+
+              // app_fft_real_single - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_fft_real_single.xe &> app_fft_real_single_test.txt'
+              sh 'cat app_fft_real_single_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_fft_real_single_test.txt tests/fft_real_single_test.expect'
+
+              // app_fft_timing - no test
+              sh 'xrun --io --id 0 bin/xcoreai/app_fft_timing.xe'
+
+              // app_filters - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_filters.xe &> app_filters_test.txt'
+              sh 'cat app_filters_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_filters_test.txt tests/filters_test.expect'
+
+              // app_math - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_math.xe &> app_math_test.txt'
+              sh 'cat app_math_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_math_test.txt tests/math_test.expect'
+
+              // app_matrix - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_matrix.xe &> app_matrix_test.txt'
+              sh 'cat app_matrix_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_matrix_test.txt tests/matrix_test.expect'
+
+              // app_statistics - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_statistics.xe &> app_statistics_test.txt'
+              sh 'cat app_statistics_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_statistics_test.txt tests/statistics_test.expect'
+
+              // app_vector - expect
+              sh 'xrun --io --id 0 bin/xcoreai/app_vector.xe &> app_vector_test.txt'
+              sh 'cat app_vector_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_vector_test.txt tests/vector_test.expect'
+
+              // app_window_post_fft - expect (test_hann)
+              sh 'xrun --io --id 0 bin/xcoreai/app_window_post_fft.xe &> app_window_post_fft_test.txt'
+              sh 'cat app_window_post_fft_test.txt && diff --ignore-blank-lines --ignore-trailing-space app_window_post_fft_test.txt tests/hann_test.expect'
             }
           }
         }
