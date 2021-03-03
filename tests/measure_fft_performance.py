@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Copyright (c) 2016-2018, XMOS Ltd, All rights reserved
+# Copyright (c) 2016-2021, XMOS Ltd, All rights reserved
+# This software is available under the terms provided in LICENSE.txt.
 import xmostest
 import sys
 sys.path.insert(0, 'test_fft_correctness/src')

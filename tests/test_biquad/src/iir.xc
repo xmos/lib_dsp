@@ -1,4 +1,5 @@
-// Copyright (c) 2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2019-2021, XMOS Ltd, All rights reserved
+// This software is available under the terms provided in LICENSE.txt.
 #include "iir.h"
 int32_t filter[IIR_ORDERS][IIRS_PER_ORDER][DSP_NUM_COEFFS_PER_BIQUAD*MAX_BIQUAD_ORDER] = {
 {
