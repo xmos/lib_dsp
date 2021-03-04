@@ -8,8 +8,8 @@ This API reference manual describes the XMOS fixed-point digital signal processi
 software library.  The library implements of a suite of common signal processing functions
 for use on XMOS xCORE-200 multicore microcontrollers.
 
-Required tools and libraries
-............................
+Required tools
+..............
 
 * xTIMEcomposer Tools Version 14.2.1 or later
 
