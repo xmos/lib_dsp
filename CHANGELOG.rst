@@ -4,7 +4,7 @@ xCORE-200 DSP library change log
 6.1.0
 -----
 
-  * ADDED: Support for building from xcore-AI
+  * ADDED: Support for XS3 architecture
 
 6.0.2
 -----
