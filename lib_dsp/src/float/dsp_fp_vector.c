@@ -1,4 +1,4 @@
-// Copyright (c) 2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2019-2021, XMOS Ltd, All rights reserved
 #include "dsp_complex.h"
 
 void dsp_sub_vect_float(

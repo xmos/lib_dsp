@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright (c) 2015-2021, XMOS Ltd, All rights reserved
     
 #if (defined(__XS2A__) || defined (__XS3A__))
 

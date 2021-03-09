@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019, XMOS Ltd, All rights reserved
+// Copyright (c) 2018-2021, XMOS Ltd, All rights reserved
 #include <xs1.h>
 #include <xclib.h>
 #include <limits.h>
