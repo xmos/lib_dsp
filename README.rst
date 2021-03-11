@@ -8,8 +8,8 @@ This API reference manual describes the XMOS fixed-point digital signal processi
 software library.  The library implements of a suite of common signal processing functions
 for use on XMOS xCORE-200 multicore microcontrollers.
 
-Required tools and libraries
-............................
+Required tools
+..............
 
 * xTIMEcomposer Tools Version 14.2.1 or later
 
@@ -35,7 +35,8 @@ and digital signal processing concepts.
 Software version and dependencies
 .................................
 
-.. libdeps::
+The CHANGELOG contains information about the current and previous versions.
+For a list of direct dependencies, look for DEPENDENT_MODULES in lib_dsp/module_build_info.
 
 Related application notes
 .........................

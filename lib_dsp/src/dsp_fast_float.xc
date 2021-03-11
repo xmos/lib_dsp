@@ -1,4 +1,5 @@
-// Copyright (c) 2018-2020, XMOS Ltd, All rights reserved
+// Copyright (c) 2018-2021, XMOS Ltd, All rights reserved
+// This software is available under the terms provided in LICENSE.txt.
 #include <xs1.h>
 #include <xclib.h>
 #include <limits.h>
@@ -411,7 +412,7 @@ dsp_u32_float_t dsp_sqrt_u32(const dsp_u32_float_t a){
 
         dsp_sqrt_calc_exp(a.e, clz(a.m), &shl, &b.e);
 
-#if defined(__XS2A__) || defined(__XS3A__)
+#if (defined(__XS2A__) || defined (__XS3A__))
         if(shl > 0)
             b.m = dsp_sqrt30_xs2(a.m<<shl);
         else
