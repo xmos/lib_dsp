@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+6.2.0
+-----
+
+  * CHANGED: Use XMOS Public Licence Version 1
+
 6.1.0
 -----
 
