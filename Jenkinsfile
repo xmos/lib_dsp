@@ -224,7 +224,7 @@ pipeline {
         label 'x86_64&&brew'
       }
       when {
-        expression { return currentBuild.result == "SUCCESS" }
+        expression { return currentBuild.currentResult == "SUCCESS" }
       }
       steps {
         updateViewfiles()
