@@ -1,5 +1,5 @@
-// Copyright (c) 2018-2021, XMOS Ltd, All rights reserved
-// This software is available under the terms provided in LICENSE.txt.
+// Copyright 2019-2021 XMOS LIMITED.
+// This Software is subject to the terms of the XMOS Public Licence: Version 1.
 #include "dsp_math.h"
 
 void dsp_sqrt_calc_exp(const int exp, const  unsigned hr, int * shl, int * e){
