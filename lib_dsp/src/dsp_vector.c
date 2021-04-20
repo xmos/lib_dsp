@@ -235,17 +235,17 @@ void dsp_vector_abs
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0;
+        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        result_vector_R[2] = -input_vector_X[2];
+        result_vector_R[2] = ( input_vector_X[2] < 0 ) ? -input_vector_X[2] : input_vector_X[2];
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0;
+        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         break;
         case 1:
-        result_vector_R[0] = -input_vector_X[0];
+        result_vector_R[0] = ( input_vector_X[0] < 0 ) ? -input_vector_X[0] : input_vector_X[0];
         break;
     }
 }
