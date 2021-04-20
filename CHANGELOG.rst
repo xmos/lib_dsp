@@ -5,6 +5,7 @@ xCORE-200 DSP library change log
 -----
 
   * CHANGED: Use XMOS Public Licence Version 1
+  * CHANGED: dsp_vector_abs function to always return positive values
 
 6.1.0
 -----
