@@ -4,16 +4,16 @@ Maximum location = 49
 Maximum = 0.600000
 Vector Negate Result
 Dst[0] = -0.110000
-Dst[1] = -0.120000
-Dst[2] = -0.130000
-Dst[3] = -0.140000
-Dst[4] = -0.150000
+Dst[1] = 0.120000
+Dst[2] = 0
+Dst[3] = -2147483647
+Dst[4] = 2147483647
 Vector Absolute Result
 Dst[0] = 0.110000
 Dst[1] = 0.120000
-Dst[2] = 0.130000
-Dst[3] = 0.140000
-Dst[4] = 0.150000
+Dst[2] = 0
+Dst[3] = 2147483647
+Dst[4] = 2147483647
 Vector / scalar addition Result
 Dst[0] = 2.110000
 Dst[1] = 2.120000
