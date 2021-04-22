@@ -174,6 +174,16 @@ int32_t dsp_vector_maximum
 
 
 
+static int32_t int32_negate
+(
+    const int32_t x
+) {
+    int32_t ret_val = ( x == INT32_MIN ) ? INT32_MAX : -x;
+    return ret_val;
+}
+
+
+
 void dsp_vector_negate
 (
     const int32_t* input_vector_X,
@@ -185,10 +195,10 @@ void dsp_vector_negate
     while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        x0 = -x0; x1 = -x1;
+        x0 = int32_negate(x0); x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        x0 = -x0; x1 = -x1;
+        x0 = int32_negate(x0); x1 = int32_negate(x1);
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
@@ -196,17 +206,17 @@ void dsp_vector_negate
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        x0 = -x0; x1 = -x1;
+        x0 = int32_negate(x0); x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        result_vector_R[2] = -input_vector_X[2];
+        result_vector_R[2] = int32_negate(input_vector_X[2]);
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        x0 = -x0; x1 = -x1;
+        x0 = int32_negate(x0); x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         break;
         case 1:
-        result_vector_R[0] = -input_vector_X[0];
+        result_vector_R[0] = int32_negate(input_vector_X[0]);
         break;
     }
 }
@@ -224,10 +234,10 @@ void dsp_vector_abs
     while( vl >= 4 )
     {
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        if( x0 < 0 ) x0 = int32_negate(x0); if( x1 < 0 ) x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         asm("ldd %0,%1,%2[1]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        if( x0 < 0 ) x0 = int32_negate(x0); if( x1 < 0 ) x1 = int32_negate(x1);
         asm("std %0,%1,%2[1]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         vl -= 4; input_vector_X += 4; result_vector_R += 4;
     }
@@ -235,17 +245,17 @@ void dsp_vector_abs
     {
         case 3:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        if( x0 < 0 ) x0 = int32_negate(x0); if( x1 < 0 ) x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
-        result_vector_R[2] = ( input_vector_X[2] < 0 ) ? -input_vector_X[2] : input_vector_X[2];
+        result_vector_R[2] = ( input_vector_X[2] < 0 ) ? int32_negate(input_vector_X[2]) : input_vector_X[2];
         break;
         case 2:
         asm("ldd %0,%1,%2[0]":"=r"(x1),"=r"(x0):"r"(input_vector_X));
-        if( x0 < 0 ) x0 = -x0; if( x1 < 0 ) x1 = -x1;
+        if( x0 < 0 ) x0 = int32_negate(x0); if( x1 < 0 ) x1 = int32_negate(x1);
         asm("std %0,%1,%2[0]"::"r"(x1), "r"(x0),"r"(result_vector_R));
         break;
         case 1:
-        result_vector_R[0] = ( input_vector_X[0] < 0 ) ? -input_vector_X[0] : input_vector_X[0];
+        result_vector_R[0] = ( input_vector_X[0] < 0 ) ? int32_negate(input_vector_X[0]) : input_vector_X[0];
         break;
     }
 }
