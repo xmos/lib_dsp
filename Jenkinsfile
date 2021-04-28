@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage('Standard build and XS2 tests') {
       agent {
-        label 'x86_64&&brew'
+        label 'x86_64&&brew&&macOS'
       }
       environment {
         REPO = 'lib_dsp'
@@ -107,6 +107,14 @@ pipeline {
             }
           }
         }
+        stage('Build docs') {
+          steps {
+            runXdoc("${REPO}/${REPO}/doc")
+            runXdoc("${REPO}/AN00209_xCORE-200_DSP_Library/doc")
+            // Archive all the generated .pdf docs
+            archiveArtifacts artifacts: "${REPO}/**/pdf/*.pdf", fingerprint: true, allowEmptyArchive: true
+      }
+    }
       } // stages
       post {
         cleanup {
