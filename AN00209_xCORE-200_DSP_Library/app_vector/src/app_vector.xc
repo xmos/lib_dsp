@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2021, XMOS Ltd, All rights reserved
-// This software is available under the terms provided in LICENSE.txt.
+// Copyright 2015-2021 XMOS LIMITED.
+// This Software is subject to the terms of the XMOS Public Licence: Version 1.
 // XMOS DSP Library - Vector Functions Test Program
 // Uses Q24 format
 
@@ -12,6 +12,7 @@
 
 #define SAMPLE_LENGTH         50
 #define SHORT_SAMPLE_LENGTH   5
+#define ABS_NEGATE_Q_ELE_CNT  2
 
 #define COMPLEX_VECTOR_LENGTH 12
 
@@ -24,6 +25,7 @@ int32_t  Src[] = { Q24(.11), Q24(.12), Q24(.13), Q24(.14), Q24(.15), Q24(.16), Q
 int32_t  Src2[] = { Q24(.51), Q24(.52), Q24(.53), Q24(.54), Q24(.55), Q24(.56), Q24(.57), Q24(.58), Q24(.59), Q24(.60)};
 int32_t  Src3[] = { Q24(.61), Q24(.62), Q24(.63), Q24(.64), Q24(.65), Q24(.66), Q24(.67), Q24(.68), Q24(.69), Q24(.70)};
 int32_t  Src4[] = { Q24(.51), Q24(-.31), Q24(0), Q24(.64), Q24(-0.3), Q24(.60), Q24(.67), Q24(.68), Q24(.69), Q24(.71)};
+int32_t  Src5[] = { Q24(.11), Q24(-.12), 0, INT32_MAX, INT32_MIN};
 int32_t  Dst[SAMPLE_LENGTH];
 
 int32_t A_real[] = {Q24(1.), Q24(2.), Q24(3.), Q24(4.), Q24(3.), Q24(4.), Q24(1.), Q24(2.), Q24(1.), Q24(3.), Q24(5.), Q24(7.)};
@@ -64,24 +66,38 @@ int main(void)
   printf ("Maximum location = %d\n", result);
   printf ("Maximum = %lf\n", F24 (Src[result]));
 
-  dsp_vector_negate (Src,                       // Input vector
+  dsp_vector_negate (Src5,                      // Input vector
                      Dst,                       // Output vector
                      SHORT_SAMPLE_LENGTH);      // Vector length
 
   printf ("Vector Negate Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
   {
-    printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+    if (i < ABS_NEGATE_Q_ELE_CNT )
+    {
+      printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+    }
+    else
+    {
+      printf ("Dst[%d] = %d\n", i, Dst[i]);
+    }
   }
 
-  dsp_vector_abs (Src,                          // Input vector
+  dsp_vector_abs (Src5,                         // Input vector
                   Dst,                          // Output vector
                   SHORT_SAMPLE_LENGTH);         // Vector length
 
   printf ("Vector Absolute Result\n");
   for (i = 0; i < SHORT_SAMPLE_LENGTH; i++)
   {
-    printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+    if (i < ABS_NEGATE_Q_ELE_CNT )
+    {
+      printf ("Dst[%d] = %lf\n", i, F24 (Dst[i]));
+    }
+    else
+    {
+      printf ("Dst[%d] = %d\n", i, Dst[i]);
+    }
   }
 
   dsp_vector_adds (Src,                         // Input vector
