@@ -7,7 +7,7 @@ pipeline {
   parameters {
     string(
       name: 'TOOLS_VERSION',
-      defaultValue: '15.0.2',
+      defaultValue: '15.0.5',
       description: 'The tools version to build with (check /projects/tools/ReleasesTools/)'
     )
   }
@@ -129,7 +129,7 @@ pipeline {
       }
       environment {
         // '/XMOS/tools' from get_tools.py and rest from tools installers
-        TOOLS_PATH = "/XMOS/tools/${params.TOOLS_VERSION}/XMOS/xTIMEcomposer/${params.TOOLS_VERSION}"
+        TOOLS_PATH = "/XMOS/tools/${params.TOOLS_VERSION}/XMOS/XTC/${params.TOOLS_VERSION}"
       }
       stages{
         stage('Install Dependencies') {
