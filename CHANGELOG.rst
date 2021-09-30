@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+6.2.1
+-----
+
+  * CHANGED: Jenkinsfile used for CI
+
 6.2.0
 -----
 
