@@ -118,7 +118,7 @@ pipeline {
 
     stage('xcore.ai Verification'){
       agent {
-        label 'xcore.ai-explorer'
+        label 'xcore.ai'
       }
       stages{
         stage('Get view') {
