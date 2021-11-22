@@ -132,7 +132,7 @@ pipeline {
               viewEnv {  // load xmos tools
                 withVenv {  // activate virtualenv
                   // Install xtagctl and reset xtags
-                  sh 'pip install git+git://github0.xmos.com/xmos-int/xtagctl.git@v1.3.1'
+                  sh 'pip install -e ${WORKSPACE}/xtagctl'
                   sh 'xtagctl reset_all XCORE-AI-EXPLORER'
 
                   // Unstash binaries
