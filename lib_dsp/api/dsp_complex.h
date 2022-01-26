@@ -33,6 +33,14 @@ typedef struct {
     double im;
 } dsp_complex_float_t;
 
+/** Type that represents a complex number. Both the real and imaginary
+ * parts are represented as single precision values.
+ */
+typedef struct {
+    float re;
+    float im;
+} dsp_complex_float4_t;
+
 /**
  * Struct containing the sample data of two channels. Both channels
  * are represented as 32-bit fixed point values, with a Q value that
