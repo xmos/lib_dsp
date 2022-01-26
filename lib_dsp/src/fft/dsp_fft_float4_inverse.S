@@ -1,4 +1,6 @@
-// Copyright (c) 2015-2017, XMOS Ltd, All rights reserved
+// Copyright 2022 XMOS LIMITED.
+// This Software is subject to the terms of the XMOS Public Licence: Version 1.
+
     
 #if defined(__XS3A__)
 
