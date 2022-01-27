@@ -8,6 +8,7 @@
 #include <math.h>
 
 #include "dsp_fft_float4.h"
+#include "dsp_bfp.h"
 
 int random(unsigned &x){
     crc32(x, -1, 0xEB31D82E);
@@ -87,6 +88,32 @@ void test_float_fft(){
         if (max_error >= 1e-6 || fabs(average_error) >= 1e-7) {
             fail = 1;
             printf("Real forward/inverse FAIL %g %g\n", max_error, average_error);
+        }
+
+        int exp = dsp_float_to_bfp((f, float[]), FFT_LENGTH);
+        dsp_fft_bit_reverse((f, dsp_complex_t[]), FFT_LENGTH);
+        dsp_fft_forward((f, dsp_complex_t[]), FFT_LENGTH, FFT_SINE(FFT_LENGTH));
+        dsp_fft_bit_reverse((f, dsp_complex_t[]), FFT_LENGTH);
+        dsp_fft_inverse((f, dsp_complex_t[]), FFT_LENGTH, FFT_SINE(FFT_LENGTH));
+        dsp_bfp_to_float((f, float[]), FFT_LENGTH, exp);
+
+        max_error = average_error = 0;
+        for(unsigned i=0;i<FFT_LENGTH;i++){
+            float e = f[i].re / FFT_LENGTH - g[i].re;
+            average_error += e;
+            e = fabs(e);
+            if(e > max_error)
+                max_error = e;
+            e = f[i].im / FFT_LENGTH - g[i].im;
+            average_error += e;
+            e = fabs(e);
+            if(e > max_error)
+                max_error = e;
+        }
+        average_error = average_error / FFT_LENGTH / 2;
+        if (max_error >= 1e-6 || fabs(average_error) >= 1e-7) {
+            fail = 1;
+            printf("Float to BSP forward/inverse FAIL %g %g\n", max_error, average_error);
         }
     }
     if (!fail) {
