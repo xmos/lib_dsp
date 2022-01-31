@@ -10,7 +10,7 @@
 // The length (in elements) of our BFP vectors.
 #define LENGTH    (128)
 #
-void forward_fft_xs3_math() {
+void fft_xs3_math() {
   printf("#########################\n");
   printf("### Convert FP to BFP ###\n");
   printf("#########################\n\n");
@@ -153,6 +153,6 @@ int main()
   // Seed the random number generator, using a constant for reproducibility
   srand(RAND_SEED);
 
-  forward_fft_xs3_math();
+  fft_xs3_math();
   return 0;
 }
