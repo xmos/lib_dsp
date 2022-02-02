@@ -1,6 +1,6 @@
 VERSION = 6.2.1
 
-DEPENDENT_MODULES = lib_logging(>=3.0.0)
+DEPENDENT_MODULES = lib_logging(>=3.0.0) lib_xs3_math(>=2.0.0)
 
 MODULE_XCC_FLAGS = $(XCC_FLAGS)
 

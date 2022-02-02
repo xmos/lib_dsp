@@ -19,7 +19,7 @@ XCC_FLAGS = $(BUILD_FLAGS)
 APP_NAME = app
 
 # The USED_MODULES variable lists other modules used by the application.
-USED_MODULES = lib_dsp(>=6.0.0) lib_xs3_math(>=2.0.0)
+USED_MODULES = lib_dsp(>=6.0.0)
 
 # The XCORE_ARM_PROJECT variable, if set to 1, configures this
 # project to create both xCORE and ARM binaries.
