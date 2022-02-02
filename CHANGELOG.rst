@@ -1,6 +1,12 @@
 xCORE-200 DSP library change log
 ================================
 
+6.3.0
+-----
+
+  * ADDED: float4 FFT functions for float4 values
+  * ADDED: float FFT functions using lib_xs3_math, limited to 512 real points
+
 6.2.1
 -----
 
