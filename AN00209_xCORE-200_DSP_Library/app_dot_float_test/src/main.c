@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "dsp_dot_xs3.h"
 float f[1000];
 float g[1000];
-extern float dsp_vect_dot_prod_xs3(float *ptr1, float *ptr2, uint32_t N);
-extern float dsp_vect_dot_prod_fast_xs3(float *ptr1, float *ptr2, uint32_t N);
 
 float dot_ref(float *ptr1, float *ptr2, uint32_t N) {
     float sum = 0;
