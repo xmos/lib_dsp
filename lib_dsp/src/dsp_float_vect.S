@@ -175,7 +175,7 @@ void FFVectMacC
 	.type	FFVectMacC_xs3,@function
 	.cc_top FFVectMacC_xs3.function,FFVectMacC_xs3
 
-    //    float FFVectMacC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    //    void FFVectMacC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
     .align 16
 FFVectMacC_xs3:
     dualentsp NSTACKWORDS
@@ -238,7 +238,7 @@ FFVectMacC_xs3:
 	.type	FFVectMac_xs3,@function
 	.cc_top FFVectMac_xs3.function,FFVectMac_xs3
 
-    //    float FFVectMac_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    //    void FFVectMac_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
     .align 16
 FFVectMac_xs3:
     dualentsp NSTACKWORDS

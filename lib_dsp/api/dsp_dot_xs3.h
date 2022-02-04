@@ -19,7 +19,7 @@ float dsp_vect_dot_prod_xs3(
                 float *ptr2,
                 uint32_t N);
 
-/** This function computes the dot product of 2 arrays of floating-point values using the VPU
+/** This function computes the dot product of 2 arrays of floating-point values using LDD to load two words at a time
  *
  * \param   ptr1    First array of float values.
  * \param   ptr2    Second array of float values.
