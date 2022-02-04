@@ -138,5 +138,317 @@ dsp_vect_dot_prod_fast_xs3:
 	.size	dsp_vect_dot_prod_fast_xs3, .Ltmp1-dsp_vect_dot_prod_fast_xs3
 
 #undef NSTACKWORDS
+
+
+#if 0
+void FFVectMacC
+(
+    OBJStruct   * const op,
+    const SIZE_T        N,
+    const FLOAT * const APES_RESTRICT in1, /* Conj */
+    const FLOAT * const APES_RESTRICT in2,
+          FLOAT * const APES_RESTRICT io
+)
+{
+    SIZE_T c1, c2;
+
+    io[ DC(N) ] += in1[ DC(N) ] * in2[ DC(N) ];
+    io[ NQ(N) ] += in1[ NQ(N) ] * in2[ NQ(N) ];
+
+    for( c1 = 2, c2 = 3; c1 < N; c1 += 2, c2 += 2 )
+    {
+        FLOAT t1 = in1[ c1 ];
+        FLOAT t2 = in1[ c2 ];
+        FLOAT t3 = in2[ c1 ];
+        FLOAT t4 = in2[ c2 ];
+        io[ c1 ] += t1 * t3 + t2 * t4;
+        io[ c2 ] += t1 * t4 - t2 * t3;
+    }
+}
+#endif
+    
+
+#define NSTACKWORDS 6
+	.text
+    .issue_mode  dual
+	.globl	FFVectMacC_xs3
+	.type	FFVectMacC_xs3,@function
+	.cc_top FFVectMacC_xs3.function,FFVectMacC_xs3
+
+    //    void FFVectMacC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    .align 16
+FFVectMacC_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+    std r8, r9, sp[2]
+
+    { shr r0, r0, 1             ; nop }
+    { ldc r11, 1                ; sub r0, r0, 2 }
+    { bitrev r11, r11           ; add r3, r3, 8 }
+    { add r1, r1, 8             ; add r2, r2, 8 }
+.MacCloop:
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    ldd r8, r9, r3[r0]
+    fmacc r9, r9, r4, r6
+    fmacc r9, r9, r5, r7
+    add r4, r4, r11
+    fmacc r8, r8, r4, r7
+    fmacc r8, r8, r5, r6
+    std r8, r9, r3[r0]
+    { bt  r0, .MacCloop         ; sub r0, r0, 1 }
+    
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    ldd r8, r9, r3[r0]
+    fmacc r8, r8, r4, r6
+    fmacc r9, r9, r5, r7
+    std r8, r9, r3[r0]
+
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    ldd r8, r9, sp[2]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+    
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectMacC_xs3.function
+	.set	FFVectMacC_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectMacC_xs3.nstackwords
+	.set	FFVectMacC_xs3.maxcores,1
+	.globl	FFVectMacC_xs3.maxcores
+	.set	FFVectMacC_xs3.maxtimers,0
+	.globl	FFVectMacC_xs3.maxtimers
+	.set	FFVectMacC_xs3.maxchanends,0
+	.globl	FFVectMacC_xs3.maxchanends
+.LtmpFFVectMacC_xs3:
+	.size	FFVectMacC_xs3, .LtmpFFVectMacC_xs3-FFVectMacC_xs3
+
+#undef NSTACKWORDS
+    
+    //    io[ c1 ] += t1 * t3 - t2 * t4;
+    //    io[ c2 ] += t1 * t4 + t2 * t3;
+
+#define NSTACKWORDS 6
+	.text
+    .issue_mode  dual
+	.globl	FFVectMac_xs3
+	.type	FFVectMac_xs3,@function
+	.cc_top FFVectMac_xs3.function,FFVectMac_xs3
+
+    //    void FFVectMac_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    .align 16
+FFVectMac_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+    std r8, r9, sp[2]
+
+    { shr r0, r0, 1             ; nop }
+    { ldc r11, 1                ; sub r0, r0, 2 }
+    { bitrev r11, r11           ; add r3, r3, 8 }
+    { add r1, r1, 8             ; add r2, r2, 8 }
+.Macloop:
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    ldd r8, r9, r3[r0]
+    fmacc r8, r8, r4, r7
+    fmacc r8, r8, r5, r6
+    add r4, r4, r11
+    fmacc r9, r9, r4, r6
+    fmacc r9, r9, r5, r7
+    std r8, r9, r3[r0]
+    { bt  r0, .Macloop         ; sub r0, r0, 1 }
+    
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    ldd r8, r9, r3[r0]
+    fmacc r8, r8, r4, r6
+    fmacc r9, r9, r5, r7
+    std r8, r9, r3[r0]
+
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    ldd r8, r9, sp[2]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+    
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectMac_xs3.function
+	.set	FFVectMac_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectMac_xs3.nstackwords
+	.set	FFVectMac_xs3.maxcores,1
+	.globl	FFVectMac_xs3.maxcores
+	.set	FFVectMac_xs3.maxtimers,0
+	.globl	FFVectMac_xs3.maxtimers
+	.set	FFVectMac_xs3.maxchanends,0
+	.globl	FFVectMac_xs3.maxchanends
+.LtmpFFVectMac_xs3:
+	.size	FFVectMac_xs3, .LtmpFFVectMac_xs3-FFVectMac_xs3
+
+#undef NSTACKWORDS
+
+#define NSTACKWORDS 6
+	.text
+    .issue_mode  dual
+	.globl	FFVectMpyC_xs3
+	.type	FFVectMpyC_xs3,@function
+	.cc_top FFVectMpyC_xs3.function,FFVectMpyC_xs3
+
+    //    void FFVectMpyC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    .align 16
+FFVectMpyC_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+    std r8, r9, sp[2]
+
+    { shr r0, r0, 1             ; nop }
+    { ldc r11, 1                ; sub r0, r0, 2 }
+    { bitrev r11, r11           ; add r3, r3, 8 }
+    { add r1, r1, 8             ; add r2, r2, 8 }
+.MpyCloop:
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    fmul r9, r4, r6
+    fmacc r9, r9, r5, r7
+    add r4, r4, r11
+    fmul r8, r4, r7
+    fmacc r8, r8, r5, r6
+    std r8, r9, r3[r0]
+    { bt  r0, .MpyCloop         ; sub r0, r0, 1 }
+    
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    fmul r8, r4, r6
+    fmul r9, r5, r7
+    std r8, r9, r3[r0]
+
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    ldd r8, r9, sp[2]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+    
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectMpyC_xs3.function
+	.set	FFVectMpyC_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectMpyC_xs3.nstackwords
+	.set	FFVectMpyC_xs3.maxcores,1
+	.globl	FFVectMpyC_xs3.maxcores
+	.set	FFVectMpyC_xs3.maxtimers,0
+	.globl	FFVectMpyC_xs3.maxtimers
+	.set	FFVectMpyC_xs3.maxchanends,0
+	.globl	FFVectMpyC_xs3.maxchanends
+.LtmpFFVectMpyC_xs3:
+	.size	FFVectMpyC_xs3, .LtmpFFVectMpyC_xs3-FFVectMpyC_xs3
+
+#undef NSTACKWORDS
+    
+#define NSTACKWORDS 6
+	.text
+    .issue_mode  dual
+	.globl	FFVectMpy_xs3
+	.type	FFVectMpy_xs3,@function
+	.cc_top FFVectMpy_xs3.function,FFVectMpy_xs3
+
+    //    void FFVectMpy_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    .align 16
+FFVectMpy_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+    std r8, r9, sp[2]
+
+    { shr r0, r0, 1             ; nop }
+    { ldc r11, 1                ; sub r0, r0, 2 }
+    { bitrev r11, r11           ; add r3, r3, 8 }
+    { add r1, r1, 8             ; add r2, r2, 8 }
+.Mpyloop:
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    fmul r8, r4, r7
+    fmacc r8, r8, r5, r6
+    add r4, r4, r11
+    fmul r9,r4, r6
+    fmacc r9, r9, r5, r7
+    std r8, r9, r3[r0]
+    { bt  r0, .Mpyloop         ; sub r0, r0, 1 }
+    
+    ldd r4, r5, r1[r0]
+    ldd r6, r7, r2[r0]
+    fmul r8, r4, r6
+    fmul r9, r5, r7
+    std r8, r9, r3[r0]
+
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    ldd r8, r9, sp[2]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+    
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectMpy_xs3.function
+	.set	FFVectMpy_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectMpy_xs3.nstackwords
+	.set	FFVectMpy_xs3.maxcores,1
+	.globl	FFVectMpy_xs3.maxcores
+	.set	FFVectMpy_xs3.maxtimers,0
+	.globl	FFVectMpy_xs3.maxtimers
+	.set	FFVectMpy_xs3.maxchanends,0
+	.globl	FFVectMpy_xs3.maxchanends
+.LtmpFFVectMpy_xs3:
+	.size	FFVectMpy_xs3, .LtmpFFVectMpy_xs3-FFVectMpy_xs3
+
+#undef NSTACKWORDS
+#define NSTACKWORDS 4
+	.text
+    .issue_mode  dual
+	.globl	FFVectAcc_xs3
+	.type	FFVectAcc_xs3,@function
+	.cc_top FFVectAcc_xs3.function,FFVectAcc_xs3
+
+    //    void FFVectAcc_xs3(int N, float *ptr1, float *ptro)
+    .align 16
+FFVectAcc_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+
+    shr r0, r0, 1
+    sub r0, r0, 1
+.FFVectAcc_xs3_loop:
+    ldd r4, r6, r1[r0]
+    ldd r5, r7, r2[r0]
+    fadd r4, r4, r5
+    fadd r6, r6, r7
+    std r4, r6, r2[r0]
+    { bt  r0, .FFVectAcc_xs3_loop     ; sub r0, r0, 1 }
+    
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectAcc_xs3.function
+	.set	FFVectAcc_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectAcc_xs3.nstackwords
+	.set	FFVectAcc_xs3.maxcores,1
+	.globl	FFVectAcc_xs3.maxcores
+	.set	FFVectAcc_xs3.maxtimers,0
+	.globl	FFVectAcc_xs3.maxtimers
+	.set	FFVectAcc_xs3.maxchanends,0
+	.globl	FFVectAcc_xs3.maxchanends
+.LtmpFFVectAcc_xs3:
+	.size	FFVectAcc_xs3, .LtmpFFVectAcc_xs3-FFVectAcc_xs3
+
+#undef NSTACKWORDS
         
 #endif
