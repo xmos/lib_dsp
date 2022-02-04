@@ -298,7 +298,7 @@ FFVectMac_xs3:
 	.type	FFVectMpyC_xs3,@function
 	.cc_top FFVectMpyC_xs3.function,FFVectMpyC_xs3
 
-    //    float FFVectMpyC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    //    void FFVectMpyC_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
     .align 16
 FFVectMpyC_xs3:
     dualentsp NSTACKWORDS
@@ -356,7 +356,7 @@ FFVectMpyC_xs3:
 	.type	FFVectMpy_xs3,@function
 	.cc_top FFVectMpy_xs3.function,FFVectMpy_xs3
 
-    //    float FFVectMpy_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
+    //    void FFVectMpy_xs3(uint32_t N, float *ptr1, float *ptr2, float *ptro)
     .align 16
 FFVectMpy_xs3:
     dualentsp NSTACKWORDS
@@ -413,7 +413,7 @@ FFVectMpy_xs3:
 	.type	FFVectAcc_xs3,@function
 	.cc_top FFVectAcc_xs3.function,FFVectAcc_xs3
 
-    //    float FFVectAcc_xs3(int N, float *ptr1, float *ptr2)
+    //    void FFVectAcc_xs3(int N, float *ptr1, float *ptro)
     .align 16
 FFVectAcc_xs3:
     dualentsp NSTACKWORDS
