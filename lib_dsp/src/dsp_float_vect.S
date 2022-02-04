@@ -406,5 +406,49 @@ FFVectMpy_xs3:
 	.size	FFVectMpy_xs3, .LtmpFFVectMpy_xs3-FFVectMpy_xs3
 
 #undef NSTACKWORDS
+#define NSTACKWORDS 4
+	.text
+    .issue_mode  dual
+	.globl	FFVectAcc_xs3
+	.type	FFVectAcc_xs3,@function
+	.cc_top FFVectAcc_xs3.function,FFVectAcc_xs3
+
+    //    float FFVectAcc_xs3(int N, float *ptr1, float *ptr2)
+    .align 16
+FFVectAcc_xs3:
+    dualentsp NSTACKWORDS
+    std r4, r5, sp[0]
+    std r6, r7, sp[1]
+
+    shr r0, r0, 1
+    sub r0, r0, 1
+.FFVectAcc_xs3_loop:
+    ldd r4, r6, r1[r0]
+    ldd r5, r7, r2[r0]
+    fadd r4, r4, r5
+    fadd r6, r6, r7
+    std r4, r6, r2[r0]
+    { bt  r0, .FFVectAcc_xs3_loop     ; sub r0, r0, 1 }
+    
+    ldd r4, r5, sp[0]
+    ldd r6, r7, sp[1]
+    add r0, r11, 0
+    retsp NSTACKWORDS
+
+	
+	// RETURN_REG_HOLDER
+	.cc_bottom FFVectAcc_xs3.function
+	.set	FFVectAcc_xs3.nstackwords,NSTACKWORDS
+	.globl	FFVectAcc_xs3.nstackwords
+	.set	FFVectAcc_xs3.maxcores,1
+	.globl	FFVectAcc_xs3.maxcores
+	.set	FFVectAcc_xs3.maxtimers,0
+	.globl	FFVectAcc_xs3.maxtimers
+	.set	FFVectAcc_xs3.maxchanends,0
+	.globl	FFVectAcc_xs3.maxchanends
+.LtmpFFVectAcc_xs3:
+	.size	FFVectAcc_xs3, .LtmpFFVectAcc_xs3-FFVectAcc_xs3
+
+#undef NSTACKWORDS
         
 #endif
