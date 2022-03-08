@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage('Standard build and XS2 tests') {
       agent {
-        label 'x86_64&&brew&&macOS'
+        label 'x86_64&&macOS'
       }
       stages {
         stage('Get view') {
@@ -226,7 +226,7 @@ pipeline {
 
     stage('Update view files') {
       agent {
-        label 'x86_64&&brew'
+        label 'x86_64'
       }
       when {
         expression { return currentBuild.currentResult == "SUCCESS" }
