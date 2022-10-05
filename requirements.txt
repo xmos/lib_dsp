@@ -22,7 +22,7 @@ importlib-metadata==4.13.0
 matplotlib==3.3.1
 
 # Pin numpy to 1.18.5 due to tensorflow v2.1.1 hard pinning it to that version.
-numpy==1.18.5
+numpy==1.22.0
 pylint==2.5.3
 pytest==6.0.0
 pytest-xdist==1.34.0
