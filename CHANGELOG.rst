@@ -1,6 +1,11 @@
 xCORE-200 DSP library change log
 ================================
 
+UNRELEASED
+----------
+
+  * ADDED:   Support for XCommon CMake build system
+
 6.2.1
 -----
 
