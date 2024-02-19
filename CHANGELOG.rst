@@ -1,10 +1,14 @@
-xCORE-200 DSP library change log
-================================
+DSP library change log
+======================
 
 6.3.0
-------
+-----
 
   * ADDED:   Support for XCommon CMake build system
+
+  * Changes to dependencies:
+
+    - lib_logging: 3.0.0 -> 3.2.0
 
 6.2.1
 -----
