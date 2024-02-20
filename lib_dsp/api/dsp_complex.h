@@ -1,4 +1,4 @@
-// Copyright 2016-2021 XMOS LIMITED.
+// Copyright 2016-2022 XMOS LIMITED.
 // This Software is subject to the terms of the XMOS Public Licence: Version 1.
 
 #ifndef DSP_COMPLEX_H_
@@ -32,6 +32,14 @@ typedef struct {
     double re;
     double im;
 } dsp_complex_float_t;
+
+/** Type that represents a complex number. Both the real and imaginary
+ * parts are represented as single precision values.
+ */
+typedef struct {
+    float re;
+    float im;
+} dsp_complex_float4_t;
 
 /**
  * Struct containing the sample data of two channels. Both channels
