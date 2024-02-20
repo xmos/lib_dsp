@@ -28,7 +28,7 @@ pytest==6.0.0
 pytest-xdist==1.34.0
 
 # Pin scipy to 1.4.1 due to tensorflow v2.1.1 hard pinning it to that version.
-scipy==1.4.1
+scipy==1.10.0
 
 # Development dependencies
 #
