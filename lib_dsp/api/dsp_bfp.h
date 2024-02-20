@@ -300,6 +300,30 @@ void dsp_bfp_shl2( dsp_complex_t * UNSAFE pts, const uint32_t N,
  */
 void dsp_bfp_bit_reverse_shl( dsp_complex_t pts[], const uint32_t N, const int32_t shift );
 
+/** This function transforms a floating point array into a BFP array.
+ * It establishes the maximum magnitude, and returns the exponent of the
+ * maximum magnitude.
+ *
+ * \param[in,out] f         Array of float elements (in), bfp (out)
+ * \param[in]     N         Half the number of points - when passing a
+ *                          dsp_complex_float4_t array as the first
+ *                          parameter it is the number of points
+ * \returns  the exponent, needed when converting back.
+ */
+int32_t dsp_float_to_bfp(float f[], uint32_t N);
+
+
+/** This function transforms a BFP array to a floating point array, giving
+ * all BFP values the exponent passed in.
+ *
+ * \param[in,out] f         Array of float elements (out), bfp (in).
+ * \param[in]     N         Half the number of points - when passing a
+ *                          dsp_complex_float4_t array as the first
+ *                          parameter it is the number of points
+ * \param[in]     exp       the exponent, from the forward conversion
+ */
+void    dsp_bfp_to_float(float f[], uint32_t N, int32_t exponent);
+
 #endif
 
 #endif
