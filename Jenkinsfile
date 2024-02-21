@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.16.2') _
+@Library('xmos_jenkins_shared_library@v0.18.0') _
 
 getApproval()
 
@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage('Standard build and XS2 tests') {
       agent {
-        label 'x86_64&&brew&&macOS'
+        label 'x86_64&&macOS'
       }
       stages {
         stage('Get view') {
@@ -118,7 +118,7 @@ pipeline {
 
     stage('xcore.ai Verification'){
       agent {
-        label 'xcore.ai-explorer'
+        label 'xcore.ai'
       }
       stages{
         stage('Get view') {
@@ -132,7 +132,7 @@ pipeline {
               viewEnv {  // load xmos tools
                 withVenv {  // activate virtualenv
                   // Install xtagctl and reset xtags
-                  sh 'pip install git+git://github0.xmos.com/xmos-int/xtagctl.git@v1.3.1'
+                  sh 'pip install -e ${WORKSPACE}/xtagctl'
                   sh 'xtagctl reset_all XCORE-AI-EXPLORER'
 
                   // Unstash binaries
@@ -226,7 +226,7 @@ pipeline {
 
     stage('Update view files') {
       agent {
-        label 'x86_64&&brew'
+        label 'x86_64 && linux'
       }
       when {
         expression { return currentBuild.currentResult == "SUCCESS" }
