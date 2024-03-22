@@ -524,4 +524,3 @@ Known Issues
 
 There are no known issues.
 
-.. include:: ../../../CHANGELOG.rst
