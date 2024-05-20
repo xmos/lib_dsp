@@ -111,6 +111,50 @@ static const int32_t costable48[24] = {
     70263695,
 };
 
+static const int32_t costable10[5] = {
+    2121044560,
+    1913421940,
+    1518500249,
+    974937174,
+    335940455,
+};
+
+static const int32_t costable20[10] = {
+    2140863672,
+    2088148503,
+    1984016188,
+    1831030810,
+    1632959376,
+    1394679064,
+    1122057123,
+    821806413,
+    501320101,
+    168489625,
+};
+
+static const int32_t costable40[20] = {
+    2145828015,
+    2132598272,
+    2106220351,
+    2066856882,
+    2014750552,
+    1950222615,
+    1873670908,
+    1785567396,
+    1686455267,
+    1576945581,
+    1457713501,
+    1329494132,
+    1193077990,
+    1049306126,
+    899064940,
+    743280720,
+    582913927,
+    418953276,
+    252409639,
+    84309812,
+};
+
 static inline int32_t mulcos(int32_t x, int32_t cos) {
     long long r = cos * (long long) x;
     return r >> 31;
@@ -137,6 +181,14 @@ void dsp_dct_forward##N(int32_t output[N], int32_t input[N]) { \
         last = temp2[i]*2 - last; \
         output[2*i+1] = last; \
     } \
+}
+
+void dsp_dct_forward5(int32_t output[5], int32_t input[5]) {
+    output[0] = input[0] + input[1] + input[2] + input[3] + input[4];
+    output[1] = mulcos(input[0] - input[4], 2042378317) + mulcos(input[1] - input[3], 1262259218);
+    output[2] = mulcos(input[0] + input[4], 1737350766) + mulcos(input[1] + input[3], -663608941) - input[2];
+    output[3] = mulcos(input[0] - input[4], 1262259218) + mulcos(input[1] - input[3], -2042378316);
+    output[4] = mulcos(input[0] + input[4], 663608942) + mulcos(input[1] + input[3], -1737350765) + input[2];
 }
 
 void dsp_dct_forward4(int32_t output[4], int32_t input[4]) {
@@ -171,10 +223,13 @@ void dsp_dct_forward1(int32_t output[1], int32_t input[1]) {
 
 DCT(6,3)
 DCT(8,4)
+DCT(10,5)
 DCT(12,6)
 DCT(16,8)
+DCT(20,10)
 DCT(24,12)
 DCT(32,16)
+DCT(40,20)
 DCT(48,24)
 
 #ifdef INCLUDE_REFERENCE_DCT
