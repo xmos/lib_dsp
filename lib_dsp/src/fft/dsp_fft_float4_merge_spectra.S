@@ -1,0 +1,88 @@
+// Copyright 2022 XMOS LIMITED.
+// This Software is subject to the terms of the XMOS Public Licence: Version 1.
+
+    
+	.section	.dp.data,"awd",@progbits
+	.text
+
+#if defined(__XS3A__)
+	.cc_top dsp_fft_float4_merge_spectra_xs3.function
+	.globl	dsp_fft_float4_merge_spectra_xs3
+	.align	4
+	.type	dsp_fft_float4_merge_spectra_xs3,@function
+
+#define NSTACKWORDS 6
+#define p  			 	 r0
+#define j   			 r1
+#define re0   			 r2
+#define re1   			 r3
+
+#define im0   			 r4
+#define im1   			 r5
+
+#define i   			 r11
+
+// void dsp_fft_float4_merge_spectra_xs3(fft_complex f[], unsigned N)
+
+dsp_fft_float4_merge_spectra_xs3:
+.align 8
+.issue_mode dual
+	DUALENTSP_lu6 NSTACKWORDS
+
+	std r5, r4, sp[0]
+	std r6, r7, sp[1]
+	std r8, r9, sp[2]
+
+	//reverse the second half
+	{shr i, j, 1; mov r8, j}
+	{add i, i, 1; sub j, j, 1}
+.Ltmp_second_half_reorder_loop:
+	ldd re0, im0, p[i]
+	ldd re1, im1, p[j]
+	std re1, im1, p[i]
+	std re0, im0, p[j]
+	{add i, i, 1; sub j, j, 1}
+	{eq im0,  i, j;nop}
+	{bf im0, .Ltmp_second_half_reorder_loop; nop}
+
+	//fix the middle
+	ldw im0, p[1]
+	ldw re0, p[r8]
+	stw re0, p[1]
+	stw im0, p[r8]
+
+	//merge the spectrum
+	{ldc i, 1; sub j, r8, 1}
+.Ltmp_reorder_loop:
+	ldd im0, re0, p[i]
+	ldd im1, re1, p[j]
+	fsub r6, re0, im1
+    fadd im1, im1, re0
+	fadd r7, im0, re1
+    fsub re1, re1, im0
+
+	std r7, r6, p[i]
+	std re1, im1, p[j]
+	{add i, i, 1; sub j, j, 1}
+	{eq im0,  i, j;nop}
+	{bf im0, .Ltmp_reorder_loop; nop}
+
+	ldd r5, r4, sp[0]
+	ldd r6, r7, sp[1]
+	ldd r8, r9, sp[2]
+	retsp NSTACKWORDS
+
+.tmp_dsp_fft_float4_merge_spectra_xs3:
+	.size	dsp_fft_float4_merge_spectra_xs3, .tmp_dsp_fft_float4_merge_spectra_xs3-dsp_fft_float4_merge_spectra_xs3
+	.align	4
+	.cc_bottom dsp_fft_float4_merge_spectra_xs3.function
+
+	.set	dsp_fft_float4_merge_spectra_xs3.nstackwords,NSTACKWORDS
+	.globl	dsp_fft_float4_merge_spectra_xs3.nstackwords
+	.set	dsp_fft_float4_merge_spectra_xs3.maxcores,1
+	.globl	dsp_fft_float4_merge_spectra_xs3.maxcores
+	.set	dsp_fft_float4_merge_spectra_xs3.maxtimers,0
+	.globl	dsp_fft_float4_merge_spectra_xs3.maxtimers
+	.set	dsp_fft_float4_merge_spectra_xs3.maxchanends,0
+	.globl	dsp_fft_float4_merge_spectra_xs3.maxchanends
+#endif
