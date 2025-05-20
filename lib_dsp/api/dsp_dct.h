@@ -1,4 +1,4 @@
-// Copyright 2015-2021 XMOS LIMITED.
+// Copyright 2015-2025 XMOS LIMITED.
 // This Software is subject to the terms of the XMOS Public Licence: Version 1.
 
 #ifndef DSP_DCT_H_
@@ -20,6 +20,17 @@
  *  \param  output          DCT values.
  */
 void dsp_dct_forward48(int32_t output[48], int32_t input[48]);
+
+/** This function performs a 40 point DCT
+ *
+ *  The first output is the DC value, subsequent values are the values for
+ *  the basis vectors of half a cosine, a whole cosine, 1.5 cosine, 2
+ *  consines, etc.
+ *
+ *  \param  input           input values to the DCT
+ *  \param  output          DCT values.
+ */
+void dsp_dct_forward40(int32_t output[40], int32_t input[40]);
 
 /** This function performs a 32 point DCT
  *
@@ -43,6 +54,17 @@ void dsp_dct_forward32(int32_t output[32], int32_t input[32]);
  */
 void dsp_dct_forward24(int32_t output[24], int32_t input[24]);
 
+/** This function performs a 20 point DCT
+ *
+ *  The first output is the DC value, subsequent values are the values for
+ *  the basis vectors of half a cosine, a whole cosine, 1.5 cosine, 2
+ *  consines, etc.
+ *
+ *  \param  input           input values to the DCT
+ *  \param  output          DCT values.
+ */
+void dsp_dct_forward20(int32_t output[20], int32_t input[20]);
+
 /** This function performs a 16 point DCT
  *
  *  The first output is the DC value, subsequent values are the values for
@@ -64,6 +86,17 @@ void dsp_dct_forward16(int32_t output[16], int32_t input[16]);
  *  \param  output          DCT values.
  */
 void dsp_dct_forward12(int32_t output[12], int32_t input[12]);
+
+/** This function performs a 10 point DCT
+ *
+ *  The first output is the DC value, subsequent values are the values for
+ *  the basis vectors of half a cosine, a whole cosine, 1.5 cosine, 2
+ *  consines, etc.
+ *
+ *  \param  input           input values to the DCT
+ *  \param  output          DCT values.
+ */
+void dsp_dct_forward10(int32_t output[10], int32_t input[10]);
 
 /** This function performs a 8 point DCT
  *
